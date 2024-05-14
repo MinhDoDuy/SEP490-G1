@@ -9,9 +9,9 @@ spring:
         enabled: false
 
   datasource:
-    url: jdbc:postgresql://ossdb.cvig4g04w55a.ap-southeast-1.rds.amazonaws.com/ossdb
-    username: postgres
-    password: ossdb123
+    url: jdbc:postgresql://dblink
+    username: user
+    password: password
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false

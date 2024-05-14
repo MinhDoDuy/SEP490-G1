@@ -1,9 +1,9 @@
 package com.ffood.g1.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
