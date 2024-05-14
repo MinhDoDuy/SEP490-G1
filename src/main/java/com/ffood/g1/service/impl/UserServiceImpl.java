@@ -1,6 +1,5 @@
 package com.ffood.g1.service.impl;
 
-import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

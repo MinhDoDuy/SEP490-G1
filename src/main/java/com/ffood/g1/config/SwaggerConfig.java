@@ -18,7 +18,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.project.oss"))
+                .apis(RequestHandlerSelectors.basePackage("com.ffood.g1"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -26,8 +26,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("OSS System")
-                .description("Hệ thống order hàng số 1 VN!!!")
+                .title("CROAK System")
+                .description("Order system 4.0...")
                 .version("1.0")
                 .build();
     }
