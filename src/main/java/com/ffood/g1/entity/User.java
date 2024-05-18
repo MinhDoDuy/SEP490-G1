@@ -8,9 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
+
 @Entity
 @Data
 @Builder
@@ -30,10 +31,10 @@ public class User implements UserDetails {
 	private String lastName;
 
 	@Column(name = "address_line1")
-	private String address_line1;
+	private String addressLine1;
 
 	@Column(name = "address_line2")
-	private String address_line2;
+	private String addressLine2;
 
 	@Column(name = "phone")
 	private String phone;
@@ -90,5 +91,21 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	// Override hashCode and equals to avoid recursion
+	@Override
+	public int hashCode() {
+		return 31;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		User user = (User) obj;
+		return userId != null && userId.equals(user.userId);
 	}
 }

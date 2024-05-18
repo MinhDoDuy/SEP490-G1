@@ -1,5 +1,7 @@
 package com.ffood.g1.service.impl;
 
+import com.ffood.g1.entity.User;
+import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,12 +11,42 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Invalid email or password.");
+        }
+        return user;
+    }
+
+    @Override
+    public User register(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            System.out.println("User not found for email: " + email);
+        } else {
+            System.out.println("User found: " + user.getEmail());
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                System.out.println("Password matches");
+                return user;
+            } else {
+                System.out.println("Password does not match");
+            }
+        }
         return null;
     }
 }
-

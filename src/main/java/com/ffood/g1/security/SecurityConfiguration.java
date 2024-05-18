@@ -45,33 +45,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/static/dashboard/**","/dashboard/**").permitAll()
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
-
-                .antMatchers("/resources/**", "/templates/**",
-                        "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**", "/static/dashboard/**",
-                        "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**", "/dashboard/**").permitAll()
-
-                //Homepage
-                .antMatchers("/").permitAll()
-
-                //Common
-                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/now").permitAll()
-
-                // Multiple role access with url
-                // TODO: Need modify
-                .antMatchers(
-                        "/dashboard/**",
-                        "/edit-staff-profile/**", "/edit-staff-profile",
-                        "/staff-change-password/**", "/staff-change-password").hasAnyRole("ADMIN", "MANAGER", "MARKETING", "SALE")
-
-                //ADMIN
+                .antMatchers("/home").permitAll()
+                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/home").permitAll()
+                .antMatchers("/", "/login/**").permitAll()
+                .antMatchers("/dashboard/**", "/edit-staff-profile/**", "/staff-change-password/**").hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 .antMatchers("/search-staff").hasRole("ADMIN")
-
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/home", true)
+                .failureUrl("/login?error")
                 .permitAll()
                 .and()
                 .logout()

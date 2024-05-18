@@ -1,4 +1,5 @@
 package com.ffood.g1.entity;
+
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,5 +19,20 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
-}
 
+    // Override hashCode and equals to avoid recursion
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Role role = (Role) obj;
+        return id != null && id.equals(role.id);
+    }
+}
