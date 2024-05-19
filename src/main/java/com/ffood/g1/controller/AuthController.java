@@ -39,9 +39,10 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String email, @RequestParam String password, Model model) {
+    public String loginUser(@RequestParam String email, @RequestParam String password, Model model, HttpSession session) {
         User user = userService.login(email, password);
         if (user != null) {
+            session.setAttribute("user", user);
             return "redirect:/home";
         } else {
             model.addAttribute("error", "Invalid email or password");

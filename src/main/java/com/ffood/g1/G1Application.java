@@ -11,10 +11,10 @@ public class G1Application {
 
 
 
-//				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//				String rawPassword = "123";
-//				String encodedPassword = encoder.encode(rawPassword);
-//				System.out.println(encodedPassword);
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String rawPassword = "12345";
+			String encodedPassword = encoder.encode(rawPassword);
+			System.out.println(encodedPassword);
 
 
 

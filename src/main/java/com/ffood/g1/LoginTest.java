@@ -23,8 +23,8 @@ public class LoginTest {
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
             // Test the login functionality
-            String email = "chuvuz04112001@gmail.com";
-            String password = "123";
+            String email = "admin@example.com";
+            String password = "12345";
 
             User user = userService.login(email, password);
             if (user != null) {
