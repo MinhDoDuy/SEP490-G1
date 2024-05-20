@@ -1,8 +1,10 @@
 package com.ffood.g1.controller;
 
+import com.ffood.g1.dto.LoginForm;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,13 +48,13 @@ public class AuthController {
         }
         return "home";
     }
-
+//crud sử dụng  pathvariable
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username, @RequestParam String password, Model model, HttpSession session) {
-        User user = userService.login(username, password);
+    public String loginUser(Model model, HttpSession session, @ModelAttribute("loginForm")LoginForm loginForm) {
+        UserDetails user = userService.loadUserByUsername(loginForm.getEmail());
         if (user != null) {
             session.setAttribute("user", user);
-            session.setAttribute("userId", user.getUserId());
+//            session.setAttribute("userId", user.getUserId());
             return "redirect:/home";
         } else {
             model.addAttribute("error", "Invalid email or password");
