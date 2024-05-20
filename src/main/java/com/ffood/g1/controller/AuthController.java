@@ -1,10 +1,8 @@
 package com.ffood.g1.controller;
 
-import com.ffood.g1.dto.LoginForm;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,22 +37,11 @@ public class AuthController {
         return "redirect:/login";
     }
 
-    @GetMapping("/home")
-    public String home(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("username", user.getFirstName() + " " + user.getLastName());
-            model.addAttribute("userId", user.getUserId());
-        }
-        return "home";
-    }
-//crud sử dụng  pathvariable
+
     @PostMapping("/login")
-    public String loginUser(Model model, HttpSession session, @ModelAttribute("loginForm")LoginForm loginForm) {
-        UserDetails user = userService.loadUserByUsername(loginForm.getEmail());
+    public String loginUser(@RequestParam String email, @RequestParam String password, Model model) {
+        User user = userService.login(email, password);
         if (user != null) {
-            session.setAttribute("user", user);
-//            session.setAttribute("userId", user.getUserId());
             return "redirect:/home";
         } else {
             model.addAttribute("error", "Invalid email or password");
@@ -62,5 +49,13 @@ public class AuthController {
         }
     }
 
-
+    @GetMapping("/home")
+    public String home(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("username", user.getFirstName() + " " + user.getLastName());
+        }
+        return "home";
+    }
 }
+

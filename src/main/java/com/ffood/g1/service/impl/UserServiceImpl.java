@@ -53,5 +53,10 @@ public class UserServiceImpl implements UserService {
         userRepository.save(existingUser);
     }
 
+    @Override
+    public User login(String email, String password) {
+        return null;
+    }
+
 
 }
