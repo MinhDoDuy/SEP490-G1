@@ -37,11 +37,22 @@ public class AuthController {
         return "redirect:/login";
     }
 
+    @GetMapping("/home")
+    public String home(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("username", user.getFirstName() + " " + user.getLastName());
+            model.addAttribute("userId", user.getUserId());
+        }
+        return "home";
+    }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String email, @RequestParam String password, Model model) {
-        User user = userService.login(email, password);
+    public String loginUser(@RequestParam String username, @RequestParam String password, Model model, HttpSession session) {
+        User user = userService.login(username, password);
         if (user != null) {
+            session.setAttribute("user", user);
+            session.setAttribute("userId", user.getUserId());
             return "redirect:/home";
         } else {
             model.addAttribute("error", "Invalid email or password");
@@ -49,13 +60,5 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/home")
-    public String home(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("username", user.getFirstName() + " " + user.getLastName());
-        }
-        return "home";
-    }
-}
 
+}

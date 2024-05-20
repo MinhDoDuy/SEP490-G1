@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Set;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Entity
@@ -55,17 +55,16 @@ public class User implements UserDetails {
 	@Column(name = "type", nullable = false)
 	private String type;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_roles",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role_id", referencedColumnName = "role_id")
+	private Role role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles.stream()
-				.map(role -> new SimpleGrantedAuthority(role.getName()))
-				.collect(Collectors.toList());
+		if (role == null) {
+			return Collections.emptyList();
+		}
+		return Collections.singletonList(new SimpleGrantedAuthority(role.getName()));
 	}
 
 	@Override
