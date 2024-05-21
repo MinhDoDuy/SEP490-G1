@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -46,11 +48,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/home").permitAll()
-                .antMatchers("/view-profile", "/update-profile").authenticated()
+                .antMatchers("/view-profile", "/update-profile").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/home").permitAll()
                 .antMatchers("/", "/login/**").permitAll()
-                .antMatchers("/dashboard/**", "/edit-staff-profile/**", "/staff-change-password/**").hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
+
+
+                //Profile
+                .antMatchers(
+                        "/view-profile/**", "/update-profile",
+                        "/staff-change-password/**", "/staff-change-password").hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
+
+                .antMatchers(
+                        "/view-profile/**", "/update-profile").permitAll()
+
+
                 .antMatchers("/search-staff").hasRole("ADMIN")
+
+                //
+
+
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -63,5 +80,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .permitAll();
+
     }
 }

@@ -6,41 +6,33 @@
     body {
       background: rgb(99, 39, 120);
     }
-
     .form-control:focus {
       box-shadow: none;
       border-color: #BA68C8;
     }
-
     .profile-button {
       background: rgb(99, 39, 120);
       box-shadow: none;
       border: none;
     }
-
     .profile-button:hover {
       background: #682773;
     }
-
     .profile-button:focus {
       background: #682773;
       box-shadow: none;
     }
-
     .profile-button:active {
       background: #682773;
       box-shadow: none;
     }
-
     .back:hover {
       color: #682773;
       cursor: pointer;
     }
-
     .labels {
       font-size: 11px;
     }
-
     .add-experience:hover {
       background: #BA68C8;
       color: #fff;
@@ -59,8 +51,8 @@
       <div class="col-md-3 border-right">
         <div class="d-flex flex-column align-items-center text-center p-3 py-5">
           <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
-          <span class="font-weight-bold">Edogaru</span>
-          <span class="text-black-50">edogaru@mail.com.my</span>
+          <span class="font-weight-bold" th:text="${user.firstName} + ' ' + ${user.lastName}"></span>
+          <span class="text-black-50" th:text="${user.email}"></span>
           <span> </span>
         </div>
       </div>
@@ -75,7 +67,7 @@
               <input type="text" id="firstName" class="form-control" name="firstName" th:field="*{firstName}" required>
             </div>
             <div class="col-md-6">
-              <label class="labels">Lastname</label>
+              <label class="labels">Last Name</label>
               <input type="text" id="lastName" class="form-control" name="lastName" th:field="*{lastName}" required>
             </div>
           </div>
@@ -89,7 +81,7 @@
               <input type="text" id="phone" class="form-control" name="phone" th:field="*{phone}">
             </div>
           </div>
-          <div class="mt-5 text-center">
+          <div class="mt-5">
             <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
           </div>
         </div>
@@ -97,19 +89,21 @@
       <div class="col-md-4">
         <div class="p-3 py-5">
           <div class="d-flex justify-content-between align-items-center experience">
-            <span>Edit Experience</span>
-            <span class="border px-3 p-1 add-experience">
-                                <i class="fa fa-plus"></i>&nbsp;Experience
-                            </span>
+            <span>Change Password</span>
           </div><br>
-          <div class="col-md-12">
-            <label class="labels">Experience in Designing</label>
-            <input type="text" class="form-control" placeholder="experience" value="">
-          </div> <br>
-          <div class="col-md-12">
-            <label class="labels">Additional Details</label>
-            <input type="text" class="form-control" placeholder="additional details" value="">
-          </div>
+          <form th:action="@{/change-password}" method="post">
+            <div class="col-md-12">
+              <label class="labels">Old Password</label>
+              <input type="password" class="form-control" name="oldPassword" placeholder="Old Password" required>
+            </div>
+            <div class="col-md-12">
+              <label class="labels">New Password</label>
+              <input type="password" class="form-control" name="newPassword" placeholder="New Password" required>
+            </div>
+            <div class="mt-5">
+              <button class="btn btn-primary profile-button" type="submit">Change Password</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -120,29 +114,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!-- Bootstrap Bundle JS (includes Popper.js) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-  $(document).ready(function() {
-    $('#profileForm').on('submit', function(event) {
-      event.preventDefault(); // Ngăn chặn form gửi mặc định
-
-      var formData = $(this).serialize(); // Serialize dữ liệu form
-
-      $.ajax({
-        type: 'POST',
-        url: $(this).attr('action'), // Lấy URL action của form
-        data: formData,
-        success: function(response) {
-          // Xử lý phản hồi thành công
-          alert('Profile updated successfully!');
-        },
-        error: function(xhr, status, error) {
-          // Xử lý phản hồi lỗi
-          alert('An error occurred while updating the profile.');
-        }
-      });
-    });
-  });
-</script>
 </body>
 </html>

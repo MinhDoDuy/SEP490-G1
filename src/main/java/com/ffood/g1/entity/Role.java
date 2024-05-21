@@ -3,7 +3,6 @@ package com.ffood.g1.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Data

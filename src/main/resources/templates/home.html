@@ -5,7 +5,12 @@
 </head>
 <body>
 <h1>Welcome to the Home Page!</h1>
-
-<a th:href="@{/view-profile}">View Profile</a>
+<div th:if="${user != null}">
+    <p>Hello, <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></p>
+</div>
+<div th:if="${user == null}">
+    <p>Please <a th:href="@{/login}">login</a> to view your profile.</p>
+</div>
+<a th:href="@{'/view-profile/' + ${user.userId}}">View Profile</a>
 </body>
 </html>

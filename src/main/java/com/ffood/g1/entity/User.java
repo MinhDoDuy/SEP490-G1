@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -24,17 +23,12 @@ public class User implements UserDetails {
 	@Column(name = "user_id")
 	private Integer userId;
 
-	@Column(name = "first_name", nullable = false)
+	@Column(name = "firstName", nullable = false)
 	private String firstName;
 
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@Column(name = "address_line1")
-	private String addressLine1;
-
-	@Column(name = "address_line2")
-	private String addressLine2;
 
 	@Column(name = "phone")
 	private String phone;
@@ -92,7 +86,6 @@ public class User implements UserDetails {
 		return true;
 	}
 
-	// Override hashCode and equals to avoid recursion
 	@Override
 	public int hashCode() {
 		return 31;
