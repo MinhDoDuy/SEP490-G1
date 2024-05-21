@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Croak Order</title>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+<div class="container">
+    <div class="left">
+        <h1>Croak Order</h1>
+        <h2>by SEP490 - G1</h2>
+        <form>
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Your name">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="*****@email.com">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Password">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" placeholder="Confirm Password">
+            <div class="buttons">
+                <div>
+                    <button type="button" class="register-btn">Đăng Kí</button>
+                    <a th:href="@{/login}" class="login-btn">Đã có tài khoản? Đăng nhập tại đây</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="right">
+        <img src="img/Canteen.jpg" alt="Description of the image">
+    </div>
+</div>
+</body>
+</html>

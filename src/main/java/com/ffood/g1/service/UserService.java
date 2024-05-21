@@ -14,4 +14,10 @@ public interface UserService extends UserDetailsService {
     void updateUser(User user);
 
     User login(String email, String password);
+
+    User authenticate(String email, String password);
+
+    boolean isEmailExist(String email);
+
+
 }

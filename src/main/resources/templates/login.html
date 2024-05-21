@@ -15,17 +15,32 @@
         <h1>Croak Order</h1>
         <h2>by SEP490 - G1</h2>
         <form th:action="@{/login}" method="post">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="*****@email.com">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password">
+            <div id="loadingOverlay"
+                 style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7); z-index: 9999;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    <!-- image or spinner -->
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${successMessage}">
+                <p class="alert alert-success" th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">Tài khoản hoặc mật khẩu không hợp lệ.</div>
+            </div>
+            <label for="email">Email<span style="color: rgb(234, 77, 77);"> *</span></label>
+            <input type="email" id="email" name="email" placeholder="*****@email.com" autofocus="autofocus">
+            <label for="password">Mật Khẩu<span style="color: rgb(234, 77, 77);"> *</span></label>
+            <input type="password" id="password" name="password" placeholder="Password" autofocus="autofocus">
             <div>
                 <input type="checkbox" id="remember-me" name="remember-me">
                 <label for="remember-me">Remember me</label>
             </div>
             <div class="buttons">
-                <button type="submit" class="login-btn">Login</button>
-                <button th:href="@{/register}" type="button" class="signup-btn">Sign up</button>
+                <button type="submit" class="login-btn">Đăng Nhập</button>
+                <a th:href="@{/register}" type="button" class="signup-btn">Đăng Kí</a>
             </div>
             <div class="forgot-password">
                 Forgot password? <a href="#">Click here</a>

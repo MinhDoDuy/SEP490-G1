@@ -18,8 +18,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-
-
     @Override
     public User register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -30,11 +28,11 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException("User Invalid");
+            throw new UsernameNotFoundException("User not found");
         }
-        //check enable or disable validate
+        // Check enable or disable validate
 
-        return user; //xác định role thi` có thể xác định các trường account đó checking for staff only
+        return user; // Xác định role có thể xác định các trường account đó checking for staff only
     }
 
     @Override
@@ -48,15 +46,24 @@ public class UserServiceImpl implements UserService {
         User existingUser = getCurrentUser();
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPhone(user.getPhone());
         userRepository.save(existingUser);
     }
 
     @Override
     public User login(String email, String password) {
-        return null;
+        return authenticate(email, password);
     }
 
+    @Override
+    public boolean isEmailExist(String email) {
+        return userRepository.findByEmail(email) != null;
+    }
 
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
+    }
 }
