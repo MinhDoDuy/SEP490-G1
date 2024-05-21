@@ -19,12 +19,6 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public User register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -38,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         int userId = 1; // Cố định userId = 1
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findById((long) userId).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Override
@@ -65,5 +59,14 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         return null;
+    }
+
+    @Override
+    public User register(User user) {
+        // Encode password before saving to database
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+        return user;
     }
 }

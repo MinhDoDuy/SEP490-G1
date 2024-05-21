@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,8 +23,21 @@
             <div class="buttons">
                 <div>
                     <button type="button" class="register-btn">Đăng Kí</button>
-                    <a th:href="@{/login}" class="login-btn">Đã có tài khoản? Đăng nhập tại đây</a>
+                    <!--                    <a th:href="@{/login}" class="login-btn">Đã có tài khoản? Đăng nhập tại đây</a>-->
                 </div>
+            </div>
+
+
+            <span>Đã có tài khoản?
+                <a style="color: #FF914D" href="/"
+                   th:href="@{/login}">Đăng nhập tại đây!</a>
+            </span>
+
+
+            <div class="login-btn">
+                <span>Đã có tài khoản?
+                <a th:href="@{/login}">Đăng nhập tại đây</a>
+                </span>
             </div>
         </form>
     </div>
