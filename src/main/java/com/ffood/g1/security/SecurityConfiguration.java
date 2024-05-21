@@ -51,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**", "/dashboard/**").permitAll()
 
                 //Homepage
-                .antMatchers("/").permitAll()
+                .antMatchers("/canteens","/home").permitAll()
 
                 //Common
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/now").permitAll()
