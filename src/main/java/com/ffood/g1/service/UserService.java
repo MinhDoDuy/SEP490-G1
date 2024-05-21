@@ -12,5 +12,5 @@ public interface UserService extends UserDetailsService {
 //
     User loadUserById(Integer userId);
 //
-    void updateUser(User user);
+void updateUser(User user);
 }

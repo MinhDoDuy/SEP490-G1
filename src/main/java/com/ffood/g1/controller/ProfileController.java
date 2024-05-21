@@ -3,6 +3,7 @@ package com.ffood.g1.controller;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,11 @@ public class ProfileController {
     }
 
     @PostMapping("/update-profile")
-    public String updateProfile(User user) {
+    public String updateProfile(@ModelAttribute("user") User user, Model model, Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
+        user.setUserId(currentUser.getUserId()); // Ensure the ID is set to the current user ID
         userService.updateUser(user);
-        return "redirect:/view-profile";
+        model.addAttribute("user", user);
+        return "redirect:/view-profile/" + user.getUserId();
     }
 }
