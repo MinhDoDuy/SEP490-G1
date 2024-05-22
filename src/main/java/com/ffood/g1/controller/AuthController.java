@@ -35,6 +35,8 @@ public class AuthController {
         return "register"; // Trả về trang đăng ký
     }
 
+
+
     // Phương thức xử lý yêu cầu đăng ký người dùng mới
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user, Model model) {
@@ -44,7 +46,7 @@ public class AuthController {
             return "register"; // Trả về trang đăng ký
         }
         userService.register(user); // Đăng ký người dùng mới
-        return "redirect:/login?success"; // Chuyển hướng đến trang đăng nhập với thông báo thành công
+        return "redirect:/login"; // Chuyển hướng đến trang đăng nhập với thông báo thành công
     }
 
     // Phương thức xử lý yêu cầu đăng nhập người dùng
@@ -52,7 +54,7 @@ public class AuthController {
     public String loginUser(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
         User user = userService.authenticate(email, password); // Xác thực người dùng
         if (user == null) {
-            return "redirect:/login?error"; // Chuyển hướng lại trang đăng nhập với thông báo lỗi
+            return "redirect:/login"; // Chuyển hướng lại trang đăng nhập với thông báo lỗi
         }
         session.setAttribute("user", user); // Lưu thông tin người dùng vào session
         return "redirect:/home"; // Chuyển hướng đến trang chủ
