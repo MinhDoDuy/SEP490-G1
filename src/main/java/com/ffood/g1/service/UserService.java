@@ -13,4 +13,8 @@ public interface UserService extends UserDetailsService {
     User loadUserById(Integer userId);
 //
 void updateUser(User user);
+
+
+    void save(User user);
+    void changePassword(Integer userId, String newPassword);
 }

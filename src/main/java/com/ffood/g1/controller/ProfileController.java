@@ -4,6 +4,7 @@ import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,9 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/view-profile/{userId}")
     public String viewProfile(@PathVariable Integer userId, Model model) {
@@ -35,5 +39,21 @@ public class ProfileController {
         userService.updateUser(user);
         model.addAttribute("user", user);
         return "redirect:/view-profile/" + user.getUserId();
+    }
+
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("oldPassword") String oldPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 Authentication authentication, Model model) {
+        User user = (User) authentication.getPrincipal();
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            userService.changePassword(user.getUserId(), newPassword);
+            return "redirect:/view-profile/" + user.getUserId();
+        } else {
+            model.addAttribute("error", "Old password is incorrect");
+            model.addAttribute("user", user);
+            return "profile";
+        }
     }
 }

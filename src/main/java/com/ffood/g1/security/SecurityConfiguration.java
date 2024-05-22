@@ -47,26 +47,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/static/dashboard/**","/dashboard/**").permitAll()
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
-                .antMatchers("/home").permitAll()
-                .antMatchers("/view-profile", "/update-profile").permitAll()
+
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/home").permitAll()
                 .antMatchers("/", "/login/**").permitAll()
 
+                // Profile
+                .antMatchers("/view-profile/","/update-profile",
+                        "/staff-change-password/**", "/staff-change-password")
+                .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
 
-                //Profile
-                .antMatchers(
-                        "/view-profile/**", "/update-profile",
-                        "/staff-change-password/**", "/staff-change-password").hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
+//                .antMatchers("/view-profile/","/update-profile").permitAll()
 
-                .antMatchers(
-                        "/view-profile/**", "/update-profile").permitAll()
-
-
-                .antMatchers("/search-staff").hasRole("ADMIN")
-
-                //
-
-
+                // Admin
+                .antMatchers("/search-staff", "/dashboard/").hasRole("ADMIN")
 
                 .anyRequest().authenticated()
                 .and()
