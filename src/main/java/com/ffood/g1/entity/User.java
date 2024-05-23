@@ -38,14 +38,14 @@ public class User implements UserDetails {
 	@Column(name = "user_phone")
 	private String userPhone;
 
-//	@OneToMany(mappedBy = "user")
-//	private Set<Feedback> feedbacks;
-//
-//	@OneToMany(mappedBy = "user")
-//	private Set<Cart> carts;
-//
-//	@OneToMany(mappedBy = "user")
-//	private Set<Order> orders;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Cart> carts = Collections.emptySet(); // Initialize as empty set
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Orders> orders = Collections.emptySet(); // Initialize as empty set
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
