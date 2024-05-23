@@ -1,15 +1,14 @@
 package com.ffood.g1.entity;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Data
@@ -21,49 +20,57 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private Integer userId;
+	private Long userId;
 
-	@Column(name = "firstName", nullable = false)
-	private String firstName;
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
-	@Column(name = "last_name", nullable = false)
-	private String lastName;
+	@Column(name = "user_name")
+	private String userName;
 
-
-	@Column(name = "phone")
-	private String phone;
-
-	@Column(nullable = false, unique = true, length = 45)
-	private String email;
-
-	@Column(nullable = false, length = 64)
+	@Column(name = "password")
 	private String password;
 
-	@Column(name = "date_of_birth")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dateOfBirth;
+	@Column(name = "email")
+	private String email;
 
-	@Column(columnDefinition = "VARCHAR(500)")
-	private String avatar;
+	@Column(name = "user_phone")
+	private String userPhone;
 
-	@Column(name = "type", nullable = false)
-	private String type;
-
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "role_id", referencedColumnName = "role_id")
-	private Role role;
+//	@OneToMany(mappedBy = "user")
+//	private Set<Feedback> feedbacks;
+//
+//	@OneToMany(mappedBy = "user")
+//	private Set<Cart> carts;
+//
+//	@OneToMany(mappedBy = "user")
+//	private Set<Order> orders;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (role == null) {
 			return Collections.emptyList();
 		}
-		return Collections.singletonList(new SimpleGrantedAuthority(role.getName()));
+		return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
 	}
 
 	@Override
 	public String getUsername() {
-		return email;
+		return email;  // Assuming email is used as username
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
 	}
 
 	@Override
@@ -84,20 +91,5 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return 31;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		User user = (User) obj;
-		return userId != null && userId.equals(user.userId);
 	}
 }

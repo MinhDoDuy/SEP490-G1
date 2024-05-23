@@ -7,17 +7,17 @@
 <form th:action="@{/login}" method="post">
     <div>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="username" required>
+        <input type="email" id="email" name="username"/>
     </div>
     <div>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password"/>
     </div>
     <div>
         <button type="submit">Login</button>
     </div>
-    <div th:if="${error}">
-        <p th:text="${error}">Invalid email or password</p>
+    <div th:if="${invalidCredentials}">
+        <p style="color: red;">Invalid email or password</p>
     </div>
 </form>
 </body>

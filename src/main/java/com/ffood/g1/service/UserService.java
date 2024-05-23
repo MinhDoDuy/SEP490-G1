@@ -7,14 +7,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 
+    User findByEmail(String email);
 
-
+////
+//    User loadUserById(Integer userId);
+////
+//void updateUser(User user);
 //
-    User loadUserById(Integer userId);
 //
-void updateUser(User user);
-
-
-    void save(User user);
-    void changePassword(Integer userId, String newPassword);
+//    void save(User user);
+//    void changePassword(Integer userId, String newPassword);
 }
