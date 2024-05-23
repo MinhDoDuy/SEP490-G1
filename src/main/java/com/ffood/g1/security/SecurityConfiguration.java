@@ -56,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
 
-//                .antMatchers("/view-profile/","/update-profile").permitAll()
+                .antMatchers("/view-profile/","/update-profile").permitAll()
 
                 // Admin
                 .antMatchers("/search-staff", "/dashboard/").hasRole("ADMIN")

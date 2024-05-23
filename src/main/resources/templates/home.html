@@ -6,5 +6,6 @@
 <body>
 <h1>Welcome, <span th:text="${user.userName}">User</span>!</h1>
 <p>Your user ID is <span th:text="${user.userId}"></span></p>
+<a th:href="@{/view-profile/{userId}(userId=${user.userId})}">View Profile</a>
 </body>
 </html>

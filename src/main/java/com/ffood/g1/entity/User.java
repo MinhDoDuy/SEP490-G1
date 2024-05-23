@@ -20,7 +20,7 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private Long userId;
+	private Integer userId;
 
 	@ManyToOne
 	@JoinColumn(name = "role_id")
@@ -64,7 +64,7 @@ public class User implements UserDetails {
 		return userName;
 	}
 
-	public Long getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 

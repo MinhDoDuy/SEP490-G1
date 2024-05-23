@@ -9,6 +9,10 @@ public interface UserService extends UserDetailsService {
 
     User findByEmail(String email);
 
+    User loadUserById(Integer userId);
+
+    void updateUser(User user);
+
 ////
 //    User loadUserById(Integer userId);
 ////
