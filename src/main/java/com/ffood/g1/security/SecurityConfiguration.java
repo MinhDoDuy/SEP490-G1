@@ -52,11 +52,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/login/**").permitAll()
 
                 // Profile
-                .antMatchers("/view-profile/","/update-profile",
+                .antMatchers(
                         "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
 
-                .antMatchers("/view-profile/","/update-profile").permitAll()
+                .antMatchers("/view-profile/","/update-profile","/change-password/").permitAll()
 
                 // Admin
                 .antMatchers("/search-staff", "/dashboard/").hasRole("ADMIN")

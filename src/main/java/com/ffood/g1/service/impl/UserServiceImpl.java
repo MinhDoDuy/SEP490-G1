@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void  updateUser(User user) {
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
         if (existingUser != null) {
             existingUser.setUserName(user.getUserName());
@@ -40,6 +40,12 @@ public class UserServiceImpl implements UserService {
             existingUser.setEmail(user.getEmail());
             userRepository.save(existingUser);
         }
+    }
+
+    @Override
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     @Override

@@ -2,10 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Profile</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
 <h1>User Profile</h1>
-<form th:action="@{/update-profile}" method="post" th:object="${user}">
+<form id="profileForm" th:action="@{/update-profile}" method="post" th:object="${user}">
   <input type="hidden" th:field="*{userId}" />
   <div>
     <label for="userName">Username:</label>
@@ -23,5 +25,6 @@
     <button type="submit">Update Profile</button>
   </div>
 </form>
+<a th:href="@{/change-password}">Change Password</a>
 </body>
 </html>
