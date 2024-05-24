@@ -63,10 +63,13 @@ public class ProfileController {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.updatePassword(user, newPassword);
+        model.addAttribute("message", "Password changed successfully");
 
         // Chuyển hướng đến trang view-profile với userId
-        return "redirect:/view-profile/" + user.getUserId();
+//        return "redirect:/view-profile/" + user.getUserId();
+        return "redirect:/login";
     }
+
 
 
 }
