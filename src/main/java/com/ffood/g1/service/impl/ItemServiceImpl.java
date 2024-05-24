@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Service
@@ -20,5 +20,10 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getRandomItems() {
         Pageable limit = PageRequest.of(0, 12);
         return itemRepository.findRandomItems(limit);
+    }
+
+    @Override
+    public Page<Item> getAllItems(Pageable pageable) {
+        return itemRepository.findAll(pageable);
     }
 }
