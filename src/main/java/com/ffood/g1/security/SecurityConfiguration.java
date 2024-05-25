@@ -42,15 +42,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/resources/**", "/templates/**", "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/static/dashboard/**","/dashboard/**").permitAll()
+                        "/static/dashboard/**","/dashboard/**","/register").permitAll()
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
-                .antMatchers("/home").permitAll()
-                .antMatchers("/view-profile", "/update-profile").authenticated()
+
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/home").permitAll()
                 .antMatchers("/", "/login/**").permitAll()
-                .antMatchers("/dashboard/**", "/edit-staff-profile/**", "/staff-change-password/**").hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
-                .antMatchers("/search-staff").hasRole("ADMIN")
+
+                // Profile
+                .antMatchers("/view-profile/","/update-profile",
+                        "/staff-change-password/**", "/staff-change-password")
+                .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
+
+//                .antMatchers("/view-profile/","/update-profile").permitAll()
+
+                // Admin
+                .antMatchers("/search-staff", "/dashboard/").hasRole("ADMIN")
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -63,5 +71,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .permitAll();
+
     }
 }

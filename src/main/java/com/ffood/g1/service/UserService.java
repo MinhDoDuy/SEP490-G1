@@ -1,23 +1,19 @@
 package com.ffood.g1.service;
 
+import com.ffood.g1.dto.UserDTO;
 import com.ffood.g1.entity.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 
 public interface UserService extends UserDetailsService {
-    //
 
-    User register(User user);
-    //get the user by id
-    User getCurrentUser();
+    User findByEmail(String email);
+
+    User loadUserById(Integer userId);
+
     void updateUser(User user);
-
-    User login(String email, String password);
-
-    User authenticate(String email, String password);
 
     boolean isEmailExist(String email);
 
-
+    void registerNewUser(UserDTO userDTO);
 }
