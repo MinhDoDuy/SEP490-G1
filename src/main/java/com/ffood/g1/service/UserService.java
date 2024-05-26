@@ -11,6 +11,8 @@ public interface UserService extends UserDetailsService {
 
     User loadUserById(Integer userId);
 
+    boolean isPhoneExist(String phone);
+
     void updateUser(User user);
 
     boolean isEmailExist(String email);
@@ -21,6 +23,8 @@ public interface UserService extends UserDetailsService {
     void saveUserWithDefaultRole(User user);
 
     boolean isCodeNameExist(String codeName);
+
+
 
 
 //    boolean isPhoneValid(String );

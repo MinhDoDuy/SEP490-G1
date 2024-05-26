@@ -25,7 +25,14 @@
                th:text="${codeNameExistsError}" style="font-size: small"></p>
         </div>
 
-
+        <div class="form-group" th:classappend="${phoneExistsError} ? ' has-error' : ''">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" th:field="*{phone}" th:value="${user.phone}"
+                   pattern="^\+?[0-9\s\-]+$" required>
+            <small class="form-text text-muted">Format: +85 1234567 </small>
+            <p class="help-block text-danger" id="phoneExistsError" style="display: none; font-size: small"></p>
+            <p class="help-block text-danger" th:if="${phoneExistsError != null}" th:text="${phoneExistsError}" style="font-size: small"></p>
+        </div>
 
         <div class="form-group" th:classappend="${emailExistsError} ? ' has-error' : ''">
             <label for="email">Email <span style="color: rgb(234, 77, 77);"> *</span></label>

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -42,6 +41,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isCodeNameExist(String codeName) {
         return userRepository.findByCodeName(codeName) != null;
+    }
+
+    @Override
+    public boolean isPhoneExist(String phone) {
+        return userRepository.findByPhone(phone) != null;
     }
 
     @Override

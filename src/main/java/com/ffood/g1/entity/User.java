@@ -117,4 +117,5 @@ public class User implements UserDetails {
 				", updatedDate=" + updatedDate +
 				'}';
 	}
+
 }
