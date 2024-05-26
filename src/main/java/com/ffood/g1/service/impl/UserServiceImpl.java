@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
 
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
         if (existingUser != null) {
-            existingUser.setUserName(user.getUserName());
-            existingUser.setUserPhone(user.getUserPhone());
+            existingUser.setFullName(user.getFullName());
+            existingUser.setPhone(user.getPhone());
             existingUser.setEmail(user.getEmail());
             userRepository.save(existingUser);
         }
@@ -55,15 +55,12 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-    @Override
     @Transactional
-    public void registerNewUser(UserDTO userDTO) {
-        User user = new User();
-        user.setUserName(userDTO.getUserName());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
-        user.setUserPhone(userDTO.getPhone());
+    public void registerNewUser(User user) {
+        user.setFullName(user.getUserName());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEmail(user.getEmail());
+        user.setPhone(user.getPhone());
 
         Role role = roleRepository.findByName("CUSTOMER");
         if (role == null) {
@@ -72,6 +69,11 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
         }
         userRepository.save(user);
+    }
+
+    @Override
+    public void saveUserWithDefaultRole(User user) {
+
     }
 
     @Override

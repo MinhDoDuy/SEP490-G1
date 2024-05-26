@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+          crossorigin="anonymous"/>
+    <title>WeWe - Verify OTP</title>
+    <link rel="icon" th:href="@{/img/Fevicon.png}" style="width: 32px; height: 32px" type="image/png">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+</head>
+<body>
+<!--loading screen-->
+<div id="loadingOverlay"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7); z-index: 9999;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <!-- image or spinner -->
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden"></span>
+        </div>
+    </div>
+</div>
+<div class="vh-100" style="background-color: #FF914D;">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+<!--            <div class="col">-->
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="col">
+                        <div class="card-body text-black">
+                            <h5 class="mb-4 pb-2 pb-md-0 mb-md-5">Xác nhận OTP</h5>
+                            <div th:if="${error}" class="alert alert-danger" role="alert">
+                                <p th:text="${error}"></p>
+                            </div>
+                            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                                <p th:text="${successMessage}"></p>
+                                <span><a style="color: #ba6a62" th:href="@{/login}">Đăng nhập ngay!</a></span>
+                            </div>
+                            <div id="oss-form">
+                                <form method="post" th:action="@{/register/verify}">
+                                    <div class="form-group">
+                                        <label for="otp">Nhập OTP:</label>
+                                        <input type="text" class="form-control" id="otp" th:name="otp" name="otp"
+                                               required>
+                                    </div>
+                                    <button type="submit"
+                                            class="btn btn-primary btn-block border-0 py-3 custom-btn-color"
+                                            style="width: 100%"
+                                            tabindex="4">Gửi
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/toast.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    var message1 = [[${message}]];
+    var messageError = [[${messageError}]];
+    if (message1 != null) {
+        toast({
+            title: "Success",
+            message: message1,
+            type: "success",
+            duration: 10000
+        });
+    }
+    if (messageError != null) {
+        toast({
+            title: "Error",
+            message: messageError,
+            type: "error",
+            duration: 10000
+        });
+    }
+    //loading screen
+    document.querySelector('form').addEventListener('submit', function (event) {
+        document.getElementById('loadingOverlay').style.display = 'block';
+    });
+</script>
+</body>
+</html>

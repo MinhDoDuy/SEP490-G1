@@ -1,23 +1,23 @@
 package com.ffood.g1.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-@Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Builder
 @Table(name = "users")
 public class User implements UserDetails {
 	@Id
@@ -29,17 +29,20 @@ public class User implements UserDetails {
 	@JoinColumn(name = "role_id")
 	private Role role;
 
-	@Column(name = "user_name")
-	private String userName;
+	@Column(name = "full_name")
+	private String fullName;
+
+	@Column(name = "code_name")
+	private String codeName;
 
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "email")
+	@Column(nullable = false, unique = true, length = 45)
 	private String email;
 
-	@Column(name = "user_phone")
-	private String userPhone;
+	@Column(name = "phone")
+	private String phone;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set
@@ -58,13 +61,19 @@ public class User implements UserDetails {
 		return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
 	}
 
+	@Column(name = "created_date")
+	private LocalDate createdDate;
+
+	@Column(name = "updated_date")
+	private LocalDate updatedDate;
+
 	@Override
 	public String getUsername() {
 		return email;  // Assuming email is used as username
 	}
 
 	public String getUserName() {
-		return userName;
+		return fullName;
 	}
 
 	public Integer getUserId() {
@@ -94,5 +103,18 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"userId=" + userId +
+				", fullName='" + fullName + '\'' +
+				", phone='" + phone + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", createdDate=" + createdDate +
+				", updatedDate=" + updatedDate +
+				'}';
 	}
 }
