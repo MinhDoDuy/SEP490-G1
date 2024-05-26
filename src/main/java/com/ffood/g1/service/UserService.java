@@ -15,8 +15,13 @@ public interface UserService extends UserDetailsService {
 
     boolean isEmailExist(String email);
 
+
     void registerNewUser(User user);
 
     void saveUserWithDefaultRole(User user);
 
+    boolean isCodeNameExist(String codeName);
+
+
+//    boolean isPhoneValid(String );
 }

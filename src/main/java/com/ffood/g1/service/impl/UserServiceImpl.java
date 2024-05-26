@@ -1,6 +1,5 @@
 package com.ffood.g1.service.impl;
 
-import com.ffood.g1.dto.UserDTO;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.RoleRepository;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,8 +24,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
     private RoleRepository roleRepository;
+
 
     @Override
     public User findByEmail(String email) {
@@ -38,8 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public boolean isCodeNameExist(String codeName) {
+        return userRepository.findByCodeName(codeName) != null;
+    }
 
+    @Override
+    public void updateUser(User user) {
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
         if (existingUser != null) {
             existingUser.setFullName(user.getFullName());
@@ -51,9 +57,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isEmailExist(String email) {
-        return false;
+        return userRepository.findByEmail(email) != null;
     }
-
 
     @Transactional
     public void registerNewUser(User user) {
@@ -73,8 +78,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUserWithDefaultRole(User user) {
-
+        // Implement save user logic if needed
     }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -92,6 +99,8 @@ public class UserServiceImpl implements UserService {
         }
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
+}
+
 
 
 //    @Override
@@ -137,4 +146,3 @@ public class UserServiceImpl implements UserService {
 //        userRepository.save(user);
 //    }
 
-}

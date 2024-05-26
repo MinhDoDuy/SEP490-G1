@@ -26,145 +26,168 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-@Controller
+@Controller // Định nghĩa lớp này là một Spring MVC Controller
 public class AuthController {
 
-    private final UserService userService;
-    private Map<String, User> temporaryUsers = new HashMap<>();
+    private final UserService userService; // Khai báo một biến dịch vụ người dùng, được khởi tạo qua constructor
+    private Map<String, User> temporaryUsers = new HashMap<>(); // Khai báo một bản đồ tạm thời để lưu trữ người dùng và OTP
+
     @Autowired
-    private JavaMailSender mailSender;
+    private JavaMailSender mailSender; // Khai báo và tự động nối kết một đối tượng gửi email
 
     public AuthController(UserService userService) {
-        this.userService = userService;
+        this.userService = userService; // Khởi tạo userService thông qua constructor
     }
 
-    @Controller
-    public class LoginController {
-
-        @GetMapping("/login")
-        public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, Authentication authentication, Model model, HttpSession session) {
-            if (authentication != null && authentication.isAuthenticated()) {
-                return "redirect:/home";
-            } else {
-                if (session.getAttribute("verificationSuccessMessage") != null) {
-                    model.addAttribute("successMessage", session.getAttribute("verificationSuccessMessage"));
-                    session.removeAttribute("verificationSuccessMessage");
-                }
-                return "login";
+    @GetMapping("/login") // Xử lý yêu cầu GET tới /login
+    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, // Tạo một đối tượng LoginForm mới cho view
+                            Authentication authentication, // Nhận thông tin xác thực hiện tại
+                            Model model,
+                            HttpSession session) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/home"; // Nếu người dùng đã xác thực, chuyển hướng đến /home
+        } else {
+            if (session.getAttribute("verificationSuccessMessage") != null) {
+                model.addAttribute("successMessage", session.getAttribute("verificationSuccessMessage")); // Thêm thông báo thành công vào model
+                session.removeAttribute("verificationSuccessMessage"); // Xóa thông báo khỏi session
             }
+            return "login"; // Trả về view login
+        }
+    }
+
+    @PostMapping("/login") // Xử lý yêu cầu POST tới /login
+    public String loginSubmit(@ModelAttribute("loginForm") LoginForm loginForm, HttpSession session) {
+        UserDetails userDetails = userService.loadUserByUsername(loginForm.getEmail()); // Lấy chi tiết người dùng dựa trên email
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); // Tạo một đối tượng xác thực
+        SecurityContextHolder.getContext().setAuthentication(authentication); // Thiết lập xác thực trong ngữ cảnh bảo mật hiện tại
+        return "redirect:/home"; // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
+    }
+
+    @GetMapping("/register") // Xử lý yêu cầu GET tới /register
+    public String showRegistrationForm(Model model,
+                                       @RequestParam(required = false) String emailExistsError,
+                                       @RequestParam(required = false) String fullName,
+                                       @RequestParam(required = false) String password,
+                                       @RequestParam(required = false) String codeNameExistsError,
+                                       @RequestParam(required = false) String phone) {
+        model.addAttribute("user", new User()); // Thêm một đối tượng User mới vào model
+        model.addAttribute("emailExistsError", emailExistsError); // Thêm thông báo lỗi email vào model
+        model.addAttribute("fullName", fullName); // Thêm giá trị của trường fullName vào model để hiển thị lại khi có lỗi
+        model.addAttribute("password", password); // Thêm giá trị của trường password vào model để hiển thị lại khi có lỗi
+        model.addAttribute("codeNameExistsError", codeNameExistsError); // Thêm giá trị của trường codeName vào model để hiển thị lại khi có lỗi
+        model.addAttribute("phone", phone);// Thêm giá trị của trường phone vào model để hiển thị lại khi có lỗi
+        return "register"; // Trả về view register
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        boolean hasError = false;
+
+        if (userService.isEmailExist(user.getEmail())) {
+            redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
+            hasError = true;
         }
 
-        @PostMapping("/login")
-        public String loginSubmit(@ModelAttribute("loginForm") LoginForm loginForm, HttpSession session) {
-            UserDetails userDetails = userService.loadUserByUsername(loginForm.getEmail());
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return "redirect:/home";
+        if (userService.isCodeNameExist(user.getCodeName())) {
+            redirectAttributes.addAttribute("codeNameExistsError", "Code Name này đã được đăng ký. Vui lòng sử dụng một code name khác.");
+            hasError = true;
         }
 
-
-        @GetMapping("/register")
-        public String showRegistrationForm(Model model) {
-            model.addAttribute("user", new User());
-            return "register";
-        }
-
-        @PostMapping("/register")
-        public String registerUser(@ModelAttribute("user") User user, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model) {
-            if (userService.isEmailExist(user.getEmail())) {
-                redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
-                redirectAttributes.addAttribute("fullName", user.getFullName());
-                redirectAttributes.addAttribute("password", user.getPassword());
-                redirectAttributes.addAttribute("codeName", user.getCodeName());
-                redirectAttributes.addAttribute("phone", user.getPhone());
-                return "redirect:/register";
-            }
-
-            String otp = generateOTP(6);
-            temporaryUsers.put(otp, user);
-
-            try {
-                sendOTPByEmail(user.getEmail(), otp);
-                // save otp into session
-                request.getSession().setAttribute("otp", otp);
-                user.setCreatedDate(LocalDate.now());
-                return "redirect:/register/verify";
-            } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("error", "Không gửi được OTP. Vui lòng thử lại.");
-                return "redirect:/register";
-            }
-        }
-
-        private String generateOTP(int length) {
-            Random random = new Random();
-            StringBuilder otp = new StringBuilder();
-
-            for (int i = 0; i < length; i++) {
-                otp.append(random.nextInt(10));
-            }
-            return otp.toString();
-        }
-
-        @GetMapping("/register/verify")
-        public String showVerifyOtpForm() {
-            return "verify-otp";
-        }
-
-        @PostMapping("/register/verify")
-        public String processVerifyOtp(HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
-            String otpFromSession = (String) session.getAttribute("otp");
-            if (otpFromSession != null && otpFromSession.equals(request.getParameter("otp"))) {
-                User user = temporaryUsers.get(otpFromSession);
-                userService.registerNewUser(user);
-                temporaryUsers.remove(otpFromSession);
-
-                session.setAttribute("verificationSuccessMessage", "Xác minh thành công !");
-                session.removeAttribute("otp");
-                return "redirect:/login";
-            } else {
-                redirectAttributes.addFlashAttribute("error", "OTP không hợp lệ. Vui lòng thử lại !");
-                return "redirect:/register/verify";
-            }
-        }
-
-        public void sendOTPByEmail(String email, String otp) throws MessagingException, UnsupportedEncodingException {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
-
-            helper.setFrom("wewe.support@gmail.com", "WeWe Support");
-            helper.setTo(email);
-
-            String subject = "OTP for Registration";
-
-            String content = "<p>Xin chào,</p>"
-                    + "<p>OTP của bạn để đăng ký là: <strong>" + otp + "</strong></p>"
-                    + "<p>Vui lòng sử dụng OTP này để hoàn tất đăng ký của bạn.</p>";
-
-            helper.setSubject(subject);
-            helper.setText(content, true);
-
-            mailSender.send(message);
+        if (hasError) {
+            redirectAttributes.addAttribute("fullName", user.getFullName());
+            redirectAttributes.addAttribute("password", user.getPassword());
+            redirectAttributes.addAttribute("codeName", user.getCodeName());
+            redirectAttributes.addAttribute("phone", user.getPhone());
+            return "redirect:/register";
         }
 
 
-        @GetMapping("/home")
-        public String home(Model model) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return "redirect:/login";
-            }
-            String email = authentication.getName();
-            User user = userService.findByEmail(email);
-            if (user == null) {
-                return "redirect:/login?error=true";
-            }
-            model.addAttribute("user", user);
-            return "home";
+        // Xử lý đăng ký người dùng (lưu thông tin người dùng vào cơ sở dữ liệu)
+        String otp = generateOTP(6); // Tạo OTP
+        temporaryUsers.put(otp, user); // Lưu OTP và người dùng vào bản đồ tạm thời
+
+        try {
+            sendOTPByEmail(user.getEmail(), otp); // Gửi OTP qua email
+            request.getSession().setAttribute("otp", otp); // Lưu OTP vào session
+            user.setCreatedDate(LocalDate.now()); // Đặt ngày tạo cho người dùng
+            return "redirect:/register/verify"; // Chuyển hướng đến trang xác minh OTP
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Không gửi được OTP. Vui lòng thử lại."); // Thêm thông báo lỗi gửi OTP vào redirectAttributes
+            return "redirect:/register"; // Chuyển hướng lại trang đăng ký
         }
+    }
+
+    private String generateOTP(int length) {
+        Random random = new Random(); // Tạo đối tượng Random
+        StringBuilder otp = new StringBuilder(); // Tạo StringBuilder để xây dựng OTP
+
+        for (int i = 0; i < length; i++) {
+            otp.append(random.nextInt(10)); // Thêm một chữ số ngẫu nhiên vào OTP
+        }
+        return otp.toString(); // Trả về OTP dưới dạng chuỗi
+    }
+
+    @GetMapping("/register/verify") // Xử lý yêu cầu GET tới /register/verify
+    public String showVerifyOtpForm() {
+        return "verify-otp"; // Trả về view verify-otp
+    }
+
+    @PostMapping("/register/verify") // Xử lý yêu cầu POST tới /register/verify
+    public String processVerifyOtp(HttpServletRequest request,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        String otpFromSession = (String) session.getAttribute("otp"); // Lấy OTP từ session
+        if (otpFromSession != null && otpFromSession.equals(request.getParameter("otp"))) { // Kiểm tra xem OTP có khớp không
+            User user = temporaryUsers.get(otpFromSession); // Lấy người dùng từ bản đồ tạm thời
+            userService.registerNewUser(user); // Đăng ký người dùng mới
+            temporaryUsers.remove(otpFromSession); // Xóa người dùng khỏi bản đồ tạm thời
+
+            session.setAttribute("verificationSuccessMessage", "Xác minh thành công!"); // Thêm thông báo thành công vào session
+            session.removeAttribute("otp"); // Xóa OTP khỏi session
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập
+        } else {
+            redirectAttributes.addFlashAttribute("error", "OTP không hợp lệ. Vui lòng thử lại!"); // Thêm thông báo lỗi OTP vào redirectAttributes
+            return "redirect:/register/verify"; // Chuyển hướng lại trang xác minh OTP
+        }
+    }
+
+    public void sendOTPByEmail(String email, String otp) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage(); // Tạo một đối tượng MimeMessage
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("G1@gmail.com", "G1 Support"); // Đặt địa chỉ email gửi và tên
+        helper.setTo(email); // Đặt địa chỉ email nhận
+
+        String subject = "OTP for Registration"; // Đặt tiêu đề email
+
+        String content = "<p>Xin chào,</p>"
+                + "<p>OTP của bạn để đăng ký là: <strong>" + otp + "</strong></p>"
+                + "<p>Vui lòng sử dụng OTP này để hoàn tất đăng ký của bạn.</p>";
+
+        helper.setSubject(subject); // Đặt tiêu đề email
+        helper.setText(content, true); // Đặt nội dung email
+
+        mailSender.send(message); // Gửi email
+    }
+
+    @GetMapping("/home") // Xử lý yêu cầu GET tới /home
+    public String home(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // Lấy thông tin xác thực hiện tại
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login"; // Nếu chưa xác thực, chuyển hướng đến trang đăng nhập
+        }
+        String email = authentication.getName(); // Lấy tên đăng nhập (email)
+        User user = userService.findByEmail(email); // Tìm người dùng theo email
+        if (user == null) {
+            return "redirect:/login?error=true"; // Nếu không tìm thấy người dùng, chuyển hướng đến trang đăng nhập với lỗi
+        }
+        model.addAttribute("user", user); // Thêm người dùng vào model
+        return "home"; // Trả về view home
     }
 }
