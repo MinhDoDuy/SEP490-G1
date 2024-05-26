@@ -32,7 +32,7 @@ public class ProfileController {
     }
 
     @PostMapping("/update-profile")
-    public String updateProfile(@ModelAttribute User user, Model model) {
+    public String updateProfile(@ModelAttribute User user) {
         userService.updateUser(user);
         return "redirect:/view-profile/" + user.getUserId();
     }

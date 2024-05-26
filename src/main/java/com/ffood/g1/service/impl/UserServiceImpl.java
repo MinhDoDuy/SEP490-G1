@@ -39,8 +39,7 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
         if (existingUser != null) {
             existingUser.setUserName(user.getUserName());
-            existingUser.setUserPhone(user.getUserPhone());
-            existingUser.setEmail(user.getEmail());
+            existingUser.setPhone(user.getPhone());
             userRepository.save(existingUser);
         }
     }
@@ -65,13 +64,7 @@ public class UserServiceImpl implements UserService {
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName())));
     }
 
-    public boolean checkEmailAndPassword(String email, String rawPassword) {
-        User user = findByEmail(email);
-        if (user == null) {
-            return false;
-        }
-        return passwordEncoder.matches(rawPassword, user.getPassword());
-    }
+
 
 
 

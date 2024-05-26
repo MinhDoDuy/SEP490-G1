@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -35,8 +36,11 @@ public class User implements UserDetails {
 	@Column(name = "email")
 	private String email;
 
-	@Column(name = "user_phone")
-	private String userPhone;
+	@Column(name = "phone")
+	private String phone;
+
+	@Column(name = "date_of_birth")
+	private LocalDate birthdate;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set

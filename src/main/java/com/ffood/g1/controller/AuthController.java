@@ -2,6 +2,7 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
 
-    private final UserService userService;
+    @Autowired
+    private  UserService userService;
 
     public AuthController(UserService userService) {
         this.userService = userService;
@@ -39,20 +41,6 @@ public class AuthController {
         } else {
             return "redirect:/login?error=true";
         }
-    }
-    @GetMapping("/home")
-    public String home(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            return "redirect:/login?error=true";
-        }
-        model.addAttribute("user", user);
-        return "home";
     }
 
 }
