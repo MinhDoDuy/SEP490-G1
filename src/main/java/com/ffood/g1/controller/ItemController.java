@@ -1,19 +1,16 @@
-package com.ffood.g1.controller.user;
+package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Item;
 import com.ffood.g1.repository.ItemRepository;
 import com.ffood.g1.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Controller
 public class ItemController {
