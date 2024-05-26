@@ -1,12 +1,18 @@
 package com.ffood.g1.entity;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
 
 @Entity
+@Data
+@Builder
+@AllArgsConstructor
 public class ResetToken {
 
     @Id
@@ -21,7 +27,8 @@ public class ResetToken {
 
     private LocalDateTime expiryDate;
 
-    public ResetToken() {}
+    public ResetToken() {
+    }
 
     public ResetToken(String token, User user) {
         this.token = token;
@@ -38,6 +45,7 @@ public class ResetToken {
     }
 
     public User getUser() {
+
         return user;
     }
 

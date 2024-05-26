@@ -27,19 +27,20 @@ public class User implements UserDetails {
 	@JoinColumn(name = "role_id")
 	private Role role;
 
-	@Column(name = "user_name")
-	private String userName;
+	@Column(name = "full_name")
+	private String fullName;
+
+	@Column(name = "code_name")
+	private String codeName;
 
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "email")
+	@Column(nullable = false, unique = true, length = 45)
 	private String email;
 
-	@Column(name = "user_phone")
-	private String userPhone;
-
-
+	@Column(name = "phone")
+	private String phone;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set
@@ -58,13 +59,19 @@ public class User implements UserDetails {
 		return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
 	}
 
+	@Column(name = "created_date")
+	private LocalDate createdDate;
+
+	@Column(name = "updated_date")
+	private LocalDate updatedDate;
+
 	@Override
 	public String getUsername() {
 		return email;  // Assuming email is used as username
 	}
 
 	public String getUserName() {
-		return userName;
+		return fullName;
 	}
 
 	public Integer getUserId() {
