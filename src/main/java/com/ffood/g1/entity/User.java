@@ -36,11 +36,10 @@ public class User implements UserDetails {
 	@Column(name = "email")
 	private String email;
 
-	@Column(name = "phone")
-	private String phone;
+	@Column(name = "user_phone")
+	private String userPhone;
 
-	@Column(name = "date_of_birth")
-	private LocalDate birthdate;
+
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set

@@ -16,7 +16,9 @@ public interface UserService extends UserDetailsService {
     void updatePassword(User user, String newPassword);
 
 
-
+    void sendResetPasswordEmail(String email);
+    boolean isResetTokenValid(String token);
+    void updatePasswordReset(String token, String password);
 
 
 }
