@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -46,25 +48,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
 
-                .antMatchers("/resources/**", "/templates/**",
-                        "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**", "/static/dashboard/**",
-                        "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**", "/dashboard/**").permitAll()
+                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/home").permitAll()
+                .antMatchers("/", "/login/**").permitAll()
 
-                //Homepage
-                .antMatchers("/").permitAll()
+                .antMatchers("/login", "/forgot-password", "/reset-password").permitAll()
 
-                //Common
-                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/now").permitAll()
-
-                // Multiple role access with url
-                // TODO: Need modify
+                // Profile
                 .antMatchers(
-                        "/dashboard/**",
-                        "/edit-staff-profile/**", "/edit-staff-profile",
-                        "/staff-change-password/**", "/staff-change-password").hasAnyRole("ADMIN", "MANAGER", "MARKETING", "SALE")
+                        "/staff-change-password/**", "/staff-change-password")
+                .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
 
-                //ADMIN
-                .antMatchers("/search-staff").hasRole("ADMIN")
+                .antMatchers("/view-profile/","/update-profile","/change-password/").permitAll()
+
+                // Admin
+                .antMatchers("/search-staff", "/dashboard/").hasRole("ADMIN")
 
                 .anyRequest().authenticated()
                 .and()
@@ -72,10 +69,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/home", true)
+                .failureUrl("/login?error")
                 .permitAll()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .permitAll();
+
     }
 }
