@@ -5,6 +5,7 @@ import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.UserService;
+import com.ffood.g1.utils.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,7 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendResetPasswordEmail(String email) {
+    public void sendResetPasswordEmail(String email, HttpServletRequest request) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new IllegalArgumentException("No user found with email: " + email);
@@ -71,7 +72,12 @@ public class UserServiceImpl implements UserService {
         ResetToken resetToken = new ResetToken(token, user);
         resetTokenRepository.save(resetToken);
 
-        String resetUrl = "http://localhost:8080/reset-password?token=" + token;
+//        String resetUrl = "http://localhost:8080/reset-password?token=" + token;
+        // Lấy URL cơ sở của ứng dụng từ HttpServletRequest
+        String baseUrl = UrlUtil.getBaseUrl(request);
+
+        // Tạo URL đặt lại mật khẩu
+        String resetUrl = baseUrl + "/reset-password?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);

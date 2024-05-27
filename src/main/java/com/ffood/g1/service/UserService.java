@@ -4,6 +4,8 @@ import com.ffood.g1.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 public interface UserService extends UserDetailsService {
     //get thông tin của 1 user thông qua mail
@@ -16,7 +18,10 @@ public interface UserService extends UserDetailsService {
     void updatePassword(User user, String newPassword);
 
 
-    void sendResetPasswordEmail(String email);
+
+
+    void sendResetPasswordEmail(String email, HttpServletRequest request);
+
     boolean isResetTokenValid(String token);
     void updatePasswordReset(String token, String password);
 
