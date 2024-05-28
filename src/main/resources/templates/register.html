@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
 <div class="container mt-5">
@@ -18,7 +19,8 @@
 
         <div class="form-group" th:classappend="${codeNameExistsError} ? ' has-error' : ''">
             <label for="codeName">Code Name<span style="color: rgb(234, 77, 77);"> *</span></label>
-            <input class="form-control" id="codeName" name="codeName" th:field="*{codeName}" th:value="${user.codeName}" required>
+            <input class="form-control" id="codeName" name="codeName" th:field="*{codeName}" th:value="${user.codeName}"
+                   required>
             <small class="form-text text-muted">Format: ví dụ minhddhe161286</small>
             <p class="help-block text-danger" id="codeNameError" style="display: none; font-size: small"></p>
             <p class="help-block text-danger" th:if="${codeNameExistsError != null}"
@@ -27,11 +29,13 @@
 
         <div class="form-group" th:classappend="${phoneExistsError} ? ' has-error' : ''">
             <label for="phone">Phone Number</label>
-            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" th:field="*{phone}" th:value="${user.phone}"
+            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number"
+                   th:field="*{phone}" th:value="${user.phone}"
                    pattern="^\+?[0-9\s\-]+$" required>
             <small class="form-text text-muted">Format: +85 1234567 </small>
             <p class="help-block text-danger" id="phoneExistsError" style="display: none; font-size: small"></p>
-            <p class="help-block text-danger" th:if="${phoneExistsError != null}" th:text="${phoneExistsError}" style="font-size: small"></p>
+            <p class="help-block text-danger" th:if="${phoneExistsError != null}" th:text="${phoneExistsError}"
+               style="font-size: small"></p>
         </div>
 
         <div class="form-group" th:classappend="${emailExistsError} ? ' has-error' : ''">
@@ -47,7 +51,11 @@
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password" th:value="${password}" required>
+            <input type="password" class="form-control" id="password" name="password" th:value="${password}"
+                   minlength="6" required>
+            <small class="form-text text-muted">Password must be at least 6 characters long</small>
+            <p class="help-block text-danger" id="passwordError" style="display: none; font-size: small">Password must
+                be at least 6 characters long.</p>
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
@@ -55,9 +63,10 @@
 
 <script>
     function validateForm() {
-        return validateCodeName() && validatePhone() && validateEmail();
+        return validateCodeName() && validatePhone() && validateEmail() && validatePassword();
     }
 
+    //validate codename
     function validateCodeName() {
         const codeNameInput = document.getElementById('codeName');
         const codeNameValue = codeNameInput.value;
@@ -74,6 +83,8 @@
         }
     }
 
+
+    //validate phone
     function validatePhone() {
         const phoneInput = document.getElementById('phone');
         const phoneValue = phoneInput.value;
@@ -90,6 +101,7 @@
         }
     }
 
+    //validate email
     function validateEmail() {
         const emailInput = document.getElementById('email');
         const emailValue = emailInput.value;
@@ -119,11 +131,43 @@
         return isValid;
     }
 
+    function validatePassword() {
+        const passwordInput = document.getElementById('password');
+        const passwordValue = passwordInput.value;
+        const passwordError = document.getElementById('passwordError');
+
+        if (passwordValue.length < 6) {
+            passwordError.style.display = 'block';
+            return false;
+        } else {
+            passwordError.style.display = 'none';
+            return true;
+        }
+    }
+
     function emailExists(email) {
         // Đây là một hàm giả để kiểm tra email đã tồn tại.
         // Bạn có thể thay thế nó bằng một cuộc gọi API thực tế.
         const existingEmails = ['test@example.com', 'hello@world.com'];
         return existingEmails.includes(email);
+    }
+
+    //validate password
+    var password = document.getElementById('password').value.trim();
+    var passwordEmptyError = document.getElementById('passwordEmptyError');
+    var passwordLengthError = document.getElementById('passwordLengthError');
+    if (password === '') {
+        passwordEmptyError.style.display = 'block';
+        passwordLengthError.style.display = 'none';
+        event.preventDefault();
+    } else {
+        passwordEmptyError.style.display = 'none';
+        if (password.length < 6) {
+            passwordLengthError.style.display = 'block';
+            event.preventDefault();
+        } else {
+            passwordLengthError.style.display = 'none';
+        }
     }
 
 </script>
