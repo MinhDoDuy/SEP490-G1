@@ -1,11 +1,16 @@
 package com.ffood.g1.service.impl;
 
+import com.ffood.g1.entity.ResetToken;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.repository.RoleRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.UserService;
+import com.ffood.g1.utils.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,6 +33,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ResetTokenRepository resetTokenRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
 
     @Override
@@ -41,6 +54,53 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isCodeNameExist(String codeName) {
         return userRepository.findByCodeName(codeName) != null;
+    }
+
+    @Override
+    public void sendResetPasswordEmail(String email, HttpServletRequest request) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("No user found with email: " + email);
+        }
+
+        String token = UUID.randomUUID().toString();
+        ResetToken resetToken = new ResetToken(token, user);
+        resetTokenRepository.save(resetToken);
+
+//        String resetUrl = "http://localhost:8080/reset-password?token=" + token;
+        // Lấy URL cơ sở của ứng dụng từ HttpServletRequest
+        String baseUrl = UrlUtil.getBaseUrl(request);
+
+        // Tạo URL đặt lại mật khẩu
+        String resetUrl = baseUrl + "/reset-password?token=" + token;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Password Reset Request");
+        message.setText("To reset your password, click the link below:\n" + resetUrl);
+
+        mailSender.send(message);
+    }
+
+    @Override
+    public boolean isResetTokenValid(String token) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        return resetToken != null && !resetToken.isExpired();
+    }
+
+    @Override
+    public void updatePasswordReset(String token, String password) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        if (resetToken == null || resetToken.isExpired()) {
+            throw new IllegalArgumentException("Invalid or expired token.");
+        }
+
+        User user = resetToken.getUser();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(password));
+        userRepository.save(user);
+
+        resetTokenRepository.delete(resetToken);
     }
 
     @Override

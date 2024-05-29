@@ -68,6 +68,47 @@ public class AuthController {
         return "redirect:/home"; // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
     }
 
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm() {
+        return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        try {
+            userService.sendResetPasswordEmail(email, request);
+            redirectAttributes.addFlashAttribute("successMessage", "Password reset email sent.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
+        }
+        return "redirect:/forgot-password";
+    }
+
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        if (!userService.isResetTokenValid(token)) {
+            model.addAttribute("errorMessage", "Invalid or expired reset token.");
+            return "reset-password";
+        }
+
+        model.addAttribute("token", token);
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(@RequestParam("token") String token,
+                                       @RequestParam("password") String password,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            userService.updatePasswordReset(token, password);
+            redirectAttributes.addFlashAttribute("successMessage", "Password reset successful.");
+            return "redirect:/login";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
+            return "redirect:/reset-password?token=" + token;
+        }
+    }
+
     @GetMapping("/register") // Xử lý yêu cầu GET tới /register
     public String showRegistrationForm(Model model,
                                        @RequestParam(required = false) String emailExistsError,
