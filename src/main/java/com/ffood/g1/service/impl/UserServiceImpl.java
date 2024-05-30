@@ -104,6 +104,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
     public boolean isPhoneExist(String phone) {
         return userRepository.findByPhone(phone) != null;
     }

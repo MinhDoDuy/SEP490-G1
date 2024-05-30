@@ -15,10 +15,10 @@ public interface UserService extends UserDetailsService {
 
     boolean isPhoneExist(String phone);
 
+    //edit profile user
     void updateUser(User user);
 
     boolean isEmailExist(String email);
-
 
     void registerNewUser(User user);
 
@@ -26,10 +26,13 @@ public interface UserService extends UserDetailsService {
 
     boolean isCodeNameExist(String codeName);
 
+    //forgot pass
     void sendResetPasswordEmail(String email, HttpServletRequest request);
-
     boolean isResetTokenValid(String token);
     void updatePasswordReset(String token, String password);
+
+    //change pass
+    void updatePassword(User user, String newPassword);
 
 
 //    boolean isPhoneValid(String );

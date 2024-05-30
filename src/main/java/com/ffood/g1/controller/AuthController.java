@@ -222,18 +222,4 @@ public class AuthController {
         mailSender.send(message); // Gửi email
     }
 
-    @GetMapping("/home") // Xử lý yêu cầu GET tới /home
-    public String home(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // Lấy thông tin xác thực hiện tại
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login"; // Nếu chưa xác thực, chuyển hướng đến trang đăng nhập
-        }
-        String email = authentication.getName(); // Lấy tên đăng nhập (email)
-        User user = userService.findByEmail(email); // Tìm người dùng theo email
-        if (user == null) {
-            return "redirect:/login?error=true"; // Nếu không tìm thấy người dùng, chuyển hướng đến trang đăng nhập với lỗi
-        }
-        model.addAttribute("user", user); // Thêm người dùng vào model
-        return "home"; // Trả về view home
-    }
 }

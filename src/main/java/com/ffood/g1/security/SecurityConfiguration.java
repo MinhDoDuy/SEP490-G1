@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/resources/**", "/templates/**", "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/static/dashboard/**","/dashboard/**","/register","/forgot-password").permitAll()
+                        "/static/dashboard/**","/dashboard/**","/register","/forgot-password","/reset-password","/view-profile/","/update-profile").permitAll()
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
 
@@ -53,8 +53,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/view-profile/","/update-profile",
                         "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
-
-//                .antMatchers("/view-profile/","/update-profile").permitAll()
 
                 // Admin
                 .antMatchers("/search-staff", "/dashboard/").hasRole("ADMIN")
