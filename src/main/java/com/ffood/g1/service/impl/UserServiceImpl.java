@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
 
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
         if (existingUser != null) {
-            existingUser.setUserName(user.getUserName());
-            existingUser.setUserPhone(user.getUserPhone());
+            existingUser.setFullName(user.getUserName());
+            existingUser.setPhone(user.getPhone());
             existingUser.setEmail(user.getEmail());
             userRepository.save(existingUser);
         }
@@ -60,10 +60,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void registerNewUser(UserDTO userDTO) {
         User user = new User();
-        user.setUserName(userDTO.getUserName());
+        user.setFullName(userDTO.getUserName());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
-        user.setUserPhone(userDTO.getPhone());
+        user.setPhone(userDTO.getPhone());
 
         Role role = roleRepository.findByName("CUSTOMER");
         if (role == null) {

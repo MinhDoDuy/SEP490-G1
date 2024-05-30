@@ -10,22 +10,23 @@
     <title>Cake | Template</title>
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
 
     <!-- Css Styles -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/flaticon.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/barfiller.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/magnific-popup.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/elegant-icons.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/nice-select.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/owl.carousel.min.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/slicknav.min.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
     <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
-
 </head>
 
 <body>
@@ -39,16 +40,16 @@
 <div class="offcanvas-menu-wrapper">
     <div class="offcanvas__cart">
         <div class="offcanvas__cart__links">
-            <a href="#" class="search-switch"><img src="/img/icon/search.png" alt=""></a>
+            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
             <a href="#"><img src="img/icon/heart.png" alt=""></a>
         </div>
         <div class="offcanvas__cart__item">
-            <a href="#"><img src="/img/icon/cart.png" alt=""> <span>0</span></a>
+            <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
             <div class="cart__price">Cart: <span>$0.00</span></div>
         </div>
     </div>
     <div class="offcanvas__logo">
-        <a href="./index.html"><img src="/img/logo.png" alt=""></a>
+        <a href="./index.html"><img src="img/logo.png" alt=""></a>
     </div>
     <div id="mobile-menu-wrap"></div>
     <div class="offcanvas__option">
@@ -71,80 +72,11 @@
 </div>
 <!-- Offcanvas Menu End -->
 
-<!-- Header Section Begin -->
-<header class="header">
-    <div class="header__top">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="header__top__inner">
-                        <div class="header__top__left">
-                            <ul>
-                                <li>USD <span class="arrow_carrot-down"></span>
-                                    <ul>
-                                        <li>EUR</li>
-                                        <li>USD</li>
-                                    </ul>
-                                </li>
-                                <li>ENG <span class="arrow_carrot-down"></span>
-                                    <ul>
-                                        <li>Spanish</li>
-                                        <li>ENG</li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Sign in</a> <span class="arrow_carrot-down"></span></li>
-                            </ul>
-                        </div>
-                        <div class="header__logo">
-                            <a href="./index.html"><img src="/img/logo.png" alt=""></a>
-                        </div>
-                        <div class="header__top__right">
-                            <div class="header__top__right__links">
-                                <a href="#" class="search-switch"><img src="/img/icon/search.png" alt=""></a>
-                                <a href="#"><img src="/img/icon/heart.png" alt=""></a>
-                            </div>
-                            <div class="header__top__right__cart">
-                                <a href="#"><img src="/img/icon/cart.png" alt=""> <span>0</span></a>
-                                <div class="cart__price">Cart: <span>$0.00</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <nav class="header__menu mobile-menu">
-                    <ul>
-                        <li class="active"><a href="./homepage">Home</a></li>
-                        <li><a href="./about.html">About</a></li>
-                        <li><a href="./items_in_all_shop">Shop</a></li>
-                        <li><a href="#">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href="./shop-details.html">Shop Details</a></li>
-                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                <li><a href="./checkout.html">Check Out</a></li>
-                                <li><a href="./wisslist.html">Wisslist</a></li>
-                                <li><a href="./Class.html">Class</a></li>
-                                <li><a href="./blog-details.html">Blog Details</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="./blog.html">Blog</a></li>
-                        <li><a href="./contact.html">Contact</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-</header>
-<!-- Header Section End -->
+<div th:replace="header :: header"></div>
 
 <!-- Hero Section Begin -->
 <section class="hero">
-    <div class="hero__slider owl-carousel">
+    <div class="hero__slider owl-carousel" >
         <div class="hero__item set-bg" data-setbg="img/hero/hero-1.jpg">
             <div class="container">
                 <div class="row d-flex justify-content-center">
@@ -173,168 +105,224 @@
 </section>
 <!-- Hero Section End -->
 
-<div class="container">
-    <div class="jumbotron mt-4">
-        <h1 class="display-4">Welcome to Our Shop!</h1>
-        <p class="lead">We offer the best products for the best prices.</p>
-        <hr class="my-4">
-        <p>Check out our latest collection and offers.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Shop Now</a>
-    </div>
 
-    <!--     Slider Start -->
-    <div id="storeCarousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            <div th:each="canteen, stat : ${canteens}" th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                <img th:src="${canteen.canteenImg}" class="d-block w-100" alt="Store Image">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 th:text="${canteen.canteenName}"></h5>
-                    <p th:text="${canteen.openingHours}"></p>
-                </div>
-            </div>
-        </div>
-        <a class="carousel-control-prev" href="#storeCarousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#storeCarousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
-    <!--     Slider End -->
-
-
-
-    <!-- Items Section Start -->
-    <div class="row mt-4">
-        <div th:each="item : ${items_home}" class="col-md-3 mb-4 d-flex align-items-stretch">
-            <div class="card">
-                <div class="position-relative">
-                    <img th:src="${item.imageUrl}" class="card-img-top" alt="Item Image">
-                    <div class="category-badge">
-                        <span>Category</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h5 class="item-name" th:text="${item.itemName}">Item Name</h5>
-                    <p class="card-text" th:text="${item.description}">Description</p>
-                    <p class="price" th:text="${item.price}">Price</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Items Section End -->
-
-
-    <!-- Map Begin -->
-    <div class="map">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-7">
-                    <div class="map__inner">
-                        <h6>My Location</h6>
-                        <ul>
-                            <li>Custom Address, Vietnam</li>
-                            <li>example@example.com</li>
-                            <li>+84 123 456 789</li>
-                        </ul>
+<!-- Categories Section Begin -->
+<div class="categories">
+    <div class="container">
+        <br><br><br><br><hr class="custom-hr">
+        <!-- List canteen -->
+        <div id="storeCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div th:each="canteen, stat : ${canteens}" th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                    <img th:src="${canteen.canteenImg}" class="d-block w-100" alt="Store Image">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 th:text="${canteen.canteenName}"></h5>
+                        <p th:text="${canteen.openingHours}"></p>
                     </div>
                 </div>
             </div>
+            <a class="carousel-control-prev" href="#storeCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#storeCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
-        <div class="map__iframe">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6838555764066!2d105.52300021533182!3d21.012499192592923!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab684cd8a1dd%3A0x1234abcd5678efgh!2sCustom%20Location!5e0!3m2!1sen!2sus!4v1625284891234" height="300" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-        </div>
-    </div>
-    <!-- Map End -->
+        <!-- End List canteen -->
+        <br><br><br> <hr class="custom-hr">
 
-    <!-- Footer Section Begin -->
-    <footer class="footer set-bg" style="width: 100%"   data-setbg="img/footer-bg.jpg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>WORKING HOURS</h6>
-                        <ul>
-                            <li>Monday - Friday: 08:00 am – 08:30 pm</li>
-                            <li>Saturday: 10:00 am – 16:30 pm</li>
-                            <li>Sunday: 10:00 am – 16:30 pm</li>
-                        </ul>
+
+
+        <div class="row">
+            <div class="categories__slider owl-carousel">
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <img src="/img/logo.png" alt="">
+                        <h5>Cupcake</h5>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-034-chocolate-roll"></span>
+                        <h5>Butter</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-005-pancake"></span>
+                        <h5>Red Velvet</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-030-cupcake-2"></span>
+                        <h5>Biscuit</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-006-macarons"></span>
+                        <h5>Donut</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-006-macarons"></span>
+                        <h5>Cupcake</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Categories Section End -->
+
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div th:each="item : ${items_home}" class="col-lg-3 col-md-6 col-sm-6">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg">
+                        <img th:src="${item.imageUrl}" class="product__item__pic set-bg">
+                        <div class="product__label">
+                            <span th:text="${item.category}">Cupcake</span>
                         </div>
-                        <p>Lorem ipsum dolor amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore dolore magna aliqua.</p>
-                        <div class="footer__social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-youtube-play"></i></a>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a th:href="@{#}" th:text="${item.itemName}">Item Name</a></h6>
+                        <div class="product__item__price" th:text="'$' + ${item.price}">Price</div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a th:href="@{#}" class="btn btn-outline-primary">Add to cart</a>
+                            <a class="btn btn-outline-secondary">Profile items</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="footer__newslatter">
-                        <h6>Subscribe</h6>
-                        <p>Get latest updates and offers.</p>
-                        <form action="#">
-                            <input type="text" placeholder="Email">
-                            <button type="submit"><i class="fa fa-send-o"></i></button>
-                        </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<!-- Product Section End -->
+
+<!-- Class Section Begin -->
+<section class="class spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="class__form">
+                    <div class="section-title">
+                        <span>Class cakes</span>
+                        <h2>Made from your <br />own hands</h2>
                     </div>
+                    <form action="#">
+                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Phone">
+                        <select>
+                            <option value="">Studying Class</option>
+                            <option value="">Writting Class</option>
+                            <option value="">Reading Class</option>
+                        </select>
+                        <input type="text" placeholder="Type your requirements">
+                        <button type="submit" class="site-btn">registration</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="copyright">
-            <div class="container">
+        <div class="class__video set-bg" data-setbg="img/class-video.jpg">
+            <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
+               class="play-btn video-popup"><i class="fa fa-play"></i></a>
+        </div>
+    </div>
+</section>
+<!-- Class Section End -->
+
+<!-- Instagram Section Begin -->
+<section class="instagram spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 p-0">
+                <div class="instagram__text">
+                    <div class="section-title">
+                        <span>Follow us on instagram</span>
+                        <h2>Sweet moments are saved as memories.</h2>
+                    </div>
+                    <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
+                </div>
+            </div>
+            <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-lg-7">
-                        <p class="copyright__text text-white"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-1.jpg" alt="">
+                        </div>
                     </div>
-                    <div class="col-lg-5">
-                        <div class="copyright__widget">
-                            <ul>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="#">Site Map</a></li>
-                            </ul>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic middle__pic">
+                            <img src="img/instagram/instagram-2.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-3.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-4.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic middle__pic">
+                            <img src="img/instagram/instagram-5.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-3.jpg" alt="">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
-    <!-- Footer Section End -->
-
-    <!-- Search Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
+    </div>
+</section>
+<!-- Instagram Section End -->
+<!-- Map Begin -->
+<div class="map">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-7">
+                <div class="map__inner">
+                    <h6>COlorado</h6>
+                    <ul>
+                        <li>1000 Lakepoint Dr, Frisco, CO 80443, USA</li>
+                        <li>Sweetcake@support.com</li>
+                        <li>+1 800-786-1000</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Search End -->
-
-    <!-- Js Plugins -->
-    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/jquery.nice-select.min.js}"></script>
-    <script th:src="@{/js/jquery.barfiller.js}"></script>
-    <script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
-    <script th:src="@{/js/jquery.slicknav.js}"></script>
-    <script th:src="@{/js/jquery.nicescroll.min.js}"></script>
-    <script th:src="@{/js/main.js}"></script>
-
+    <div class="map__iframe">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3722.4513164231116!2d105.5255445!3d21.0130509!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1623354989267" height="300" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+    </div>
+</div>
+<!-- Map End -->
+<!--Footer-->
+<div th:replace="footer :: footer"></div>
+<!-- Js Plugins -->
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.nice-select.min.js}"></script>
+<script th:src="@{/js/jquery.barfiller.js}"></script>
+<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/js/jquery.slicknav.js}"></script>
+<script th:src="@{/js/owl.carousel.min.js}"></script>
+<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
 </body>
 
 </html>

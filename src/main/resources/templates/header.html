@@ -1,0 +1,59 @@
+
+
+
+
+<!-- header.html -->
+
+<header class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li th:classappend="${#httpServletRequest.requestURI == '/homepage'} ? 'active'">
+                            <a href="./homepage">Home</a>
+                        </li>
+                        <li th:classappend="${#httpServletRequest.requestURI == '/about.html'} ? 'active'">
+                            <a href="./about.html">About</a>
+                        </li>
+                        <li th:classappend="${#httpServletRequest.requestURI == '/items_in_all_shop'} ? 'active'">
+                            <a href="./items_in_all_shop">Canteens</a>
+                        </li>
+                        <li th:classappend="${#httpServletRequest.requestURI.startsWith('/pages')} ? 'active'">
+                            <a href="#">Pages</a>
+                            <ul class="dropdown">
+                                <li th:classappend="${#httpServletRequest.requestURI == '/shop-details.html'} ? 'active'">
+                                    <a href="./shop-details.html">Shop Details</a>
+                                </li>
+                                <li th:classappend="${#httpServletRequest.requestURI == '/shoping-cart.html'} ? 'active'">
+                                    <a href="./shoping-cart.html">Shoping Cart</a>
+                                </li>
+                                <li th:classappend="${#httpServletRequest.requestURI == '/checkout.html'} ? 'active'">
+                                    <a href="./checkout.html">Check Out</a>
+                                </li>
+                                <li th:classappend="${#httpServletRequest.requestURI == '/wisslist.html'} ? 'active'">
+                                    <a href="./wisslist.html">Wisslist</a>
+                                </li>
+                                <li th:classappend="${#httpServletRequest.requestURI == '/class.html'} ? 'active'">
+                                    <a href="./class.html">Class</a>
+                                </li>
+                                <li th:classappend="${#httpServletRequest.requestURI == '/blog-details.html'} ? 'active'">
+                                    <a href="./blog-details.html">Blog Details</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li th:classappend="${#httpServletRequest.requestURI == '/blog.html'} ? 'active'">
+                            <a href="./blog.html">Blog</a>
+                        </li>
+                        <li th:classappend="${#httpServletRequest.requestURI == '/canteen_contact'} ? 'active'">
+                            <a href="./canteen_contact">Contact</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+

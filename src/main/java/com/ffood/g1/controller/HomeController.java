@@ -34,4 +34,15 @@ public class HomeController {
 
         return "/homepage";
     }
+    @GetMapping("/canteen_contact")
+    public String getCanteenContact(Model model) {
+        //get All canteens and display in homepage
+        List<Canteen> canteens = canteenService.getAllCanteens();
+        model.addAttribute("canteens", canteens);
+        return "/canteen_contact";
+    }
+
+
+
+
 }

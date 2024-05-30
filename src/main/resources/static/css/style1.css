@@ -293,3 +293,22 @@ body {
     color: #fff;
     text-decoration: none;
 }
+
+.divider {
+    border-bottom: 2px solid #ddd;
+    margin: 2rem 0;
+}
+.spacer {
+    margin: 2rem 0;
+}
+
+
+
+
+.custom-hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+    margin: 20px 0;
+}

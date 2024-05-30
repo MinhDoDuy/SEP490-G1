@@ -17,4 +17,7 @@ public class CanteenServiceImpl implements CanteenService {
     public List<Canteen> getAllCanteens() {
         return canteenRepository.findAll();
     }
+    public List<Canteen> getAllCanteenContact() {
+        return canteenRepository.findAll();
+    }
 }

@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 public class ItemController {
 
@@ -29,8 +31,17 @@ public class ItemController {
         model.addAttribute("items_home", items.getContent());
         model.addAttribute("totalPages", items.getTotalPages());
         model.addAttribute("currentPage", page);
-        return "canteens";
-
+        return "/canteens";
 
     }
+
+    @GetMapping("/food_details")
+    public String getFoodDetail( Model model) {
+        List<Item> food_details = itemService.getRandomItems();
+        model.addAttribute("food_details", food_details);
+        return "/food_details";
+
+    }
+
+
 }

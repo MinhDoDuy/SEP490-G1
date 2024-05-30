@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/", "/login/**").permitAll()
 
                 //Homepage
-                .antMatchers("/canteens","/homepage","/items_in_all_shop").permitAll()
+                .antMatchers("/canteens","/homepage","/items_in_all_shop","/canteen_contact").permitAll()
 
 
                 // Profile
