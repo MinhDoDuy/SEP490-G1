@@ -1,6 +1,9 @@
 package com.ffood.g1.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -22,6 +25,7 @@ public class Role {
 
     @OneToMany(mappedBy = "role")
     private Set<User> users;
+
 
     public enum RoleName {
         CUSTOMER,

@@ -1,26 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Croak Order</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+          crossorigin="anonymous"/>
+    <link th:href="@{/css/style_login.css}" rel="stylesheet">
 </head>
 <body>
-<form th:action="@{/login}" method="post">
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="username"/>
+<div class="container">
+    <div class="left">
+        <h1>Croak Order</h1>
+        <h2>by SEP490 - G1</h2>
+        <form th:action="@{/login}" method="post" >
+            <div th:if="${successMessage}" class="alert alert-success">
+                <span th:text="${successMessage}"></span>
+            </div>
+            <label for="email">Email<span style="color: rgb(234, 77, 77);"> *</span></label>
+            <input type="email" id="email" name="username" placeholder="*****@email.com" autofocus="autofocus"/>
+            <label for="password">Mật Khẩu<span style="color: rgb(234, 77, 77);"> *</span></label>
+            <input type="password" id="password" name="password" placeholder="Password" autofocus="autofocus">
+            <div>
+                <input type="checkbox" id="remember-me" name="remember-me">
+                <label for="remember-me">Remember me</label>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="login-btn">Đăng Nhập</button>
+                <a th:href="@{/register}" type="button" class="signup-btn">Đăng Kí</a>
+            </div>
+            <a th:href="@{/forgot-password}">Forgot Password?</a>
+        </form>
     </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"/>
+    <div class="right">
+        <img src="img/Canteen.jpg" alt="Description of the image">
     </div>
-    <div>
-        <button type="submit">Login</button>
-    </div>
-    <div th:if="${invalidCredentials}">
-        <p style="color: red;">Invalid email or password</p>
-    </div>
-</form>
-
-<a th:href="@{/forgot-password}">Forgot Password?</a>
+</div>
 </body>
 </html>

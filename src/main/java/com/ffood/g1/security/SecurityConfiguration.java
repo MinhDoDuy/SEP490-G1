@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -44,21 +42,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/resources/**", "/templates/**", "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/static/dashboard/**","/dashboard/**").permitAll()
+                        "/static/dashboard/**","/dashboard/**","/register","/forgot-password","/reset-password","/view-profile/","/update-profile").permitAll()
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
 
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/home").permitAll()
                 .antMatchers("/", "/login/**").permitAll()
 
-                .antMatchers("/login", "/forgot-password", "/reset-password").permitAll()
-
                 // Profile
-                .antMatchers(
+                .antMatchers("/view-profile/","/update-profile",
                         "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
-
-                .antMatchers("/view-profile/","/update-profile","/change-password/").permitAll()
 
                 // Admin
                 .antMatchers("/search-staff", "/dashboard/").hasRole("ADMIN")

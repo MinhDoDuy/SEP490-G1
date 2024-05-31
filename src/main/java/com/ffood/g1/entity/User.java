@@ -7,15 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-@Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Builder
 @Table(name = "users")
 public class User implements UserDetails {
 	@Id
@@ -102,4 +104,18 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"userId=" + userId +
+				", fullName='" + fullName + '\'' +
+				", phone='" + phone + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", createdDate=" + createdDate +
+				", updatedDate=" + updatedDate +
+				'}';
+	}
+
 }
