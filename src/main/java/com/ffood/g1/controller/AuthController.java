@@ -3,8 +3,13 @@ package com.ffood.g1.controller;
 import com.ffood.g1.dto.LoginForm;
 import com.ffood.g1.dto.UserDTO;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -36,11 +42,15 @@ public class AuthController {
     private final UserService userService; // Khai báo một biến dịch vụ người dùng, được khởi tạo qua constructor
     private Map<String, User> temporaryUsers = new HashMap<>(); // Khai báo một bản đồ tạm thời để lưu trữ người dùng và OTP
 
+
     @Autowired
-    private JavaMailSender mailSender; // Khai báo và tự động nối kết một đối tượng gửi email
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private ResetTokenRepository resetTokenRepository;
 
     public AuthController(UserService userService) {
-        this.userService = userService; // Khởi tạo userService thông qua constructor
+        this.userService = userService;
     }
 
     @GetMapping("/login") // Xử lý yêu cầu GET tới /login

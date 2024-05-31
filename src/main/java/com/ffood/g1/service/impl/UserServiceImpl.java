@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(user.getEmail());
         user.setPhone(user.getPhone());
 
-        Role role = roleRepository.findByName("CUSTOMER");
+        Role role = roleRepository.findByName("ROLE_CUSTOMER");
         if (role == null) {
             throw new IllegalArgumentException("Invalid role");
         } else {
