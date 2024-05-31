@@ -24,6 +24,8 @@ public class HomeController {
 
     @GetMapping("/homepage")
     public String getCanteens(Model model) {
+
+
         //get All canteens and display in homepage
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);

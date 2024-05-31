@@ -1,15 +1,13 @@
 
 
-
-
-<!-- header.html -->
-
 <header class="header">
+
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <nav class="header__menu mobile-menu">
                     <ul>
+
                         <li th:classappend="${#httpServletRequest.requestURI == '/homepage'} ? 'active'">
                             <a href="./homepage">Home</a>
                         </li>
@@ -54,6 +52,5 @@
         </div>
     </div>
 </header>
-
 
 
