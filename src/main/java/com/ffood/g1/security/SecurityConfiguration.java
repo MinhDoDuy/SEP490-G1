@@ -67,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
 
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/homepage","/items_in_all_shop").permitAll()
-                .antMatchers("/", "/login/**").permitAll()
+
 
                 // Profile
                 .antMatchers("/view-profile/","/update-profile",

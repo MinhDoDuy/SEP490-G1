@@ -1,16 +1,4 @@
-<header>
-    <div class="logo">
-        <img src="/img/logo.png" alt="Website Logo">
-        <span>Website Name</span>
-    </div>
-
-    <a th:href="@{/view-profile/{userId}(userId=${user.userId})}">View Profile</a>
-
-    <div class="auth-buttons">
-        <button class="login">Login</button>
-        <button class="register">Register</button>
-    </div>
-</header>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 <header class="header">
 
     <div class="container ">
@@ -57,11 +45,14 @@
                         <li th:classappend="${#httpServletRequest.requestURI == '/canteen_contact'} ? 'active'">
                             <a href="./canteen_contact">Contact</a>
                         </li>
+                        <li>
+                            <a th:href="@{/view-profile/{userId}(userId=${user.userId})}">View Profile</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 </header>
-
+</html>
 

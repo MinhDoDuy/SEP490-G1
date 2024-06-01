@@ -10,7 +10,7 @@
 
 <a th:href="@{/view-profile/{userId}(userId=${user.userId})}">View Profile</a>
 
-<div th:if="${user.role.roleName == 'ADMIN'}">
+<div th:if="${user.role.roleName == 'ROLE_ADMIN'}">
 
     <a th:href="@{/dashboard}">Go to Dashboard</a>
 
