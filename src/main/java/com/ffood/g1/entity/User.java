@@ -53,6 +53,9 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Orders> orders = Collections.emptySet(); // Initialize as empty set
 
+
+
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (role == null) {
