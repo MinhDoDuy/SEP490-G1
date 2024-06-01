@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface RoleRepository extends JpaRepository<Role, Integer> {
     @Query("SELECT r FROM Role r WHERE r.roleName = ?1")
     Role findByName(String name);
+
 }
+
+
+
