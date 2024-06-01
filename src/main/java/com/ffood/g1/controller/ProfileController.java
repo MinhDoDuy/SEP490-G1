@@ -19,6 +19,14 @@ public class ProfileController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+
+
+    @Autowired
+    public void PasswordController(UserService userService) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @GetMapping("/view-profile/{userId}")
     public String viewProfile(@PathVariable Integer userId, Model model) {
         User user = userService.loadUserById(userId);
@@ -56,6 +64,11 @@ public class ProfileController {
             return "change-password";
         }
 
+        if (newPassword.length() < 6) {
+            model.addAttribute("error", "New password must be at least 6 characters long");
+            return "change-password";
+        }
+
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "New passwords do not match");
             return "change-password";
@@ -65,8 +78,6 @@ public class ProfileController {
         userService.updatePassword(user, newPassword);
         model.addAttribute("message", "Password changed successfully");
 
-        // Chuyển hướng đến trang view-profile với userId
-//        return "redirect:/view-profile/" + user.getUserId();
         return "redirect:/login";
     }
 

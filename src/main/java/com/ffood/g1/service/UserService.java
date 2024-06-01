@@ -1,6 +1,5 @@
 package com.ffood.g1.service;
 
-import com.ffood.g1.dto.UserDTO;
 import com.ffood.g1.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 

@@ -5,43 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify OTP</title>
     <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
     <!-- Libraries Stylesheet -->
-    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/otp-input.css}"/>
 </head>
 <body>
-<!--loading screen-->
-<div id="loadingOverlay">
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden"></span>
+
+<div class="main-content-container">
+    <div class="text-container">
+        <div class="font-h2-strong">OTP Input</div>
     </div>
-</div>
-<div class="vh-100">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="card">
-                    <div class="card-body text-black">
-                        <h5 class="mb-4 pb-2 pb-md-0 mb-md-5">Xác nhận OTP</h5>
-                        <div th:if="${error}" class="alert alert-danger" role="alert">
-                            <p th:text="${error}"></p>
+
+    <div class="vh-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card">
+                        <div class="card-body text-black">
+                            <h5 class="mb-4 pb-2 pb-md-0 mb-md-5 custom-heading">Xác nhận OTP</h5>
+                            <form th:action="@{/register/verify}" method="post">
+                                <div th:if="${error}" class="alert alert-danger" role="alert">
+                                    <p th:text="${error}"></p>
+                                </div>
+                                <div th:if="${successMessage}" class="alert alert-success">
+                                    <span th:text="${successMessage}"></span>
+                                </div>
+
+                                <div id="otp-input" class="font-h2-strong">
+                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                           autocomplete="no" pattern="\d*"/>
+                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                           autocomplete="no" pattern="\d*"/>
+                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                           autocomplete="no" pattern="\d*"/>
+                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                           autocomplete="no" pattern="\d*"/>
+                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                           autocomplete="no" pattern="\d*"/>
+                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                           autocomplete="no" pattern="\d*"/>
+                                    <input id="otp-value" placeholder="_" type="hidden" name="otp"/>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn"
+                                            style="width: 100%; max-width: 220px; margin-top: 16px;" tabindex="4">Gửi
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <div th:if="${successMessage}" class="alert alert-success" role="alert">
-                            <p th:text="${successMessage}"></p>
-                            <span><a style="color: #ba6a62" th:href="@{/login}">Đăng nhập ngay!</a></span>
-                        </div>
-                        <form method="post" th:action="@{/register/verify}">
-                            <div class="form-group">
-                                <label for="otp">Nhập OTP:</label>
-                                <input type="text" class="form-control custom-input-color" id="otp" th:name="otp" name="otp" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block border-0 py-3 custom-btn-color"
-                                    style="width: 100%" tabindex="4">Gửi
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -49,6 +63,7 @@
     </div>
 </div>
 <script th:src="@{/js/toast.js}"></script>
+<script th:src="@{/js/otp-input.js}"></script>
 <script type="text/javascript" th:inline="javascript">
     var message1 = [[${message}]];
     var messageError = [[${messageError}]];

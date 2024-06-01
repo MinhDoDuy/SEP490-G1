@@ -16,8 +16,6 @@ public class G1Application {
 //				String encodedPassword = encoder.encode(rawPassword);
 //				System.out.println(encodedPassword);
 
-
-
 		SpringApplication.run(G1Application.class, args);
 	}
 

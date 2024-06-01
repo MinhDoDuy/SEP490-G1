@@ -42,6 +42,14 @@ h2 {
     font-size: 1em;
     font-weight: normal;
 }
+
+h3 {
+    margin: 10px 0 30px;
+    color: #fff;
+    font-size: 1em;
+    font-weight: normal;
+}
+
 input[type="email"], input[type="password"] {
     width: 100%;
     padding: 10px;

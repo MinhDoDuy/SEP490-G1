@@ -1,22 +1,16 @@
 package com.ffood.g1.controller;
 
 import com.ffood.g1.dto.LoginForm;
-import com.ffood.g1.dto.UserDTO;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -139,9 +132,15 @@ public class AuthController {
     public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         boolean hasError = false;
+        String codeNamePattern = "^[a-zA-Z0-9]{6,20}$";
 
         if (userService.isEmailExist(user.getEmail())) {
             redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
+            hasError = true;
+        }
+
+        if (!user.getCodeName().matches(codeNamePattern)) {
+            redirectAttributes.addAttribute("codeNameExistsError", "Invalid code name. Please enter letters and numbers between 6-20 characters.");
             hasError = true;
         }
 
@@ -203,7 +202,6 @@ public class AuthController {
             User user = temporaryUsers.get(otpFromSession); // Lấy người dùng từ bản đồ tạm thời
             userService.registerNewUser(user); // Đăng ký người dùng mới
             temporaryUsers.remove(otpFromSession); // Xóa người dùng khỏi bản đồ tạm thời
-
             session.setAttribute("verificationSuccessMessage", "Xác minh thành công!"); // Thêm thông báo thành công vào session
             session.removeAttribute("otp"); // Xóa OTP khỏi session
             return "redirect:/login"; // Chuyển hướng đến trang đăng nhập
