@@ -102,6 +102,11 @@ public class AuthController {
     public String processResetPassword(@RequestParam("token") String token,
                                        @RequestParam("password") String password,
                                        RedirectAttributes redirectAttributes) {
+        if (password.length() < 6) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Password must be at least 6 characters long.");
+            return "redirect:/reset-password?token=" + token;
+        }
+
         try {
             userService.updatePasswordReset(token, password);
             redirectAttributes.addFlashAttribute("successMessage", "Password reset successful.");
@@ -111,6 +116,8 @@ public class AuthController {
             return "redirect:/reset-password?token=" + token;
         }
     }
+
+
 
     @GetMapping("/register") // Xử lý yêu cầu GET tới /register
     public String showRegistrationForm(Model model,
