@@ -21,8 +21,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private StringToLocalDateConverter stringToLocalDateConverter;
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -82,8 +81,5 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                 .permitAll();
     }
 
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(stringToLocalDateConverter);
-    }
+
 }
