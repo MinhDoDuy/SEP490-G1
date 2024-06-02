@@ -6,6 +6,9 @@
             <div class="col-lg-12">
                 <nav class="header__menu mobile-menu">
                     <ul>
+                        <li>
+                            <a th:href="@{/logout}">Logout</a>
+                        </li>
 
                         <li th:classappend="${#httpServletRequest.requestURI == '/homepage'} ? 'active'">
                             <a href="./homepage">Home</a>

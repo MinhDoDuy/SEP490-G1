@@ -62,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/view-profile/","/update-profile").permitAll()
 
 
-                .antMatchers( "/static/dashboard/**","/dashboard/**","/register","/forgot-password","/reset-password","/view-profile/","/update-profile").permitAll()
+                .antMatchers( "/static/dashboard/**","/dashboard/**","/register","/forgot-password","/reset-password","/view-profile/","/update-profile","/change-password").permitAll()
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
 
