@@ -51,12 +51,29 @@ h3 {
 }
 
 input[type="email"], input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid #e6e6e6;    /* Thiết lập viền của trường nhập liệu với độ dày 1px và màu xám nhạt (#e6e6e6) */
+    display: block;               /* Hiển thị trường nhập liệu dưới dạng khối, khiến mỗi trường chiếm toàn bộ chiều ngang của phần tử chứa */
+    width: 400px;                 /* Đặt chiều rộng của trường nhập liệu là 400px */
+    height: 50px;                 /* Đặt chiều cao của trường nhập liệu là 50px */
+    padding: 0 30px;              /* Thiết lập khoảng đệm bên trong trường nhập liệu: 0px cho trên và dưới, 30px cho trái và phải */
+    color: #999;                  /* Đặt màu chữ bên trong trường nhập liệu là màu xám (#999) */
+    font-size: 15px;              /* Đặt kích thước chữ bên trong trường nhập liệu là 15px */
+    border-radius: 5px;           /* Thiết lập góc bo tròn của viền trường nhập liệu với bán kính 5px */
 }
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.forgot-password {
+    color: #007bff;
+    text-decoration: none;
+    margin-left: auto;
+}
+
 input[type="checkbox"] {
     margin: 20px 0;
 }

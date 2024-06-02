@@ -14,43 +14,42 @@
 </head>
 <body>
 
-<div class="main-content-container">
+<div class="main-content-container" style="background-image: url('/img/food-background-otp.jpg');">
     <div class="text-container">
         <div class="font-h2-strong">OTP Input</div>
     </div>
-
     <div class="vh-100">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-lg-4 col-xl-3">
                     <div class="card">
                         <div class="card-body text-black">
-                            <h5 class="mb-4 pb-2 pb-md-0 mb-md-5 custom-heading">Xác nhận OTP</h5>
+                            <h5 class="large-heading">Xác nhận OTP</h5>
                             <form th:action="@{/register/verify}" method="post">
-                                <div th:if="${error}" class="alert alert-danger" role="alert">
+                                <div th:if="${error}" class="alert-danger" role="alert">
                                     <p th:text="${error}"></p>
                                 </div>
                                 <div th:if="${successMessage}" class="alert alert-success">
                                     <span th:text="${successMessage}"></span>
                                 </div>
 
-                                <div id="otp-input" class="font-h2-strong">
-                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                <div id="otp-input" class="font-h3-strong">
+                                    <input class="font-h3-strong" placeholder="_" type="number" step="1" min="0" max="9"
                                            autocomplete="no" pattern="\d*"/>
-                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                    <input class="font-h3-strong" placeholder="_" type="number" step="1" min="0" max="9"
                                            autocomplete="no" pattern="\d*"/>
-                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                    <input class="font-h3-strong" placeholder="_" type="number" step="1" min="0" max="9"
                                            autocomplete="no" pattern="\d*"/>
-                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                    <input class="font-h3-strong" placeholder="_" type="number" step="1" min="0" max="9"
                                            autocomplete="no" pattern="\d*"/>
-                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                    <input class="font-h3-strong" placeholder="_" type="number" step="1" min="0" max="9"
                                            autocomplete="no" pattern="\d*"/>
-                                    <input class="font-h2-strong" placeholder="_" type="number" step="1" min="0" max="9"
+                                    <input class="font-h3-strong" placeholder="_" type="number" step="1" min="0" max="9"
                                            autocomplete="no" pattern="\d*"/>
                                     <input id="otp-value" placeholder="_" type="hidden" name="otp"/>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn"
+                                    <button type="submit" class="button"
                                             style="width: 100%; max-width: 220px; margin-top: 16px;" tabindex="4">Gửi
                                     </button>
                                 </div>

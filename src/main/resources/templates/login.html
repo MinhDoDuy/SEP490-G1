@@ -28,15 +28,18 @@
             <input type="email" id="email" name="username" placeholder="*****@email.com" autofocus="autofocus"/>
             <label for="password">Mật Khẩu<span style="color: rgb(234, 77, 77);"> *</span></label>
             <input type="password" id="password" name="password" placeholder="Password" autofocus="autofocus">
-            <div>
-                <input type="checkbox" id="remember-me" name="remember-me">
-                <label for="remember-me">Remember me</label>
+            <div class="remember-forgot">
+                <div>
+                    <input type="checkbox" id="remember-me" name="remember-me">
+                    <label for="remember-me">Remember me</label>
+                </div>
+                <a class="forgot-password" th:href="@{/forgot-password}">Forgot Password?</a>
             </div>
             <div class="buttons">
                 <button type="submit" class="login-btn">Đăng Nhập</button>
                 <a th:href="@{/register}" type="button" class="signup-btn">Đăng Kí</a>
             </div>
-            <a th:href="@{/forgot-password}">Forgot Password?</a>
+
         </form>
     </div>
     <div class="right">

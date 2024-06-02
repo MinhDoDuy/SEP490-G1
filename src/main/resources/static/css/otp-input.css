@@ -1,27 +1,53 @@
-body,
-
-html {
+body, html {
     height: 100%;
     width: 100%;
-    background-color: #faf9f6;
+    /*background-color: #faf9f6;*/
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.background-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
+}
+
 .font-h2-strong {
-    color: #141414;
+    color: #e2e8f0;
     font-weight: 400;
-    font-size: 24px;
-    line-height: 31.68px;
+    font-size: 50px;
+    line-height: 36px;
     font-family: "Lexend", sans-serif;
 }
 
+.font-h3-strong {
+    font-size: 35px;
+}
+
+.large-heading {
+    font-size: 20px; /* Thay đổi kích thước theo ý bạn */
+    font-weight: bold; /* Nếu bạn muốn làm đậm chữ */
+}
+
+.alert-danger{
+    color: crimson;
+    font-size: 20px;
+}
+
 .main-content-container {
+    height: 95vh;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: 50px;
+    row-gap: 100px;
+    justify-content: center
 }
 
 .text-container {
