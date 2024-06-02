@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -24,15 +25,18 @@ public class ProfileController {
         User user = userService.loadUserById(userId);
         if (user != null) {
             model.addAttribute("user", user);
-            return "profile";
+            return "profile"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "User not found");
-            return "error";
+            return "error"; // Error page template
         }
     }
 
     @PostMapping("/update-profile")
-    public String updateProfile(@ModelAttribute User user) {
+    public String updateProfile(@ModelAttribute User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "profile"; // Return to profile page if there are validation errors
+        }
         userService.updateUser(user);
         return "redirect:/view-profile/" + user.getUserId();
     }
@@ -53,7 +57,12 @@ public class ProfileController {
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("error", "Current password is incorrect");
-            return "redirect:/view-profile/" + user.getUserId();
+            return "redirect:/view-profile/" + user.getUserId() ;
+        }
+
+        if (passwordEncoder.matches(oldPassword, user.getPassword()) == passwordEncoder.matches(newPassword, user.getPassword())) {
+            model.addAttribute("error", "Current password and new password can't the same");
+            return "redirect:/view-profile/" + user.getUserId() ;
         }
 
         if (!newPassword.equals(confirmPassword)) {
@@ -65,8 +74,7 @@ public class ProfileController {
         userService.updatePassword(user, newPassword);
         model.addAttribute("message", "Password changed successfully");
 
-        // Chuyển hướng đến trang view-profile với userId
-//        return "redirect:/view-profile/" + user.getUserId();
+
         return "redirect:/login";
     }
 
