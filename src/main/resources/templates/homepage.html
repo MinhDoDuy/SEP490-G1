@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Cake Template">
+    <meta name="keywords" content="Cake, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cake | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+    <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+
+<div th:replace="header :: header"></div>
+
+<!-- Hero Section Begin -->
+<section class="hero">
+    <div class="hero__slider owl-carousel" >
+        <div class="hero__item set-bg" data-setbg="img/hero/hero-1.jpg">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="hero__text">
+                            <h2>Making your life sweeter one bite at a time!</h2>
+                            <a href="#" class="primary-btn">Our cakes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero__item set-bg" data-setbg="img/hero/hero-1.jpg">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="hero__text">
+                            <h2>Making your life sweeter one bite at a time!</h2>
+                            <a href="#" class="primary-btn">Our cakes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+
+
+<!-- Categories Section Begin -->
+<div class="categories">
+    <div class="container">
+        <br><br><br><br><hr class="custom-hr">
+        <!-- List canteen -->
+        <div id="storeCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div th:each="canteen, stat : ${canteens}" th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                    <img th:src="${canteen.canteenImg}" class="d-block w-100" alt="Store Image">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 th:text="${canteen.canteenName}"></h5>
+                        <p th:text="${canteen.openingHours}"></p>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#storeCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#storeCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <!-- End List canteen -->
+        <br><br><br> <hr class="custom-hr">
+
+
+
+        <div class="row">
+            <div class="categories__slider owl-carousel">
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <img src="/img/logo.png" alt="">
+                        <h5>Cupcake</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-034-chocolate-roll"></span>
+                        <h5>Butter</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-005-pancake"></span>
+                        <h5>Red Velvet</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-030-cupcake-2"></span>
+                        <h5>Biscuit</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-006-macarons"></span>
+                        <h5>Donut</h5>
+                    </div>
+                </div>
+                <div class="categories__item">
+                    <div class="categories__item__icon">
+                        <span class="flaticon-006-macarons"></span>
+                        <h5>Cupcake</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Categories Section End -->
+
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div th:each="item : ${items_home}" class="col-lg-3 col-md-6 col-sm-6">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg">
+                        <img th:src="${item.imageUrl}" class="product__item__pic set-bg">
+                        <div class="product__label">
+                            <span th:text="${item.category}">Cupcake</span>
+                        </div>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a th:href="@{#}" th:text="${item.itemName}">Item Name</a></h6>
+                        <div class="product__item__price" th:text="'$' + ${item.price}">Price</div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a th:href="@{#}" class="btn btn-outline-primary">Add to cart</a>
+                            <a class="btn btn-outline-secondary">Profile items</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<!-- Product Section End -->
+
+<!-- Class Section Begin -->
+<section class="class spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="class__form">
+                    <div class="section-title">
+                        <span>Class cakes</span>
+                        <h2>Made from your <br />own hands</h2>
+                    </div>
+                    <form action="#">
+                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Phone">
+                        <select>
+                            <option value="">Studying Class</option>
+                            <option value="">Writting Class</option>
+                            <option value="">Reading Class</option>
+                        </select>
+                        <input type="text" placeholder="Type your requirements">
+                        <button type="submit" class="site-btn">registration</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="class__video set-bg" data-setbg="img/class-video.jpg">
+            <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
+               class="play-btn video-popup"><i class="fa fa-play"></i></a>
+        </div>
+    </div>
+</section>
+<!-- Class Section End -->
+
+<!-- Instagram Section Begin -->
+<section class="instagram spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 p-0">
+                <div class="instagram__text">
+                    <div class="section-title">
+                        <span>Follow us on instagram</span>
+                        <h2>Sweet moments are saved as memories.</h2>
+                    </div>
+                    <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-1.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic middle__pic">
+                            <img src="img/instagram/instagram-2.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-3.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-4.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic middle__pic">
+                            <img src="img/instagram/instagram-5.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="instagram__pic">
+                            <img src="img/instagram/instagram-3.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Instagram Section End -->
+<!-- Map Begin -->
+<div class="map">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-7">
+                <div class="map__inner">
+                    <h6>COlorado</h6>
+                    <ul>
+                        <li>1000 Lakepoint Dr, Frisco, CO 80443, USA</li>
+                        <li>Sweetcake@support.com</li>
+                        <li>+1 800-786-1000</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="map__iframe">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3722.4513164231116!2d105.5255445!3d21.0130509!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1623354989267" height="300" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+    </div>
+</div>
+<!-- Map End -->
+<!--Footer-->
+<div th:replace="footer :: footer"></div>
+<!-- Js Plugins -->
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.nice-select.min.js}"></script>
+<script th:src="@{/js/jquery.barfiller.js}"></script>
+<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/js/jquery.slicknav.js}"></script>
+<script th:src="@{/js/owl.carousel.min.js}"></script>
+<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

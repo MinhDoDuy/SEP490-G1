@@ -61,7 +61,7 @@ public class ProfileController {
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("error", "Current password is incorrect");
-            return "change-password";
+            return "redirect:/view-profile/" + user.getUserId();
         }
 
         if (newPassword.length() < 6) {
@@ -71,7 +71,7 @@ public class ProfileController {
 
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "New passwords do not match");
-            return "change-password";
+            return "redirect:/view-profile/" + user.getUserId();
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));

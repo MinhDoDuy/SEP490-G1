@@ -42,12 +42,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/resources/**", "/templates/**", "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/static/dashboard/**","/dashboard/**","/register","/forgot-password","/reset-password","/view-profile/","/update-profile").permitAll()
+
+                        "/static/dashboard/**","/dashboard/**","/register").permitAll()
                 // Swagger config
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
 
-                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/home").permitAll()
-                .antMatchers("/", "/login/**").permitAll()
+                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
+                //.antMatchers("/", "/login/**").permitAll()
+
+                //Homepage
+                .antMatchers("/canteens","/homepage","/items_in_all_shop","/canteen_contact").permitAll()
+
+
+                // Profile
+                .antMatchers("/view-profile/","/update-profile",
+                        "/staff-change-password/**", "/staff-change-password")
+                .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
+
+//                .antMatchers("/view-profile/","/update-profile").permitAll()
+
+
+                .antMatchers( "/static/dashboard/**","/dashboard/**","/register","/forgot-password","/reset-password","/view-profile/","/update-profile","/change-password").permitAll()
+                // Swagger config
+                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+
+                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password", "/homepage","/items_in_all_shop").permitAll()
+
 
                 // Profile
                 .antMatchers("/view-profile/","/update-profile",
@@ -62,7 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/home", true)
+                .defaultSuccessUrl("/homepage", true)
                 .failureUrl("/login?error")
                 .permitAll()
                 .and()

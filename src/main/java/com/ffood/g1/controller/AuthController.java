@@ -52,7 +52,7 @@ public class AuthController {
                             Model model,
                             HttpSession session) {
         if (authentication != null && authentication.isAuthenticated()) {
-            return "redirect:/home"; // Nếu người dùng đã xác thực, chuyển hướng đến /home
+            return "redirect:/homepage"; // Nếu người dùng đã xác thực, chuyển hướng đến /home
         } else {
             if (session.getAttribute("verificationSuccessMessage") != null) {
                 model.addAttribute("successMessage", session.getAttribute("verificationSuccessMessage")); // Thêm thông báo thành công vào model
@@ -68,7 +68,7 @@ public class AuthController {
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); // Tạo một đối tượng xác thực
         SecurityContextHolder.getContext().setAuthentication(authentication); // Thiết lập xác thực trong ngữ cảnh bảo mật hiện tại
-        return "redirect:/home"; // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
+        return "redirect:/homepage"; // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
     }
 
     @GetMapping("/forgot-password")
