@@ -57,17 +57,17 @@ public class ProfileController {
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("error", "Current password is incorrect");
-            return "redirect:/view-profile/" + user.getUserId() ;
+            return "change-password"  ;
         }
 
         if (passwordEncoder.matches(oldPassword, user.getPassword()) == passwordEncoder.matches(newPassword, user.getPassword())) {
             model.addAttribute("error", "Current password and new password can't the same");
-            return "redirect:/view-profile/" + user.getUserId() ;
+            return "change-password" ;
         }
 
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "New passwords do not match");
-            return "redirect:/view-profile/" + user.getUserId();
+            return "change-password";
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -75,9 +75,6 @@ public class ProfileController {
         model.addAttribute("message", "Password changed successfully");
 
 
-        return "redirect:/login";
+        return "redirect:/logout";
     }
-
-
-
 }
