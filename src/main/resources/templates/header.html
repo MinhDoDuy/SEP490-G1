@@ -67,11 +67,10 @@
 
                                 <li th:if="${user == null}">
                                     <a th:href="@{/login}">Đăng nhập</a>
-                                </li>
                                 <li th:if="${user != null}">
                                     <a th:href="@{/view-profile/{userId}(userId=${user.userId})}">Xem hồ sơ</a>
                                 </li>
-                                <li th:if="${user.role.roleName == 'ROLE_ADMIN'}">
+                                <li th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_ADMIN'}">
                                     <a th:href="@{/manager-user}">Manage User</a>
                                 </li>
                                 <li th:if="${user != null}">
