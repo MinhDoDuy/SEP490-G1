@@ -3,12 +3,16 @@ package com.ffood.g1.service.impl;
 import com.ffood.g1.entity.ResetToken;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.repository.CanteenRepository;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.repository.RoleRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.UserService;
 import com.ffood.g1.utils.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private CanteenRepository canteenRepository;
 
 
     @Override
@@ -108,6 +115,19 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    @Override
+    public Page<User> getAllUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<User> searchUsers(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
+    }
+
 
     @Override
     public boolean isPhoneExist(String phone) {
