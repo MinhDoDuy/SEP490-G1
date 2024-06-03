@@ -42,4 +42,7 @@ public interface UserService extends UserDetailsService {
     //search user
     Page<User> searchUsers(String keyword, int page, int size);
 
+    User getUserById(Integer userId);
+
+    void updateUserRole(Integer userId, Integer roleId);
 }

@@ -136,7 +136,7 @@
                         <td>Email</td>
                         <td>Phone</td>
                         <td>Role</td>
-<!--                        <td>Action</td>-->
+                        <td>Action</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -147,12 +147,7 @@
                         <td th:text="${user.email}">Email</td>
                         <td th:text="${user.phone}">Phone</td>
                         <td th:text="${user.role.roleName}">Role</td>
-<!--                        <td>-->
-<!--                            <a th:href="@{/delete-user/{userId}(userId=${user.userId})}"-->
-<!--                               onclick="return confirm('Are you sure you want to delete this user?');">-->
-<!--                                Delete-->
-<!--                            </a>-->
-<!--                        </td>-->
+                        <td><a th:href="@{/edit-role/{userId}(userId=${user.userId})}">Edit Role</a></td>
                     </tr>
 
                     </tbody>

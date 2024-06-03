@@ -52,7 +52,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 //.antMatchers("/", "/login/**").permitAll()
                 //Homepage
-                .antMatchers("/canteens","/homepage","/items_in_all_shop","/canteen_contact").permitAll()
+                .antMatchers("/canteens","/homepage","/items_in_all_shop","/canteen_contact","/edit-role").permitAll()
                 // Profile
                 .antMatchers("/view-profile/","/update-profile",
                         "/staff-change-password/**", "/staff-change-password")
@@ -66,7 +66,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 // Admin
-                .antMatchers("/search-staff", "/dashboard/","/manage-user","/manage-user/**","/delete-user","/delete-user/**").hasRole("ADMIN")
+                .antMatchers("/search-staff", "/dashboard/","/manage-user","/manage-user/**","/delete-user","/delete-user/**","/edit-role","/edit-role/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

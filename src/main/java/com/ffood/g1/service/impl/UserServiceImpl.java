@@ -9,6 +9,7 @@ import com.ffood.g1.repository.RoleRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.UserService;
 import com.ffood.g1.utils.UrlUtil;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -126,6 +127,20 @@ public class UserServiceImpl implements UserService {
     public Page<User> searchUsers(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
+    }
+
+    @Override
+    public User getUserById(Integer userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+    @Override
+    public void updateUserRole(Integer userId, Integer roleId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Role role = roleRepository.findById(roleId).orElse(null);
+        if (user != null && role != null) {
+            user.setRole(role);
+            userRepository.save(user);
+        }
     }
 
 
