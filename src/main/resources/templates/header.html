@@ -1,15 +1,25 @@
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
-<header class="header">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodingDung | Profile Template</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 
+<div class="container">
+    <h3>Chợ Cóc</h3>
+
+</div>
+
+<header class="header">
     <div class="container ">
         <div class="row">
             <div class="col-lg-12">
                 <nav class="header__menu mobile-menu">
-                    <ul>
-                        <li>
-                            <a th:href="@{/logout}">Logout</a>
-                        </li>
 
+                    <ul>
                         <li th:classappend="${#httpServletRequest.requestURI == '/homepage'} ? 'active'">
                             <a href="./homepage">Home</a>
                         </li>
@@ -40,16 +50,34 @@
                                 <li th:classappend="${#httpServletRequest.requestURI == '/blog-details.html'} ? 'active'">
                                     <a href="./blog-details.html">Blog Details</a>
                                 </li>
+
                             </ul>
                         </li>
+
                         <li th:classappend="${#httpServletRequest.requestURI == '/blog.html'} ? 'active'">
                             <a href="./blog.html">Blog</a>
                         </li>
                         <li th:classappend="${#httpServletRequest.requestURI == '/canteen_contact'} ? 'active'">
                             <a href="./canteen_contact">Contact</a>
                         </li>
+
                         <li>
-                            <a th:href="@{/view-profile/{userId}(userId=${user.userId})}">View Profile</a>
+                            <a href="#">Người dùng</a>
+                            <ul class="dropdown">
+
+                                <li th:if="${user == null}">
+                                    <a th:href="@{/login}">Đăng nhập</a>
+                                </li>
+                                <li th:if="${user != null}">
+                                    <a th:href="@{/view-profile/{userId}(userId=${user.userId})}">Xem hồ sơ</a>
+                                </li>
+                                <li th:if="${user != null}">
+                                    <a th:href="@{/settings}">Cài đặt</a>
+                                </li>
+                                <li th:if="${user != null}">
+                                    <a th:href="@{/logout}">Đăng xuất</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -57,5 +85,10 @@
         </div>
     </div>
 </header>
-</html>
 
+<!-- Include jQuery, Popper.js, and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
