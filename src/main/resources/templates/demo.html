@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Header</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .logo h1 {
+            margin: 0;
+        }
+
+        nav {
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons button {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #login-btn, #signup-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #logout-btn {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <h1>MyWebsite</h1>
+    </div>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="auth-buttons">
+        <button id="login-btn">Login</button>
+        <button id="signup-btn">Sign Up</button>
+        <button id="logout-btn" style="display: none;">Logout</button>
+    </div>
+</header>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        const isAuthenticated = false; // Change this value based on authentication status
+
+        const updateAuthButtons = () => {
+            if (isAuthenticated) {
+                loginBtn.style.display = 'none';
+                signupBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+            } else {
+                loginBtn.style.display = 'block';
+                signupBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+            }
+        };
+
+        loginBtn.addEventListener('click', () => {
+            // Add login logic here
+            console.log('Login button clicked');
+        });
+
+        signupBtn.addEventListener('click', () => {
+            // Add signup logic here
+            console.log('Sign Up button clicked');
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            // Add logout logic here
+            console.log('Logout button clicked');
+        });
+
+        updateAuthButtons();
+    });
+</script>
+</body>
+</html>

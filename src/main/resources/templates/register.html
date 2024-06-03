@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- MATERIAL DESIGN ICONIC FONT -->
+    <link rel="stylesheet"
+          href="colorlib-regform-19/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+
+    <!-- STYLE CSS -->
+    <link th:href="@{/css/style_register.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="wrapper" style="background-image: url('/img/food-background.jpg');">
+    <div class="inner">
+        <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return validateForm()">
+            <h3>Registration Canteen Member</h3>
+            <div class="form-group">
+                <div class="form-wrapper">
+                    <label for="fullName">Full name:<span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <div class="form-holder">
+                        <small class="form-text text-muted">Format: Nguyen Van A</small>
+                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}"
+                               th:value="${fullName}"
+                               autofocus="autofocus">
+                        <p class="help-block text-danger" id="fullNameError" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" style="font-size: small; color: rgb(234, 77, 77);">
+                            Full name cannot start or end with a space.</p>
+                    </div>
+                </div>
+
+                <!--CodeName-->
+                <div class="form-wrapper">
+                    <label for="codeName">Code Name: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <div class="form-holder">
+                        <small class="form-text text-muted">Format: ví dụ minhddhe161286</small>
+                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}"
+                               th:value="${user.codeName}">
+                        <p class="help-block text-danger" id="codeNameError"
+                           style="display: none; font-size: small"></p>
+                        <p class="help-block text-danger" th:if="${codeNameExistsError != null}"
+                           th:text="${codeNameExistsError}" style="font-size: small"></p>
+                    </div>
+                </div>
+
+                <!--Phone-->
+                <div class="form-wrapper">
+                    <label for="phone">Phone number: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <div class="form-holder">
+                        <small class="form-text text-muted">Format: +85 1234567</small>
+                        <input type="text" class="form-control" id="phone" name="phone"
+                               th:field="*{phone}" th:value="${user.phone}" pattern="^\+?[0-9\s\-]{9,11}$">
+                        <p class="help-block text-danger" id="phoneError" style="display: none; font-size: small"></p>
+                        <p class="help-block text-danger" th:if="${phoneExistsError != null}"
+                           th:text="${phoneExistsError}" style="font-size: small"></p>
+                    </div>
+                </div>
+
+                <!--Email-->
+                <div class="form-wrapper">
+                    <label for="email">Email: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <div class="form-holder">
+                        <small class="form-text text-muted">Format: abc@gmail.com or abc@fpt.com.vn</small>
+                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}"
+                               th:value="${user.email}"/>
+                        <p class="help-block text-danger" id="emailEmptyError" style="display: none; font-size: small">
+                            Email is required</p>
+                        <p class="help-block text-danger" id="emailFormatError" style="display: none; font-size: small">
+                            Invalid email format</p>
+                        <p class="help-block text-danger" id="emailSpaceError" style="display: none; font-size: small">
+                            Email cannot start or end with a space</p>
+                        <p class="help-block text-danger" id="emailContainsSpaceError"
+                           style="display: none; font-size: small">Email cannot contain spaces</p>
+                        <p class="help-block text-danger" id="emailExistsError" th:if="${emailExistsError != null}"
+                           th:text="${emailExistsError}" style="font-size: small"></p>
+                    </div>
+                </div>
+
+                <!--Password-->
+                <div class="form-wrapper">
+                    <label for="password">Password: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <div class="form-holder">
+                        <small class="form-text text-muted">Password must be at least 6 characters long</small>
+                        <input type="password" class="form-control" placeholder="********" id="password" name="password"
+                               th:field="*{password}"
+                               th:value="${user.password}" minlength="6">
+                        <p class="help-block text-danger" id="passwordEmptyError"
+                           style="display: none; font-size: small">Password is required.</p>
+                        <p class="help-block text-danger" id="passwordLengthError"
+                           style="display: none; font-size: small">Password must be at least 6 characters long.</p>
+                        <p class="help-block text-danger" id="passwordSpaceError"
+                           style="display: none; font-size: small">Password cannot start or end with a space.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--Password-->
+            <!--            <div class="form-group">-->
+            <!--                <div class="form-wrapper" style="margin-top: 20px;">-->
+            <!--                    <label for="password">Password: <span style="color: rgb(234, 77, 77);"> *</span></label>-->
+            <!--                    <div class="form-holder">-->
+            <!--                        <small class="form-text text-muted">Password must be at least 6 characters long</small>-->
+            <!--                        <input type="password" class="form-control" placeholder="********" id="password" name="password"-->
+            <!--                               th:field="*{password}"-->
+            <!--                               th:value="${user.password}" minlength="6">-->
+            <!--                        <p class="help-block text-danger" id="passwordEmptyError"-->
+            <!--                           style="display: none; font-size: small">Password is required.</p>-->
+            <!--                        <p class="help-block text-danger" id="passwordLengthError"-->
+            <!--                           style="display: none; font-size: small">Password must be at least 6 characters long.</p>-->
+            <!--                        <p class="help-block text-danger" id="passwordSpaceError"-->
+            <!--                           style="display: none; font-size: small">Password cannot start or end with a space.</p>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+            <div class="form-end">
+                <div class="button-holder">
+                    <button type="submit" class="btn btn-primary">Register Now</button>
+                </div>
+            </div>
+
+            <p class="help-block text-danger" id="generalError" style="display: none; font-size: medium">Please
+                correct
+                the errors above and try again.</p>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        const isFullNameValid = validateFullName();
+        const isCodeNameValid = validateCodeName();
+        const isPhoneValid = validatePhone();
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+
+        if (isFullNameValid && isCodeNameValid && isPhoneValid && isEmailValid && isPasswordValid) {
+            return true;
+        } else {
+            document.getElementById('generalError').style.display = 'block';
+            return false;
+        }
+    }
+
+    // Validate full name
+    function validateFullName() {
+        const fullNameInput = document.getElementById('fullName');
+        const fullNameValue = fullNameInput.value;
+        const fullNameError = document.getElementById('fullNameError');
+
+        if (fullNameValue.trim() === '' || fullNameValue !== fullNameValue.trim()) {
+            fullNameError.style.display = 'block';
+            return false;
+        } else {
+            fullNameError.style.display = 'none';
+            return true;
+        }
+    }
+
+    // Validate codename
+    function validateCodeName() {
+        const codeNameInput = document.getElementById('codeName');
+        const codeNameValue = codeNameInput.value;
+        const codeNamePattern = /^[a-zA-Z0-9]{6,20}$/; // Định dạng cho codeName bao gồm chữ cái và số, độ dài từ 6-20 ký tự
+        const codeNameError = document.getElementById('codeNameError');
+
+        if (!codeNamePattern.test(codeNameValue)) {
+            codeNameError.textContent = 'Invalid code name. Please enter letters and numbers between 6-20 characters.';
+            codeNameError.style.display = 'block';
+            return false;
+        } else {
+            codeNameError.style.display = 'none';
+            return true;
+        }
+    }
+
+    // Validate phone
+    function validatePhone() {
+        const phoneInput = document.getElementById('phone');
+        const phoneValue = phoneInput.value;
+        const phonePattern = /^\+?[0-9\s\-]{9,11}$/;
+        const phoneError = document.getElementById('phoneError');
+
+        if (!phonePattern.test(phoneValue)) {
+            phoneError.textContent = 'Invalid phone number format. Please use +123456789 or 123-456-7890.';
+            phoneError.style.display = 'block';
+            return false;
+        } else {
+            phoneError.style.display = 'none';
+            return true;
+        }
+    }
+
+    // Validate email
+    function validateEmail() {
+        const emailInput = document.getElementById('email');
+        const emailValue = emailInput.value.trim(); // Trim để loại bỏ khoảng trắng ở đầu và cuối
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const emailEmptyError = document.getElementById('emailEmptyError');
+        const emailFormatError = document.getElementById('emailFormatError');
+        const emailSpaceError = document.getElementById('emailSpaceError');
+        const emailContainsSpaceError = document.getElementById('emailContainsSpaceError');
+        const emailExistsError = document.getElementById('emailExistsError');
+
+        // Reset error messages
+        emailEmptyError.style.display = 'none';
+        emailFormatError.style.display = 'none';
+        emailSpaceError.style.display = 'none';
+        emailContainsSpaceError.style.display = 'none';
+        emailExistsError.style.display = 'none';
+
+        if (emailValue === '') {
+            emailEmptyError.style.display = 'block';
+            return false;
+        } else if (emailValue !== emailInput.value) {
+            emailSpaceError.style.display = 'block';
+            return false;
+        } else if (/\s/.test(emailValue)) { // Kiểm tra dấu cách trong email
+            emailContainsSpaceError.style.display = 'block';
+            return false;
+        } else if (!emailPattern.test(emailValue)) {
+            emailFormatError.style.display = 'block';
+            return false;
+        } else if (emailExists(emailValue)) { // Mock function to simulate email existence check
+            emailExistsError.style.display = 'block';
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validate password
+    function validatePassword() {
+        const passwordInput = document.getElementById('password');
+        const passwordValue = passwordInput.value;
+        const passwordEmptyError = document.getElementById('passwordEmptyError');
+        const passwordLengthError = document.getElementById('passwordLengthError');
+        const passwordSpaceError = document.getElementById('passwordSpaceError');
+
+        if (passwordValue.trim() === '' || passwordValue !== passwordValue.trim()) {
+            passwordSpaceError.style.display = 'block';
+            passwordEmptyError.style.display = 'none';
+            return false;
+        } else if (passwordValue.trim() === '') {
+            passwordEmptyError.style.display = 'block';
+            passwordLengthError.style.display = 'none';
+            return false;
+        } else {
+            passwordEmptyError.style.display = 'none';
+            if (passwordValue.length < 6) {
+                passwordLengthError.style.display = 'block';
+                return false;
+            } else {
+                passwordLengthError.style.display = 'none';
+                passwordSpaceError.style.display = 'none';
+                return true;
+            }
+        }
+    }
+
+    function emailExists(email) {
+        // Đây là một hàm giả để kiểm tra email đã tồn tại.
+        // Bạn có thể thay thế nó bằng một cuộc gọi API thực tế.
+        const existingEmails = ['test@example.com', 'hello@world.com'];
+        return existingEmails.includes(email);
+    }
+
+    // Add event listeners for real-time validation
+    document.getElementById('password').addEventListener('input', function () {
+        validatePassword();
+    });
+
+    document.getElementById('email').addEventListener('input', function () {
+        validateEmail();
+    });
+
+    document.getElementById('phone').addEventListener('input', function () {
+        validatePhone();
+    });
+
+    document.getElementById('codeName').addEventListener('input', function () {
+        validateCodeName();
+    });
+
+    document.getElementById('fullName').addEventListener('input', function () {
+        validateFullName();
+    });
+</script>
+
+</body>
+</html>
