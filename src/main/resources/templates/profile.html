@@ -103,43 +103,7 @@
 
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  function validatePasswordForm() {
-    const oldPassword = document.querySelector('#oldPassword').value;
-    const newPassword = document.querySelector('#newPassword').value;
-    const confirmPassword = document.querySelector('#confirmPassword').value;
 
-    // Check if the current password matches the one in the database
-    let isValid = false;
-    $.ajax({
-      url: '/verify-password',
-      type: 'POST',
-      data: JSON.stringify({ currentPassword: oldPassword }),
-      contentType: 'application/json',
-      async: false,
-      success: function (response) {
-        isValid = response;
-      }
-    });
-
-    if (!isValid) {
-      alert('Current password is incorrect');
-      return false;
-    }
-
-    if (newPassword !== confirmPassword) {
-      alert('New passwords do not match');
-      return false;
-    }
-
-    if (newPassword.length < 6) {
-      alert('New password must be at least 6 characters long');
-      return false;
-    }
-
-    return true;
-  }
-</script>
 </body>
 
 </html>

@@ -44,8 +44,8 @@ public class User implements UserDetails {
 	@Column(name = "phone")
 	private String phone;
 
-	@Column(name = "date_of_birth" , nullable = true)
-	private LocalDate dateOfBirth;
+	
+
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set

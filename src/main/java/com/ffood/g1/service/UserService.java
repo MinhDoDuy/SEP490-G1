@@ -2,6 +2,7 @@ package com.ffood.g1.service;
 
 import com.ffood.g1.dto.UserDTO;
 import com.ffood.g1.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,5 +36,13 @@ public interface UserService extends UserDetailsService {
     void updatePassword(User user, String newPassword);
 
 
-//    boolean isPhoneValid(String );
+    //List người dùng cho admin đã có phân trang
+    Page<User> getAllUsers(int page, int size);
+
+    //search user
+    Page<User> searchUsers(String keyword, int page, int size);
+
+    User getUserById(Integer userId);
+
+    void updateUserRole(Integer userId, Integer roleId);
 }
