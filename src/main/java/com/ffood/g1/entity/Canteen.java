@@ -40,6 +40,6 @@ public class Canteen {
     @Column(name = "canteen_img")
     private String canteenImg;
 
-    @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL)
-    private Set<Food> foods = Collections.emptySet(); // Initialize as empty set
+//    @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL)
+//    private Set<Food> foods = Collections.emptySet(); // Initialize as empty set
 }

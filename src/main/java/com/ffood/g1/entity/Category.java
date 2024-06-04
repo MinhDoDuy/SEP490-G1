@@ -27,6 +27,6 @@ public class Category {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<Food> foods = Collections.emptySet(); // Initialize as empty set
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    private Set<Food> foods = Collections.emptySet(); // Initialize as empty set
 }
