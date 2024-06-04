@@ -1,12 +1,12 @@
 package com.ffood.g1.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -32,7 +32,6 @@ public class Canteen {
     @Column(name = "opening_hours")
     private String openingHours;
 
-
     @Column(name = "canteen_img", columnDefinition = "VARCHAR(500)")
     private String canteenImg;
 
@@ -40,6 +39,6 @@ public class Canteen {
     @JoinColumn(name = "manager_id", referencedColumnName = "user_id")
     private User manager;
 
-
-
+    @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Item> items;
 }
