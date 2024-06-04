@@ -1,7 +1,7 @@
 package com.ffood.g1.service.impl;
 
 
-import com.ffood.g1.entity.Item;
+import com.ffood.g1.entity.Food;
 import com.ffood.g1.repository.ItemRepository;
 import com.ffood.g1.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
 
     @Override
-    public List<Item> getRandomItems() {
+    public List<Food> getRandomItems() {
         Pageable limit = PageRequest.of(0, 12);
         return itemRepository.findRandomItems(limit);
     }
 
     @Override
-    public Page<Item> getAllItems(Pageable pageable) {
+    public Page<Food> getAllItems(Pageable pageable) {
         return itemRepository.findAll(pageable);
     }
 }

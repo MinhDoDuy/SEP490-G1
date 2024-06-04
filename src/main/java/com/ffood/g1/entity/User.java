@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -54,7 +53,7 @@ public class User implements UserDetails {
 	private Set<Cart> carts = Collections.emptySet(); // Initialize as empty set
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Orders> orders = Collections.emptySet(); // Initialize as empty set
+	private Set<Order> orders = Collections.emptySet(); // Initialize as empty set
 
 
 

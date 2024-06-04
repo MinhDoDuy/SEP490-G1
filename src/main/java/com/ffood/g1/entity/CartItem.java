@@ -7,28 +7,30 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Set;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cart")
-public class Cart {
+@Table(name = "cart_item")
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
-    private Integer cartId;
+    @Column(name = "cart_item")
+    private Integer cartItem;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
+
+    @ManyToOne
+    @JoinColumn(name = "food_id", nullable = false)
+    private Food food;
+
+    @Column(name = "amount", nullable = false)
+    private Integer amount;
 
     @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
-
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private Set<CartItem> cartItems = Collections.emptySet(); // Initialize as empty set
 }

@@ -1,14 +1,13 @@
 package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Canteen;
-import com.ffood.g1.entity.Item;
+import com.ffood.g1.entity.Food;
 import com.ffood.g1.repository.ItemRepository;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,7 +46,7 @@ public class HomeController {
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
         // get random 12 items and display in homepage
-        List<Item> items_home = itemService.getRandomItems();
+        List<Food> items_home = itemService.getRandomItems();
         model.addAttribute("items_home", items_home);
 
 
