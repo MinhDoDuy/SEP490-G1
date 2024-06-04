@@ -75,8 +75,7 @@ public class UserServiceImpl implements UserService {
         ResetToken resetToken = new ResetToken(token, user);
         resetTokenRepository.save(resetToken);
 
-//        String resetUrl = "http://localhost:8080/reset-password?token=" + token;
-        // Lấy URL cơ sở của ứng dụng từ HttpServletRequest
+
         String baseUrl = UrlUtil.getBaseUrl(request);
 
         // Tạo URL đặt lại mật khẩu
@@ -90,14 +89,18 @@ public class UserServiceImpl implements UserService {
         mailSender.send(message);
     }
 
+    //check token xem đã hết hạn hoặc là check token có tồn tại không
     @Override
     public boolean isResetTokenValid(String token) {
         ResetToken resetToken = resetTokenRepository.findByToken(token);
         return resetToken != null && !resetToken.isExpired();
     }
 
+
     @Override
+    //truyền vào string token và password sẽ nhập vào
     public void updatePasswordReset(String token, String password) {
+        //get thông tin của token đó
         ResetToken resetToken = resetTokenRepository.findByToken(token);
         if (resetToken == null || resetToken.isExpired()) {
             throw new IllegalArgumentException("Invalid or expired token.");
@@ -112,18 +115,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    //update password cho người dùng khi ở trang profile
     public void updatePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
     @Override
+    //ROLE_ADMIN quản lý user (quản lý role user) đã có phần page để phân trang
     public Page<User> getAllUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAll(pageable);
     }
 
     @Override
+    //ROLE_ADMIN tìm kiếm người dùng thông quan fullname, codeName , Email
     public Page<User> searchUsers(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
@@ -134,6 +140,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElse(null);
     }
     @Override
+    //update người dùng đó và get ra thông tin người dùng đó
     public void updateUserRole(Integer userId, Integer roleId) {
         User user = userRepository.findById(userId).orElse(null);
         Role role = roleRepository.findById(roleId).orElse(null);
@@ -150,6 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    //update profile người dùng
     public void updateUser(User user) {
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
         if (existingUser != null) {
@@ -209,46 +217,4 @@ public class UserServiceImpl implements UserService {
 
 
 
-//    @Override
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        User user = userRepository.findByEmail(email);
-//        if (user == null) {
-//            throw new UsernameNotFoundException("User Invalid");
-//        }
-//        //check enable or disable validate
-//
-//        return user; //xác định role thi` có thể xác định các trường account đó checking for staff only
-//    }
-//
-//
-//
-//
-//    @Override
-//    public User loadUserById(Integer userId) {
-//        return userRepository.findById(userId).orElse(null);
-//    }
-//
-//    @Override
-//    public void updateUser(User user) {
-//        User existingUser = userRepository.findById(user.getUserId()).orElse(null);
-//        if (existingUser != null) {
-//            existingUser.setFirstName(user.getFirstName());
-//            existingUser.setLastName(user.getLastName());
-//            existingUser.setEmail(user.getEmail());
-//            existingUser.setPhone(user.getPhone());
-//            userRepository.save(existingUser);
-//        }
-//    }
-//
-//    @Override
-//    public void save(User user) {
-//        userRepository.save(user);
-//    }
-//
-//    @Override
-//    public void changePassword(Integer userId, String newPassword) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//        user.setPassword(passwordEncoder.encode(newPassword));
-//        userRepository.save(user);
-//    }
 

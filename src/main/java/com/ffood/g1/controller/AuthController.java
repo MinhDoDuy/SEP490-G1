@@ -71,11 +71,13 @@ public class AuthController {
         return "redirect:/home"; // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
     }
 
+    //dẫn đến đường link forgot password
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm() {
         return "forgot-password";
     }
 
+    //thực hiện quá trình reset
     @PostMapping("/forgot-password")
     public String processForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
