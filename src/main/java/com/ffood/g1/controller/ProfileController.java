@@ -92,7 +92,7 @@ public class ProfileController {
         userService.updatePassword(user, newPassword);
         model.addAttribute("message", "Password changed successfully");
 
-        return "redirect:/login";
+        return "redirect:/logout";
 
     }
 }
