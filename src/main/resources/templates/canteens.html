@@ -104,11 +104,11 @@
                 <div class="col-lg-7 col-md-7">
                     <div class="shop__option__search">
                         <form action="#">
-                            <select>
-                                <option value="">Categories</option>
-                                <option value="">Red Velvet</option>
-                                <option value="">Cup Cake</option>
-                                <option value="">Biscuit</option>
+                            <select id="categorySelect">
+                                <option value="">Category</option>
+                                <option th:each="category : ${categories}" th:value="${category.categoryId}">
+                                    <div th:text="${category.categoryName}"></div>
+                                </option>
                             </select>
                             <input type="text" placeholder="Search">
                             <button type="submit"><i class="fa fa-search"></i></button>
@@ -139,17 +139,17 @@
     <div class="container">
 
         <div class="row">
-            <div th:each="item : ${items_home}" class="col-lg-3 col-md-6 col-sm-6">
+            <div th:each="food : ${items_home}" class="col-lg-3 col-md-6 col-sm-6">
                 <div class="product__item">
                     <div class="product__item__pic set-bg">
-                        <img th:src="${item.imageFood}" class="product__item__pic set-bg">
+                        <img th:src="${food.imageFood}" class="product__item__pic set-bg">
                         <div class="product__label">
-                            <span th:text="${item.category}">Cupcake</span>
+                            <span th:text="${food.category.categoryName}">Cupcake</span>
                         </div>
                     </div>
                     <div class="product__item__text">
-                        <h6><a th:href="@{#}" th:text="${item.foodName}">Item Name</a></h6>
-                        <div class="product__item__price" th:text="'$' + ${item.price}">Price</div>
+                        <h6><a th:href="@{#}" th:text="${food.foodName}">Item Name</a></h6>
+                        <div class="product__item__price" th:text="'$' + ${food.price}">Price</div>
                         <div class="d-flex justify-content-between mt-3">
                             <a th:href="@{#}" class="btn btn-outline-primary">Add to cart</a>
                             <a class="btn btn-outline-secondary">Profile items</a>
@@ -160,15 +160,15 @@
         </div>
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/items_in_all_shop(page=${currentPage} - 1)}">Previous</a>
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/canteen_details(page=${currentPage} - 1)}">Previous</a>
                 </li>
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                     th:classappend="${i == currentPage} ? 'active'">
-                    <a class="page-link" th:href="@{/items_in_all_shop(page=${i})}" th:text="${i + 1}">1</a>
+                    <a class="page-link" th:href="@{/canteen_details(page=${i})}" th:text="${i + 1}">1</a>
                 </li>
                 <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{/items_in_all_shop(page=${currentPage} + 1)}">Next</a>
+                    <a class="page-link" th:href="@{/canteen_details(page=${currentPage} + 1)}">Next</a>
                 </li>
             </ul>
         </nav>

@@ -2,9 +2,9 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Food;
-import com.ffood.g1.repository.ItemRepository;
+import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.service.CanteenService;
-import com.ffood.g1.service.ItemService;
+import com.ffood.g1.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.service.UserService;
@@ -22,9 +22,9 @@ public class HomeController {
     @Autowired
     private CanteenService canteenService;
     @Autowired
-    private ItemRepository itemRepository;
+    private FoodRepository foodRepository;
     @Autowired
-    private ItemService itemService;
+    private FoodService foodService;
     @Autowired
     private UserService userService;
 
@@ -46,7 +46,7 @@ public class HomeController {
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
         // get random 12 items and display in homepage
-        List<Food> items_home = itemService.getRandomItems();
+        List<Food> items_home = foodService.getRandomFood();
         model.addAttribute("items_home", items_home);
 
 
