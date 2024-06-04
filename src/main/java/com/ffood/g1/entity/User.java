@@ -47,14 +47,14 @@ public class User implements UserDetails {
 	private String userImage;
 
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Cart> carts = Collections.emptySet(); // Initialize as empty set
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Order> orders = Collections.emptySet(); // Initialize as empty set
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set
+//
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	private Set<Cart> carts = Collections.emptySet(); // Initialize as empty set
+//
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	private Set<Order> orders = Collections.emptySet(); // Initialize as empty set
 
 
 
