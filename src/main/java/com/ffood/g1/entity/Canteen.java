@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "canteens")
+@Table(name = "canteen")
 public class Canteen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +36,9 @@ public class Canteen {
 
     @Column(name = "opening_hours")
     private String openingHours;
+
+    @Column(name = "canteen_img")
+    private String canteenImg;
 
     @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL)
     private Set<Food> foods = Collections.emptySet(); // Initialize as empty set
