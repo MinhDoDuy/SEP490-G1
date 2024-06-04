@@ -43,7 +43,8 @@ public class User implements UserDetails {
 	@Column(name = "phone")
 	private String phone;
 
-	
+	@Column(name = "user_image")
+	private String userImage;
 
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
