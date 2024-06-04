@@ -65,6 +65,11 @@ public class ProfileController {
             return "change-password" ;
         }
 
+        if(passwordEncoder.matches(oldPassword ,user.getPassword()) == passwordEncoder.matches(newPassword ,user.getPassword())){
+            model.addAttribute("error", " new password can't same with old password");
+            return "change-password";
+        }
+
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "New passwords do not match");
             return "change-password";
