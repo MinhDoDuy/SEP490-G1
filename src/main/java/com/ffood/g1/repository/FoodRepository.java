@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FoodRepository extends PagingAndSortingRepository<Food, Integer> {
-    @Query("SELECT i FROM Food i ORDER BY RAND()")
+   // @Query("SELECT i FROM Food i ORDER BY RAND()")
+    @Query("SELECT f FROM Food f ORDER BY f.salesCount DESC")
     List<Food> findRandomItems(Pageable pageable);
 
     List<Food> findByCategory(Category category);
