@@ -10,20 +10,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 public class FoodController {
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private FoodService foodService;
+
+
     @Controller
     @RequestMapping("/categories")
     public class CategoryController {
 
-        @Autowired
-        private CategoryService categoryService;
 
-        @Autowired
-        private FoodService foodService;
 
         @GetMapping
         public ModelAndView getAllCategories(Model model) {
@@ -40,5 +46,17 @@ public class FoodController {
 //            model.addAttribute("foods", foods);
 //            return new ModelAndView("foods"); // Thay đổi tên template
 //        }
+    }
+
+    @GetMapping("/food_details")
+    public String viewFoodDetails(@RequestParam("id") Integer id, Model model) {
+        Optional<Food> foodOptional = foodService.getFoodById(id);
+        if (foodOptional.isPresent()) {
+            model.addAttribute("food", foodOptional.get());
+            return "food_details";
+        } else {
+            // Handle case when food is not found, e.g., redirect to an error page or show a message
+            return "error";
+        }
     }
 }

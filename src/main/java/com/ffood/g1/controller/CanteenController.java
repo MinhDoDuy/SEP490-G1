@@ -30,24 +30,55 @@ public class CanteenController {
     private CategoryService categoryService;
 
 
-    @GetMapping("/canteen_details")
-    public String getItems(@RequestParam(defaultValue = "0") int page, Model model) {
+//    @GetMapping("/canteen_details")
+//    public String getItems(@RequestParam(defaultValue = "0") int page, Model model) {
+//
+//        //get all food in canteens
+//        Pageable pageable = PageRequest.of(page, 12);  // 12 items per page (3 rows x 4 items)
+//        Page<Food> items = foodService.getAllFood(pageable);
+//        model.addAttribute("items_home", items.getContent());
+//        model.addAttribute("totalPages", items.getTotalPages());
+//        model.addAttribute("currentPage", page);
+//
+//        //get all category
+//        List<Category> categories = categoryService.getAllCategories();
+//        model.addAttribute("categories", categories);
+//
+//        return "/canteens";
+//
+//    }
 
-        //get all food in canteens
+    @GetMapping("/canteen_details")
+    public String viewCanteens(@RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "categoryId", required = false) Integer categoryId,
+                               @RequestParam(value = "name", required = false) String name,
+                               Model model) {
         Pageable pageable = PageRequest.of(page, 12);  // 12 items per page (3 rows x 4 items)
-        Page<Food> items = foodService.getAllFood(pageable);
+        Page<Food> items;
+
+        if (categoryId != null && name != null) {
+            items = foodService.getFoodByCategoryAndName(categoryId, name, pageable);
+        } else if (categoryId != null) {
+            items = foodService.getFoodByCategory(categoryId, pageable);
+        } else if (name != null) {
+            items = foodService.getFoodByName(name, pageable);
+        } else {
+            items = foodService.getAllFood(pageable);
+        }
+        model.addAttribute("categoryId", categoryId);  // Add this line
+        model.addAttribute("name", name);  // Add this line
+
         model.addAttribute("items_home", items.getContent());
         model.addAttribute("totalPages", items.getTotalPages());
         model.addAttribute("currentPage", page);
 
-        //get all category
+        // Get all categories
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
 
-        return "/canteens";
 
+        return "canteens";
     }
-
 
 
 

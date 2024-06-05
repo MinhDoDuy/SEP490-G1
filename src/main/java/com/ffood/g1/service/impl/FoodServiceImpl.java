@@ -11,7 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
+
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FoodServiceImpl implements FoodService {
@@ -36,4 +40,24 @@ public class FoodServiceImpl implements FoodService {
         category.setCategoryId(categoryId);
         return foodRepository.findByCategory(category);
     }
+
+
+
+
+    public Page<Food> getFoodByCategory(Integer categoryId, Pageable pageable) {
+        return foodRepository.findByCategoryCategoryId(categoryId, pageable);
+    }
+
+    public Page<Food> getFoodByName(String name, Pageable pageable) {
+        return foodRepository.findByFoodNameContaining(name, pageable);
+    }
+
+    public Page<Food> getFoodByCategoryAndName(Integer categoryId, String name, Pageable pageable) {
+        return foodRepository.findByCategoryCategoryIdAndFoodNameContaining(categoryId, name, pageable);
+    }
+
+    public Optional<Food> getFoodById(Integer id) {
+        return foodRepository.findById(id);
+    }
+
 }
