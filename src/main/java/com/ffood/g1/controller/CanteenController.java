@@ -81,14 +81,14 @@ public class CanteenController {
     }
 
 
-
-    @GetMapping("/food_details")
-    public String getFoodDetail( Model model) {
-        List<Food> food_details = foodService.getRandomFood();
-        model.addAttribute("food_details", food_details);
-        return "/food_details";
-
-    }
+//
+//    @GetMapping("/food_details")
+//    public String getFoodDetail( Model model) {
+//        List<Food> food_details = foodService.getRandomFood();
+//        model.addAttribute("food_details", food_details);
+//        return "/food_details";
+//
+//    }
 
 
 }

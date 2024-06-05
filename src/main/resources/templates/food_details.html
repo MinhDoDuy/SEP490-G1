@@ -35,43 +35,6 @@
     <div class="loader"></div>
 </div>
 
-<!-- Offcanvas Menu Begin -->
-<div class="offcanvas-menu-overlay"></div>
-<div class="offcanvas-menu-wrapper">
-    <div class="offcanvas__cart">
-        <div class="offcanvas__cart__links">
-            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-            <a href="#"><img src="img/icon/heart.png" alt=""></a>
-        </div>
-        <div class="offcanvas__cart__item">
-            <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-            <div class="cart__price">Cart: <span>$0.00</span></div>
-        </div>
-    </div>
-    <div class="offcanvas__logo">
-        <a href="./index.html"><img src="img/logo.png" alt=""></a>
-    </div>
-    <div id="mobile-menu-wrap"></div>
-    <div class="offcanvas__option">
-        <ul>
-            <li>USD <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </li>
-            <li>ENG <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li>Spanish</li>
-                    <li>ENG</li>
-                </ul>
-            </li>
-            <li><a href="#">Sign in</a> <span class="arrow_carrot-down"></span></li>
-        </ul>
-    </div>
-</div>
-<!-- Offcanvas Menu End -->
-
 <!-- Header Section Begin -->
 <div th:replace="header :: header"></div>
 <!-- Header Section End -->
@@ -87,15 +50,18 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="breadcrumb__links">
-                    <a href="./index.html">Home</a>
-                    <a href="./shop.html">Shop</a>
-                    <span>Sweet autumn leaves</span>
+                    <a href="./homepage">Home</a>
+                    <a href="./canteen_details">Shop</a>
+                    <span th:text="${food.foodName}"></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <!-- Breadcrumb End -->
+
+
+
 
 <!-- Shop Details Section Begin -->
 <section class="product-details spad">
@@ -104,42 +70,49 @@
             <div class="col-lg-6">
                 <div class="product__details__img">
                     <div class="product__details__big__img">
-                        <img class="big_img" src="img/shop/details/product-big-1.jpg" alt="">
+                        <img class="big_img" th:src="@{${food.imageFood}}" alt="Food Image">
                     </div>
                     <div class="product__details__thumb">
-                        <div class="pt__item active">
-                            <img data-imgbigurl="img/shop/details/product-big-2.jpg"
-                                 src="img/shop/details/product-big-2.jpg" alt="">
+<!--                        <div class="pt__item active">-->
+<!--                            <img data-imgbigurl="img/shop/details/product-big-2.jpg"-->
+<!--                             th:src="@{${food.imageFood}}" alt="Food Image">-->
+<!--                        </div>-->
+<!--                        <div class="pt__item">-->
+<!--                            <img data-imgbigurl="img/shop/details/product-big-1.jpg"-->
+<!--                                 th:src="@{${food.imageFood}}" alt="Food Image">-->
+<!--                        </div>-->
+<!--                        <div class="pt__item">-->
+<!--                            <img data-imgbigurl="img/shop/details/product-big-4.jpg"-->
+<!--                                 th:src="@{${food.imageFood}}" alt="Food Image">-->
+<!--                        </div>-->
+                        <div class="pt__item">
+                            <img th:attr="data-imgbigurl=@{${food.imageFood}}"
+                                    th:src="@{${food.imageFood}}" alt="" >
                         </div>
                         <div class="pt__item">
-                            <img data-imgbigurl="img/shop/details/product-big-1.jpg"
-                                 src="img/shop/details/product-big-1.jpg" alt="">
+                            <img th:attr="data-imgbigurl=@{${food.imageFood}}"
+                                 th:src="@{${food.imageFoodDetail1}}" alt="" >
                         </div>
                         <div class="pt__item">
-                            <img data-imgbigurl="img/shop/details/product-big-4.jpg"
-                                 src="img/shop/details/product-big-4.jpg" alt="">
-                        </div>
-                        <div class="pt__item">
-                            <img data-imgbigurl="img/shop/details/product-big-3.jpg"
-                                 src="img/shop/details/product-big-3.jpg" alt="">
-                        </div>
-                        <div class="pt__item">
-                            <img data-imgbigurl="img/shop/details/product-big-5.jpg"
-                                 src="img/shop/details/product-big-5.jpg" alt="">
-                        </div>
+                        <img th:attr="data-imgbigurl=@{${food.imageFood}}"
+                             th:src="@{${food.imageFoodDetail1}}"  alt="">
+                    </div>
+
+
+
+
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="product__details__text">
-                    <div class="product__label">Cupcake</div>
-                    <h4>SWEET AUTUMN LEAVES</h4>
-                    <h5>$26.41</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, eiusmod tempor incididunt ut labore
-                        et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida</p>
+                    <div class="product__label"><span th:text="${food.category.categoryName}"></span></div>
+                    <h4><span th:text="${food.foodName}"></span></h4>
+                    <h5><span th:text="${food.price}"></span></h5>
+                    <p><span th:text="${food.description}"></span></p>
                     <ul>
                         <li>SKU: <span>17</span></li>
-                        <li>Category: <span>Biscuit cake</span></li>
+                        <li>Category: <span><span th:text="${food.category.categoryName}"></span></span></li>
                         <li>Tags: <span>Gadgets, minimalisstic</span></li>
                     </ul>
                     <div class="product__details__option">
@@ -219,96 +192,23 @@
         </div>
         <div class="row">
             <div class="related__products__slider owl-carousel">
-                <div class="col-lg-3">
+                <div class="col-lg-3" th:each="food : ${relatedFoods}">
                     <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/shop/product-1.jpg">
+<!--                        <div class="product__item__pic">-->
+<!--                            <img th:src="@{${food.imageFood}}" alt="Food Image" />-->
+<!--                            <div class="product__label">-->
+<!--                                <span th:text="${food.category.categoryName}">Cupcake</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="product__item__pic" th:style="'background-image: url(' + ${food.imageFood} + ');'">
                             <div class="product__label">
-                                <span>Cupcake</span>
+                                <span th:text="${food.category.categoryName}">Cupcake</span>
                             </div>
                         </div>
+
                         <div class="product__item__text">
-                            <h6><a href="#">Dozen Cupcakes</a></h6>
-                            <div class="product__item__price">$32.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/shop/product-2.jpg">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Cookies and Cream</a></h6>
-                            <div class="product__item__price">$30.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/shop/product-3.jpg">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Gluten Free Mini Dozen</a></h6>
-                            <div class="product__item__price">$31.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/shop/product-4.jpg">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Cookie Dough</a></h6>
-                            <div class="product__item__price">$25.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/shop/product-5.jpg">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Vanilla Salted Caramel</a></h6>
-                            <div class="product__item__price">$05.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="img/shop/product-6.jpg">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">German Chocolate</a></h6>
-                            <div class="product__item__price">$14.00</div>
+                            <h6><a href="#" th:text="${food.foodName}"></a></h6>
+                            <div class="product__item__price" th:text="'$' + ${food.price}"></div>
                             <div class="cart_add">
                                 <a href="#">Add to cart</a>
                             </div>

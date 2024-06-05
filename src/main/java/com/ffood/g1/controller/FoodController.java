@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.List;
 import java.util.Optional;
 
+
+@Controller
 public class FoodController {
 
     @Autowired
@@ -25,10 +25,10 @@ public class FoodController {
     private FoodService foodService;
 
 
+
     @Controller
     @RequestMapping("/categories")
     public class CategoryController {
-
 
 
         @GetMapping
@@ -52,7 +52,13 @@ public class FoodController {
     public String viewFoodDetails(@RequestParam("id") Integer id, Model model) {
         Optional<Food> foodOptional = foodService.getFoodById(id);
         if (foodOptional.isPresent()) {
-            model.addAttribute("food", foodOptional.get());
+            Food food = foodOptional.get();
+            model.addAttribute("food", food);
+
+            // Lấy các sản phẩm cùng danh mục
+            List<Food> relatedFoods = foodService.getFoodsByCategory(food.getCategory().getCategoryId());
+            model.addAttribute("relatedFoods", relatedFoods);
+
             return "food_details";
         } else {
             // Handle case when food is not found, e.g., redirect to an error page or show a message
