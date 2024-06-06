@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class HomeController {
@@ -28,20 +29,16 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/homepage")
+    @GetMapping({"/homepage",""})
     public String getCanteens(Model model) {
-        //
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            User user = userService.findByEmail(email);
+            if (Objects.nonNull(user)) {
+                model.addAttribute("user", user);
+            }
         }
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            return "redirect:/login?error=true";
-        }
-        model.addAttribute("user", user);
-
         //get All canteens and display in homepage
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);

@@ -153,6 +153,7 @@
                     <div class="product__item__text">
                         <h6><a th:href="@{#}" th:text="${food.foodName}">Item Name</a></h6>
                         <div class="product__item__price" th:text="'$' + ${food.price}">Price</div>
+                        <div class="product__item__price" th:text=" ${food.canteen.canteenName}">Price</div>
                         <div class="d-flex justify-content-between mt-3">
                             <a th:href="@{#}" class="btn btn-outline-primary">Add to cart</a>
                             <a class="btn btn-outline-secondary"  th:href="@{/food_details(id=${food.foodId})}">Profile items</a>
