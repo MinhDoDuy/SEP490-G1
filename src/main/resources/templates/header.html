@@ -8,10 +8,10 @@
 </head>
 <body>
 
-<div class="container">
-    <h3>Chợ Cóc</h3>
+<header>
 
-</div>
+    <h1>Chợ Cóc</h1>
+</header>
 
 <header class="header">
     <div class="container ">
@@ -20,14 +20,16 @@
                 <nav class="header__menu mobile-menu">
 
                     <ul>
-                        <li th:classappend="${#httpServletRequest.requestURI == '/homepage'} ? 'active'">
-                            <a href="./homepage">Home</a>
+                        <li >
+                            <a th:href="@{/homepage}">Home</a>
+
                         </li>
                         <li th:classappend="${#httpServletRequest.requestURI == '/about.html'} ? 'active'">
                             <a href="./about.html">About</a>
                         </li>
-                        <li th:classappend="${#httpServletRequest.requestURI == '/items_in_all_shop'} ? 'active'">
-                            <a href="./items_in_all_shop">Canteens</a>
+                        <li th:classappend="${#httpServletRequest.requestURI == '/canteen_details'} ? 'active'">
+                            <a th:href="@{/canteen_details}">Canteens</a>
+
                         </li>
                         <li th:classappend="${#httpServletRequest.requestURI.startsWith('/pages')} ? 'active'">
                             <a href="#">Pages</a>
@@ -64,7 +66,6 @@
                         <li>
                             <a href="#">Người dùng</a>
                             <ul class="dropdown">
-
                                 <li th:if="${user == null}">
                                     <a th:href="@{/login}">Đăng nhập</a>
                                 <li th:if="${user != null}">
