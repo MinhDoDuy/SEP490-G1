@@ -121,7 +121,7 @@
                                 <input type="text" value="2">
                             </div>
                         </div>
-                        <a href="#" class="primary-btn">Add to cart</a>
+                        <a href="#" class="primary-btn" > Add to cart</a>
                         <a href="#" class="heart__btn"><span class="icon_heart_alt"></span></a>
                     </div>
                 </div>
@@ -210,7 +210,7 @@
                             <h6><a href="#" th:text="${food.foodName}"></a></h6>
                             <div class="product__item__price" th:text="'$' + ${food.price}"></div>
                             <div class="cart_add">
-                                <a href="#">Add to cart</a>
+                                <a  th:href="@{/food_details(id=${food.foodId})}">View </a>
                             </div>
                         </div>
                     </div>
