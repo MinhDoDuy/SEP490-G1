@@ -27,6 +27,28 @@
     <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
     <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
+
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/lib/lightbox/css/lightbox.min.css" th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}"
+          rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/css/style_test.css" th:href="@{/css/style_test.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -38,255 +60,311 @@
 
 <div th:replace="header :: header"></div>
 
-<!-- Hero Section Begin -->
-<section class="hero">
-    <div class="hero__slider owl-carousel" >
-        <div class="hero__item set-bg" data-setbg="img/hero/hero-1.jpg">
-            <div class="container">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="hero__text">
-                            <h2>Making your life sweeter one bite at a time!</h2>
-                            <a href="#" class="primary-btn">Our cakes</a>
-                        </div>
-                    </div>
+<!-- Modal Search Start -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content rounded-0">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex align-items-center">
+                <div class="input-group w-75 mx-auto d-flex">
+                    <input type="search" class="form-control p-3" placeholder="keywords"
+                           aria-describedby="search-icon-1">
+                    <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                 </div>
             </div>
         </div>
-        <div class="hero__item set-bg" data-setbg="img/hero/hero-1.jpg">
-            <div class="container">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="hero__text">
-                            <h2>Making your life sweeter one bite at a time!</h2>
-                            <a href="#" class="primary-btn">Our cakes</a>
+    </div>
+</div>
+<!-- Modal Search End -->
+
+<!-- Hero Start -->
+<div class="container-fluid py-5 mb-5 hero-header">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-md-12 col-lg-7">
+                <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
+                <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
+                <div class="position-relative mx-auto">
+                    <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number"
+                           placeholder="Search">
+                    <button type="submit"
+                            class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
+                            style="top: 0; right: 25%;">Submit Now
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-5">
+                <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
+                    <div class="carousel-inner" role="listbox">
+                        <div class="carousel-item active rounded" th:each="canteen, stat : ${canteens}"
+                             th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide" style="height: 100px;width: 100px">
+                            <div class="carousel-caption d-none d-md-block ">
+                                <h5 th:text="${canteen.canteenPhone}"></h5>
+                                <p th:text="${canteen.openingHours}"></p>
+                            </div>
+                            <a href="#" class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}">Fruites</a>
                         </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselId"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+
+
+<!-- Featurs Section Start -->
+<div class="container-fluid featurs py-5">
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="featurs-item text-center rounded bg-light p-4">
+                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                        <i class="fas fa-car-side fa-3x text-white"></i>
+                    </div>
+                    <div class="featurs-content text-center">
+                        <h5>Free Shipping</h5>
+                        <p class="mb-0">Free on order over $300</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="featurs-item text-center rounded bg-light p-4">
+                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                        <i class="fas fa-user-shield fa-3x text-white"></i>
+                    </div>
+                    <div class="featurs-content text-center">
+                        <h5>Security Payment</h5>
+                        <p class="mb-0">100% security payment</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="featurs-item text-center rounded bg-light p-4">
+                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                        <i class="fas fa-exchange-alt fa-3x text-white"></i>
+                    </div>
+                    <div class="featurs-content text-center">
+                        <h5>30 Day Return</h5>
+                        <p class="mb-0">30 day money guarantee</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="featurs-item text-center rounded bg-light p-4">
+                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                        <i class="fa fa-phone-alt fa-3x text-white"></i>
+                    </div>
+                    <div class="featurs-content text-center">
+                        <h5>24/7 Support</h5>
+                        <p class="mb-0">Support every time fast</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
-<!-- Hero Section End -->
+</div>
+<!-- Featurs Section End -->
 
 
 <!-- Categories Section Begin -->
 <div class="categories">
     <div class="container">
-        <br><br><br><br><hr class="custom-hr">
-        <!-- List canteen -->
-        <div id="storeCarousel" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div th:each="canteen, stat : ${canteens}" th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                    <img th:src="${canteen.canteenImg}" class="d-block w-100" alt="Store Image">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5 th:text="${canteen.canteenName}"></h5>
-                        <p th:text="${canteen.openingHours}"></p>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#storeCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#storeCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-        <!-- End List canteen -->
-        <br><br><br> <hr class="custom-hr">
-
-
-
-        <div class="row">
-            <div class="categories__slider owl-carousel">
-                <div class="categories__item">
-                    <div class="categories__item__icon">
-                        <img src="/img/logo.png" alt="">
-                        <h5>Cupcake</h5>
-                    </div>
-                </div>
-                <div class="categories__item">
-                    <div class="categories__item__icon">
-                        <span class="flaticon-034-chocolate-roll"></span>
-                        <h5>Butter</h5>
-                    </div>
-                </div>
-                <div class="categories__item">
-                    <div class="categories__item__icon">
-                        <span class="flaticon-005-pancake"></span>
-                        <h5>Red Velvet</h5>
-                    </div>
-                </div>
-                <div class="categories__item">
-                    <div class="categories__item__icon">
-                        <span class="flaticon-030-cupcake-2"></span>
-                        <h5>Biscuit</h5>
-                    </div>
-                </div>
-                <div class="categories__item">
-                    <div class="categories__item__icon">
-                        <span class="flaticon-006-macarons"></span>
-                        <h5>Donut</h5>
-                    </div>
-                </div>
-                <div class="categories__item">
-                    <div class="categories__item__icon">
-                        <span class="flaticon-006-macarons"></span>
-                        <h5>Cupcake</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Categories Section End -->
-
-<!-- Product Section Begin -->
-<section class="product spad">
-    <div class="container">
-        <div class="row">
-            <div th:each="item : ${items_home}" class="col-lg-3 col-md-6 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg">
-                        <img th:src="${item.imageFood}" class="product__item__pic set-bg">
-                        <div class="product__label">
-                            <span th:text="${item.category.categoryName}">Category</span>
+        <!-- Fruits Shop Start-->
+        <div class="container-fluid fruite py-3">
+            <div class="container py-3">
+                <div class="tab-class text-center">
+                    <div class="row g-3">
+                        <div class="col-lg-4 text-start">
+                            <h1>Food</h1>
+                        </div>
+                        <div class="col-lg-8 text-end">
+                            <ul class="nav nav-pills d-inline-flex text-center mb-5">
+                                <li class="nav-item">
+                                    <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill"
+                                       href="#tab-1">
+                                        <span class="text-dark" style="width: 130px;">All Products</span>
+                                    </a>
+                                </li>
+                                <!-- Đặt các tab-pane khác ở đây -->
+                            </ul>
                         </div>
                     </div>
-                    <div class="product__item__text">
-                        <h6><a th:href="@{#}" th:text="${item.foodName}">Item Name</a></h6>
-                        <div class="product__item__price" th:text="'$' + ${item.price}">Price</div>
-                        <div class="d-flex justify-content-between mt-3">
-                            <a th:href="@{#}" class="btn btn-outline-primary">Add to cart</a>
-                            <a class="btn btn-outline-secondary"  th:href="@{/food_details(id=${item.foodId})}">Profile items</a>
+
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane fade show p-0 active">
+                            <div class="row g-4">
+                                <div class="col-lg-12">
+                                    <div class="row g-4">
+
+                                        <!-- Lặp qua danh sách sản phẩm -->
+                                        <div class="col-md-6 col-lg-4 col-xl-3 " th:each="item : ${items_home}">
+
+                                            <div class="rounded position-relative fruite-item">
+                                                <div class="fruite-img">
+                                                    <img th:src="${item.imageFood}"
+                                                         class="img-fluid w-100 rounded-top" alt=""
+                                                         style="width: 100px;height: 200px ">
+                                                </div>
+                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                                                     style="top: 10px; left: 10px;"><a th:href="@{#}"
+                                                                                       th:text="${item.category.categoryName}">Item
+                                                    Name</a></div>
+                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                    <h4><a th:href="@{#}" th:text="${item.foodName}">Item Name</a></h4>
+                                                    <p><a th:href="@{#}" th:text="${item.description}">Item Name</a></p>
+                                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
+                                                        <a href="#"
+                                                           class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                                                class="fa fa-shopping-bag me-2 text-primary"></i> Add to
+                                                            cart</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-</section>
-<!-- Product Section End -->
+        <!-- Fruits Shop End-->
 
-<!-- Class Section Begin -->
-<section class="class spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="class__form">
-                    <div class="section-title">
-                        <span>Class cakes</span>
-                        <h2>Made from your <br />own hands</h2>
-                    </div>
-                    <form action="#">
-                        <input type="text" placeholder="Name">
-                        <input type="text" placeholder="Phone">
-                        <select>
-                            <option value="">Studying Class</option>
-                            <option value="">Writting Class</option>
-                            <option value="">Reading Class</option>
-                        </select>
-                        <input type="text" placeholder="Type your requirements">
-                        <button type="submit" class="site-btn">registration</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="class__video set-bg" data-setbg="img/class-video.jpg">
-            <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
-               class="play-btn video-popup"><i class="fa fa-play"></i></a>
-        </div>
-    </div>
-</section>
-<!-- Class Section End -->
 
-<!-- Instagram Section Begin -->
-<section class="instagram spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 p-0">
-                <div class="instagram__text">
-                    <div class="section-title">
-                        <span>Follow us on instagram</span>
-                        <h2>Sweet moments are saved as memories.</h2>
-                    </div>
-                    <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
-                </div>
-            </div>
-            <div class="col-lg-8">
+        <!-- Class Section Begin -->
+        <section class="class spad">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                        <div class="instagram__pic">
-                            <img src="img/instagram/instagram-1.jpg" alt="">
+                    <div class="col-lg-6">
+                        <div class="class__form">
+                            <div class="section-title">
+                                <span>Class cakes</span>
+                                <h2>Made from your <br/>own hands</h2>
+                            </div>
+                            <form action="#">
+                                <input type="text" placeholder="Name">
+                                <input type="text" placeholder="Phone">
+                                <select>
+                                    <option value="">Studying Class</option>
+                                    <option value="">Writting Class</option>
+                                    <option value="">Reading Class</option>
+                                </select>
+                                <input type="text" placeholder="Type your requirements">
+                                <button type="submit" class="site-btn">registration</button>
+                            </form>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                        <div class="instagram__pic middle__pic">
-                            <img src="img/instagram/instagram-2.jpg" alt="">
+                </div>
+                <div class="class__video set-bg" data-setbg="img/class-video.jpg">
+                    <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
+                       class="play-btn video-popup"><i class="fa fa-play"></i></a>
+                </div>
+            </div>
+        </section>
+        <!-- Class Section End -->
+
+        <!-- Instagram Section Begin -->
+        <section class="instagram spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 p-0">
+                        <div class="instagram__text">
+                            <div class="section-title">
+                                <span>Follow us on instagram</span>
+                                <h2>Sweet moments are saved as memories.</h2>
+                            </div>
+                            <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                        <div class="instagram__pic">
-                            <img src="img/instagram/instagram-3.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                        <div class="instagram__pic">
-                            <img src="img/instagram/instagram-4.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                        <div class="instagram__pic middle__pic">
-                            <img src="img/instagram/instagram-5.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                        <div class="instagram__pic">
-                            <img src="img/instagram/instagram-3.jpg" alt="">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                                <div class="instagram__pic">
+                                    <img src="img/instagram/instagram-1.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                                <div class="instagram__pic middle__pic">
+                                    <img src="img/instagram/instagram-2.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                                <div class="instagram__pic">
+                                    <img src="img/instagram/instagram-3.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                                <div class="instagram__pic">
+                                    <img src="img/instagram/instagram-4.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                                <div class="instagram__pic middle__pic">
+                                    <img src="img/instagram/instagram-5.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
+                                <div class="instagram__pic">
+                                    <img src="img/instagram/instagram-3.jpg" alt="">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-<!-- Instagram Section End -->
-<!-- Map Begin -->
-<div class="map">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 col-md-7">
-                <div class="map__inner">
-                    <h6>COlorado</h6>
-                    <ul>
-                        <li>1000 Lakepoint Dr, Frisco, CO 80443, USA</li>
-                        <li>Sweetcake@support.com</li>
-                        <li>+1 800-786-1000</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="map__iframe">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3722.4513164231116!2d105.5255445!3d21.0130509!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1623354989267" height="300" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+        </section>
+        <!-- Instagram Section End -->
     </div>
 </div>
-<!-- Map End -->
-<!--Footer-->
-<div th:replace="footer :: footer"></div>
-<!-- Js Plugins -->
-<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/jquery.nice-select.min.js}"></script>
-<script th:src="@{/js/jquery.barfiller.js}"></script>
-<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
-<script th:src="@{/js/jquery.slicknav.js}"></script>
-<script th:src="@{/js/owl.carousel.min.js}"></script>
-<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
-<script th:src="@{/js/main.js}"></script>
+
+    <!--Footer-->
+    <div th:replace="footer :: footer"></div>
+    <!-- Js Plugins -->
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/jquery.nice-select.min.js}"></script>
+    <script th:src="@{/js/jquery.barfiller.js}"></script>
+    <script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+    <script th:src="@{/js/jquery.slicknav.js}"></script>
+    <script th:src="@{/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/js/jquery.nicescroll.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+            class="fa fa-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
+    <script src="/lib/waypoints/waypoints.min.js"
+            th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+    <script src="/lib/lightbox/js/lightbox.min.js"
+            th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js"
+            th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Template Javascript -->
+    <script src="/js/main_test.js" th:src="@{/js/main_test.js}"></script>
 </body>
 
 </html>
