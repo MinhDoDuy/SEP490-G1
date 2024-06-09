@@ -66,4 +66,10 @@ public class ManageController {
         return "redirect:/manager-user";
     }
 
+    @GetMapping("/delete-user/{userId}")
+    public String deleteUser(@PathVariable Integer userId) {
+        userService.deleteUserById(userId);
+        return "redirect:/manager-user";// Redirect to the users list page
+    }
+
 }

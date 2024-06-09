@@ -65,6 +65,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
+
+    @Override
     public void sendResetPasswordEmail(String email, HttpServletRequest request) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
