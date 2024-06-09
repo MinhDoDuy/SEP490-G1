@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit User Role</title>
+</head>
+<body>
+<h1>Edit User Role</h1>
+<form th:action="@{/edit-role}" method="post">
+  <input type="hidden" name="userId" th:value="${user.userId}"/>
+  <label for="email">Email:</label>
+  <input type="text" id="email" th:value="${user.email}" readonly="readonly"/>
+  <br/>
+  <label for="fullname">Fullname:</label>
+  <input type="text" id="fullname" th:value="${user.fullName}" readonly="readonly"/>
+  <br/>
+  <label for="role">Role:</label>
+  <select id="role" name="roleId">
+    <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleName}" th:selected="${role.roleId} == ${user.role.roleId}"></option>
+  </select>
+  <br/>
+  <button type="submit">Save</button>
+</form>
+</body>
+</html>

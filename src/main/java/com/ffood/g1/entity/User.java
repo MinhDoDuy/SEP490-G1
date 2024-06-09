@@ -1,52 +1,126 @@
 package com.ffood.g1.entity;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
-@Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Builder
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Integer userId;
 
-	@Column(name = "first_name", nullable = false)
-	private String firstName;
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
-	@Column(name = "last_name", nullable = false)
-	private String lastName;
+	@Column(name = "full_name")
+	private String fullName;
 
-	@Column(name = "address_line1")
-	private String address_line1;
+	@Column(name = "code_name")
+	private String codeName;
 
-	@Column(name = "address_line2")
-	private String address_line2;
-
-	@Column(name = "phone")
-	private String phone;
+	@Column(name = "password")
+	private String password;
 
 	@Column(nullable = false, unique = true, length = 45)
 	private String email;
 
-	@Column(nullable = false, length = 64)
-	private String password;
+	@Column(name = "phone")
+	private String phone;
 
-	@Column(name = "date_of_birth")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dateOfBirth;
+	@Column(name = "user_image")
+	private String userImage;
 
-	@Column(columnDefinition = "VARCHAR(500)")
-	private String avatar;
 
-	@Column(name = "type", nullable = false)
-	private String type;
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set
+//
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	private Set<Cart> carts = Collections.emptySet(); // Initialize as empty set
+//
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	private Set<Order> orders = Collections.emptySet(); // Initialize as empty set
 
+
+
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		if (role == null) {
+			return Collections.emptyList();
+		}
+		return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
+	}
+
+	@Column(name = "created_date")
+	private LocalDate createdDate;
+
+	@Column(name = "updated_date")
+	private LocalDate updatedDate;
+
+	@Override
+	public String getUsername() {
+		return email;  // Assuming email is used as username
+	}
+
+	public String getUserName() {
+		return fullName;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"userId=" + userId +
+				", fullName='" + fullName + '\'' +
+				", phone='" + phone + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", createdDate=" + createdDate +
+				", updatedDate=" + updatedDate +
+				'}';
+	}
 }

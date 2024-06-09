@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Cake Template">
+    <meta name="keywords" content="Cake, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cake | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+    <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header Section Begin -->
+<div th:replace="header :: header"></div>
+<!-- Header Section End -->
+
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__text">
+                    <h2>Product detail</h2>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__links">
+                    <a href="./homepage">Home</a>
+                    <a href="./canteen_details">Shop</a>
+                    <span th:text="${food.foodName}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+
+
+
+<!-- Shop Details Section Begin -->
+<section class="product-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product__details__img">
+                    <div class="product__details__big__img">
+                        <img class="big_img" th:src="@{${food.imageFood}}" alt="Food Image">
+                    </div>
+                    <div class="product__details__thumb">
+
+                        <div class="pt__item">
+                            <img th:attr="data-imgbigurl=@{${food.imageFood}}"
+                                    th:src="@{${food.imageFood}}" alt="" >
+                        </div>
+                        <div class="pt__item">
+                            <img th:attr="data-imgbigurl=@{${food.imageFood}}"
+                                 th:src="@{${food.imageFoodDetail1}}" alt="" >
+                        </div>
+                        <div class="pt__item">
+                        <img th:attr="data-imgbigurl=@{${food.imageFood}}"
+                             th:src="@{${food.imageFoodDetail1}}"  alt="">
+                    </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="product__details__text">
+                    <div class="product__label"><span th:text="${food.category.categoryName}"></span></div>
+                    <h4><span th:text="${food.foodName}"></span></h4>
+                    <h5><span th:text="${food.price}"></span></h5>
+                    <p><span th:text="${food.description}"></span></p>
+                    <ul>
+                        <li>SKU: <span>17</span></li>
+                        <li>Category: <span><span th:text="${food.category.categoryName}"></span></span></li>
+                        <li>Tags: <span>Gadgets, minimalisstic</span></li>
+                    </ul>
+                    <div class="product__details__option">
+                        <div class="quantity">
+                            <div class="pro-qty">
+                                <input type="text" value="2">
+                            </div>
+                        </div>
+                        <a href="#" class="primary-btn" > Add to cart</a>
+                        <a href="#" class="heart__btn"><span class="icon_heart_alt"></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product__details__tab">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Additional information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Previews(1)</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-8">
+                                <p>This delectable Strawberry Pie is an extraordinary treat filled with sweet and
+                                    tasty chunks of delicious strawberries. Made with the freshest ingredients, one
+                                    bite will send you to summertime. Each gift arrives in an elegant gift box and
+                                    arrives with a greeting card of your choice that you can personalize online!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabs-2" role="tabpanel">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-8">
+                                <p>This delectable Strawberry Pie is an extraordinary treat filled with sweet and
+                                    tasty chunks of delicious strawberries. Made with the freshest ingredients, one
+                                    bite will send you to summertime. Each gift arrives in an elegant gift box and
+                                    arrives with a greeting card of your choice that you can personalize online!2
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabs-3" role="tabpanel">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-8">
+                                <p>This delectable Strawberry Pie is an extraordinary treat filled with sweet and
+                                    tasty chunks of delicious strawberries. Made with the freshest ingredients, one
+                                    bite will send you to summertime. Each gift arrives in an elegant gift box and
+                                    arrives with a greeting card of your choice that you can personalize online!3
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Details Section End -->
+
+<!-- Related Products Section Begin -->
+<section class="related-products spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="section-title">
+                    <h2>Related Products</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="related__products__slider owl-carousel">
+                <div class="col-lg-3" th:each="food : ${relatedFoods}">
+                    <div class="product__item">
+<!--                        <div class="product__item__pic">-->
+<!--                            <img th:src="@{${food.imageFood}}" alt="Food Image" />-->
+<!--                            <div class="product__label">-->
+<!--                                <span th:text="${food.category.categoryName}">Cupcake</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="product__item__pic" th:style="'background-image: url(' + ${food.imageFood} + ');'">
+                            <div class="product__label">
+                                <span th:text="${food.category.categoryName}">Cupcake</span>
+                            </div>
+                        </div>
+
+                        <div class="product__item__text">
+                            <h6><a href="#" th:text="${food.foodName}"></a></h6>
+                            <div class="product__item__price" th:text="'$' + ${food.price}"></div>
+                            <div class="cart_add">
+                                <a  th:href="@{/food_details(id=${food.foodId})}">View </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Related Products Section End -->
+
+<!-- Footer-->
+<div th:replace="footer :: footer"></div>
+
+<!-- Search Begin -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search End -->
+
+<!-- Js Plugins -->
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.nice-select.min.js}"></script>
+<script th:src="@{/js/jquery.barfiller.js}"></script>
+<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/js/jquery.slicknav.js}"></script>
+<script th:src="@{/js/owl.carousel.min.js}"></script>
+<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

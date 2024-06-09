@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <style>
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .search-bar input[type="text"] {
+            width: 250px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .search-bar button.search-btn {
+            padding: 10px;
+            border: none;
+            background-color: #2A2185FF;
+            color: white;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        .search-bar button.search-btn:hover {
+            background-color: #555;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #2A2185FF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #2A2185FF;
+        }
+
+        .cardHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-start; /* Change from center to flex-start */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div th:replace="navigation :: navigation"></div>
+    <div class="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+
+            <div class="user">
+                <img src="assets/imgs/customer01.jpg" alt="">
+            </div>
+        </div>
+        <div class="cardBox">
+            <div class="card">
+                <div>
+                    <div class="numbers">1,504</div>
+                    <div class="cardName">Daily Views</div>
+                </div>
+                <div class="iconBx">
+                    <ion-icon name="eye-outline"></ion-icon>
+                </div>
+            </div>
+            <div class="card">
+                <div>
+                    <div class="numbers">80</div>
+                    <div class="cardName">Sales</div>
+                </div>
+                <div class="iconBx">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </div>
+            </div>
+            <div class="card">
+                <div>
+                    <div class="numbers">284</div>
+                    <div class="cardName">Comments</div>
+                </div>
+                <div class="iconBx">
+                    <ion-icon name="chatbubbles-outline"></ion-icon>
+                </div>
+            </div>
+            <div class="card">
+                <div>
+                    <div class="numbers">$7,842</div>
+                    <div class="cardName">Earning</div>
+                </div>
+                <div class="iconBx">
+                    <ion-icon name="cash-outline"></ion-icon>
+                </div>
+            </div>
+        </div>
+        <div class="details">
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>Users</h2>
+
+
+                    <a href="#" class="btn">View All</a>
+
+                </div>
+                <div class="search-container">
+                    <form th:action="@{/search}" method="get" class="search-bar">
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by full name, email, or code name" pattern=".*\S.*" >
+                        <button class="search-btn" type="submit">
+                            <span>Search</span>
+                        </button>
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Full Name</td>
+                        <td>Code Name</td>
+                        <td>Email</td>
+                        <td>Phone</td>
+                        <td>Role</td>
+                        <td>Action</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${userPage.content}">
+                        <td th:text="${user.userId}">ID</td>
+                        <td th:text="${user.fullName}">Full Name</td>
+                        <td th:text="${user.codeName}">Code Name</td>
+                        <td th:text="${user.email}">Email</td>
+                        <td th:text="${user.phone}">Phone</td>
+                        <td th:text="${user.role.roleName}">Role</td>
+                        <td><a th:href="@{/edit-role/{userId}(userId=${user.userId})}">Edit Role</a></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+                <div class="pagination">
+        <span th:if="${userPage.hasPrevious()}">
+            <a th:href="@{/manager-user(page=${userPage.number - 1}, size=${userPage.size})}">Previous</a>
+        </span>
+                    <span>Page <span th:text="${userPage.number + 1}">1</span> of <span
+                            th:text="${userPage.totalPages}">1</span></span>
+                    <span th:if="${userPage.hasNext()}">
+            <a th:href="@{/manager-user(page=${userPage.number + 1}, size=${userPage.size})}">Next</a>
+        </span>
+                </div>
+            </div>
+            <div class="recentCustomers">
+                <div class="cardHeader">
+                    <h2>Recent Customers</h2>
+                </div>
+                <table>
+                    <!--                    <tr th:each="customer : ${recentCustomers}">-->
+                    <!--                        <td width="60px">-->
+                    <!--                            <div class="imgBx"><img th:src="@{/images/{image}(image=${customer.image})}" alt=""></div>-->
+                    <!--                        </td>-->
+                    <!--                        <td>-->
+                    <!--                            <h4 th:text="${customer.name}">David <br> <span th:text="${customer.country}">Italy</span></h4>-->
+                    <!--                        </td>-->
+                    <!--                    </tr>-->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/main.js}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
