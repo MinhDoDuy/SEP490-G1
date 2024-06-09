@@ -1,4 +1,4 @@
-package com.ffood.g1.controller.management;
+package com.ffood.g1.controller.adminController;
 
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
