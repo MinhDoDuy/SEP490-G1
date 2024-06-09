@@ -3,24 +3,32 @@ package com.ffood.g1.controller;
 import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
+import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.CategoryService;
 import com.ffood.g1.service.FoodService;
+import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class CanteenController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
 
@@ -43,6 +51,14 @@ public class CanteenController {
                                @RequestParam(value = "checkedCanteens", required = false) List<Integer> checkedCanteens,
                                @RequestParam(value = "sort", required = false) String sort,
                                Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            User user = userService.findByEmail(email);
+            if (Objects.nonNull(user)) {
+                model.addAttribute("user", user);
+            }
+        }
         Pageable pageable = PageRequest.of(page, 9, getSortDirection(sort));
         Page<Food> foods;
 
