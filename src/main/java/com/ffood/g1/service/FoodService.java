@@ -19,14 +19,7 @@ public interface FoodService {
     //get food by category
     List<Food> getFoodsByCategory(Integer categoryId);
 
+    Optional<Food> getFoodById(Integer id) ;
 
- Page<Food> getFoodByCategoryAndName(Integer categoryId, String name, Pageable pageable);
-
- Page<Food> getFoodByName(String name, Pageable pageable);
-
- Page<Food> getFoodByCategory(Integer categoryId, Pageable pageable);
-
- Optional<Food> getFoodById(Integer id) ;
-
- 
+ Page<Food> getFilteredFoods(List<Integer> checkedCategories, List<Integer> checkedCanteens, String name, Pageable pageable);
 }

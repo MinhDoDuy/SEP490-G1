@@ -21,4 +21,5 @@ public class CanteenServiceImpl implements CanteenService {
         return canteenRepository.findAll();
     }
 
+
 }

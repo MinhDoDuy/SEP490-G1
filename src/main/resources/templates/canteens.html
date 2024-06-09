@@ -1,197 +1,244 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Cake Template">
-    <meta name="keywords" content="Cake, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cake | Template</title>
+    <meta charset="utf-8">
+    <title>Fruitables - Vegetable Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--    <link th:href="@{https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap}" rel="stylesheet">-->
 
-    <!-- Css Styles -->
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
-    <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" th:href="@{https://use.fontawesome.com/releases/v5.15.4/css/all.css}"/>
+    <!--    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css}" rel="stylesheet">-->
+
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
+    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link th:href="@{/css/style_test.css}" rel="stylesheet">
+
 </head>
 
 <body>
+
 <!-- Page Preloder -->
 <div id="preloder">
     <div class="loader"></div>
 </div>
 
-<!-- Offcanvas Menu Begin -->
-<div class="offcanvas-menu-overlay"></div>
-<div class="offcanvas-menu-wrapper">
-    <div class="offcanvas__cart">
-        <div class="offcanvas__cart__links">
-            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-            <a href="#"><img src="img/icon/heart.png" alt=""></a>
-        </div>
-        <div class="offcanvas__cart__item">
-            <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-            <div class="cart__price">Cart: <span>$0.00</span></div>
-        </div>
-    </div>
-    <div class="offcanvas__logo">
-        <a href="./index.html"><img src="img/logo.png" alt=""></a>
-    </div>
-    <div id="mobile-menu-wrap"></div>
-    <div class="offcanvas__option">
-        <ul>
-            <li>USD <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </li>
-            <li>ENG <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li>Spanish</li>
-                    <li>ENG</li>
-                </ul>
-            </li>
-            <li><a href="#">Sign in</a> <span class="arrow_carrot-down"></span></li>
-        </ul>
-    </div>
-</div>
-<!-- Offcanvas Menu End -->
-
 <div th:replace="header :: header"></div>
-
-<!-- Breadcrumb Begin -->
-<div class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="breadcrumb__text">
-                    <h2>Canteen</h2>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="breadcrumb__links">
-                    <a href="./homepage">Home</a>
-                    <a href="">Canteen</a>
-
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Shop</li>
+    </ol>
 </div>
-<!-- Breadcrumb End -->
+<!-- Single Page Header End -->
 
-<!-- Shop Details Section Begin -->
-<section class="product-details spad">
-    <div class="container">
 
-        <div class="shop__option">
-            <div class="row">
-                <div class="col-lg-7 col-md-7">
-                    <div class="shop__option__search">
-
-                        <form action="/canteen_details" method="get">
-                            <select name="categoryId">
-                                <option value=""> Categories</option>
-                                <th:block th:each="category : ${categories}">
-                                    <option th:value="${category.categoryId}"
-                                            th:text="${category.categoryName}"
-                                            th:selected="${category.categoryId} == ${categoryId}"></option>
-                                </th:block>
+<!-- Fruits Shop Start-->
+<div class="container-fluid fruite py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Fresh fruits shop</h1>
+        <div class="row g-4">
+            <div class="col-lg-12">
+                <div class="row g-4">
+                    <div class="col-xl-3">
+                        <div class="input-group w-100 mx-auto d-flex">
+                            <input type="search" class="form-control p-3" placeholder="keywords"
+                                   aria-describedby="search-icon-1">
+                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-6"></div>
+                    <div class="col-xl-3">
+                        <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                            <label for="fruits">Default Sorting:</label>
+                            <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3">
+                                <option value="volvo">Nothing</option>
+                                <option value="saab">Popularity</option>
+                                <option value="opel">Organic</option>
+                                <option value="audi">Fantastic</option>
                             </select>
-                            <input type="text" name="name" placeholder="Search by name" th:value="${name}" />
-                            <button type="submit">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <form id="categoryForm" action="/canteen_details" method="get">
+                            <div class="row g-4">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <h4>Search</h4>
+                                        <input type="text" class="form-control" name="name" th:value="${name}" placeholder="Search for food..." onkeypress="if(event.keyCode == 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <h4>Categories</h4>
+                                        <ul class="list-unstyled fruite-categorie">
+                                            <li th:each="category : ${categories}">
+                                                <div class="d-flex justify-content-between fruite-name">
+                                                    <input class="pixel-checkbox" style="margin-right: 10px" type="checkbox"
+                                                           name="checkedCategories" th:value="${category.categoryId}"
+                                                           id="${'category_' + category.categoryId}"
+                                                           onchange="document.getElementById('categoryForm').submit()"
+                                                           th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
+                                                    <label for="${'category_' + category.categoryId}" th:text="${category.categoryName}" style="color: #0b0b0b"></label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <h4>Canteens</h4>
+                                        <ul class="list-unstyled fruite-categorie">
+                                            <li th:each="canteen : ${canteens}">
+                                                <div class="d-flex justify-content-between fruite-name">
+                                                    <input class="pixel-checkbox" style="margin-right: 10px" type="checkbox"
+                                                           name="checkedCanteens" th:value="${canteen.canteenId}"
+                                                           id="${'canteen_' + canteen.canteenId}"
+                                                           onchange="document.getElementById('categoryForm').submit()"
+                                                           th:checked="${checkedCanteens != null and #lists.contains(checkedCanteens, canteen.canteenId)}">
+                                                    <label for="${'canteen_' + canteen.canteenId}" th:text="${canteen.canteenName}" style="color: #0b0b0b"></label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- Other filters like Additional can be here -->
+                            </div>
                         </form>
                     </div>
-                </div>
-                <div class="col-lg-5 col-md-5">
-                    <div class="shop__option__right">
-                        <select>
-                            <option value="">Default sorting</option>
-                            <option value="">A to Z</option>
-                            <option value="">1 - 8</option>
-                            <option value="">Name</option>
-                        </select>
-                        <a href="#"><i class="fa fa-list"></i></a>
-                        <a href="#"><i class="fa fa-reorder"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-    </div>
-</section>
-<!-- Shop Details Section End -->
+                    <div class="col-lg-9">
+                        <div class="row g-4 justify-content-center">
+                            <div th:if="${items_home.size() == 0}">
+                                <h4>Không có kết quả phù hợp</h4>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-4" th:each="food : ${items_home}">
+                                <div class="rounded position-relative fruite-item">
+                                    <div class="fruite-img">
+                                        <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt=""
+                                             style="width: 100px;height: 180px">
+                                    </div>
+                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                                         style="top: 10px; left: 10px;" th:text="${food.category.categoryName}">
+                                    </div>
+                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                        <h4><a th:text="${food.foodName}" style="color: #db032b"></a></h4>
+                                        <p><a th:text="${food.price}" style="color:#db032b"></a></p>
+                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                            <a href="#" style="color: #db032b" class="btn border border-secondary rounded-pill px-2 text-primary">
+                                                <i class="fa fa-shopping-bag me-2 text-primary_test"></i> Add to cart
+                                            </a>
+                                            <a th:href="@{/food_details(id=${food.foodId})}" style="color: #db032b" class="btn border border-secondary rounded-pill px-2 text-primary">
+                                                <i class="fa fa-utensils me-2 text-primary_test"></i> View Food
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-<!-- Related Products Section Begin -->
-<section class="related-products spad">
-    <div class="container">
+                            <div class="col-12">
+                                <ul class="pagination justify-content-center d-flex mt-5">
+                                    <li class="page-item rounded" th:classappend="${currentPage == 0} ? 'disabled'">
+                                        <a class="page-link rounded" th:href="@{/canteen_details(page=${currentPage - 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Previous</a>
+                                    </li>
+                                    <li class="page-item rounded" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                                        <a class="page-link" th:href="@{/canteen_details(page=${i}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}" th:text="${i + 1}">1</a>
+                                    </li>
+                                    <li class="page-item rounded" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/canteen_details(page=${currentPage + 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
 
-        <div class="row">
-            <div th:each="food : ${items_home}" class="col-lg-3 col-md-6 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg">
-                        <img th:src="${food.imageFood}" class="product__item__pic set-bg">
-                        <div class="product__label">
-                            <span th:text="${food.category.categoryName}">Cupcake</span>
                         </div>
                     </div>
-                    <div class="product__item__text">
-                        <h6><a th:href="@{#}" th:text="${food.foodName}">Item Name</a></h6>
-                        <div class="product__item__price" th:text="'$' + ${food.price}">Price</div>
-                        <div class="product__item__price" th:text=" ${food.canteen.canteenName}">Price</div>
-                        <div class="d-flex justify-content-between mt-3">
-                            <a th:href="@{#}" class="btn btn-outline-primary">Add to cart</a>
-                            <a class="btn btn-outline-secondary"  th:href="@{/food_details(id=${food.foodId})}">Profile items</a>
-                        </div>
-                    </div>
                 </div>
+
             </div>
         </div>
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                    <a class="page-link" th:href="@{/canteen_details(page=${currentPage} - 1)}">Previous</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                    th:classappend="${i == currentPage} ? 'active'">
-                    <a class="page-link" th:href="@{/canteen_details(page=${i})}" th:text="${i + 1}">1</a>
-                </li>
-                <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{/canteen_details(page=${currentPage} + 1)}">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
-</section>
-<!-- Related Products Section End -->
+</div>
+<!-- Fruits Shop End-->
 
+
+<!-- Footer Start -->
 <div th:replace="footer :: footer"></div>
+<!-- Footer End -->
 
-<!-- Js Plugins -->
-<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/jquery.nice-select.min.js}"></script>
-<script th:src="@{/js/jquery.barfiller.js}"></script>
-<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
-<script th:src="@{/js/jquery.slicknav.js}"></script>
-<script th:src="@{/js/owl.carousel.min.js}"></script>
-<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
-<script th:src="@{/js/main.js}"></script>
+<!-- Copyright Start -->
+<div class="container-fluid copyright bg-dark py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your Site Name</a>, All right reserved.</span>
+            </div>
+            <div class="col-md-6 my-auto text-center text-md-end text-white">
+                <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
+                <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
+                <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
+                Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed By <a
+                    class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Copyright End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+        class="fa fa-arrow-up"></i></a>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/lib/easing/easing.min.js}"></script>
+<script th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+<script th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+<!-- Template Javascript -->
+<script th:src="@{/js/main_test.js}"></script>
+<!---->
+
+<script>
+    function submitForm(categoryId) {
+        // Tạo input ẩn chứa giá trị của categoryId
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'categoryId';
+        input.value = categoryId;
+
+        // Thêm input ẩn vào form
+        const form = document.getElementById('categoryForm');
+        form.appendChild(input);
+
+        // Thực hiện submit form
+        form.submit();
+    }
+</script>
+
+<!-- Template Javascript -->
+<script src="/js/main_test.js"></script>
 </body>
 
 </html>

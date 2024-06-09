@@ -1,14 +1,17 @@
 package com.ffood.g1.controller;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.repository.FoodRepository;
+import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.CategoryService;
 import com.ffood.g1.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,66 +32,58 @@ public class CanteenController {
     @Autowired
     private CategoryService categoryService;
 
-
-//    @GetMapping("/canteen_details")
-//    public String getItems(@RequestParam(defaultValue = "0") int page, Model model) {
-//
-//        //get all food in canteens
-//        Pageable pageable = PageRequest.of(page, 12);  // 12 items per page (3 rows x 4 items)
-//        Page<Food> items = foodService.getAllFood(pageable);
-//        model.addAttribute("items_home", items.getContent());
-//        model.addAttribute("totalPages", items.getTotalPages());
-//        model.addAttribute("currentPage", page);
-//
-//        //get all category
-//        List<Category> categories = categoryService.getAllCategories();
-//        model.addAttribute("categories", categories);
-//
-//        return "/canteens";
-//
-//    }
+    @Autowired
+    private CanteenService canteenService;
 
     @GetMapping("/canteen_details")
     public String viewCanteens(@RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "categoryId", required = false) Integer categoryId,
                                @RequestParam(value = "name", required = false) String name,
+                               @RequestParam(value = "checkedCategories", required = false) List<Integer> checkedCategories,
+                               @RequestParam(value = "checkedCanteens", required = false) List<Integer> checkedCanteens,
+                               @RequestParam(value = "sort", required = false) String sort,
                                Model model) {
-        Pageable pageable = PageRequest.of(page, 12);  // 12 items per page (3 rows x 4 items)
-        Page<Food> items;
+        Pageable pageable = PageRequest.of(page, 9, getSortDirection(sort));
+        Page<Food> foods;
 
-        if (categoryId != null && name != null) {
-            items = foodService.getFoodByCategoryAndName(categoryId, name, pageable);
-        } else if (categoryId != null) {
-            items = foodService.getFoodByCategory(categoryId, pageable);
-        } else if (name != null) {
-            items = foodService.getFoodByName(name, pageable);
+        if ((checkedCategories != null && !checkedCategories.isEmpty()) || (checkedCanteens != null && !checkedCanteens.isEmpty()) || name != null) {
+            foods = foodService.getFilteredFoods(checkedCategories, checkedCanteens, name, pageable);
         } else {
-            items = foodService.getAllFood(pageable);
+            foods = foodService.getAllFood(pageable);
         }
-        model.addAttribute("categoryId", categoryId);  // Add this line
-        model.addAttribute("name", name);  // Add this line
 
-        model.addAttribute("items_home", items.getContent());
-        model.addAttribute("totalPages", items.getTotalPages());
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("name", name);
+        model.addAttribute("checkedCategories", checkedCategories);
+        model.addAttribute("checkedCanteens", checkedCanteens);
+        model.addAttribute("sort", sort);
+
+        model.addAttribute("items_home", foods.getContent());
+        model.addAttribute("totalPages", foods.getTotalPages());
         model.addAttribute("currentPage", page);
 
         // Get all categories
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
 
+        // Get all canteens
+        List<Canteen> canteens = canteenService.getAllCanteens();
+        model.addAttribute("canteens", canteens);
 
         return "canteens";
     }
 
-
-//
-//    @GetMapping("/food_details")
-//    public String getFoodDetail( Model model) {
-//        List<Food> food_details = foodService.getRandomFood();
-//        model.addAttribute("food_details", food_details);
-//        return "/food_details";
-//
-//    }
-
-
+    private Sort getSortDirection(String sort) {
+        if (sort == null) return Sort.unsorted();
+        switch (sort) {
+            case "popularity":
+                return Sort.by(Sort.Direction.DESC, "saleCounts");
+            case "priceDesc":
+                return Sort.by(Sort.Direction.DESC, "price");
+            case "priceAsc":
+                return Sort.by(Sort.Direction.ASC, "price");
+            default:
+                return Sort.unsorted();
+        }
+    }
 }

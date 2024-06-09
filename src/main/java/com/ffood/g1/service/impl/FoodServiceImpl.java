@@ -40,24 +40,31 @@ public class FoodServiceImpl implements FoodService {
         category.setCategoryId(categoryId);
         return foodRepository.findByCategory(category);
     }
-
-
-
-
-    public Page<Food> getFoodByCategory(Integer categoryId, Pageable pageable) {
-        return foodRepository.findByCategoryCategoryId(categoryId, pageable);
-    }
-
-    public Page<Food> getFoodByName(String name, Pageable pageable) {
-        return foodRepository.findByFoodNameContaining(name, pageable);
-    }
-
-    public Page<Food> getFoodByCategoryAndName(Integer categoryId, String name, Pageable pageable) {
-        return foodRepository.findByCategoryCategoryIdAndFoodNameContaining(categoryId, name, pageable);
-    }
-
+    @Override
     public Optional<Food> getFoodById(Integer id) {
-        return foodRepository.findById(id);
+        return Optional.empty();
+    }
+
+
+
+
+    public Page<Food> getFilteredFoods(List<Integer> categoryIds, List<Integer> canteenIds, String name, Pageable pageable) {
+        if (categoryIds != null && !categoryIds.isEmpty() && canteenIds != null && !canteenIds.isEmpty() && name != null) {
+            return foodRepository.findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable);
+        } else if (categoryIds != null && !categoryIds.isEmpty() && canteenIds != null && !canteenIds.isEmpty()) {
+            return foodRepository.findByCategoriesAndCanteens(categoryIds, canteenIds, pageable);
+        } else if (categoryIds != null && !categoryIds.isEmpty() && name != null) {
+            return foodRepository.findByCategoriesAndName(categoryIds, name, pageable);
+        } else if (canteenIds != null && !canteenIds.isEmpty() && name != null) {
+            return foodRepository.findByCanteensAndName(canteenIds, name, pageable);
+        } else if (categoryIds != null && !categoryIds.isEmpty()) {
+            return foodRepository.findByCategoryIds(categoryIds, pageable);
+        } else if (canteenIds != null && !canteenIds.isEmpty()) {
+            return foodRepository.findByCanteenIds(canteenIds, pageable);
+        } else if (name != null) {
+            return foodRepository.findByNameContainingIgnoreCase(name, pageable);
+        }
+        return foodRepository.findAll(pageable);
     }
 
 }

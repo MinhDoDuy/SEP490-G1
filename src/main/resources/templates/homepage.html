@@ -212,27 +212,29 @@
                                     <div class="row g-4">
 
                                         <!-- Lặp qua danh sách sản phẩm -->
-                                        <div class="col-md-6 col-lg-4 col-xl-3 " th:each="item : ${items_home}">
+                                        <div class="col-md-6 col-lg-4 col-xl-3 " th:each="food : ${items_home}">
 
-                                            <div class="rounded position-relative fruite-item">
+                                            <div class="rounded position-relative fruite-item" co>
                                                 <div class="fruite-img">
-                                                    <img th:src="${item.imageFood}"
+                                                    <img th:src="${food.imageFood}"
                                                          class="img-fluid w-100 rounded-top" alt=""
-                                                         style="width: 100px;height: 200px ">
+                                                         style="width: 100px;height: 180px ">
                                                 </div>
                                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                                                      style="top: 10px; left: 10px;"><a th:href="@{#}"
-                                                                                       th:text="${item.category.categoryName}">Item
+                                                                                       th:text="${food.category.categoryName}">Item
                                                     Name</a></div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4><a th:href="@{#}" th:text="${item.foodName}">Item Name</a></h4>
-                                                    <p><a th:href="@{#}" th:text="${item.description}">Item Name</a></p>
+                                                    <h4><a th:href="@{#}" th:text="${food.foodName}" style="color: #db032b">Item Name</a></h4>
+                                                    <p><a th:href="@{#}" th:text="${food.price} " style="color: #db032b">Item Name</a></p>
                                                     <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
+                                                        <!--                                            <p class="text-dark fs-5 fw-bold mb-0"><a th:text="${food.price}"></a></p>-->
                                                         <a href="#"
-                                                           class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                                                class="fa fa-shopping-bag me-2 text-primary"></i> Add to
-                                                            cart</a>
+                                                           class="btn border border-secondary rounded-pill px-1 text-primary_test"><i
+                                                                class="fa fa-shopping-bag me-2 text-primary_test" ></i> Add to cart</a>
+                                                        <a th:href="@{/food_details(id=${food.foodId})}"
+                                                           class="btn border border-secondary rounded-pill px-1 text-primary_test"><i
+                                                                class="fa fa-utensils me-2 text-primary_test"></i> View Food</a>
                                                     </div>
                                                 </div>
                                             </div>
