@@ -22,4 +22,6 @@ public interface FoodService {
     Optional<Food> getFoodById(Integer id) ;
 
  Page<Food> getFilteredFoods(List<Integer> checkedCategories, List<Integer> checkedCanteens, String name, Pageable pageable);
+
+ Optional<Food> getFoodByIdFoodDetails(Integer id);
 }

@@ -42,7 +42,7 @@ public class FoodController {
 
     @GetMapping("/food_details")
     public String viewFoodDetails(@RequestParam("id") Integer id, Model model) {
-        Optional<Food> foodOptional = foodService.getFoodById(id);
+        Optional<Food> foodOptional = foodService.getFoodByIdFoodDetails(id);
         if (foodOptional.isPresent()) {
             Food food = foodOptional.get();
             model.addAttribute("food", food);
