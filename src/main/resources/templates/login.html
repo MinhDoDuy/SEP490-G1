@@ -1,50 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Croak Order</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
-          integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
-          crossorigin="anonymous"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Croak Order - Login</title>
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link th:href="@{/css/style_login.css}" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <div class="left">
-        <h1>Croak Order</h1>
-        <h2>by SEP490 - G1</h2>
-        <form th:action="@{/login}" method="post">
-            <div th:if="${successMessage}" class="alert alert-success">
-                <span th:text="${successMessage}"></span>
-            </div>
-            <div th:if="${param.error}">
-                <div class="alert alert-danger">Tài khoản hoặc mật khẩu không hợp lệ.</div>
-            </div>
-            <div style="color: #058f10" th:if="${param.logout}">
-                <div class="alert alert-success">Đăng xuất thành công.</div>
-            </div>
-            <label for="email">Email<span style="color: rgb(234, 77, 77);"> *</span></label>
-            <input type="email" id="email" name="username" placeholder="*****@email.com" autofocus="autofocus"/>
-            <label for="password">Mật Khẩu<span style="color: rgb(234, 77, 77);"> *</span></label>
-            <input type="password" id="password" name="password" placeholder="Password" autofocus="autofocus">
-            <div class="remember-forgot">
-                <div>
-                    <input type="checkbox" id="remember-me" name="remember-me">
-                    <label for="remember-me">Remember me</label>
+<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+    <div class="container">
+        <div class="card login-card">
+            <div class="row no-gutters">
+                <div class="col-md-5">
+                    <img src="/img/Canteen.jpg" alt="login" class="login-card-img">
                 </div>
-                <a class="forgot-password" th:href="@{/forgot-password}">Forgot Password?</a>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <div class="brand-wrapper">
+                            <img src="/img/logo.png" alt="logo" class="logo">
+                        </div>
+                        <p class="login-card-description">Sign into your account</p>
+                        <form th:action="@{/login}" method="post">
+                            <div th:if="${successMessage}" class="alert alert-success">
+                                <span th:text="${successMessage}"></span>
+                            </div>
+                            <div th:if="${param.error}">
+                                <div class="alert alert-danger">Tài khoản hoặc mật khẩu không hợp lệ.</div>
+                            </div>
+                            <div style="color: #058f10" th:if="${param.logout}">
+                                <div class="alert alert-success">Đăng xuất thành công.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="sr-only">Email</label>
+                                <input type="email" name="username" id="email" class="form-control" placeholder="*****@email.com" autofocus="autofocus">
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="password" class="sr-only">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="***********" >
+                                <span toggle="#password" class="mdi mdi-eye toggle-password"></span>
+                            </div>
+                            <div class="remember-forgot d-flex justify-content-between">
+                                <div>
+                                    <input type="checkbox" id="remember-me" name="remember-me">
+                                    <label for="remember-me">Remember me</label>
+                                </div>
+                                <a class="forgot-password-link" th:href="@{/forgot-password}">Forgot Password?</a>
+                            </div>
+                            <div class="buttons mt-4">
+                                <button type="submit" class="btn btn-block login-btn mb-4">Login</button>
+                                <a th:href="@{/register}" type="button" class="btn btn-block signup-btn">Register</a>
+                            </div>
+                        </form>
+                        <nav class="login-card-footer-nav">
+                            <a href="#!">Terms of use.</a>
+                            <a href="#!">Privacy policy</a>
+                        </nav>
+                    </div>
+                </div>
             </div>
-            <div class="buttons">
-                <button type="submit" class="login-btn">Đăng Nhập</button>
-                <a th:href="@{/register}" type="button" class="signup-btn">Đăng Kí</a>
-            </div>
-
-        </form>
+        </div>
     </div>
-    <div class="right">
-        <img src="img/Canteen.jpg" alt="Description of the image">
-    </div>
-</div>
+</main>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".toggle-password").click(function() {
+            $(this).toggleClass("mdi-eye mdi-eye-off");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") === "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+    });
+</script>
 </body>
 </html>

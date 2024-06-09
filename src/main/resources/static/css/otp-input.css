@@ -16,7 +16,7 @@ body, html {
 }
 
 .font-h2-strong {
-    color: #e2e8f0;
+    color: #1b1e21;
     font-weight: 400;
     font-size: 50px;
     line-height: 36px;
@@ -28,12 +28,13 @@ body, html {
 }
 
 .large-heading {
+    color: #1b1e21;
     font-size: 20px; /* Thay đổi kích thước theo ý bạn */
     font-weight: bold; /* Nếu bạn muốn làm đậm chữ */
 }
 
 .alert-danger{
-    color: crimson;
+    color: aqua;
     font-size: 20px;
 }
 
