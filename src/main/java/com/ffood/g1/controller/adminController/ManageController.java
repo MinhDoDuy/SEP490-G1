@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,6 +36,7 @@ public class ManageController {
                               @RequestParam(value = "size", defaultValue = "10") int size,
                               @RequestParam(value = "keyword", required = false) String keyword) {
         Page<User> userPage;
+
         if (keyword == null || keyword.isEmpty()) {
             userPage = userService.getAllUsers(page, size);
         } else {
@@ -66,10 +64,29 @@ public class ManageController {
         return "redirect:/manager-user";
     }
 
+
     @GetMapping("/delete-user/{userId}")
     public String deleteUser(@PathVariable Integer userId) {
         userService.deleteUserById(userId);
-        return "redirect:/manager-user";// Redirect to the users list page
+
+        return "redirect:/manager-user"; // Redirect to the users list page
     }
+
+
+    @GetMapping("/add-user")
+    public String showAddForm(Model model) {
+        User user = new User();
+        List<Role> roles = roleService.getAllRoles();
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roles);
+        return "add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
+    }
+
+    @PostMapping("/add-user")
+    public String addUser(@ModelAttribute("user") User user) {
+        userService.saveUser(user);
+        return "redirect:/manager-user";
+    }
+
 
 }

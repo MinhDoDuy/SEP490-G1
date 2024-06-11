@@ -64,10 +64,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByCodeName(codeName) != null;
     }
 
-    @Override
-    public void deleteUserById(Integer userId) {
-        userRepository.deleteById(userId);
-    }
+
 
     @Override
     public void sendResetPasswordEmail(String email, HttpServletRequest request) {
@@ -153,6 +150,16 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 
 
