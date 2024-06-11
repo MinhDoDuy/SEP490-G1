@@ -8,8 +8,6 @@ import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +32,7 @@ public class ManageController {
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<User> userPage = userService.getAllUsers(page, size);
         model.addAttribute("userPage", userPage);
-        return "manage-user";
+        return "./admin-management/manage-user";
     }
 
     @GetMapping("/search")
@@ -52,7 +50,7 @@ public class ManageController {
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
 
-        return "manage-user";
+        return "./admin-management/manage-user";
     }
 
 
@@ -86,7 +84,7 @@ public class ManageController {
         List<Role> roles = roleService.getAllRoles();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
-        return "add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
+        return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
     }
 
     @PostMapping("/add-user")
@@ -102,7 +100,7 @@ public class ManageController {
                                @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<Canteen> canteenPage = canteenService.getAllCanteensPage(page, size);
         model.addAttribute("canteenPage", canteenPage);
-        return "manage-canteen";
+        return "./admin-management/manage-canteen";
     }
 
     @GetMapping("/search-canteen")
@@ -120,7 +118,7 @@ public class ManageController {
         model.addAttribute("canteenPage", canteenPage);
         model.addAttribute("keyword", keyword);
 
-        return "manage-canteen";
+        return "./admin-management/manage-canteen";
     }
 
 
@@ -128,7 +126,7 @@ public class ManageController {
     public String showAddCanteenForm(Model model) {
         model.addAttribute("canteen", new Canteen());
         model.addAttribute("managers", userService.getAllManagers());
-        return "add-canteen";
+        return "./admin-management/add-canteen";
     }
 
     @PostMapping("/add-canteen")
