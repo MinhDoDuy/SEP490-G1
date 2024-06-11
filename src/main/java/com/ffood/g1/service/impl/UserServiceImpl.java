@@ -164,10 +164,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public List<User> getManagers() {
-        return userRepository.findByRoleRoleId(3); // 3 là roleId của manager
-    }
+
 
 
     @Override

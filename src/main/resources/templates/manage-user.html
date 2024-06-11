@@ -162,14 +162,14 @@
                 </table>
                 <div class="pagination">
                     <span th:if="${userPage.hasPrevious()}">
-                        <a th:href="@{/manager-user(page=${userPage.number - 1}, size=${userPage.size})}">Previous</a>
+                        <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}">Previous</a>
                     </span>
                     <span>
                         Page <span th:text="${userPage.number + 1}">1</span> of
                         <span th:text="${userPage.totalPages}">1</span>
                     </span>
                     <span th:if="${userPage.hasNext()}">
-                    <a th:href="@{/manager-user(page=${userPage.number + 1}, size=${userPage.size})}">Next</a>
+                    <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}">Next</a>
                     </span>
                 </div>
             </div>

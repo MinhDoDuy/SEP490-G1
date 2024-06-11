@@ -10,7 +10,7 @@
 <body>
 <div class="container">
   <h2>Add New Canteen</h2>
-  <form th:action="@{/canteen/add}" th:object="${canteen}" method="post">
+  <form th:action="@{/add-canteen}" th:object="${canteen}" method="post">
     <div>
       <label for="canteenName">Canteen Name:</label>
       <input type="text" id="canteenName" th:field="*{canteenName}" required>
