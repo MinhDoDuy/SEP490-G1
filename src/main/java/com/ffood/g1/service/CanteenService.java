@@ -11,4 +11,6 @@ public interface CanteenService {
 
     Page<Canteen> getAllCanteensPage(Pageable pageable);
 
+    void saveCanteen(Canteen canteen);
+
 }

@@ -163,8 +163,10 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
-
+    @Override
+    public List<User> getAllManagers() {
+        return userRepository.findByRoleRoleId(3);
+    }
 
 
     @Override

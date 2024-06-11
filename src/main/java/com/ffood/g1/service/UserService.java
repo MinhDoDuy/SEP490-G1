@@ -50,5 +50,6 @@ public interface UserService extends UserDetailsService {
 
     void saveUser(User user);
 
+    List<User> getAllManagers();
 
 }

@@ -107,7 +107,18 @@ public class ManageController {
     }
 
 
+    @GetMapping("/add-canteen")
+    public String showAddCanteenForm(Model model) {
+        model.addAttribute("canteen", new Canteen());
+        model.addAttribute("managers", userService.getAllManagers());
+        return "add-canteen";
+    }
 
+    @PostMapping("/add-canteen")
+    public String addCanteen(@ModelAttribute("canteen") Canteen canteen, Model model) {
+        canteenService.saveCanteen(canteen);
+        return "redirect:/manage-canteen";
+    }
 
 
 

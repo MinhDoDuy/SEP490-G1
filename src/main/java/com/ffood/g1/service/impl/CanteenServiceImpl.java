@@ -25,6 +25,10 @@ public class CanteenServiceImpl implements CanteenService {
         return canteenRepository.findAll(pageable);
     }
 
+    @Override
+    public void saveCanteen(Canteen canteen) {
+        canteenRepository.save(canteen);
+    }
 
 
     public List<Canteen> getAllCanteenContact() {
