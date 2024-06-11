@@ -14,13 +14,14 @@
     <input type="email" id="email" th:field="*{email}"/><br/>
     <label for="phone">Phone:</label>
     <input type="text" id="phone" th:field="*{phone}"/><br/>
-
+    <label for="password">Password:</label>
+    <input type="password" id="password" th:field="*{password}"/><br/>
     <label for="role">Role:</label>
     <select id="role" th:field="*{role.roleId}">
         <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleName}"></option>
     </select><br/>
     <button type="submit">Save</button>
 </form>
-<a th:href="@{/users}">Back to list</a>
+<a th:href="@{/manager-user}">Back to list</a>
 </body>
 </html>

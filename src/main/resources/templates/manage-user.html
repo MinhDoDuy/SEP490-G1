@@ -121,7 +121,8 @@
                 </div>
                 <div class="search-container">
                     <form th:action="@{/search}" method="get" class="search-bar">
-                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by full name, email, or code name" pattern=".*\S.*" >
+                        <input type="text" name="keyword" th:value="${keyword}"
+                               placeholder="Search by full name, email, or code name" pattern=".*\S.*">
                         <button class="search-btn" type="submit">
                             <span>Search</span>
                         </button>
@@ -160,14 +161,16 @@
                     </tbody>
                 </table>
                 <div class="pagination">
-        <span th:if="${userPage.hasPrevious()}">
-            <a th:href="@{/manager-user(page=${userPage.number - 1}, size=${userPage.size})}">Previous</a>
-        </span>
-                    <span>Page <span th:text="${userPage.number + 1}">1</span> of <span
-                            th:text="${userPage.totalPages}">1</span></span>
+                    <span th:if="${userPage.hasPrevious()}">
+                        <a th:href="@{/manager-user(page=${userPage.number - 1}, size=${userPage.size})}">Previous</a>
+                    </span>
+                    <span>
+                        Page <span th:text="${userPage.number + 1}">1</span> of
+                        <span th:text="${userPage.totalPages}">1</span>
+                    </span>
                     <span th:if="${userPage.hasNext()}">
-            <a th:href="@{/manager-user(page=${userPage.number + 1}, size=${userPage.size})}">Next</a>
-        </span>
+                    <a th:href="@{/manager-user(page=${userPage.number + 1}, size=${userPage.size})}">Next</a>
+                    </span>
                 </div>
             </div>
             <div class="recentCustomers">

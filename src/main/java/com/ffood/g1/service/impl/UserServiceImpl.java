@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -160,6 +161,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(User user) {
         userRepository.save(user);
+    }
+
+
+    @Override
+    public List<User> getManagers() {
+        return userRepository.findByRoleRoleId(3); // 3 là roleId của manager
     }
 
 

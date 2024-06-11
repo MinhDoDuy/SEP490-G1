@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 public interface UserService extends UserDetailsService {
@@ -48,4 +49,6 @@ public interface UserService extends UserDetailsService {
     void deleteUserById(Integer userId);
 
     void saveUser(User user);
+
+    List<User> getManagers();
 }

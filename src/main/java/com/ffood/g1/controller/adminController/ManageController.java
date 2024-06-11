@@ -1,11 +1,15 @@
 package com.ffood.g1.controller.adminController;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,9 @@ public class ManageController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private CanteenService canteenService;
+
 
     @GetMapping("/manager-user")
     public String listUsers(Model model,
@@ -27,7 +34,7 @@ public class ManageController {
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<User> userPage = userService.getAllUsers(page, size);
         model.addAttribute("userPage", userPage);
-        return "manager-user";
+        return "manage-user";
     }
 
     @GetMapping("/search")
@@ -45,7 +52,7 @@ public class ManageController {
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
 
-        return "manager-user";
+        return "manage-user";
     }
 
 
@@ -86,6 +93,33 @@ public class ManageController {
     public String addUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
         return "redirect:/manager-user";
+    }
+
+
+    @GetMapping("/manage-canteen")
+    public String listCanteens(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "10") int size,
+                               Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Canteen> canteenPage = canteenService.getAllCanteensPage(pageable);
+        model.addAttribute("canteenPage", canteenPage);
+        return "manage-canteen";
+    }
+
+    @GetMapping("/add-canteen")
+    public String showAddCanteenForm(Model model) {
+        List<User> managers = userService.getManagers();
+        model.addAttribute("users", managers);
+        model.addAttribute("canteen", new Canteen());
+        return "addCanteen";
+    }
+
+    @PostMapping("/add-canteen")
+    public String addCanteen(Canteen canteen, @RequestParam Integer userId) {
+        User user = userService.getUserById(userId);
+        canteen.setUser(user);
+        canteenService.saveCanteen(canteen);
+        return "redirect:/manage-canteen";
     }
 
 
