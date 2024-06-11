@@ -27,7 +27,7 @@ public class CanteenServiceImpl implements CanteenService {
 
     @Override
     public void saveCanteen(Canteen canteen) {
-
+        canteenRepository.save(canteen);
     }
 
     public List<Canteen> getAllCanteenContact() {

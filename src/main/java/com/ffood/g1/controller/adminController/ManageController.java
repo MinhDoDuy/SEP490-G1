@@ -28,7 +28,7 @@ public class ManageController {
     private CanteenService canteenService;
 
 
-    @GetMapping("/manager-user")
+    @GetMapping("/manage-user")
     public String listUsers(Model model,
                             @RequestParam(value = "page", defaultValue = "0") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -68,7 +68,7 @@ public class ManageController {
     @PostMapping("/edit-role")
     public String updateUserRole(@RequestParam Integer userId, @RequestParam Integer roleId) {
         userService.updateUserRole(userId, roleId);
-        return "redirect:/manager-user";
+        return "redirect:/manage-user";
     }
 
 
@@ -76,7 +76,7 @@ public class ManageController {
     public String deleteUser(@PathVariable Integer userId) {
         userService.deleteUserById(userId);
 
-        return "redirect:/manager-user"; // Redirect to the users list page
+        return "redirect:/manage-user"; // Redirect to the users list page
     }
 
 
@@ -92,7 +92,7 @@ public class ManageController {
     @PostMapping("/add-user")
     public String addUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
-        return "redirect:/manager-user";
+        return "redirect:/manage-user";
     }
 
 
@@ -108,16 +108,13 @@ public class ManageController {
 
     @GetMapping("/add-canteen")
     public String showAddCanteenForm(Model model) {
-        List<User> managers = userService.getManagers();
-        model.addAttribute("users", managers);
         model.addAttribute("canteen", new Canteen());
-        return "addCanteen";
+        model.addAttribute("managers", userService.getManagers());
+        return "add-canteen";
     }
 
     @PostMapping("/add-canteen")
-    public String addCanteen(Canteen canteen, @RequestParam Integer userId) {
-        User user = userService.getUserById(userId);
-        canteen.setUser(user);
+    public String addCanteen(@ModelAttribute Canteen canteen) {
         canteenService.saveCanteen(canteen);
         return "redirect:/manage-canteen";
     }

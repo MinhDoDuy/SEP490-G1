@@ -90,9 +90,14 @@
                                 <a th:href="@{/view-profile/{userId}(userId=${user.userId})}" class="dropdown-item">Xem hồ sơ</a>
 
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_ADMIN'}">
-                                    <a th:href="@{/manage-user}" class="dropdown-item">Quản Lý Người Dùng</a>
+
                                     <a th:href="@{/manage-canteen}" class="dropdown-item">Quản Lý Canteen</a>
                                 </div>
+                                <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_ADMIN'}">
+
+                                    <a th:href="@{/manage-user}" class="dropdown-item">Quản Lý Người Dùng</a>
+                                </div>
+
                                 <a th:href="@{/logout}" class="dropdown-item">Logout</a>
                                 <a href="chackout.html" class="dropdown-item">Checkout</a>
                                 <a href="testimonial.html" class="dropdown-item">Testimonial</a>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Canteen</title>
+  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+  <h2>Add New Canteen</h2>
+  <form th:action="@{/canteen/add}" th:object="${canteen}" method="post">
+    <div>
+      <label for="canteenName">Canteen Name:</label>
+      <input type="text" id="canteenName" th:field="*{canteenName}" required>
+    </div>
+    <div>
+      <label for="location">Location:</label>
+      <input type="text" id="location" th:field="*{location}">
+    </div>
+    <div>
+      <label for="canteenPhone">Phone:</label>
+      <input type="text" id="canteenPhone" th:field="*{canteenPhone}">
+    </div>
+    <div>
+      <label for="openingHours">Opening Hours:</label>
+      <input type="text" id="openingHours" th:field="*{openingHours}">
+    </div>
+    <div>
+      <label for="canteenImg">Canteen Image URL:</label>
+      <input type="text" id="canteenImg" th:field="*{canteenImg}">
+    </div>
+    <div>
+      <label for="manager">Manager:</label>
+      <select id="manager" th:field="*{user}">
+        <option th:each="manager : ${managers}" th:value="${manager}" th:text="${manager.fullName}">Manager</option>
+      </select>
+    </div>
+    <button type="submit">Add Canteen</button>
+  </form>
+</div>
+</body>
+</html>
