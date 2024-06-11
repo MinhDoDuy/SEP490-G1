@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+  <title>Manage Canteens</title>
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
   <style>
     .search-bar {
@@ -71,44 +71,6 @@
         <img src="assets/imgs/customer01.jpg" alt="">
       </div>
     </div>
-    <div class="cardBox">
-      <div class="card">
-        <div>
-          <div class="numbers">1,504</div>
-          <div class="cardName">Daily Views</div>
-        </div>
-        <div class="iconBx">
-          <ion-icon name="eye-outline"></ion-icon>
-        </div>
-      </div>
-      <div class="card">
-        <div>
-          <div class="numbers">80</div>
-          <div class="cardName">Sales</div>
-        </div>
-        <div class="iconBx">
-          <ion-icon name="cart-outline"></ion-icon>
-        </div>
-      </div>
-      <div class="card">
-        <div>
-          <div class="numbers">284</div>
-          <div class="cardName">Comments</div>
-        </div>
-        <div class="iconBx">
-          <ion-icon name="chatbubbles-outline"></ion-icon>
-        </div>
-      </div>
-      <div class="card">
-        <div>
-          <div class="numbers">$7,842</div>
-          <div class="cardName">Earning</div>
-        </div>
-        <div class="iconBx">
-          <ion-icon name="cash-outline"></ion-icon>
-        </div>
-      </div>
-    </div>
     <div class="details">
       <div class="recentOrders">
         <div class="cardHeader">
@@ -153,33 +115,16 @@
           </tbody>
         </table>
         <div class="pagination">
-                    <span th:if="${canteenPage.hasPrevious()}">
-                        <a th:href="@{/manage-canteen(page=${canteenPage.number - 1}, size=${canteenPage.size})}">Previous</a>
-                    </span>
+          <span th:if="${canteenPage.hasPrevious()}">
+            <a th:href="@{/manage-canteen(page=${canteenPage.number - 1}, size=${canteenPage.size}, keyword=${keyword})}">Previous</a>
+          </span>
           <span>
-                        Page <span th:text="${canteenPage.number + 1}">1</span> of
-                        <span th:text="${canteenPage.totalPages}">1</span>
-                    </span>
+            Page <span th:text="${canteenPage.number + 1}">1</span> of <span th:text="${canteenPage.totalPages}">1</span>
+          </span>
           <span th:if="${canteenPage.hasNext()}">
-                        <a th:href="@{/manage-canteen(page=${canteenPage.number + 1}, size=${canteenPage.size})}">Next</a>
-                    </span>
+            <a th:href="@{/manage-canteen(page=${canteenPage.number + 1}, size=${canteenPage.size}, keyword=${keyword})}">Next</a>
+          </span>
         </div>
-      </div>
-      <div class="recentCustomers">
-        <div class="cardHeader">
-          <h2>Recent Customers</h2>
-        </div>
-        <table>
-          <!-- Uncomment and populate this section with recent customer data if needed -->
-          <!-- <tr th:each="customer : ${recentCustomers}">
-              <td width="60px">
-                  <div class="imgBx"><img th:src="@{/images/{image}(image=${customer.image})}" alt=""></div>
-              </td>
-              <td>
-                  <h4 th:text="${customer.name}">David <br> <span th:text="${customer.country}">Italy</span></h4>
-              </td>
-          </tr> -->
-        </table>
       </div>
     </div>
   </div>

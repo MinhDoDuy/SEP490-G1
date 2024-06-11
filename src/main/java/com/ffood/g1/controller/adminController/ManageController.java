@@ -97,12 +97,29 @@ public class ManageController {
 
 
     @GetMapping("/manage-canteen")
-    public String listCanteens(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size,
-                               Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Canteen> canteenPage = canteenService.getAllCanteensPage(pageable);
+    public String listCanteens(Model model,
+                               @RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "size", defaultValue = "10") int size) {
+        Page<Canteen> canteenPage = canteenService.getAllCanteensPage(page, size);
         model.addAttribute("canteenPage", canteenPage);
+        return "manage-canteen";
+    }
+
+    @GetMapping("/search-canteen")
+    public String searchCanteens(Model model,
+                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                 @RequestParam(value = "keyword", required = false) String keyword) {
+        Page<Canteen> canteenPage;
+
+        if (keyword == null || keyword.isEmpty()) {
+            canteenPage = canteenService.getAllCanteensPage(page, size);
+        } else {
+            canteenPage = canteenService.searchCanteens(keyword, page, size);
+        }
+        model.addAttribute("canteenPage", canteenPage);
+        model.addAttribute("keyword", keyword);
+
         return "manage-canteen";
     }
 
@@ -119,6 +136,7 @@ public class ManageController {
         canteenService.saveCanteen(canteen);
         return "redirect:/manage-canteen";
     }
+
 
 
 

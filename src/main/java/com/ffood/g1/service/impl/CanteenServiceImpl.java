@@ -5,6 +5,7 @@ import com.ffood.g1.repository.CanteenRepository;
 import com.ffood.g1.service.CanteenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,22 @@ public class CanteenServiceImpl implements CanteenService {
     }
 
     @Override
-    public Page<Canteen> getAllCanteensPage(Pageable pageable) {
+    public Page<Canteen> getAllCanteensPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return canteenRepository.findAll(pageable);
     }
+
 
     @Override
     public void saveCanteen(Canteen canteen) {
         canteenRepository.save(canteen);
+    }
+
+    @Override
+    public Page<Canteen> searchCanteens(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return canteenRepository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
+                keyword, keyword, keyword, pageable);
     }
 
 

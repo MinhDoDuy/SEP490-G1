@@ -67,7 +67,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                 // Admin
                 .antMatchers("/search-staff", "/dashboard/","/manage-user","/manage-user/**","/delete-user","/delete-user/**","/edit-profile","/edit-profile/**","/edit-role","/edit-role/**",
                             "/disable-user","/disable-user/**","/enable-user","/enable-user/**","/add-user","/add-user/**",
-                            "/manage-canteen","/manage-canteen/**","/add-canteen"
+                            "/manage-canteen","/manage-canteen/**","/add-canteen","/search-canteen"
                         ).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
