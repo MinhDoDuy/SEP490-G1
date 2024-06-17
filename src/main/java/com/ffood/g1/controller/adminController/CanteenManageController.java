@@ -66,6 +66,12 @@ public class CanteenManageController {
     }
 
 
+    @GetMapping("/delete-canteen/{canteenId}")
+    public String deleteCanteen(@PathVariable Integer canteenId) {
+        canteenService.deleteCanteenById(canteenId);
+        return "redirect:/manage-canteen";
+    }
+
 
 
 }

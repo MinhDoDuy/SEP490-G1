@@ -15,4 +15,6 @@ public interface CanteenService {
     void saveCanteen(Canteen canteen);
 
     Page<Canteen> searchCanteens(String keyword, int page, int size);
+
+    void deleteCanteenById(Integer canteenId);
 }

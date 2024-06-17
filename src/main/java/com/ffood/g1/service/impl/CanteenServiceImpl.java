@@ -40,6 +40,11 @@ public class CanteenServiceImpl implements CanteenService {
                 keyword, keyword, keyword, pageable);
     }
 
+    @Override
+    public void deleteCanteenById(Integer canteenId) {
+
+    }
+
 
     public List<Canteen> getAllCanteenContact() {
         return canteenRepository.findAll();
