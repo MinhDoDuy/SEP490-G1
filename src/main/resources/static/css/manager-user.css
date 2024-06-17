@@ -263,7 +263,6 @@ body {
     position: relative;
     width: 100%;
     padding: 20px;
-    display: grid;
     grid-template-columns: 2fr 1fr;
     grid-gap: 30px;
     /* margin-top: 10px; */
@@ -290,7 +289,7 @@ body {
 }
 .cardHeader .btn {
     position: relative;
-    padding: 5px 10px;
+    padding: 10px 10px;
     background: var(--blue);
     text-decoration: none;
     color: var(--white);
@@ -312,10 +311,7 @@ body {
 .details .recentOrders table tr:last-child {
     border-bottom: none;
 }
-.details .recentOrders table tbody tr:hover {
-    background: var(--blue);
-    color: var(--white);
-}
+
 .details .recentOrders table tr td {
     padding: 10px;
 }
@@ -465,5 +461,57 @@ body {
         position: fixed;
         right: 0;
         left: initial;
+    }
+
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+
+    .search-bar input[type="text"] {
+        width: 250px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .search-bar button.search-btn {
+        padding: 10px;
+        border: none;
+        background-color: #2A2185FF;
+        color: white;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }
+
+    .search-bar button.search-btn:hover {
+        background-color: #555;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #2A2185FF;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #2A2185FF;
+    }
+
+    .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: flex-start; /* Change from center to flex-start */
+        margin-top: 10px;
     }
 }

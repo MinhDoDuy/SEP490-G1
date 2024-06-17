@@ -56,9 +56,13 @@ public class CanteenServiceImpl implements CanteenService {
     }
 
 
+
+
     public List<Canteen> getAllCanteenContact() {
         return canteenRepository.findAll();
     }
+
+
 
 
 }

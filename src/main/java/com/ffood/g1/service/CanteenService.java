@@ -4,8 +4,10 @@ import com.ffood.g1.entity.Canteen;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+@Service
 
 public interface CanteenService {
     List<Canteen> getAllCanteens();
@@ -21,4 +23,7 @@ public interface CanteenService {
     Canteen getCanteenById(Integer canteenId);
 
     void updateCanteen(Canteen canteen);
+
+
+
 }
