@@ -129,7 +129,6 @@
                     </form>
 
                 </div>
-
                 <table>
                     <thead>
                     <tr>
@@ -155,11 +154,11 @@
                             <a th:href="@{/delete-user/{userId}(userId=${user.userId})}"
                                th:onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
                         </td>
-
                     </tr>
 
                     </tbody>
                 </table>
+
                 <div class="pagination">
                     <span th:if="${userPage.hasPrevious()}">
                         <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}">Previous</a>

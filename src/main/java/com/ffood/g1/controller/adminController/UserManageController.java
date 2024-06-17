@@ -66,7 +66,7 @@ public class UserManageController {
 
     @GetMapping("/delete-user/{userId}")
     public String deleteUser(@PathVariable Integer userId, Model model) {
-            userService.deleteUserById(userId);
+        userService.deleteUserById(userId);
         return "redirect:/manage-user"; // Redirect to the users list page
     }
 
