@@ -19,4 +19,6 @@ public interface CanteenService {
     void deleteCanteenById(Integer canteenId);
 
     Canteen getCanteenById(Integer canteenId);
+
+    void updateCanteen(Canteen canteen);
 }

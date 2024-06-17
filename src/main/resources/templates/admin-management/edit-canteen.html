@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Canteen</title>
+  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+  <style>
+    .container {
+      display: flex;
+    }
+    .main {
+      flex-grow: 1;
+      padding: 20px;
+    }
+    .details {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .cardHeader {
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+    .form-group {
+      padding-right: 15px;
+      margin-bottom: 1rem;
+    }
+    .col-md-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div th:replace="navigation :: navigation"></div>
+  <div class="main">
+    <div class="topbar">
+      <div class="toggle">
+        <ion-icon name="menu-outline"></ion-icon>
+      </div>
+      <div class="user">
+        <img src="assets/imgs/customer01.jpg" alt="">
+      </div>
+    </div>
+    <div class="details">
+      <div class="recentOrders">
+        <div class="cardHeader">
+          <h2>Edit Canteen</h2>
+        </div>
+        <form th:action="@{/edit-canteen}" method="post">
+          <input type="hidden" th:value="${canteen.canteenId}" name="canteenId">
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="canteenName">Name</label>
+              <input type="text" class="form-control" id="canteenName" th:value="${canteen.canteenName}" name="canteenName" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="location">Location</label>
+              <input type="text" class="form-control" id="location" th:value="${canteen.location}" name="location" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="canteenPhone">Phone</label>
+              <input type="text" class="form-control" id="canteenPhone" th:value="${canteen.canteenPhone}" name="canteenPhone" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="openingHours">Opening Hours</label>
+              <input type="text" class="form-control" id="openingHours" th:value="${canteen.openingHours}" name="openingHours" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+
+            <div class="form-group col-md-6">
+              <label for="manager">Manager</label>
+              <select id="manager" class="form-control" name="user.userId" required>
+                <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}" th:selected="${canteen.user.userId == manager.userId}"></option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/manage.js}"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
