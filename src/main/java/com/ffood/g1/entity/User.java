@@ -46,8 +46,6 @@ public class User implements UserDetails {
     @Column(name = "user_image")
     private String userImage;
 
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (role == null) {
@@ -98,6 +96,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "canteen_id")
+    private Canteen canteen;
+
+    public Canteen getCanteen() {
+        return canteen;
+    }
+
+    public void setCanteen(Canteen canteen) {
+        this.canteen = canteen;
     }
 
     @Override
