@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface CanteenRepository extends JpaRepository<Canteen, Long> {
+public interface CanteenRepository extends JpaRepository<Canteen, Integer> {
 
 
     Page<Canteen> findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(

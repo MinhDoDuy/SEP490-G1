@@ -42,7 +42,7 @@ public class CanteenServiceImpl implements CanteenService {
 
     @Override
     public void deleteCanteenById(Integer canteenId) {
-
+        canteenRepository.deleteById(canteenId);
     }
 
 
