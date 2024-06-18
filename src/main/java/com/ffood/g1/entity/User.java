@@ -60,6 +60,8 @@ public class User implements UserDetails {
     @Column(name = "updated_date")
     private LocalDate updatedDate;
 
+
+
     @Override
     public String getUsername() {
         return email;  // Assuming email is used as username

@@ -40,6 +40,10 @@ public class Canteen {
     @Column(name = "canteen_img")
     private String canteenImg;
 
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
 //    public Integer getId() {
 //        return canteenId;
 //    }
