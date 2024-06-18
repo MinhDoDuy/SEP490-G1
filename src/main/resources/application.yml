@@ -18,7 +18,6 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        ddl-auto: validate
         dialect: org.hibernate.dialect.PostgreSQLDialect
         enable_lazy_load_no_trans: true
     generate-ddl: true
