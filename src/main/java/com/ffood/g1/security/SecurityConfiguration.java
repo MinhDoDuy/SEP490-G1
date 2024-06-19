@@ -53,6 +53,9 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                 //.antMatchers("/", "/login/**").permitAll()
                 //Homepage
                 .antMatchers("/","/canteens","/homepage/**","/canteen_details","/canteen_contact","/food_details").permitAll()
+
+                //Cart
+                .antMatchers("/add_to_cart").permitAll()
                 // Profile
                 .antMatchers("/view-profile/","/update-profile",
                         "/staff-change-password/**", "/staff-change-password")
