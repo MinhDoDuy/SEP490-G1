@@ -1,25 +1,25 @@
 @font-face {
-    font-family: "Muli-Regular";
+    font-family: "Karla", sans-serif;
     src: url('../fonts/muli/Muli-Regular.ttf');
 }
 
 @font-face {
-    font-family: "Muli-SemiBold";
+    font-family: "Karla", sans-serif;
     src: url('../fonts/muli/Muli-SemiBold.ttf');
 }
 
 @font-face {
-    font-family: "Muli-Bold";
+    font-family: "Karla", sans-serif;
     src: url('../fonts/muli/Muli-Bold.ttf');
 }
 
 @font-face {
-    font-family: "Abril_Fatface";
+    font-family: "Karla", sans-serif;
     src: url('../fonts/Abril_Fatface/AbrilFatface-Regular.ttf');
 }
 
 body {
-    font-family: "Muli-Regular", serif;
+    font-family: "Karla", sans-serif;
     color: #666;
     font-size: 13px;
     margin: 0;
@@ -30,8 +30,27 @@ body {
     overflow: hidden;
 }
 
+.form-holder-pass {
+    position: relative;
+}
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
 input, textarea, select, button {
-    font-family: "Muli-Regular", serif;
+    font-family: "Karla", sans-serif;
     color: #333;
     font-size: 13px;
 }
@@ -97,7 +116,7 @@ form {
 h3 {
     text-transform: uppercase;
     font-size: 20px;
-    font-family: "Abril_Fatface", "Abril_Fatface", 'Poppins', sans-serif;
+    font-family: "Karla", sans-serif;
     text-align: center;
     margin-bottom: 20px;
     color: #6d5555;
@@ -124,7 +143,7 @@ label {
     margin-bottom: 10px;
     display: block;
     text-transform: uppercase;
-    font-family: "Muli-Bold", serif;
+    font-family: "Karla", sans-serif
 }
 
 .form-holder {
@@ -135,9 +154,12 @@ label {
 }
 
 .form-holder input,
-.form-holder small,
-.form-holder p {
-    width: 70%;
+.form-holder small {
+    width: 70%; /* Đảm bảo tất cả các input có cùng chiều rộng */
+}
+
+.form-holder-pass {
+    width: 34%;
 }
 
 .form-control {
@@ -164,7 +186,7 @@ button {
     font-size: 13px;
     color: #fff;
     text-transform: uppercase;
-    font-family: "Muli-SemiBold", serif;
+    font-family: "Karla", sans-serif;
     border-radius: 5px;
     transition: background 0.3s ease;
     margin-top: 1.5rem; /* Thêm khoảng cách giữa các dòng */
@@ -186,7 +208,7 @@ button:hover {
 .checkbox label {
     cursor: pointer;
     color: #999;
-    font-family: "Muli-SemiBold", serif;
+    font-family: "Karla", sans-serif
 }
 
 .checkbox input {
@@ -208,7 +230,7 @@ button:hover {
     border-radius: 2px;
     background-color: #ebebeb;
     border: 1px solid #ccc;
-    font-family: Material-Design-Iconic-Font, serif;
+    font-family: "Karla", sans-serif;
     color: #000;
     font-size: 10px;
     font-weight: bolder;
@@ -265,3 +287,4 @@ button:hover {
         margin-bottom: 40px;
     }
 }
+

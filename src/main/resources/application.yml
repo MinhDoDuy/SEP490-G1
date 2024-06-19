@@ -31,8 +31,9 @@ spring:
     cache: false
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 15MB
+      max-file-size: 30MB
+      max-request-size: 45MB
+      enabled: true
 ---
 server:
   port: 8080
@@ -55,9 +56,9 @@ spring:
             enable: true
 aws:
   bucket:
-    name: xxx
-    accessKey: AKIAQ3EGQNBOLSXAQLEQxxx
-    secretKey: 02rjNAgcGATaudQMGeaO0xMdS6AB0OYP1+hmJf/Fxxx
+    name: croak-order
+  accessKey: AKIAXYKJV66WSDNNVO6G
+  secretKey: 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
 
 logging:
   level:

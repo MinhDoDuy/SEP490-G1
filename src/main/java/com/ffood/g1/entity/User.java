@@ -19,108 +19,109 @@ import java.util.Set;
 @Builder
 @Table(name = "users")
 public class User implements UserDetails {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id")
-	private Integer userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Integer userId;
 
-	@ManyToOne
-	@JoinColumn(name = "role_id")
-	private Role role;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-	@Column(name = "full_name")
-	private String fullName;
+    @Column(name = "full_name")
+    private String fullName;
 
-	@Column(name = "code_name")
-	private String codeName;
+    @Column(name = "code_name")
+    private String codeName;
 
-	@Column(name = "password")
-	private String password;
+    @Column(name = "password")
+    private String password;
 
-	@Column(nullable = false, unique = true, length = 45)
-	private String email;
+    @Column(nullable = false, unique = true, length = 45)
+    private String email;
 
-	@Column(name = "phone")
-	private String phone;
+    @Column(name = "phone")
+    private String phone;
 
-	@Column(name = "user_image")
-	private String userImage;
+    @Column(name = "user_image")
+    private String userImage;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (role == null) {
+            return Collections.emptyList();
+        }
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
+    }
+
+    @Column(name = "created_date")
+    private LocalDate createdDate;
+
+    @Column(name = "updated_date")
+    private LocalDate updatedDate;
 
 
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//	private Set<Feedback> feedbacks = Collections.emptySet(); // Initialize as empty set
-//
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//	private Set<Cart> carts = Collections.emptySet(); // Initialize as empty set
-//
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//	private Set<Order> orders = Collections.emptySet(); // Initialize as empty set
 
+    @Override
+    public String getUsername() {
+        return email;  // Assuming email is used as username
+    }
 
+    public String getUserName() {
+        return fullName;
+    }
 
+    public Integer getUserId() {
+        return userId;
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		if (role == null) {
-			return Collections.emptyList();
-		}
-		return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
-	}
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-	@Column(name = "created_date")
-	private LocalDate createdDate;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-	@Column(name = "updated_date")
-	private LocalDate updatedDate;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-	@Override
-	public String getUsername() {
-		return email;  // Assuming email is used as username
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-	public String getUserName() {
-		return fullName;
-	}
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
-	public Integer getUserId() {
-		return userId;
-	}
+    @ManyToOne
+    @JoinColumn(name = "canteen_id")
+    private Canteen canteen;
 
-	@Override
-	public String getPassword() {
-		return password;
-	}
+    public Canteen getCanteen() {
+        return canteen;
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    public void setCanteen(Canteen canteen) {
+        this.canteen = canteen;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-				"userId=" + userId +
-				", fullName='" + fullName + '\'' +
-				", phone='" + phone + '\'' +
-				", email='" + email + '\'' +
-				", password='" + password + '\'' +
-				", createdDate=" + createdDate +
-				", updatedDate=" + updatedDate +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", fullName='" + fullName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                '}';
+    }
 }

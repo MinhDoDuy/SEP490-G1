@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -63,6 +64,8 @@ public class UserServiceImpl implements UserService {
     public boolean isCodeNameExist(String codeName) {
         return userRepository.findByCodeName(codeName) != null;
     }
+
+
 
     @Override
     public void sendResetPasswordEmail(String email, HttpServletRequest request) {
@@ -150,6 +153,24 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAllManagers() {
+        return userRepository.findByRoleRoleId(3);
+    }
+
+
+
 
     @Override
     public boolean isPhoneExist(String phone) {
@@ -164,7 +185,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setFullName(user.getFullName());
             existingUser.setPhone(user.getPhone());
             existingUser.setEmail(user.getEmail());
-
+            existingUser.setUserImage(user.getUserImage());
             userRepository.save(existingUser);
         }
     }

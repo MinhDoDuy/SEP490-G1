@@ -4,7 +4,6 @@ import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -69,7 +68,12 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 // Admin
-                .antMatchers("/search-staff", "/dashboard/","/manager-user","/manager-user/**","/delete-user","/delete-user/**","/edit-profile","/edit-profile/**","/edit-role","/edit-role/**").hasRole("ADMIN")
+                .antMatchers("/search-staff", "/dashboard/","/manage-user","/manage-user/**","/delete-user","/delete-user/**","/edit-profile","/edit-profile/**","/edit-role","/edit-role/**",
+                        "/disable-user","/disable-user/**","/enable-user","/enable-user/**","/add-user","/add-user/**",
+                        "/manage-canteen","/manage-canteen/**","/add-canteen","/search-canteen",
+                        "/edit-canteen","/edit-canteen/**",
+                        "/edit-canteen","/edit-canteen/**","/delete-canteen"
+                ).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

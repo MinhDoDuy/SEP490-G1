@@ -1,4 +1,4 @@
-package com.ffood.g1.controller.management;
+package com.ffood.g1.controller.adminController;
 
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
@@ -8,29 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
-public class ManageController {
+public class UserManageController {
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private RoleService roleService;
-
-
-    @GetMapping("/manager-user")
+    @GetMapping("/manage-user")
     public String listUsers(Model model,
                             @RequestParam(value = "page", defaultValue = "0") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<User> userPage = userService.getAllUsers(page, size);
         model.addAttribute("userPage", userPage);
-        return "manager-user";
+        return "./admin-management/manage-user";
     }
 
     @GetMapping("/search")
@@ -39,6 +35,7 @@ public class ManageController {
                               @RequestParam(value = "size", defaultValue = "10") int size,
                               @RequestParam(value = "keyword", required = false) String keyword) {
         Page<User> userPage;
+
         if (keyword == null || keyword.isEmpty()) {
             userPage = userService.getAllUsers(page, size);
         } else {
@@ -47,7 +44,7 @@ public class ManageController {
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
 
-        return "manager-user";
+        return "./admin-management/manage-user";
     }
 
 
@@ -57,13 +54,36 @@ public class ManageController {
         List<Role> roles = roleService.getAllRoles();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
-        return "editRoleUser";
+        return "./admin-management/editRoleUser";
     }
 
     @PostMapping("/edit-role")
     public String updateUserRole(@RequestParam Integer userId, @RequestParam Integer roleId) {
         userService.updateUserRole(userId, roleId);
-        return "redirect:/manager-user";
+        return "redirect:/manage-user";
+    }
+
+
+    @GetMapping("/delete-user/{userId}")
+    public String deleteUser(@PathVariable Integer userId, Model model) {
+        userService.deleteUserById(userId);
+        return "redirect:/manage-user"; // Redirect to the users list page
+    }
+
+
+    @GetMapping("/add-user")
+    public String showAddForm(Model model) {
+        User user = new User();
+        List<Role> roles = roleService.getAllRoles();
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roles);
+        return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
+    }
+
+    @PostMapping("/add-user")
+    public String addUser(@ModelAttribute("user") User user) {
+        userService.saveUser(user);
+        return "redirect:/manage-user";
     }
 
 }

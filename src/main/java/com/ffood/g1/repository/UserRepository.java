@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 	User findByEmail(String email);
@@ -17,6 +19,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Page<User> findAll(Pageable pageable);
 
     //search list user with fullname , codename , email
-	Page<User> findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(String fullName, String email, String codeName, Pageable pageable);
+	Page<User> findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase
+	(String fullName, String email, String codeName, Pageable pageable);
+
+	List<User> findByRoleRoleId(Integer role_id);
+
 
 }
