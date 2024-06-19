@@ -28,9 +28,6 @@ import java.util.Objects;
 public class CanteenController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
 
     private FoodRepository foodRepository;
 
@@ -42,6 +39,9 @@ public class CanteenController {
 
     @Autowired
     private CanteenService canteenService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/canteen_details")
     public String viewCanteens(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -59,6 +59,8 @@ public class CanteenController {
                 model.addAttribute("user", user);
             }
         }
+
+
         Pageable pageable = PageRequest.of(page, 9, getSortDirection(sort));
         Page<Food> foods;
 
@@ -93,7 +95,7 @@ public class CanteenController {
         if (sort == null) return Sort.unsorted();
         switch (sort) {
             case "popularity":
-                return Sort.by(Sort.Direction.DESC, "saleCounts");
+                return Sort.by(Sort.Direction.DESC, "saleCount");
             case "priceDesc":
                 return Sort.by(Sort.Direction.DESC, "price");
             case "priceAsc":
