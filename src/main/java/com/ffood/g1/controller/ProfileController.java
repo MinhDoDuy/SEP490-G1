@@ -1,6 +1,8 @@
 package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.User;
+import com.ffood.g1.exception.SpringBootFileUploadException;
+import com.ffood.g1.service.FileS3Service;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,7 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 
 @Controller
@@ -20,7 +25,8 @@ public class ProfileController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-
+    @Autowired
+    private FileS3Service fileS3Service;
 
     @Autowired
     public void PasswordController(UserService userService) {
@@ -41,10 +47,19 @@ public class ProfileController {
     }
 
     @PostMapping("/update-profile")
-    public String updateProfile(@ModelAttribute User user, BindingResult result) {
+    public String updateProfile(@ModelAttribute User user, BindingResult result,
+                                @RequestParam("imageProfileInput") MultipartFile imageProfileInput, Model model)
+            throws SpringBootFileUploadException, IOException {
         if (result.hasErrors()) {
             return "profile"; // Return to profile page if there are validation errors
         }
+
+        // Upload file nếu có
+        if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
+            String avatarURL = fileS3Service.uploadFile(imageProfileInput);
+            user.setUserImage(avatarURL);
+        }
+
         userService.updateUser(user);
         return "redirect:/view-profile/" + user.getUserId();
     }

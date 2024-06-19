@@ -52,4 +52,8 @@ public interface UserService extends UserDetailsService {
 
     List<User> getAllManagers();
 
+
+
+
+
 }

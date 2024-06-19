@@ -2,6 +2,7 @@ package com.ffood.g1.controller.adminController;
 
 import com.ffood.g1.entity.Canteen;
 
+import com.ffood.g1.entity.User;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Controller
@@ -65,6 +68,27 @@ public class CanteenManageController {
         return "redirect:/manage-canteen";
     }
 
+
+    @GetMapping("/edit-canteen/{canteenId}")
+    public String editCanteen(@PathVariable Integer canteenId, Model model) {
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        List<User> managers = userService.getAllManagers();
+        model.addAttribute("canteen", canteen);
+        model.addAttribute("managers", managers);
+        return "./admin-management/edit-canteen";
+    }
+
+    @PostMapping("/edit-canteen")
+    public String updateCanteen(Canteen canteen) {
+        canteenService.updateCanteen(canteen);
+        return "redirect:/manage-canteen";
+    }
+
+    @GetMapping("/delete-canteen/{canteenId}")
+    public String deleteCanteen(@PathVariable Integer canteenId) {
+        canteenService.deleteCanteenById(canteenId);
+        return "redirect:/manage-canteen";
+    }
 
 
 
