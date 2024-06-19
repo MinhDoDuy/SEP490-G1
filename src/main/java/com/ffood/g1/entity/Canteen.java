@@ -22,7 +22,7 @@ public class Canteen {
     private Integer canteenId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "canteen_name", nullable = false)
@@ -40,13 +40,8 @@ public class Canteen {
     @Column(name = "canteen_img")
     private String canteenImg;
 
-
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
-
-//    public Integer getId() {
-//        return canteenId;
-//    }
-
-
+    
 }
+

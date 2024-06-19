@@ -160,6 +160,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -167,6 +168,8 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllManagers() {
         return userRepository.findByRoleRoleId(3);
     }
+
+
 
 
     @Override
@@ -182,7 +185,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setFullName(user.getFullName());
             existingUser.setPhone(user.getPhone());
             existingUser.setEmail(user.getEmail());
-
+            existingUser.setUserImage(user.getUserImage());
             userRepository.save(existingUser);
         }
     }

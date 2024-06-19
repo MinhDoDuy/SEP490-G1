@@ -5,6 +5,7 @@ import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -13,10 +14,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 public interface FoodRepository extends PagingAndSortingRepository<Food, Integer> {
+
+
+    @Transactional
+    @Modifying
+    //Modifying annotation để giúp JPA đang thực hiện thao tác delete
+    @Query("DELETE FROM Food f WHERE f.canteen.canteenId = :canteenId")
+    void deleteByCanteenId(@Param("canteenId") Integer canteenId);
+
+
     // @Query("SELECT i FROM Food i ORDER BY RAND()")
     @Query("SELECT f FROM Food f ORDER BY f.salesCount DESC")
     List<Food> findRandomItems(Pageable pageable);

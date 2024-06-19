@@ -95,6 +95,7 @@
             <td>Phone</td>
             <td>Opening Hours</td>
             <td>Manager</td>
+            <td>Status</td>
             <td>Action</td>
           </tr>
           </thead>
@@ -106,10 +107,11 @@
             <td th:text="${canteen.canteenPhone}">Phone</td>
             <td th:text="${canteen.openingHours}">Opening Hours</td>
             <td th:text="${canteen.user.fullName}">Manager</td>
+            <td th:text="${canteen.isActive ? 'Active' : 'Inactive'}">Status</td>
             <td>
               <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}">Edit</a>
-              <a th:href="@{/delete-canteen/{canteenId}(canteenId=${canteen.canteenId})}"
-                 th:onclick="return confirm('Are you sure you want to delete this canteen?');">Delete</a>
+<!--              <a th:href="@{/delete-canteen/{canteenId}(canteenId=${canteen.canteenId})}"-->
+<!--                 th:onclick="return confirm('Are you sure you want to delete this canteen?');">Delete</a>-->
             </td>
           </tr>
           </tbody>
@@ -129,7 +131,7 @@
     </div>
   </div>
 </div>
-<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/manage.js}"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
