@@ -6,28 +6,123 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add New Canteen</title>
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+  <style>
+    .form-container {
+      width: 50%;
+      margin: auto;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group select {
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .form-group select {
+      width: auto;
+    }
+
+    button[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body>
-<div class="container">
-  <div th:replace="navigation :: navigation"></div>
-  <div class="main">
-    <h2>Add New Canteen</h2>
-    <form th:action="@{/add-canteen}" th:object="${canteen}" method="post">
-      <label for="canteenName">Canteen Name:</label>
-      <input type="text" id="canteenName" th:field="*{canteenName}" required>
-      <label for="location">Location:</label>
-      <input type="text" id="location" th:field="*{location}">
-      <label for="canteenPhone">Phone:</label>
-      <input type="text" id="canteenPhone" th:field="*{canteenPhone}">
-      <label for="openingHours">Opening Hours:</label>
-      <input type="text" id="openingHours" th:field="*{openingHours}">
-      <label for="manager">Manager:</label>
-      <select id="manager" th:field="*{user.userId}">
-        <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}"></option>
-      </select>
-      <button type="submit">Add Canteen</button>
-    </form>
+<body class="text-gray-800 font-inter">
+
+<!-- start: Sidebar -->
+<div th:replace="sidebar :: sidebar"></div>
+<!-- end: Sidebar -->
+
+<!-- start: Main -->
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
+  <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+    <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+      <i class="ri-menu-line"></i>
+    </button>
+    <ul class="flex items-center text-sm ml-4">
+      <li class="mr-2">
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+      </li>
+      <li class="text-gray-600 mr-2 font-medium">/</li>
+      <li class="text-gray-600 mr-2 font-medium">Add New Canteen</li>
+    </ul>
   </div>
-</div>
+
+  <div class="p-6 flex justify-center">
+
+    <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+      <div class="flex justify-between mb-4 items-start">
+        <div class="font-medium">Add New Canteen</div>
+      </div>
+      <div class="overflow-x-auto">
+        <form th:action="@{/add-canteen}" th:object="${canteen}" method="post">
+          <div class="form-group">
+            <label for="canteenName">Canteen Name:</label>
+            <input type="text" id="canteenName" th:field="*{canteenName}" required>
+          </div>
+          <div class="form-group">
+            <label for="location">Location:</label>
+            <input type="text" id="location" th:field="*{location}">
+          </div>
+          <div class="form-group">
+            <label for="canteenPhone">Phone:</label>
+            <input type="text" id="canteenPhone" th:field="*{canteenPhone}">
+          </div>
+          <div class="form-group">
+            <label for="openingHours">Opening Hours:</label>
+            <input type="text" id="openingHours" th:field="*{openingHours}">
+          </div>
+          <div class="form-group">
+            <label for="manager">Manager:</label>
+            <select id="manager" th:field="*{user.userId}">
+              <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}"></option>
+            </select>
+          </div>
+          <button type="submit">Add Canteen</button>
+        </form>
+        <a th:href="@{/manage-canteen}" class="back-link">Back to list</a>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- end: Main -->
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{/js/manage.js}"></script>
 </body>
 </html>

@@ -51,7 +51,7 @@ public class UserManageController {
     @GetMapping("/edit-role/{userId}")
     public String editUserForm(@PathVariable Integer userId, Model model) {
         User user = userService.getUserById(userId);
-        List<Role> roles = roleService.getAllRoles();
+        List<Role> roles = roleService.findRolesExcludingAdmin();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
         return "./admin-management/editRoleUser";
@@ -74,16 +74,40 @@ public class UserManageController {
     @GetMapping("/add-user")
     public String showAddForm(Model model) {
         User user = new User();
-        List<Role> roles = roleService.getAllRoles();
+        List<Role> roles = roleService.findRolesExcludingAdmin();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
         return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
     }
 
     @PostMapping("/add-user")
-    public String addUser(@ModelAttribute("user") User user) {
+    public String addUser(@ModelAttribute("user") User user, Model model) {
+        boolean hasErrors = false;
+
+        if (userService.isEmailExist(user.getEmail())) {
+            model.addAttribute("emailError", "Email already exists.");
+            hasErrors = true;
+        }
+
+        if (userService.isCodeNameExist(user.getCodeName())) {
+            model.addAttribute("codeNameError", "Code Name already exists.");
+            hasErrors = true;
+        }
+
+        if (userService.isPhoneExist(user.getPhone())) {
+            model.addAttribute("phoneError", "Phone already exists.");
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            model.addAttribute("user", user);
+            model.addAttribute("roles", roleService.getAllRoles()); // Make sure to pass roles to the model
+            return "./admin-management/add-user"; // Change to your actual form view name
+        }
+
         userService.saveUser(user);
         return "redirect:/manage-user";
     }
+
 
 }
