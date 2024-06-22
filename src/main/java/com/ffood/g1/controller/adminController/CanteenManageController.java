@@ -79,7 +79,7 @@ public class CanteenManageController {
     }
 
     @PostMapping("/edit-canteen")
-    public String updateCanteen(Canteen canteen) {
+    public String updateCanteen(@ModelAttribute("canteen")Canteen canteen) {
         canteenService.updateCanteen(canteen);
         return "redirect:/manage-canteen";
     }

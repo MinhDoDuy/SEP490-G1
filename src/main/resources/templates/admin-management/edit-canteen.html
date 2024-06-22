@@ -1,130 +1,146 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Canteen</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+  <title>Edit Canteen</title>
+
   <style>
-    .container {
-      display: flex;
+    .form-container {
+      width: 50%;
+      margin: auto;
     }
-    .main {
-      flex-grow: 1;
-      padding: 20px;
-    }
-    .details {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .cardHeader {
-      margin-bottom: 20px;
-    }
+
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
     }
-    .form-control {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
     }
-    .btn-primary {
+
+    .form-group input, .form-group select {
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .form-group select {
+      width: auto;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 12px;
+    }
+
+    button[type="submit"] {
       background-color: #007bff;
-      border: none;
+      color: white;
       padding: 10px 20px;
-      border-radius: 5px;
-      color: #fff;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
+      font-size: 14px;
     }
-    .btn-primary:hover {
+
+    button[type="submit"]:hover {
       background-color: #0056b3;
     }
-    .form-row {
-      display: flex;
-      flex-wrap: wrap;
-      margin-right: -15px;
-      margin-left: -15px;
+
+    .back-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #007bff;
+      text-decoration: none;
     }
-    .form-group {
-      padding-right: 15px;
-      margin-bottom: 1rem;
-    }
-    .col-md-6 {
-      flex: 0 0 50%;
-      max-width: 50%;
+
+    .back-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
-<body>
-<div class="container">
-  <div th:replace="navigation :: navigation"></div>
-  <div class="main">
-    <div class="topbar">
-      <div class="toggle">
-        <ion-icon name="menu-outline"></ion-icon>
+
+<body class="text-gray-800 font-inter">
+
+<!-- start: Sidebar -->
+<div th:replace="sidebar :: sidebar"></div>
+<!-- end: Sidebar -->
+
+<!-- start: Main -->
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
+  <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+    <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+      <i class="ri-menu-line"></i>
+    </button>
+    <ul class="flex items-center text-sm ml-4">
+      <li class="mr-2">
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+      </li>
+      <li class="text-gray-600 mr-2 font-medium">/</li>
+      <li class="text-gray-600 mr-2 font-medium">Edit Canteen</li>
+    </ul>
+  </div>
+
+  <div class="p-6 flex justify-center">
+
+    <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+      <div class="flex justify-between mb-4 items-start">
+        <div class="font-medium">Edit Canteen</div>
       </div>
-      <div class="user">
-        <img src="assets/imgs/customer01.jpg" alt="">
-      </div>
-    </div>
-    <div class="details">
-      <div class="recentOrders">
-        <div class="cardHeader">
-          <h2>Edit Canteen</h2>
-        </div>
-        <form th:action="@{/edit-canteen}" method="post">
-          <input type="hidden" th:value="${canteen.canteenId}" name="canteenId">
+      <div class="overflow-x-auto">
+        <form th:action="@{/edit-canteen}" th:object="${canteen}" method="post">
+          <input type="hidden" th:field="*{canteenId}" name="canteenId">
 
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="canteenName">Name</label>
-              <input type="text" class="form-control" id="canteenName" th:value="${canteen.canteenName}" name="canteenName" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="location">Location</label>
-              <input type="text" class="form-control" id="location" th:value="${canteen.location}" name="location" required>
-            </div>
+          <div class="form-group">
+            <label for="canteenName">Canteen Name:</label>
+            <input type="text" id="canteenName" th:field="*{canteenName}" required>
           </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="canteenPhone">Phone</label>
-              <input type="text" class="form-control" id="canteenPhone" th:value="${canteen.canteenPhone}" name="canteenPhone" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="openingHours">Opening Hours</label>
-              <input type="text" class="form-control" id="openingHours" th:value="${canteen.openingHours}" name="openingHours" required>
-            </div>
+          <div class="form-group">
+            <label for="location">Location:</label>
+            <input type="text" id="location" th:field="*{location}" required>
           </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="manager">Manager</label>
-              <select id="manager" class="form-control" name="user.userId" required>
-                <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}" th:selected="${canteen.user.userId == manager.userId}"></option>
-              </select>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="isActive">Status</label>
-              <select id="isActive" class="form-control" name="isActive">
-                <option value="true" th:selected="${canteen.isActive}">Active</option>
-                <option value="false" th:selected="${!canteen.isActive}">Inactive</option>
-              </select>
-            </div>
+          <div class="form-group">
+            <label for="canteenPhone">Phone:</label>
+            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" required>
           </div>
-
-          <button type="submit" class="btn btn-primary">Update</button>
+          <div class="form-group">
+            <label for="openingHours">Opening Hours:</label>
+            <input type="text" id="openingHours" th:field="*{openingHours}" required>
+          </div>
+          <div class="form-group">
+            <label for="manager">Manager:</label>
+            <select id="manager" th:field="*{user.userId}" required>
+              <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}" th:selected="${canteen.user.userId == manager.userId}"></option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="isActive">Status:</label>
+            <select id="isActive" th:field="*{isActive}">
+              <option value="true" th:selected="${canteen.isActive}">Active</option>
+              <option value="false" th:selected="${!canteen.isActive}">Inactive</option>
+            </select>
+          </div>
+          <button type="submit">Update</button>
         </form>
+        <a th:href="@{/manage-canteen}" class="back-link">Back to list</a>
       </div>
     </div>
   </div>
-</div>
+</main>
+<!-- end: Main -->
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
+
 </html>
