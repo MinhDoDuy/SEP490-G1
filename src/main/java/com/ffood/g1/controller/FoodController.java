@@ -51,6 +51,10 @@ public class FoodController {
             List<Food> relatedFoods = foodService.getFoodsByCategory(food.getCategory().getCategoryId());
             model.addAttribute("relatedFoods", relatedFoods);
 
+            // get random 12 items and display in homepage
+            List<Food> items_home = foodService.getRandomFood();
+            model.addAttribute("items_home", items_home);
+
             return "food_details";
         } else {
             // Handle case when food is not found, e.g., redirect to an error page or show a message
