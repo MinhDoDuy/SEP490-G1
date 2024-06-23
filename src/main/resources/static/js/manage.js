@@ -202,7 +202,7 @@ function generateRandomData(n) {
     return data
 }
 
-
+//end chart
 document.addEventListener("DOMContentLoaded", function() {
     const rows = document.querySelectorAll("#userTable tr");
     const maxRows = 13;
@@ -212,4 +212,3 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-// end: Chart

@@ -37,7 +37,7 @@ public interface UserService extends UserDetailsService {
 
 
     //List người dùng cho admin đã có phân trang
-    Page<User> getAllUsers(int page, int size);
+    Page<User>  getAllUsers(int page, int size);
 
     //search user
     Page<User> searchUsers(String keyword, int page, int size);

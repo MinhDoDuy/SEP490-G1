@@ -46,6 +46,9 @@ public class User implements UserDetails {
     @Column(name = "user_image")
     private String userImage;
 
+    @Column(name = "gender")
+    private Boolean gender = true;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (role == null) {
