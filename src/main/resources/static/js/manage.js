@@ -205,7 +205,7 @@ function generateRandomData(n) {
 //end chart
 document.addEventListener("DOMContentLoaded", function() {
     const rows = document.querySelectorAll("#userTable tr");
-    const maxRows = 13;
+    const maxRows = 9;
     rows.forEach((row, index) => {
         if (index >= maxRows) {
             row.style.display = "none";
