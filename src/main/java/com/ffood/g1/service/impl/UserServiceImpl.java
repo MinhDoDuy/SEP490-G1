@@ -145,11 +145,12 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     //update người dùng đó và get ra thông tin người dùng đó
-    public void updateUserRole(Integer userId, Integer roleId) {
+    public void updateUserRole(Integer userId, Integer roleId, Boolean isActive) {
         User user = userRepository.findById(userId).orElse(null);
         Role role = roleRepository.findById(roleId).orElse(null);
         if (user != null && role != null) {
             user.setRole(role);
+            user.setIsActive(isActive);
             userRepository.save(user);
         }
     }

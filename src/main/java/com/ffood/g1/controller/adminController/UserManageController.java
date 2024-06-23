@@ -59,8 +59,10 @@ public class UserManageController {
     }
 
     @PostMapping("/edit-role")
-    public String updateUserRole(@RequestParam Integer userId, @RequestParam Integer roleId) {
-        userService.updateUserRole(userId, roleId);
+    public String editUserRole(@RequestParam("userId") Integer userId,
+                               @RequestParam("roleId") Integer roleId,
+                               @RequestParam("isActive") Boolean isActive) {
+        userService.updateUserRole(userId, roleId, isActive);
         return "redirect:/manage-user";
     }
 

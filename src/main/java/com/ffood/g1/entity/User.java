@@ -49,6 +49,10 @@ public class User implements UserDetails {
     @Column(name = "gender")
     private Boolean gender = true;
 
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (role == null) {

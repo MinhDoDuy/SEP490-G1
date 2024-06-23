@@ -117,6 +117,13 @@
               <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleName}" th:selected="${role.roleId} == ${user.role.roleId}"></option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="isActive">Status:</label>
+            <select id="isActive" name="isActive" class="form-control">
+              <option th:value="true" th:text="'Active'" th:selected="${user.isActive} == true"></option>
+              <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive} == false"></option>
+            </select>
+          </div>
           <button type="submit">Save</button>
         </form>
         <a th:href="@{/manager-user}" class="back-link">Back to list</a>
