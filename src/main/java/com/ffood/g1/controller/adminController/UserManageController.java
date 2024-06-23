@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -75,6 +76,7 @@ public class UserManageController {
     public String showAddForm(Model model) {
         User user = new User();
         List<Role> roles = roleService.findRolesExcludingAdmin();
+
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
         return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
@@ -104,6 +106,7 @@ public class UserManageController {
             model.addAttribute("roles", roleService.getAllRoles()); // Make sure to pass roles to the model
             return "./admin-management/add-user"; // Change to your actual form view name
         }
+        user.setCreatedDate(LocalDate.now());
 
         userService.saveUser(user);
         return "redirect:/manage-user";

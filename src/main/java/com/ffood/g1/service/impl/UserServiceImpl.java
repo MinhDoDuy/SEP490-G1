@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -169,7 +170,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByRoleRoleId(3);
     }
 
+    @Override
+    public Integer countUsers() {
+        return Math.toIntExact(userRepository.count());
+    }
 
+    @Override
+    public List<User> getUsersSortedByCreatedDate() {
+        return userRepository.findAllUsers(Sort.by(Sort.Direction.DESC, "createdDate"));
+
+    }
 
 
     @Override

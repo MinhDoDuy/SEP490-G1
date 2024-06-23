@@ -201,4 +201,15 @@ function generateRandomData(n) {
     }
     return data
 }
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const rows = document.querySelectorAll("#userTable tr");
+    const maxRows = 13;
+    rows.forEach((row, index) => {
+        if (index >= maxRows) {
+            row.style.display = "none";
+        }
+    });
+});
 // end: Chart
