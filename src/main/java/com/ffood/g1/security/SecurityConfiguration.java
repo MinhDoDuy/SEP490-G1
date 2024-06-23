@@ -72,7 +72,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/disable-user","/disable-user/**","/enable-user","/enable-user/**","/add-user","/add-user/**",
                         "/manage-canteen","/manage-canteen/**","/add-canteen","/search-canteen",
                         "/edit-canteen","/edit-canteen/**",
-                        "/edit-canteen","/edit-canteen/**","/delete-canteen"
+                        "/edit-canteen","/edit-canteen/**","/delete-canteen","/dashboard-admin"
                 ).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
