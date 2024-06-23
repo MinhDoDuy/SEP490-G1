@@ -49,6 +49,10 @@ public class User implements UserDetails {
     @Column(name = "gender")
     private Boolean gender = true;
 
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (role == null) {
@@ -115,16 +119,4 @@ public class User implements UserDetails {
         this.canteen = canteen;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", fullName='" + fullName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", createdDate=" + createdDate +
-                ", updatedDate=" + updatedDate +
-                '}';
-    }
 }

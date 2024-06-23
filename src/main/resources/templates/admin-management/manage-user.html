@@ -72,6 +72,9 @@
                             Gender
                         </th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+                            Status
+                        </th>
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                             Role
                         </th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">
@@ -87,11 +90,12 @@
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.phone}">Phone</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.gender ? 'Male' : 'Female'}">Gender</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.isActive ? 'Active' : 'Inactive'}">Status</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}" th:text="${user.role.roleName}"></td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}">
                             <a th:href="@{/edit-role/{userId}(userId=${user.userId})}" class="btn btn-primary"
                                style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none;
-                               border-radius: 2px;"> Edit Role
+                               border-radius: 2px;"> Edit
                             </a>
                         </td>
                     </tr>

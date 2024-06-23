@@ -44,7 +44,7 @@ public interface UserService extends UserDetailsService {
 
     User getUserById(Integer userId);
 
-    void updateUserRole(Integer userId, Integer roleId);
+    void updateUserRole(Integer userId, Integer roleId , Boolean isActive);
 
     void deleteUserById(Integer userId);
 
