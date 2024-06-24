@@ -14,4 +14,7 @@ public interface CartService {
     void addToCart(Cart cart, Integer foodId, int quantity, LocalDateTime transactionDate, Double price);
     Cart getCartByUserId(Integer userId); // Phương thức này phải được triển khai
 
+    void removeCartItem(Integer cartItemId);
+
+
 }

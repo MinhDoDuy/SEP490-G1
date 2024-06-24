@@ -12,11 +12,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -73,6 +73,15 @@ public class CartController {
         // Trả về trang HTML
         return "cart";
     }
+
+
+    @PostMapping("/remove_cartItem")
+    public String removeCartItem(@RequestParam("cartItemId") Integer cartItemId) {
+        cartService.removeCartItem(cartItemId);
+        return "redirect:/cart_items";
+    }
+
+
 
 }
 

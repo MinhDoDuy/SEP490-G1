@@ -28,23 +28,27 @@
     <!-- Template Stylesheet -->
     <link th:href="@{/css/style_test.css}" rel="stylesheet">
 
-
     <style>
-        .quantity-input {
-            width: 120px; /* Tăng kích thước chiều rộng */
-            height: 50px; /* Tăng kích thước chiều cao */
-            font-size: 1.5rem; /* Tăng kích thước font chữ */
-            text-align: center; /* Canh giữa chữ */
-        }
-        .quantity-input::-webkit-inner-spin-button,
-        .quantity-input::-webkit-outer-spin-button {
+        .custom-input::-webkit-outer-spin-button,
+        .custom-input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-        .quantity-input {
+
+        .custom-input[type="number"] {
             -moz-appearance: textfield;
         }
+
+        .custom-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
+
 </head>
 
 <body>
@@ -99,28 +103,33 @@
                         <p class="mb-0 mt-4"><span th:text="${cartItem.food.price} +' đồng'"></span></p>
                     </td>
                     <td>
-                        <div class="input-group quantity mt-4" style="width: 100px;">
+                        <div class="input-group quantity mt-4" style="width: 150px;">
                             <div class="input-group-btn">
-                                <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
+                                <button class="btn btn-sm btn-minus rounded-circle bg-light border custom-btn" onclick="decreaseQuantity([[${cartItem.food.id}]])">
                                     <i class="fa fa-minus"></i>
                                 </button>
                             </div>
-                            <input type="number" class="form-control form-control-sm text-center border-0" th:value="${cartItem.quantity}" min="1">
-
+                            <input type="number" class="form-control form-control-sm text-center border-0 custom-input" id="quantity-[[${cartItem.food.id}]]" th:value="${cartItem.quantity}" min="1">
                             <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border" >
+                                <button class="btn btn-sm btn-plus rounded-circle bg-light border custom-btn" onclick="increaseQuantity([[${cartItem.food.id}]])">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
                     </td>
+
+
                     <td>
                         <p class="mb-0 mt-4"><span th:text="${cartItem.totalFoodPrice} +' đồng'"></span></p>
                     </td>
                     <td>
-                        <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                            <i class="fa fa-times text-danger"></i>
-                        </button>
+                        <form th:action="@{/remove_cartItem}" method="post" style="display:inline;">
+                            <input type="hidden" name="cartItemId" th:value="${cartItem.cartItemId}" />
+                            <button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
+                                <i class="fa fa-times text-danger"></i>
+                            </button>
+                        </form>
+
                     </td>
                 </tr>
 
@@ -199,21 +208,21 @@
 <script th:src="@{lib/owlcarousel/owl.carousel.min.js}"></script>
 
 <script>
-    // function decreaseQuantity(foodId) {
-    //     const quantityInput = document.getElementById(`quantity-${foodId}`);
-    //     let quantity = parseInt(quantityInput.value);
-    //     if (quantity > 1) {
-    //         quantity--;
-    //         quantityInput.value = quantity;
-    //     }
-    // }
-    //
-    // function increaseQuantity(foodId) {
-    //     const quantityInput = document.getElementById(`quantity-${foodId}`);
-    //     let quantity = parseInt(quantityInput.value);
-    //     quantity++;
-    //     quantityInput.value = quantity;
-    // }
+    function decreaseQuantity(foodId) {
+        const quantityInput = document.getElementById(`quantity-${foodId}`);
+        let quantity = parseInt(quantityInput.value);
+        if (quantity > 1) {
+            quantity--;
+            quantityInput.value = quantity;
+        }
+    }
+
+    function increaseQuantity(foodId) {
+        const quantityInput = document.getElementById(`quantity-${foodId}`);
+        let quantity = parseInt(quantityInput.value);
+        quantity++;
+        quantityInput.value = quantity;
+    }
 
 
 </script>

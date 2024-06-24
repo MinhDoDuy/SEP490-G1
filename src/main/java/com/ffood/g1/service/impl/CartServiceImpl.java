@@ -89,4 +89,15 @@ public class CartServiceImpl implements CartService {
     public Cart getCartByUserId(Integer userId) {
         return cartRepository.findByUserId(userId).orElseThrow(() -> new EntityNotFoundException("Không tìm thấy giỏ hàng cho người dùng id: " + userId));
     }
+
+
+    @Transactional
+    @Override
+    public void removeCartItem(Integer cartItemId) {
+        cartItemRepository.deleteById(cartItemId);
+    }
+
+
+
+
 }
