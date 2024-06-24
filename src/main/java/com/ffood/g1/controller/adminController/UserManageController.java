@@ -1,7 +1,9 @@
 package com.ffood.g1.controller.adminController;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,10 @@ public class UserManageController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private CanteenService canteenService;
+
     @GetMapping("/manage-user")
     public String listUsers(Model model,
                             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -49,38 +55,35 @@ public class UserManageController {
     }
 
 
-    @GetMapping("/edit-role/{userId}")
+    @GetMapping("/edit-user/{userId}")
     public String editUserForm(@PathVariable Integer userId, Model model) {
         User user = userService.getUserById(userId);
         List<Role> roles = roleService.findRolesExcludingAdmin();
+        List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
-        return "./admin-management/editRoleUser";
+        model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
+        return "./admin-management/edit-user";
     }
 
-    @PostMapping("/edit-role")
+    @PostMapping("/edit-user")
     public String editUserRole(@RequestParam("userId") Integer userId,
                                @RequestParam("roleId") Integer roleId,
-                               @RequestParam("isActive") Boolean isActive) {
-        userService.updateUserRole(userId, roleId, isActive);
+                               @RequestParam("isActive") Boolean isActive,
+                               @RequestParam(value = "canteenId", required = false) Integer canteenId) {
+        userService.updateUserRoleAndCanteen(userId, roleId, isActive, canteenId);
         return "redirect:/manage-user";
     }
-
-
-    @GetMapping("/delete-user/{userId}")
-    public String deleteUser(@PathVariable Integer userId, Model model) {
-        userService.deleteUserById(userId);
-        return "redirect:/manage-user"; // Redirect to the users list page
-    }
-
 
     @GetMapping("/add-user")
     public String showAddForm(Model model) {
         User user = new User();
         List<Role> roles = roleService.findRolesExcludingAdmin();
+        List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
 
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
+        model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
         return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
     }
 
@@ -106,6 +109,7 @@ public class UserManageController {
         if (hasErrors) {
             model.addAttribute("user", user);
             model.addAttribute("roles", roleService.getAllRoles()); // Make sure to pass roles to the model
+            model.addAttribute("canteens", canteenService.getAllCanteens()); // Pass canteens to the model
             return "./admin-management/add-user"; // Change to your actual form view name
         }
         user.setCreatedDate(LocalDate.now());

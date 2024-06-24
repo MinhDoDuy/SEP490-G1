@@ -65,8 +65,9 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 // Admin
-                .antMatchers("/search-staff", "/dashboard/","/manage-user","/manage-user/**","/delete-user","/delete-user/**","/edit-profile","/edit-profile/**","/edit-role","/edit-role/**",
-                        "/disable-user","/disable-user/**","/enable-user","/enable-user/**","/add-user","/add-user/**",
+                .antMatchers("/search-staff", "/dashboard/","/manage-user","/manage-user/**",
+                        "/edit-profile","/edit-profile/**","/edit-user","/edit-user/**",
+                        "/add-user","/add-user/**",
                         "/manage-canteen","/manage-canteen/**","/add-canteen","/search-canteen",
                         "/edit-canteen","/edit-canteen/**",
                         "/edit-canteen","/edit-canteen/**","/delete-canteen","/dashboard-admin"
