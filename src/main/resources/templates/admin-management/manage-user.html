@@ -46,7 +46,9 @@
                         <i class="ri-search-line absolute top-1/2 left-4 -translate-y-1/2 text-gray-400"></i>
                     </div>
                 </form>
-                <a th:href="@{/add-user}" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Add New User</a>
+                <a th:href="@{/add-user}" class="btn btn-primary"
+                   style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Add
+                    New User</a>
             </div>
 
             <div class="overflow-x-auto">
@@ -89,11 +91,16 @@
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.codeName}">Code Name</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.phone}">Phone</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.gender ? 'Male' : 'Female'}">Gender</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.isActive ? 'Active' : 'Inactive'}">Status</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}" th:text="${user.role.roleName}"></td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.gender ? 'Male' : 'Female'}">
+                            Gender
+                        </td>
+                        <td class="py-2 px-4 border-b border-b-gray-50"
+                            th:text="${user.isActive ? 'Active' : 'Inactive'}">Status
+                        </td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}"
+                            th:text="${user.role.roleName}"></td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}">
-                            <a th:href="@{/edit-role/{userId}(userId=${user.userId})}" class="btn btn-primary"
+                            <a th:href="@{/edit-user/{userId}(userId=${user.userId})}" class="btn btn-primary"
                                style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none;
                                border-radius: 2px;"> Edit
                             </a>
@@ -103,7 +110,8 @@
                 </table>
                 <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
                     <span th:if="${userPage.hasPrevious()}">
-                        <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}" class="page-link">&laquo;</a>
+                        <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}"
+                           class="page-link">&laquo;</a>
                     </span>
                     <span th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
                         <a th:classappend="${i} == ${userPage.number} ? 'active' : ''"
@@ -113,7 +121,8 @@
                         </a>
                     </span>
                     <span th:if="${userPage.hasNext()}">
-                        <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}" class="page-link">&raquo;</a>
+                        <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}"
+                           class="page-link">&raquo;</a>
                     </span>
                 </div>
             </div>

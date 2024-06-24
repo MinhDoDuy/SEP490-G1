@@ -1,5 +1,6 @@
 package com.ffood.g1.service.impl;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.ResetToken;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
@@ -144,21 +145,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElse(null);
     }
     @Override
-    //update người dùng đó và get ra thông tin người dùng đó
-    public void updateUserRole(Integer userId, Integer roleId, Boolean isActive) {
+    public void updateUserRoleAndCanteen(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
         User user = userRepository.findById(userId).orElse(null);
         Role role = roleRepository.findById(roleId).orElse(null);
+        Canteen canteen = canteenId != null ? canteenRepository.findById(canteenId).orElse(null) : null;
         if (user != null && role != null) {
             user.setRole(role);
             user.setIsActive(isActive);
+            user.setCanteen(canteen);
             userRepository.save(user);
         }
     }
 
-    @Override
-    public void deleteUserById(Integer userId) {
-        userRepository.deleteById(userId);
-    }
+
 
     @Override
     public void saveUser(User user) {

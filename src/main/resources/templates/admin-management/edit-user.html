@@ -97,15 +97,15 @@
         <div class="font-medium">Edit User Role</div>
       </div>
       <div class="overflow-x-auto">
-        <form th:action="@{/edit-role}" method="post">
+        <form th:action="@{/edit-user}" method="post">
           <input type="hidden" name="userId" th:value="${user.userId}"/>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" id="email" th:value="${user.email}" readonly="readonly"/>
+            <input type="text" id="email" th:value="${user.email}" readonly="readonly" class="form-control"/>
           </div>
           <div class="form-group">
             <label for="fullname">Fullname:</label>
-            <input type="text" id="fullname" th:value="${user.fullName}" readonly="readonly"/>
+            <input type="text" id="fullname" th:value="${user.fullName}" readonly="readonly" class="form-control"/>
           </div>
           <div class="form-group">
             <label for="gender">Gender:</label>
@@ -113,8 +113,14 @@
           </div>
           <div class="form-group">
             <label for="role">Role:</label>
-            <select id="role" name="roleId">
+            <select id="role" name="roleId" class="form-control" onchange="showCanteenSelect()">
               <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleName}" th:selected="${role.roleId} == ${user.role.roleId}"></option>
+            </select>
+          </div>
+          <div class="form-group" id="canteen-select" style="display:none;">
+            <label for="canteen">Canteen:</label>
+            <select id="canteen" name="canteenId" class="form-control">
+              <option th:each="canteen : ${canteens}" th:value="${canteen.canteenId}" th:text="${canteen.canteenName}" th:selected="${canteen.canteenId} == ${user.canteen?.canteenId}"></option>
             </select>
           </div>
           <div class="form-group">
@@ -124,9 +130,9 @@
               <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive} == false"></option>
             </select>
           </div>
-          <button type="submit">Save</button>
+          <button type="submit" class="btn btn-primary">Save</button>
         </form>
-        <a th:href="@{/manager-user}" class="back-link">Back to list</a>
+        <a th:href="@{/manage-user}" class="back-link">Back to list</a>
       </div>
     </div>
   </div>
@@ -136,6 +142,22 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+    function showCanteenSelect() {
+    var roleSelect = document.getElementById("role");
+    var canteenSelect = document.getElementById("canteen-select");
+    if (roleSelect.value == "2") { // 2 là role_id của staff
+    canteenSelect.style.display = "block";
+  } else {
+    canteenSelect.style.display = "none";
+  }
+  }
+
+    // Call showCanteenSelect on page load to set the initial state
+    document.addEventListener("DOMContentLoaded", function() {
+    showCanteenSelect();
+  });
+</script>
 </body>
 
 </html>
