@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class CartController {
@@ -48,9 +49,20 @@ public class CartController {
     @GetMapping("/cart_items")
     public String getCartItems(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            User user = userService.findByEmail(email);
+            if (Objects.nonNull(user)) {
+                model.addAttribute("user", user);
+            }
+        }
+
+
         String email = authentication.getName();
         User user = userService.findByEmail(email);
         Integer userId = user.getUserId();
+
 
         // Lấy các sản phẩm trong giỏ hàng của người dùng
         List<CartItem> cartItems = cartItemService.getCartItemsByUserId(userId);
@@ -59,7 +71,7 @@ public class CartController {
         model.addAttribute("cartItems", cartItems);
 
         // Trả về trang HTML
-        return "cart_items";
+        return "cart";
     }
 
 }

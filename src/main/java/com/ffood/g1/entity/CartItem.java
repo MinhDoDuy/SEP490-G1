@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,9 +36,11 @@ public class CartItem {
     @Column(name = "price", nullable = false)
     private Double price;
 
+    @Column(name = "total_food_price", nullable = false)
+    private Double totalFoodPrice;
+
     @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
-
 
     @Override
     public String toString() {
@@ -48,5 +52,4 @@ public class CartItem {
                 ", transactionDate=" + transactionDate +
                 '}';
     }
-
 }
