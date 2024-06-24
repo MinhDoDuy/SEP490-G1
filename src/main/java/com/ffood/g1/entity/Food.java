@@ -50,6 +50,9 @@ public class Food {
     @Column(name = "image_food_detail2")
     private String imageFoodDetail2;
 
+    public Food(Integer foodId) {
+    }
+
 //    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
 //    private Set<OrderDetail> orderDetails = Collections.emptySet(); // Initialize as empty set
 }

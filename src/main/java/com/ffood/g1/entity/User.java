@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -46,12 +47,7 @@ public class User implements UserDetails {
     @Column(name = "user_image")
     private String userImage;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == null) {
-            return Collections.emptyList();
-        }
-        return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
+    public User(Integer userId) {
     }
 
     @Column(name = "created_date")
@@ -60,7 +56,20 @@ public class User implements UserDetails {
     @Column(name = "updated_date")
     private LocalDate updatedDate;
 
+    @ManyToOne
+    @JoinColumn(name = "canteen_id")
+    private Canteen canteen;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (role == null) {
+            return Collections.emptyList();
+        }
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Cart> carts = new HashSet<>();
 
     @Override
     public String getUsername() {
@@ -71,9 +80,9 @@ public class User implements UserDetails {
         return fullName;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
+//    public Integer getUserId() {
+//        return userId;
+//    }
 
     @Override
     public String getPassword() {
@@ -100,17 +109,14 @@ public class User implements UserDetails {
         return true;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "canteen_id")
-    private Canteen canteen;
 
-    public Canteen getCanteen() {
-        return canteen;
-    }
-
-    public void setCanteen(Canteen canteen) {
-        this.canteen = canteen;
-    }
+//    public Canteen getCanteen() {
+//        return canteen;
+//    }
+//
+//    public void setCanteen(Canteen canteen) {
+//        this.canteen = canteen;
+//    }
 
     @Override
     public String toString() {
