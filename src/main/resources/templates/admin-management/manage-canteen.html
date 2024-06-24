@@ -62,6 +62,9 @@
               Location
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+              Canteen Image
+            </th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
               Phone
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
@@ -83,6 +86,9 @@
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenId}">ID</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenName}">Name</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.location}">Location</td>
+            <td class="py-2 px-4 border-b border-b-gray-50">
+              <img th:src="${canteen.canteenImg}" alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+            </td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenPhone}">Phone</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingHours}">Opening Hours</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.user.fullName}">Manager</td>

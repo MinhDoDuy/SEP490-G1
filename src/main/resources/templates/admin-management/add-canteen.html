@@ -89,30 +89,34 @@
         <div class="font-medium">Add New Canteen</div>
       </div>
       <div class="overflow-x-auto">
-        <form th:action="@{/add-canteen}" th:object="${canteen}" method="post">
+        <form th:action="@{/add-canteen}" th:object="${canteen}" method="post" enctype="multipart/form-data">
           <div class="form-group">
             <label for="canteenName">Canteen Name:</label>
-            <input type="text" id="canteenName" th:field="*{canteenName}" required>
+            <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control"/>
           </div>
           <div class="form-group">
             <label for="location">Location:</label>
-            <input type="text" id="location" th:field="*{location}">
+            <input type="text" id="location" th:field="*{location}" class="form-control"/>
           </div>
           <div class="form-group">
             <label for="canteenPhone">Phone:</label>
-            <input type="text" id="canteenPhone" th:field="*{canteenPhone}">
+            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" class="form-control"/>
           </div>
           <div class="form-group">
             <label for="openingHours">Opening Hours:</label>
-            <input type="text" id="openingHours" th:field="*{openingHours}">
+            <input type="text" id="openingHours" th:field="*{openingHours}" class="form-control"/>
           </div>
           <div class="form-group">
             <label for="manager">Manager:</label>
-            <select id="manager" th:field="*{user.userId}">
+            <select id="manager" th:field="*{user.userId}" class="form-control">
               <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}"></option>
             </select>
           </div>
-          <button type="submit">Add Canteen</button>
+          <div class="form-group">
+            <label for="imageCanteenInput">Canteen Image:</label>
+            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*"/>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Canteen</button>
         </form>
         <a th:href="@{/manage-canteen}" class="back-link">Back to list</a>
       </div>
@@ -124,5 +128,19 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+  function onChangeFileTrigger() {
+    const input = document.getElementById('imageCanteenInput');
+    if (input && input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('displayImage').src = e.target.result;
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  document.getElementById('imageCanteenInput').addEventListener('change', onChangeFileTrigger);
+</script>
 </body>
 </html>
