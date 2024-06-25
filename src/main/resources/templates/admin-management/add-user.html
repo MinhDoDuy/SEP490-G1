@@ -125,12 +125,6 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="role">Role:</label>
-                        <select id="role" th:field="*{role.roleId}" class="form-control" onchange="showCanteenSelect()">
-                            <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleName}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="canteen-select" style="display:none;">
                         <label for="canteen">Canteen:</label>
                         <select id="canteen" th:field="*{canteen.canteenId}" class="form-control">
                             <option th:each="canteen : ${canteens}" th:value="${canteen.canteenId}" th:text="${canteen.canteenName}"></option>
@@ -144,6 +138,7 @@
                 </form>
                 <a th:href="@{/manage-user}" class="back-link">Back to list</a>
             </div>
+
         </div>
     </div>
 </main>
@@ -153,15 +148,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
 <script>
-    function showCanteenSelect() {
-        var roleSelect = document.getElementById("role");
-        var canteenSelect = document.getElementById("canteen-select");
-        if (roleSelect.value == "2") { // 2 là role_id của staff
-            canteenSelect.style.display = "block";
-        } else {
-            canteenSelect.style.display = "none";
-        }
-    }
 </script>
 </body>
 

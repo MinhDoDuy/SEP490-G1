@@ -29,6 +29,6 @@ public class Cart {
     @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private Set<CartItem> cartItems = Collections.emptySet(); // Initialize as empty set
+//    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+//    private Set<CartItem> cartItems = Collections.emptySet(); // Initialize as empty set
 }

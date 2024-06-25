@@ -116,17 +116,18 @@
             <input type="text" id="openingHours" th:field="*{openingHours}" class="form-control"/>
           </div>
           <div class="form-group">
-            <label for="manager">Manager:</label>
-            <select id="manager" th:field="*{user.userId}" class="form-control">
-              <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}"></option>
-            </select>
-          </div>
-          <div class="form-group">
             <label for="imageCanteenInput">Canteen Image:</label>
             <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*"/>
           </div>
           <div class="form-group">
             <img id="displayImage" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
+          </div>
+          <div class="form-group">
+            <label for="isActive">Status:</label>
+            <select id="isActive" name="isActive" class="form-control">
+              <option th:value="true" th:text="'Active'" th:selected="${canteen.isActive} == true"></option>
+              <option th:value="false" th:text="'Inactive'" th:selected="${canteen.isActive} == false"></option>
+            </select>
           </div>
           <button type="submit" class="btn btn-primary">Save changes</button>
         </form>

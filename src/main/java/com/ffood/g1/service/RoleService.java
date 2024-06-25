@@ -11,4 +11,7 @@ public interface RoleService {
     List<Role> findRolesExcludingAdmin();
 
 
+    Role findRoleById(Integer roleId);
+
+
 }

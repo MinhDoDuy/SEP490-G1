@@ -48,7 +48,7 @@
                 </form>
                 <a th:href="@{/add-user}" class="btn btn-primary"
                    style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Add
-                    New User</a>
+                    New Manager</a>
             </div>
 
             <div class="overflow-x-auto">
@@ -71,6 +71,9 @@
                             Phone
                         </th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+                            Canteen
+                        </th>
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                             Gender
                         </th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
@@ -91,6 +94,8 @@
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.codeName}">Code Name</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.phone}">Phone</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen != null}" th:text="${user.canteen.canteenName}">Canteen</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen == null}"></td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.gender ? 'Male' : 'Female'}">
                             Gender
                         </td>
