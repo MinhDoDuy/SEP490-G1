@@ -63,7 +63,6 @@ public class CanteenManageController {
     @GetMapping("/add-canteen")
     public String showAddCanteenForm(Model model) {
         model.addAttribute("canteen", new Canteen());
-        model.addAttribute("managers", userService.getAllManagers());
         return "./admin-management/add-canteen";
     }
 
@@ -71,10 +70,6 @@ public class CanteenManageController {
     public String addCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
                              @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput, Model model)
             throws IOException, SpringBootFileUploadException {
-        if (result.hasErrors()) {
-            model.addAttribute("managers", userService.getAllManagers());
-            return "./admin-management/add-canteen";
-        }
 
         // Upload file nếu có
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
@@ -89,9 +84,9 @@ public class CanteenManageController {
     @GetMapping("/edit-canteen/{canteenId}")
     public String editCanteen(@PathVariable Integer canteenId, Model model) {
         Canteen canteen = canteenService.getCanteenById(canteenId);
-        List<User> managers = userService.getAllManagers();
+
         model.addAttribute("canteen", canteen);
-        model.addAttribute("managers", managers);
+
         return "./admin-management/edit-canteen";
     }
 
@@ -99,10 +94,7 @@ public class CanteenManageController {
     public String updateCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
                                 @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput, Model model)
             throws IOException, SpringBootFileUploadException {
-        if (result.hasErrors()) {
-            model.addAttribute("managers", userService.getAllManagers());
-            return "./admin-management/edit-canteen";
-        }
+
 
         // Upload file nếu có
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
