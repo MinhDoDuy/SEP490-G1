@@ -16,5 +16,5 @@ public interface CartService {
 
     void removeCartItem(Integer cartItemId);
 
-
+    int getTotalQuantityByUser(User user);
 }

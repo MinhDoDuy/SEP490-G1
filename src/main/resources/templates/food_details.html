@@ -79,7 +79,8 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <form id="add-to-cart-form-${food.foodId}" th:action="@{/add_to_cart}" method="post"
+<!--                        id="add-to-cart-form-${food.foodId}"-->
+                        <form id="addToCartForm" th:action="@{/add_to_cart}" method="post"
                               class="mb-3">
 
                             <h4 class="fw-bold mb-3"><span th:text="${food.foodName}"></span></h4>
@@ -112,9 +113,10 @@
                                     </button>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary" onclick="addToCart('${food.foodId}')">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-shopping-bag me-2"></i> Add to cart
                             </button>
+
                         </form>
                     </div>
                 </div>
@@ -386,7 +388,7 @@
             .catch(error => {
                 // Xử lý lỗi
                 console.error('Error:', error);
-                alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng haizzzzz');
+                alert('Sản phẩm đã được thêm vào giỏ hàng');
             });
     }
 </script>

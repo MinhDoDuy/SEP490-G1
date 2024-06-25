@@ -2,10 +2,12 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
+import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.CartService;
+import com.ffood.g1.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class CartController {
@@ -31,20 +34,27 @@ public class CartController {
     UserRepository userService;
     @Autowired
     CartItemService cartItemService;
+    @Autowired
+    FoodService foodService;
 
-    @PostMapping("/add_to_cart")
-    public ResponseEntity<String> addToCart(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") int quantity, @RequestParam("price") Double price, Model model) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
+@PostMapping("/add_to_cart")
+public String addToCart(@RequestParam("foodId") Integer foodId,
+                        @RequestParam("quantity") int quantity,
+                        @RequestParam("price") Double price,
+                        Model model) {
 
-        Cart cart = cartService.getOrCreateCart(user);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+    User user = userService.findByEmail(email);
 
-        cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
+    Cart cart = cartService.getOrCreateCart(user);
 
-        return ResponseEntity.ok("Sản phẩm đã được thêm vào giỏ hàng");
-    }
+    cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
+
+    // Chuyển hướng về trang chủ sau khi thêm vào giỏ hàng
+    return "redirect:/food_details?id=" + foodId;
+}
 
     @GetMapping("/cart_items")
     public String getCartItems(Model model) {
@@ -55,6 +65,9 @@ public class CartController {
             User user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
                 model.addAttribute("user", user);
+
+                int totalQuantity = cartService.getTotalQuantityByUser(user);
+                model.addAttribute("totalQuantity", totalQuantity);
             }
         }
 

@@ -96,8 +96,11 @@ public class CartServiceImpl implements CartService {
     public void removeCartItem(Integer cartItemId) {
         cartItemRepository.deleteById(cartItemId);
     }
-
-
+    @Transactional
+    @Override
+    public int getTotalQuantityByUser(User user) {
+        return cartRepository.getTotalQuantityByUser(user);
+    }
 
 
 }

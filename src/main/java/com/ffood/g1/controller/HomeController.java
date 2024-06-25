@@ -2,8 +2,10 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Food;
+import com.ffood.g1.repository.CartRepository;
 import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.service.CanteenService;
+import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ffood.g1.entity.User;
@@ -28,7 +30,8 @@ public class HomeController {
     private FoodService foodService;
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private CartService cartService;
     @GetMapping({"/homepage",""})
     public String getCanteens(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -37,6 +40,9 @@ public class HomeController {
             User user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
                 model.addAttribute("user", user);
+
+                int totalQuantity = cartService.getTotalQuantityByUser(user);
+                model.addAttribute("totalQuantity", totalQuantity);
             }
         }
         //get All canteens and display in homepage

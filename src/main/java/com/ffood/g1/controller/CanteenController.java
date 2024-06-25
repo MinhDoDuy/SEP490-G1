@@ -5,10 +5,7 @@ import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.FoodRepository;
-import com.ffood.g1.service.CanteenService;
-import com.ffood.g1.service.CategoryService;
-import com.ffood.g1.service.FoodService;
-import com.ffood.g1.service.UserService;
+import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +40,8 @@ public class CanteenController {
     @Autowired
     private CanteenService canteenService;
 
+    @Autowired
+    private CartService cartService;
     @GetMapping("/canteen_details")
     public String viewCanteens(@RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "categoryId", required = false) Integer categoryId,
@@ -57,6 +56,8 @@ public class CanteenController {
             User user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
                 model.addAttribute("user", user);
+                int totalQuantity = cartService.getTotalQuantityByUser(user);
+                model.addAttribute("totalQuantity", totalQuantity);
             }
         }
         Pageable pageable = PageRequest.of(page, 9, getSortDirection(sort));
