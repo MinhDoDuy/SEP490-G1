@@ -1,5 +1,6 @@
 package com.ffood.g1.controller;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.FileS3Service;
@@ -58,6 +59,10 @@ public class ProfileController {
         if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
             String avatarURL = fileS3Service.uploadFile(imageProfileInput);
             user.setUserImage(avatarURL);
+        } else {
+            // Retrieve the existing canteen image URL if a new image is not uploaded
+            User existingUser = userService.getUserById(user.getUserId());
+            user.setUserImage(existingUser.getUserImage());
         }
 
         userService.updateUser(user);

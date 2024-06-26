@@ -61,6 +61,7 @@
             <div class="card-body">
               <form id="profileForm" th:action="@{/update-profile}" method="post" th:object="${user}" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{userId}"/>
+                <input type="hidden" id="currentImageUrl" th:field="*{userImage}" />
                 <div class="card-body media align-items-center">
                   <img id="displayImage" alt="" th:src="${user?.userImage != null ? user.userImage : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
                   <div class="media-body ml-4">
@@ -101,7 +102,6 @@
                     <button type="button" class="btn btn-default">Cancel</button>
                   </div>
                 </div>
-
               </form>
             </div>
           </div>
@@ -117,7 +117,8 @@
     if (input && input.files && input.files[0]) {
       const reader = new FileReader();
       reader.onload = function (e) {
-        $('#displayImage').attr('src', e.target.result).attr('alt', input.files.item(0).name);
+        document.getElementById('displayImage').src = e.target.result;
+        document.getElementById('currentImageUrl').value = ''; // Clear the current image URL
       }
       reader.readAsDataURL(input.files[0]);
     }

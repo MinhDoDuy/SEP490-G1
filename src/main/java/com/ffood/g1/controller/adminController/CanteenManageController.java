@@ -91,24 +91,23 @@ public class CanteenManageController {
     }
 
     @PostMapping("/edit-canteen")
-    public String updateCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
+    public String updateCanteen(@ModelAttribute("canteen") Canteen canteen,
                                 @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput, Model model)
             throws IOException, SpringBootFileUploadException {
-
 
         // Upload file nếu có
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
             String canteenImageUrl = fileS3Service.uploadFile(imageCanteenInput);
             canteen.setCanteenImg(canteenImageUrl);
+        } else {
+            // Retrieve the existing canteen image URL if a new image is not uploaded
+            Canteen existingCanteen = canteenService.getCanteenById(canteen.getCanteenId());
+            canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
         canteenService.updateCanteen(canteen);
         return "redirect:/manage-canteen";
     }
 
-    @GetMapping("/delete-canteen/{canteenId}")
-    public String deleteCanteen(@PathVariable Integer canteenId) {
-        canteenService.deleteCanteenById(canteenId);
-        return "redirect:/manage-canteen";
-    }
+
 }

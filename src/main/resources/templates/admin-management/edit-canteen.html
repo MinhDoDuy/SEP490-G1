@@ -118,9 +118,11 @@
           <div class="form-group">
             <label for="imageCanteenInput">Canteen Image:</label>
             <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*"/>
+            <input type="hidden" id="currentImageUrl" th:field="*{canteenImg}" />
           </div>
           <div class="form-group">
-            <img id="displayImage" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
+            <img id="displayImage" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}"
+                 style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
           </div>
           <div class="form-group">
             <label for="isActive">Status:</label>
@@ -148,6 +150,7 @@
       const reader = new FileReader();
       reader.onload = function (e) {
         document.getElementById('displayImage').src = e.target.result;
+        document.getElementById('currentImageUrl').value = ''; // Clear the current image URL
       }
       reader.readAsDataURL(input.files[0]);
     }
