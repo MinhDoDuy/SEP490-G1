@@ -55,7 +55,10 @@ public class CanteenServiceImpl implements CanteenService {
         canteenRepository.save(canteen);
     }
 
-
+    @Override
+    public Integer countCanteens() {
+        return Math.toIntExact(canteenRepository.count());
+    }
 
 
     public List<Canteen> getAllCanteenContact() {
