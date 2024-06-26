@@ -2,6 +2,7 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
+import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartItemService;
@@ -71,16 +72,17 @@ public class OrderController {
             if (user != null) {
                 // Lấy giỏ hàng hiện tại
                 Cart cart = cartService.getOrCreateCart(user);
-
                 // Tạo và lưu đơn hàng
-                orderService.createOrder(cart, address, paymentMethod);
-
+                Integer cartId = cartService.findCartIdByUserId(user.getUserId());
+                double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
+                String note="heehehe";
+                Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart);
 
 
                 // Xóa giỏ hàng
                 cartService.clearCart(cart);
             }
         }
-        return "redirect:/orderConfirmation";
+        return "homepage";
     }
 }

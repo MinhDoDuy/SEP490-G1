@@ -1,10 +1,8 @@
 package com.ffood.g1.entity;
 
+import com.ffood.g1.converter.OrderStatusConverter;
 import com.ffood.g1.enum_pay.OrderStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,8 +31,7 @@ public class Order {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
-
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = OrderStatusConverter.class)
     @Column(name = "status")
     private OrderStatus status;
 
@@ -44,14 +41,10 @@ public class Order {
     @Column(name = "total_order_price", nullable = false)
     private Double totalOrderPrice;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", nullable = false)
-    private Enum paymentMethod;
-
-
     @Column(name = "note")
     private String note;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private Set<OrderDetail> orderDetails = Collections.emptySet(); // Initialize as empty set
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<OrderDetail> orderDetails = Collections.emptySet();
 }

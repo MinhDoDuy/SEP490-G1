@@ -1,9 +1,6 @@
 package com.ffood.g1.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -21,6 +18,7 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @ToString.Exclude
     private Order order;
 
     @ManyToOne
@@ -32,4 +30,14 @@ public class OrderDetail {
 
     @Column(name = "price", nullable = false)
     private Double price;
+
+    @Override
+    public String toString() {
+        return "OrderDetail{" +
+                "orderDetailId=" + orderDetailId +
+                ", food=" + food +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
+    }
 }
