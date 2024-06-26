@@ -21,4 +21,14 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
 
     @Query("SELECT SUM(ci.quantity) FROM Cart c JOIN c.cartItems ci WHERE c.user = :user AND c.status = 'active'")
     int getTotalQuantityByUser(@Param("user") User user);
+
+
+//    @Query("SELECT SUM(ci.totalFoodPrice) FROM Cart c JOIN c.cartItems ci WHERE c.user = :user AND c.status = 'active'")
+//    double getTotalFoodPriceByUser(@Param("user") User user);
+
+    @Query("SELECT c.cartId FROM Cart c WHERE c.user.userId = :userId AND c.status = 'active'")
+    Integer findCartIdByUserId(@Param("userId") Integer userId);
+
+    @Query("SELECT SUM(ci.totalFoodPrice) FROM Cart c JOIN c.cartItems ci WHERE c.cartId = :cartId AND c.status = 'active'")
+    double getTotalFoodPriceByCartId(@Param("cartId") Integer cartId);
 }

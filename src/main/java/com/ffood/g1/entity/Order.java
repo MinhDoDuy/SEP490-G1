@@ -1,5 +1,6 @@
 package com.ffood.g1.entity;
 
+import com.ffood.g1.enum_pay.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,9 @@ public class Order {
     @Column(name = "order_id")
     private Integer orderId;
 
+    @Column(name = "order_code")
+    private String orderCode;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -29,11 +33,21 @@ public class Order {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private OrderStatus status;
 
     @Column(name = "order_address")
     private String orderAddress;
+
+    @Column(name = "total_order_price", nullable = false)
+    private Double totalOrderPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private Enum paymentMethod;
+
 
     @Column(name = "note")
     private String note;

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Objects;
@@ -71,6 +72,8 @@ public class FoodController {
             // Lấy các sản phẩm cùng danh mục
             List<Food> relatedFoods = foodService.getFoodsByCategory(food.getCategory().getCategoryId());
             model.addAttribute("relatedFoods", relatedFoods);
+
+
 
             // get random 12 items and display in homepage
             List<Food> items_home = foodService.getRandomFood();

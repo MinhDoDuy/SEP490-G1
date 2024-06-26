@@ -67,6 +67,7 @@
 
 <!-- Single Product Start -->
 <div class="container-fluid py-5 mt-5">
+
     <div class="container py-5">
         <div class="row g-4 mb-5">
             <div class="col-lg-8 col-xl-9">
@@ -367,31 +368,10 @@
         quantityInput.value = quantity;
     }
 
-    function addToCart(foodId) {
-        const form = document.getElementById(`add-to-cart-form-${foodId}`);
-        const formData = new FormData(form);
 
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Xử lý phản hồi từ server, ví dụ như hiển thị thông báo thành công
-                alert('Sản phẩm đã được thêm vào giỏ hàng');
-            })
-            .catch(error => {
-                // Xử lý lỗi
-                console.error('Error:', error);
-                alert('Sản phẩm đã được thêm vào giỏ hàng');
-            });
-    }
+
 </script>
+
 
 </body>
 

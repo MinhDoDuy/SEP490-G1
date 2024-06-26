@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,6 +43,7 @@ public class CartController {
 public String addToCart(@RequestParam("foodId") Integer foodId,
                         @RequestParam("quantity") int quantity,
                         @RequestParam("price") Double price,
+                        RedirectAttributes redirectAttributes,
                         Model model) {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,9 +53,8 @@ public String addToCart(@RequestParam("foodId") Integer foodId,
     Cart cart = cartService.getOrCreateCart(user);
 
     cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-
     // Chuyển hướng về trang chủ sau khi thêm vào giỏ hàng
-    return "redirect:/food_details?id=" + foodId;
+    return "redirect:/food_details?id=" + foodId  ;
 }
 
     @GetMapping("/cart_items")
@@ -75,6 +76,11 @@ public String addToCart(@RequestParam("foodId") Integer foodId,
         String email = authentication.getName();
         User user = userService.findByEmail(email);
         Integer userId = user.getUserId();
+
+
+        Integer cartId = cartService.findCartIdByUserId(user.getUserId());
+        double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
+        model.addAttribute("totalOrderPrice", totalOrderPrice);
 
 
         // Lấy các sản phẩm trong giỏ hàng của người dùng

@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -100,6 +98,24 @@ public class CartServiceImpl implements CartService {
     @Override
     public int getTotalQuantityByUser(User user) {
         return cartRepository.getTotalQuantityByUser(user);
+    }
+
+    @Transactional
+    @Override
+    public Integer findCartIdByUserId(Integer userId) {
+        return cartRepository.findCartIdByUserId(userId);
+    }
+    @Transactional
+    @Override
+    public double getTotalFoodPriceByCartId(Integer cartId) {
+        return cartRepository.getTotalFoodPriceByCartId(cartId);
+    }
+
+    @Transactional
+    @Override
+    public void clearCart(Cart cart) {
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
     }
 
 
