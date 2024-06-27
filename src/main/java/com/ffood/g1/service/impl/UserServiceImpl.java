@@ -175,12 +175,6 @@ public class UserServiceImpl implements UserService {
         return Math.toIntExact(userRepository.count());
     }
 
-    @Override
-    public List<User> getUsersSortedByCreatedDate() {
-        return userRepository.findAllUsers(Sort.by(Sort.Direction.DESC, "createdDate"));
-
-    }
-
 
     @Override
     public boolean isPhoneExist(String phone) {

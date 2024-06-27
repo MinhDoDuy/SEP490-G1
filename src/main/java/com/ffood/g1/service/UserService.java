@@ -53,6 +53,6 @@ public interface UserService extends UserDetailsService {
 
     Integer countUsers();
 
-    List<User> getUsersSortedByCreatedDate();
+
 
 }

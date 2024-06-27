@@ -26,8 +26,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	List<User> findByRoleRoleId(Integer role_id);
 
-	@Query("SELECT u FROM User u")
-	List<User> findAllUsers(Sort sort);
+
 
 
 }
