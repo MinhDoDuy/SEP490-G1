@@ -12,4 +12,10 @@ public interface OrderService {
     List<Object[]> getBestSellingItems();
 
     List<Object[]> getOrderStats();
+
+    List<Object[]> getRevenueDataByDay();
+
+    List<Object[]> getRevenueDataByMonth();
+
+    List<Object[]> getRevenueDataByYear();
 }

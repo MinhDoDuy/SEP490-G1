@@ -101,6 +101,17 @@
                     </div>
                 </div>
 
+                <!-- Revenue Chart -->
+                <div class="mb-4">
+                    <h4>Revenue Chart</h4>
+                    <select id="revenue-chart-type" class="form-control mb-3">
+                        <option value="day">By Day</option>
+                        <option value="month">By Month</option>
+                        <option value="year">By Year</option>
+                    </select>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+
                 <!-- Best Selling Items Chart -->
                 <div>
                     <h4>Best Selling Items Chart</h4>
@@ -113,7 +124,6 @@
                     <canvas id="ordersChart"></canvas>
                 </div>
             </div>
-
         </div>
     </div>
 </main>
@@ -145,6 +155,49 @@
                 borderWidth: 1
             }]
         }
+    });
+
+    // Dữ liệu Revenue Chart
+    const revenueLabelsByDay = /*[[${revenueLabelsByDay}]]*/ [];
+    const revenueDataByDay = /*[[${revenueDataByDay}]]*/ [];
+
+    const revenueLabelsByMonth = /*[[${revenueLabelsByMonth}]]*/ [];
+    const revenueDataByMonth = /*[[${revenueDataByMonth}]]*/ [];
+
+    const revenueLabelsByYear = /*[[${revenueLabelsByYear}]]*/ [];
+    const revenueDataByYear = /*[[${revenueDataByYear}]]*/ [];
+
+    // Biểu đồ Revenue
+    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+    let revenueChart = new Chart(ctxRevenue, {
+        type: 'line',
+        data: {
+            labels: revenueLabelsByDay,
+            datasets: [{
+                label: 'Revenue',
+                data: revenueDataByDay,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false
+            }]
+        }
+    });
+
+    document.getElementById('revenue-chart-type').addEventListener('change', function () {
+        const value = this.value;
+        let labels, data;
+        if (value === 'day') {
+            labels = revenueLabelsByDay;
+            data = revenueDataByDay;
+        } else if (value === 'month') {
+            labels = revenueLabelsByMonth;
+            data = revenueDataByMonth;
+        } else if (value === 'year') {
+            labels = revenueLabelsByYear;
+            data = revenueDataByYear;
+        }
+        revenueChart.data.labels = labels;
+        revenueChart.data.datasets[0].data = data;
+        revenueChart.update();
     });
 
     // Biểu đồ Orders
