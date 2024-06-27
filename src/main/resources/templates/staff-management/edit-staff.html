@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <title>Edit Staff</title>
+
+    <style>
+        .form-container {
+            width: 50%;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group select {
+            width: auto;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="text-gray-800 font-inter">
+<!-- start: Sidebar -->
+<div th:replace="sidebar :: sidebar"></div>
+<!-- end: Sidebar -->
+
+<!-- start: Main -->
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
+    <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+        <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+            <i class="ri-menu-line"></i>
+        </button>
+        <ul class="flex items-center text-sm ml-4">
+            <li class="mr-2">
+                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+            </li>
+            <li class="text-gray-600 mr-2 font-medium">/</li>
+            <li class="text-gray-600 mr-2 font-medium">Staff</li>
+        </ul>
+    </div>
+
+    <div class="p-6 flex justify-center">
+        <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+            <div class="flex justify-between mb-4 items-start">
+                <div class="font-medium">Edit Staff Role</div>
+            </div>
+            <form th:action="@{/edit-staff(canteenId=${user.canteen.canteenId})}" method="post" th:object="${user}">
+                <input type="hidden" name="userId" th:value="${userId}"/>
+                <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" th:value="${user.email}" readonly="readonly" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="fullname">Fullname:</label>
+                    <input type="text" id="fullname" th:value="${user.fullName}" readonly="readonly" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" th:value="${user.gender ? 'Male' : 'Female'}" readonly="readonly" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <input type="text" id="role" value="ROLE_STAFF" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label for="isActive">Status:</label>
+                    <select id="isActive" name="isActive" class="form-control">
+                        <option th:value="true" th:text="'Active'" th:selected="${user.isActive} == true"></option>
+                        <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive} == false"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+            <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="back-link">Back to list</a>
+        </div>
+    </div>
+</main>
+<!-- end: Main -->
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{/js/manage.js}"></script>
+</body>
+</html>

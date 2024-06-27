@@ -1,6 +1,7 @@
 package com.ffood.g1.service.impl;
 
 import com.ffood.g1.entity.Canteen;
+import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.CanteenRepository;
 import com.ffood.g1.service.CanteenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +57,10 @@ public class CanteenServiceImpl implements CanteenService {
     }
 
 
-
-
-    public List<Canteen> getAllCanteenContact() {
-        return canteenRepository.findAll();
+    @Override
+    public Canteen loadCanteenId(Integer canteenId) {
+        return canteenRepository.findById(canteenId).orElse(null);
     }
-
 
 
 

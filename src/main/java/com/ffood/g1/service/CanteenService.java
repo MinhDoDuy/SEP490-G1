@@ -24,8 +24,5 @@ public interface CanteenService {
 
     void updateCanteen(Canteen canteen);
 
-
-
-
-
+    Canteen loadCanteenId(Integer canteenId);
 }

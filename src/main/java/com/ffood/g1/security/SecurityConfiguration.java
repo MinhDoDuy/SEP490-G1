@@ -75,6 +75,12 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/edit-canteen","/edit-canteen/**",
                         "/edit-canteen","/edit-canteen/**","/delete-canteen","/dashboard-admin"
                 ).hasRole("ADMIN")
+                // Manager
+                .antMatchers("/manage-staff", "/search-staff", "/add-staff", "/add-staff/**", "/add-staff-form", "/add-staff-form/**",
+                        "/edit-staff", "/edit-staff/**",
+                        "/canteen-details", "/canteen-details/**","/canteen/update-canteen/**",
+                        "/canteen/view-canteen/**") // Thêm các mẫu URL liên quan đến canteen
+                .hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -93,6 +93,11 @@
                                     <a th:href="@{/dashboard-admin}" class="dropdown-item">Bảng Điều Hành Quản Lý</a>
                                 </div>
 
+                                <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_MANAGER'}">
+
+                                    <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Manage Staff</a>
+                                </div>
+
 
                                 <a th:href="@{/logout}" class="dropdown-item">Logout</a>
                                 <a href="chackout.html" class="dropdown-item">Checkout</a>
