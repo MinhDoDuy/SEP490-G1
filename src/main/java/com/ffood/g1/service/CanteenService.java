@@ -22,6 +22,7 @@ public interface CanteenService {
 
     void updateCanteen(Canteen canteen);
 
+    Canteen loadCanteenId(Integer canteenId);
     Integer countCanteens();
     boolean isPhoneExist(String phone);
     boolean isCanteenNameExist(String canteenName);

@@ -21,7 +21,6 @@ public class Canteen {
     @Column(name = "canteen_id")
     private Integer canteenId;
 
-
     @Column(name = "canteen_name", nullable = false)
     private String canteenName;
 
