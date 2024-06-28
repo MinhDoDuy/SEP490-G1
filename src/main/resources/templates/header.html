@@ -96,6 +96,8 @@
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_MANAGER'}">
 
                                     <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Manage Staff</a>
+                                    <a th:href="@{/canteen/edit-profile/{canteenId}(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Edit Canteen</a>
+
                                 </div>
 
 

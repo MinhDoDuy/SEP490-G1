@@ -23,23 +23,11 @@ public class ProfileCanteenController {
     @Autowired
     private FileS3Service fileS3Service;
 
-//    @GetMapping("/view-profile/{canteenId}")
-//    public String viewProfileCanteen(@PathVariable Integer canteenId, Model model) {
-//        Canteen canteen = canteenService.loadCanteenId(canteenId);
-//        if (canteen != null) {
-//            model.addAttribute("canteenId", canteenId);
-//            return "staff-management/view-profile-canteen"; // Thymeleaf template name
-//        } else {
-//            model.addAttribute("error", "Canteen not found");
-//            return "error"; // Error page template
-//        }
-//    }
-
-    @GetMapping("/edit-profile/{canteenId}")
-    public String editProfileCanteen(@PathVariable Integer canteenId, Model model) {
+    @GetMapping("/view-profile/{canteenId}")
+    public String viewProfileCanteen(@PathVariable Integer canteenId, Model model) {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
-            model.addAttribute("canteenId", canteenId);
+            model.addAttribute("canteen", canteen);
             return "staff-management/edit-profile-canteen"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "Canteen not found");
@@ -47,22 +35,50 @@ public class ProfileCanteenController {
         }
     }
 
-    @PostMapping("/update-profile")
-    public String updateProfileCanteen(@ModelAttribute Canteen canteen, BindingResult result,
+    @GetMapping("/edit-profile/{canteenId}")
+    public String editProfileCanteen(@PathVariable Integer canteenId, Model model) {
+        Canteen canteen = canteenService.loadCanteenId(canteenId);
+        if (canteen != null) {
+            model.addAttribute("canteen", canteen);
+            return "staff-management/edit-profile-canteen"; // Thymeleaf template name
+        } else {
+            model.addAttribute("error", "Canteen not found");
+            return "error"; // Error page template
+        }
+    }
+
+    @PostMapping("/update-canteen")
+    public String updateProfileCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
                                        @RequestParam("imageProfileInput") MultipartFile imageProfileInput, Model model)
             throws SpringBootFileUploadException, IOException {
         if (result.hasErrors()) {
             return "staff-management/edit-profile-canteen"; // Return to edit page if there are validation errors
         }
 
-        // Upload file nếu có
+//        // Upload file nếu có
+//        if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
+//            String avatarURL = fileS3Service.uploadFile(imageProfileInput);
+//            canteen.setCanteenImg(avatarURL);
+//        }
+
+        // Check if a new image is uploaded
+        // Fetch the existing canteen data from the database
+        Canteen existingCanteen = canteenService.loadCanteenId(canteen.getCanteenId());
+        if (existingCanteen == null) {
+            model.addAttribute("error", "Canteen not found");
+            return "error"; // Error page template
+        }
+
+        // Check if a new image is uploaded
         if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
             String avatarURL = fileS3Service.uploadFile(imageProfileInput);
             canteen.setCanteenImg(avatarURL);
+        } else {
+            // Retain the existing image if no new image is uploaded
+            canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
         canteenService.updateCanteen(canteen);
         return "redirect:/canteen/view-profile/" + canteen.getCanteenId();
     }
-
 }

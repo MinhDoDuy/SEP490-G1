@@ -54,6 +54,7 @@ public class CanteenServiceImpl implements CanteenService {
     @Override
     public void updateCanteen(Canteen canteen) {
         canteenRepository.save(canteen);
+
     }
 
 
