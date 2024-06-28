@@ -37,8 +37,10 @@ public class StaffManageController {
                             @RequestParam(value = "canteenId") Integer canteenId) {
         page = Math.max(page, 0);
         Page<User> staffPage = userService.getAllStaff(page, size, canteenId);
+        Canteen canteen = canteenService.getCanteenById(canteenId); // Retrieve the canteen object
         model.addAttribute("staffPage", staffPage);
         model.addAttribute("canteenId", canteenId);
+        model.addAttribute("canteen", canteen); // Add canteen to the model
         return "./staff-management/manage-staff";
     }
 
@@ -63,14 +65,17 @@ public class StaffManageController {
     public String editStaffForm(@PathVariable Integer userId, Model model,
                                 @RequestParam(value = "canteenId") Integer canteenId) {
         User user = userService.getUserById(userId);
-        List<Role> roles = roleService.getAllRoles(); // Giả sử bạn có phương thức lấy tất cả các vai trò
+        List<Role> roles = roleService.getAllRoles(); // Assume you have a method to get all roles
+        Canteen canteen = canteenService.getCanteenById(canteenId); // Retrieve the canteen object
 
         model.addAttribute("userId", userId);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
+        model.addAttribute("canteen", canteen); // Add canteen to the model
         return "./staff-management/edit-staff";
     }
+
 
     @PostMapping("/edit-staff")
     public String updateStaffRole(@RequestParam Integer userId,
