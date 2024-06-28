@@ -192,10 +192,6 @@ public class UserServiceImpl implements UserService {
         return Math.toIntExact(userRepository.count());
     }
 
-    @Override
-    public List<User> getUsersSortedByCreatedDate() {
-        return userRepository.findAllUsers(Sort.by(Sort.Direction.DESC, "createdDate"));
-    }
 
     public Page<User> getStaffUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

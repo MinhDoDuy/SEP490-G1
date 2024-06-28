@@ -36,5 +36,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Page<User> findAllByRoleName(@Param("roleName") String roleName, Pageable pageable);
 
 
-	List<User> findAllUsers(Sort createdDate);
 }

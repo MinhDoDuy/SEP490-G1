@@ -60,7 +60,7 @@ public interface UserService extends UserDetailsService {
 
     Page<User> getAllStaff(int page, int size, Integer canteenId);
 
-    List<User> getUsersSortedByCreatedDate();
+
 
     Page<User> getStaffUsers(int page, int size);
 
