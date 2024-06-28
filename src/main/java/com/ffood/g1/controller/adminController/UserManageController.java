@@ -68,6 +68,8 @@ public class UserManageController {
     public String editUserRole(@RequestParam("userId") Integer userId,
                                @RequestParam("isActive") Boolean isActive,
                                @RequestParam(value = "canteenId", required = false) Integer canteenId) {
+
+
         userService.updateUserRoleAndCanteen(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
         return "redirect:/manage-user";
     }

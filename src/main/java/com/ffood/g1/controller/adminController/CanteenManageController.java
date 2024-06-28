@@ -67,11 +67,25 @@ public class CanteenManageController {
     }
 
     @PostMapping("/add-canteen")
-    public String addCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
-                             @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput, Model model)
-            throws IOException, SpringBootFileUploadException {
+    public String addCanteen(@ModelAttribute("canteen") Canteen canteen, Model model,
+                             @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput) throws IOException, SpringBootFileUploadException {
+        boolean hasErrors = false;
 
-        // Upload file nếu có
+        if (canteenService.isPhoneExist(canteen.getCanteenPhone())) {
+            model.addAttribute("phoneError", "Phone number already exists.");
+            hasErrors = true;
+        }
+
+        if (canteenService.isCanteenNameExist(canteen.getCanteenName())) {
+            model.addAttribute("canteenNameError", "Canteen name already exists.");
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            model.addAttribute("canteen", canteen);
+            return "./admin-management/add-canteen"; // Change to your actual form view name
+        }
+
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
             String canteenImageUrl = fileS3Service.uploadFile(imageCanteenInput);
             canteen.setCanteenImg(canteenImageUrl);
@@ -91,24 +105,44 @@ public class CanteenManageController {
     }
 
     @PostMapping("/edit-canteen")
-    public String updateCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
-                                @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput, Model model)
-            throws IOException, SpringBootFileUploadException {
+    public String updateCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result, Model model,
+                                @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput) throws IOException, SpringBootFileUploadException {
+        boolean hasErrors = false;
 
+        // Lấy thông tin canteen hiện tại từ database
+        Canteen existingCanteen = canteenService.getCanteenById(canteen.getCanteenId());
 
-        // Upload file nếu có
+        // Kiểm tra nếu số điện thoại thay đổi và đã tồn tại trong database
+        if (!existingCanteen.getCanteenPhone().equals(canteen.getCanteenPhone()) && canteenService.isPhoneExist(canteen.getCanteenPhone())) {
+            model.addAttribute("phoneError", "Phone number already exists.");
+            hasErrors = true;
+        }
+
+        // Kiểm tra nếu tên canteen thay đổi và đã tồn tại trong database
+        if (!existingCanteen.getCanteenName().equals(canteen.getCanteenName()) && canteenService.isCanteenNameExist(canteen.getCanteenName())) {
+            model.addAttribute("canteenNameError", "Canteen name already exists.");
+            hasErrors = true;
+        }
+
+        // Nếu có lỗi, trả về form chỉnh sửa với các thông báo lỗi
+        if (hasErrors) {
+            model.addAttribute("canteen", canteen);
+            return "./admin-management/edit-canteen";
+        }
+
+        // Xử lý upload ảnh nếu có
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
             String canteenImageUrl = fileS3Service.uploadFile(imageCanteenInput);
             canteen.setCanteenImg(canteenImageUrl);
+        } else {
+            canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
+        // Cập nhật thông tin canteen
         canteenService.updateCanteen(canteen);
         return "redirect:/manage-canteen";
     }
 
-    @GetMapping("/delete-canteen/{canteenId}")
-    public String deleteCanteen(@PathVariable Integer canteenId) {
-        canteenService.deleteCanteenById(canteenId);
-        return "redirect:/manage-canteen";
-    }
+
+
 }

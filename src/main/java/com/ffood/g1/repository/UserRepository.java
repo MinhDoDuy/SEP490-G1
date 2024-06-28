@@ -27,8 +27,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	List<User> findByRoleRoleId(Integer role_id);
 
-	@Query("SELECT u FROM User u")
-	List<User> findAllUsers(Sort sort);
+
 
 	@Query("SELECT u FROM User u WHERE u.canteen.canteenId = :canteenId AND u.role.roleId = 2")
 	Page<User> findAllStaffByCanteenId(@Param("canteenId") Integer canteenId, Pageable pageable);
@@ -37,4 +36,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Page<User> findAllByRoleName(@Param("roleName") String roleName, Pageable pageable);
 
 
+	List<User> findAllUsers(Sort createdDate);
 }

@@ -56,9 +56,11 @@ public interface UserService extends UserDetailsService {
 
     Integer countUsers();
 
-    List<User> getUsersSortedByCreatedDate();
+
 
     Page<User> getAllStaff(int page, int size, Integer canteenId);
+
+    List<User> getUsersSortedByCreatedDate();
 
     Page<User> getStaffUsers(int page, int size);
 

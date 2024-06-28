@@ -41,10 +41,6 @@ public class CanteenServiceImpl implements CanteenService {
                 keyword, keyword, keyword, pageable);
     }
 
-    @Override
-    public void deleteCanteenById(Integer canteenId) {
-        canteenRepository.deleteById(canteenId);
-    }
 
     @Override
     public Canteen getCanteenById(Integer canteenId) {
@@ -57,12 +53,27 @@ public class CanteenServiceImpl implements CanteenService {
 
     }
 
+    @Override
+    public Integer countCanteens() {
+        return Math.toIntExact(canteenRepository.count());
+    }
 
     @Override
+
     public Canteen loadCanteenId(Integer canteenId) {
         return canteenRepository.findById(canteenId).orElse(null);
     }
 
+    public boolean isPhoneExist(String phone) {
+        return canteenRepository.findByCanteenPhone(phone) != null;
+    }
 
+    @Override
+    public boolean isCanteenNameExist(String canteenName) {
+        return canteenRepository.findByCanteenName(canteenName) != null;
+    }
 
+    public List<Canteen> getAllCanteenContact() {
+        return canteenRepository.findAll();
+    }
 }

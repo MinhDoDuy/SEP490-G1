@@ -195,7 +195,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUsersSortedByCreatedDate() {
         return userRepository.findAllUsers(Sort.by(Sort.Direction.DESC, "createdDate"));
-
     }
 
     public Page<User> getStaffUsers(int page, int size) {
