@@ -37,6 +37,7 @@
 
             <div class="flex justify-between items-center mb-4">
                 <form th:action="@{/search-staff}" method="get" class="search-bar flex items-center">
+                    <input type="hidden" name="canteenId" th:value="${canteenId}">
                     <div class="relative w-64 mr-2">
                         <input type="text"
                                class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500"

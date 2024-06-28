@@ -48,18 +48,25 @@ public class StaffManageController {
     public String searchStaff(Model model,
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size,
-                              @RequestParam(value = "keyword", required = false) String keyword) {
+                              @RequestParam(value = "keyword", required = false) String keyword,
+                              @RequestParam(value = "canteenId") Integer canteenId) {
         Page<User> staffPage;
         if (keyword == null || keyword.isEmpty()) {
             staffPage = userService.getStaffUsers(page, size);
         } else {
             staffPage = userService.searchStaff(keyword, page, size);
         }
+        Canteen canteen = canteenService.getCanteenById(canteenId); // Retrieve the canteen object
+
         model.addAttribute("staffPage", staffPage);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("canteen", canteen); // Add canteen to the model
 
         return "./staff-management/manage-staff";
     }
+
+
 
     @GetMapping("/edit-staff/{userId}")
     public String editStaffForm(@PathVariable Integer userId, Model model,
