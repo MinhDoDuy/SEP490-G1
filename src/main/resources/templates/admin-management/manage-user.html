@@ -26,7 +26,7 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Analytics</li>
+            <li class="text-gray-600 mr-2 font-medium">View All User</li>
         </ul>
     </div>
 
@@ -56,7 +56,7 @@
                     <thead>
                     <tr>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                            ID
+                            STT
                         </th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                             Full Name
@@ -88,49 +88,42 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="user : ${userPage.content}">
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.userId}">ID</td>
+                    <tr th:each="user, iterStat : ${userPage.content}">
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${userPage.number * userPage.size + iterStat.index + 1}">STT</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.fullName}">Full Name</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.codeName}">Code Name</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.phone}">Phone</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen != null}" th:text="${user.canteen.canteenName}">Canteen</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen == null}"></td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.gender ? 'Male' : 'Female'}">
-                            Gender
-                        </td>
-                        <td class="py-2 px-4 border-b border-b-gray-50"
-                            th:text="${user.isActive ? 'Active' : 'Inactive'}">Status
-                        </td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}"
-                            th:text="${user.role.roleName}"></td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}">
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.gender ? 'Male' : 'Female'}">Gender</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.isActive ? 'Active' : 'Inactive'}">Status</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.role.roleName}"></td>
+                        <td class="py-2 px-4 border-b border-b-gray-50">
                             <a th:href="@{/edit-user/{userId}(userId=${user.userId})}" class="btn btn-primary"
-                               style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none;
-                               border-radius: 2px;"> Edit
+                               style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">
+                                Edit
                             </a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
                 <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                    <span th:if="${userPage.hasPrevious()}">
-                        <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}"
-                           class="page-link">&laquo;</a>
-                    </span>
+        <span th:if="${userPage.hasPrevious()}">
+            <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}" class="page-link">&laquo;</a>
+        </span>
                     <span th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
-                        <a th:classappend="${i} == ${userPage.number} ? 'active' : ''"
-                           th:href="@{/manage-user(page=${i}, size=${userPage.size})}"
-                           class="page-link">
-                            <span th:text="${i + 1}">1</span>
-                        </a>
-                    </span>
+            <a th:classappend="${i} == ${userPage.number} ? 'active' : ''"
+               th:href="@{/manage-user(page=${i}, size=${userPage.size})}" class="page-link">
+                <span th:text="${i + 1}">1</span>
+            </a>
+        </span>
                     <span th:if="${userPage.hasNext()}">
-                        <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}"
-                           class="page-link">&raquo;</a>
-                    </span>
+            <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}" class="page-link">&raquo;</a>
+        </span>
                 </div>
             </div>
+
         </div>
     </div>
 </main>
