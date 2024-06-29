@@ -30,12 +30,12 @@
 </head>
 <body class="text-gray-800 font-inter">
 <!-- start: Sidebar -->
-<div th:replace="sidebar-manage :: sidebar-manage(canteen=${canteen})"></div>
+<div th:replace="sidebar :: sidebar"></div>
 <!-- end: Sidebar -->
 
 <!-- start: Main -->
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
-<!--    <input type="hidden" id="canteenId" name="canteenId" th:value="${canteen.canteenId}"/>-->
+    <!--    <input type="hidden" id="canteenId" name="canteenId" th:value="${canteen.canteenId}"/>-->
 
     <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
         <button type="button" class="text-lg text-gray-600 sidebar-toggle">

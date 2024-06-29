@@ -140,36 +140,35 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        boolean hasError = false;
-        String codeNamePattern = "^[a-zA-Z0-9]{6,20}$";
+            boolean hasError = false;
+            String codeNamePattern = "^[a-zA-Z0-9]{6,20}$";
 
-        if (userService.isEmailExist(user.getEmail())) {
-            redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
-            hasError = true;
-        }
+            if (userService.isEmailExist(user.getEmail())) {
+                redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
+                hasError = true;
+            }
 
-        if (!user.getCodeName().matches(codeNamePattern)) {
-            redirectAttributes.addAttribute("codeNameExistsError", "Invalid code name. Please enter letters and numbers between 6-20 characters.");
-            hasError = true;
-        }
+            if (!user.getCodeName().matches(codeNamePattern)) {
+                redirectAttributes.addAttribute("codeNameExistsError", "Invalid code name. Please enter letters and numbers between 6-20 characters.");
+                hasError = true;
+            }
 
-        if (userService.isCodeNameExist(user.getCodeName())) {
-            redirectAttributes.addAttribute("codeNameExistsError", "Code Name này đã được đăng ký. Vui lòng sử dụng một code name khác.");
-            hasError = true;
-        }
+            if (userService.isCodeNameExist(user.getCodeName())) {
+                redirectAttributes.addAttribute("codeNameExistsError", "Code Name này đã được đăng ký. Vui lòng sử dụng một code name khác.");
+                hasError = true;
+            }
 
-        if (userService.isPhoneExist(user.getPhone())) {
-            redirectAttributes.addAttribute("phoneExistsError", "Số điện thoại này đã được đăng ký. Vui lòng sử dụng số khác.");
-            hasError = true;
-        }
+            if (userService.isPhoneExist(user.getPhone())) {
+                redirectAttributes.addAttribute("phoneExistsError", "Số điện thoại này đã được đăng ký. Vui lòng sử dụng số khác.");
+                hasError = true;
+            }
 
-        if (hasError) {
-            redirectAttributes.addAttribute("fullName", user.getFullName());
-            redirectAttributes.addAttribute("password", user.getPassword());
-            redirectAttributes.addAttribute("codeName", user.getCodeName());
-            redirectAttributes.addAttribute("phone", user.getPhone());
-            return "redirect:/register";
-        }
+            if (hasError) {
+                redirectAttributes.addAttribute("fullName", user.getFullName());
+                redirectAttributes.addAttribute("password", user.getPassword());
+                redirectAttributes.addAttribute("phone", user.getPhone());
+                return "redirect:/register";
+            }
 
 
         // Xử lý đăng ký người dùng (lưu thông tin người dùng vào cơ sở dữ liệu)
