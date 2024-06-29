@@ -4,6 +4,9 @@ import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.OrderType;
+import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.CartService;
@@ -63,8 +66,9 @@ public class OrderController {
 
     @PostMapping("/checkout")
     public String processCheckout(@RequestParam("address") String address,
-                                  @RequestParam("paymentMethod") String paymentMethod,
-                                  Model model) {
+                                  @RequestParam("note") String note,
+                                  @RequestParam("paymentMethod") PaymentMethod paymentMethod,
+                                  @RequestParam("orderType") OrderType orderType, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
             String email = authentication.getName();
@@ -75,16 +79,25 @@ public class OrderController {
                 // Tạo và lưu đơn hàng
                 Integer cartId = cartService.findCartIdByUserId(user.getUserId());
                 double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
-                String note="heehehe";
-//                Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart);
+                if (paymentMethod.equals(PaymentMethod.CASH)) {
+                    OrderStatus orderStatus = OrderStatus.PENDING_PAYMENT;
+                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus);
+                    model.addAttribute("order", order);
+                    // Xóa giỏ hàng
+                    cartService.clearCart(cart);
 
+                }
+                if (paymentMethod.equals(PaymentMethod.VNPAY)) {
 
+                    OrderStatus orderStatus = OrderStatus.PAYMENT_COMPLETE;
+                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus);
 
-                Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart);
-                model.addAttribute("order", order);
-                // Xóa giỏ hàng
-                cartService.clearCart(cart);
+                    model.addAttribute("order", order);
+                    // Xóa giỏ hàng
+                    cartService.clearCart(cart);
+                }
             }
+
         }
         return "redirect:/homepage";
     }

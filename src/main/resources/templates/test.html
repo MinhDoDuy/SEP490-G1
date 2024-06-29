@@ -118,38 +118,31 @@
 
                     <div class="mb-3">
                         <label for="address">Địa chỉ nhận hàng <span class="text-muted">(Optional)</span></label>
-                        <input type="text" class="form-control" id="address" placeholder="Apartment or suite" name="address">
+                        <input type="text" class="form-control" id="address" placeholder="Địa chỉ nhận hàng" name="address">
                     </div>
 
-
+                    <div class="mb-3">
+                        <label for="address">Note <span class="text-muted">(Optional)</span></label>
+                        <input type="text" class="form-control" id="note" placeholder="Điều cần lưu ý về đơn hàng" name="note">
+                    </div>
                     <hr class="mb-4">
 
                     <h4 class="mb-3">Payment</h4>
 
                     <div class="d-block my-3">
-                        <div class="custom-control custom-radio">
-                            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input"
-                                   value="creditCard" checked required>
-                            <label class="custom-control-label" for="credit">VN Pay</label>
+                        <label for="orderType">Chọn loại đặt hàng:</label>
+                        <select id="orderType" name="orderType" class="form-control" onchange="showPaymentOptions()">
+                            <option value="ONLINE_ORDER" selected>Đặt hàng online</option>
+                            <option value="AT_COUNTER">Nhận tại quầy</option>
+                        </select>
+
+                        <div id="paymentOptions" class="mt-3">
+                            <label for="paymentMethod">Chọn hình thức thanh toán:</label>
+                            <select id="paymentMethod" name="paymentMethod" class="form-control mt-2">
+                                <!-- Options will be dynamically added based on selection -->
+                                <option value="VNPAY">VN Pay</option>
+                            </select>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"
-                                   value="debitCard" required>
-                            <label class="custom-control-label" for="debit">Tiền mặt</label>
-                        </div>
-
-                    </div>
-
-                    <h4 class="mb-3">Ship</h4>
-
-                    <div class="d-block my-3">
-                        <div class="custom-control custom-radio">
-                            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input"
-                                   value="creditCard" checked required>
-                            <label class="custom-control-label" for="credit">Nhận tại quầy</label>
-                        </div>
-
-
                     </div>
 
                     <hr class="mb-4">
@@ -168,6 +161,38 @@
         </footer>
     </div>
 </div>
+<script>
+    // Show payment options when page loads
+    showPaymentOptions();
+
+    function showPaymentOptions() {
+        var orderType = document.getElementById('orderType').value;
+        var paymentMethodSelect = document.getElementById('paymentMethod');
+        paymentMethodSelect.innerHTML = ''; // Clear previous options
+
+        if (orderType === "ONLINE_ORDER") {
+            // Add options for online order
+            var vnpayOption = document.createElement('option');
+            vnpayOption.value = 'VNPAY';
+            vnpayOption.textContent = 'VN Pay';
+            paymentMethodSelect.appendChild(vnpayOption);
+        } else if (orderType === "AT_COUNTER") {
+            // Add options for pickup at counter
+            var vnpayOption = document.createElement('option');
+            vnpayOption.value = 'VNPAY';
+            vnpayOption.textContent = 'VN Pay';
+            paymentMethodSelect.appendChild(vnpayOption);
+
+            var cashOption = document.createElement('option');
+            cashOption.value = 'CASH';
+            cashOption.textContent = 'Tiền mặt';
+            paymentMethodSelect.appendChild(cashOption);
+        }
+
+        // Show payment options div
+        document.getElementById('paymentOptions').style.display = 'block';
+    }
+</script>
 <!-- Bootstrap core JavaScript -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7aboO6U9tT+GIH9WENao2wA2biG8qkGs1F5W7XgsRAK/FivB"

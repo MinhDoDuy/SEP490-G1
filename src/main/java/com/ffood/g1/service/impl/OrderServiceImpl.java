@@ -2,6 +2,8 @@ package com.ffood.g1.service.impl;
 
 import com.ffood.g1.entity.*;
 import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.OrderType;
+import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,17 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order createOrder(User user, String address, Double totalOrderPrice, String note, Cart cart) {
+    public Order createOrder(User user, String address, Double totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDING_PAYMENT);
+        order.setStatus(orderStatus);
         order.setOrderAddress(address);
         order.setTotalOrderPrice(totalOrderPrice);
         order.setNote(note);
+        order.setOrderType(orderType);
+        order.setPaymentMethod(paymentMethod);
+
 
         // Lưu Order trước để lấy ID
         order = orderRepository.save(order);

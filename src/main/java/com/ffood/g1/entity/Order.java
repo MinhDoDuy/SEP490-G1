@@ -2,6 +2,8 @@ package com.ffood.g1.entity;
 
 import com.ffood.g1.converter.OrderStatusConverter;
 import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.OrderType;
+import com.ffood.g1.enum_pay.PaymentMethod;
 import lombok.*;
 
 import javax.persistence.*;
@@ -44,6 +46,15 @@ public class Order {
 
     @Column(name = "note")
     private String note;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_type", nullable = false)
+    private OrderType orderType;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
