@@ -6,11 +6,9 @@ import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -30,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
         order = orderRepository.save(order);
 
         // Thiết lập các OrderDetail và thêm vào Order đã lưu
-        Set<OrderDetail> orderDetails = new HashSet<>();
+        List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartItem cartItem : cart.getCartItems()) {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(order);
@@ -38,13 +36,22 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setQuantity(cartItem.getQuantity());
             orderDetail.setPrice(cartItem.getPrice());
 
+            // Debug: In ra các thông tin của CartItem và OrderDetail
+            System.out.println("CartItem ID: " + cartItem.getCartItemId());
+            System.out.println("OrderDetail Food ID: " + orderDetail.getFood().getFoodId());
+            System.out.println("OrderDetail Quantity: " + orderDetail.getQuantity());
+            System.out.println("OrderDetail Price: " + orderDetail.getPrice());
 
+            // Thêm OrderDetail vào List
+            orderDetails.add(orderDetail);
         }
         order.setOrderDetails(orderDetails);
-
+        // Debug: In ra số lượng OrderDetails trước khi lưu
+        System.out.println("Total OrderDetails: " + orderDetails.size());
         // Lưu lại Order cùng với OrderDetail
-        return orderRepository.save(order);
+        order = orderRepository.save(order);
+        // Debug: In ra ID của Order sau khi lưu
+        System.out.println("Order ID: " + order.getOrderId());
+        return order;
     }
-
-
 }

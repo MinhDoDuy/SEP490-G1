@@ -56,7 +56,8 @@ public class CanteenController {
             User user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
                 model.addAttribute("user", user);
-                int totalQuantity = cartService.getTotalQuantityByUser(user);
+                Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
+                int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
                 model.addAttribute("totalQuantity", totalQuantity);
             }
         }

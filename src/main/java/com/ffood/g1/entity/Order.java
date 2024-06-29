@@ -6,8 +6,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -46,5 +47,18 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<OrderDetail> orderDetails = Collections.emptySet();
+    private List<OrderDetail> orderDetails = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderId, order.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
+    }
 }

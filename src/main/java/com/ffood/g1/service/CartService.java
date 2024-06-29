@@ -17,7 +17,7 @@ public interface CartService {
 
     void removeCartItem(Integer cartItemId);
 
-    int getTotalQuantityByUser(User user);
+    Integer getTotalQuantityByUser(User user);
 
     @Transactional
     Integer findCartIdByUserId(Integer userId);

@@ -76,13 +76,16 @@ public class OrderController {
                 Integer cartId = cartService.findCartIdByUserId(user.getUserId());
                 double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
                 String note="heehehe";
+//                Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart);
+
+
+
                 Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart);
-
-
+                model.addAttribute("order", order);
                 // Xóa giỏ hàng
                 cartService.clearCart(cart);
             }
         }
-        return "homepage";
+        return "redirect:/homepage";
     }
 }

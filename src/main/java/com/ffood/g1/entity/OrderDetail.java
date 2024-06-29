@@ -3,6 +3,7 @@ package com.ffood.g1.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -32,12 +33,15 @@ public class OrderDetail {
     private Double price;
 
     @Override
-    public String toString() {
-        return "OrderDetail{" +
-                "orderDetailId=" + orderDetailId +
-                ", food=" + food +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderDetail that = (OrderDetail) o;
+        return Objects.equals(orderDetailId, that.orderDetailId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderDetailId);
     }
 }

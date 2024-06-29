@@ -96,8 +96,11 @@ public class CartServiceImpl implements CartService {
     }
     @Transactional
     @Override
-    public int getTotalQuantityByUser(User user) {
-        return cartRepository.getTotalQuantityByUser(user);
+    public Integer getTotalQuantityByUser(User user) {
+
+
+           return cartRepository.getTotalQuantityByUser(user);
+
     }
 
     @Transactional

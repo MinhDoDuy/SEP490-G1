@@ -66,8 +66,10 @@ public String addToCart(@RequestParam("foodId") Integer foodId,
             User user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
                 model.addAttribute("user", user);
+                Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
+                int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
 
-                int totalQuantity = cartService.getTotalQuantityByUser(user);
+
                 model.addAttribute("totalQuantity", totalQuantity);
             }
         }
@@ -79,7 +81,9 @@ public String addToCart(@RequestParam("foodId") Integer foodId,
 
 
         Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-        double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
+//        double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
+
+        double totalOrderPrice=0;
         model.addAttribute("totalOrderPrice", totalOrderPrice);
 
 
