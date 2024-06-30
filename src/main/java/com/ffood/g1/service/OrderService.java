@@ -18,4 +18,6 @@ public interface OrderService {
     List<Object[]> getRevenueDataByMonth();
 
     List<Object[]> getRevenueDataByYear();
+
+    Double calculateTotalRevenue();
 }

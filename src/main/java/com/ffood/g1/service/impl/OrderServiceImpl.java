@@ -34,4 +34,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Object[]> getRevenueDataByYear() {
         return orderRepository.findRevenueDataByYear();
     }
+
+    @Override
+    public Double calculateTotalRevenue() {
+        return orderRepository.findTotalRevenue();
+    }
 }
