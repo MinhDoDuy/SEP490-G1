@@ -141,7 +141,7 @@
                                 <h4>Không có kết quả phù hợp</h4>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-4" th:each="food : ${items_home}">
-                                <div class="rounded position-relative fruite-item">
+                                <div th:if="${food.canteen.isActive}" class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
                                         <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt=""
                                              style="width: 100px;height: 180px">
