@@ -133,38 +133,6 @@
         }
     });
 
-    // Biểu đồ Revenue
-    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-    let revenueChart = new Chart(ctxRevenue, {
-        type: 'line',
-        data: {
-            labels: revenueLabelsByDay,
-            datasets: [{
-                label: 'Revenue',
-                data: revenueDataByDay,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: false
-            }]
-        }
-    });
-
-    document.getElementById('revenue-chart-type').addEventListener('change', function () {
-        const value = this.value;
-        let labels, data;
-        if (value === 'day') {
-            labels = revenueLabelsByDay;
-            data = revenueDataByDay;
-        } else if (value === 'month') {
-            labels = revenueLabelsByMonth;
-            data = revenueDataByMonth;
-        } else if (value === 'year') {
-            labels = revenueLabelsByYear;
-            data = revenueDataByYear;
-        }
-        revenueChart.data.labels = labels;
-        revenueChart.data.datasets[0].data = data;
-        revenueChart.update();
-    });
 
     // Biểu đồ Orders
     const ctxOrders = document.getElementById('ordersChart').getContext('2d');
@@ -191,6 +159,43 @@
             }]
         }
     });
+
+    document.getElementById('revenue-chart-type').addEventListener('change', function () {
+        const value = this.value;
+        let labels, data;
+        if (value === 'day') {
+            labels = revenueLabelsByDay;
+            data = revenueDataByDay;
+        } else if (value === 'month') {
+            labels = revenueLabelsByMonth;
+            data = revenueDataByMonth;
+        } else if (value === 'year') {
+            labels = revenueLabelsByYear;
+            data = revenueDataByYear;
+        }
+        revenueChart.data.labels = labels;
+        revenueChart.data.datasets[0].data = data;
+        revenueChart.update();
+    });
+
+    // Biểu đồ Revenue
+    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+    let revenueChart = new Chart(ctxRevenue, {
+        type: 'line',
+        data: {
+            labels: revenueLabelsByDay,
+            datasets: [{
+                label: 'Revenue',
+                data: revenueDataByDay,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false
+            }]
+        }
+    });
+
+
+
+
 </script>
 </body>
 </html>
