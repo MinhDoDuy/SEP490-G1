@@ -7,11 +7,11 @@ import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
+import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.repository.UserRepository;
-import com.ffood.g1.service.CartItemService;
-import com.ffood.g1.service.CartService;
-import com.ffood.g1.service.FoodService;
-import com.ffood.g1.service.OrderService;
+import com.ffood.g1.service.*;
+import com.ffood.g1.service.impl.VNPayService;
+import com.google.api.client.util.store.AbstractMemoryDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class OrderController {
@@ -37,6 +40,11 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private VNPayService vnpayService;
 
     @GetMapping("/checkout")
     public String showCheckoutPage(Model model) {
@@ -46,7 +54,7 @@ public class OrderController {
             User user = userService.findByEmail(email);
             if (user != null) {
                 Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-                double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
+                Integer totalOrderPrice = (int) cartService.getTotalFoodPriceByCartId(cartId);
                 model.addAttribute("totalOrderPrice", totalOrderPrice);
                 model.addAttribute("user", user);
             }
@@ -68,7 +76,9 @@ public class OrderController {
     public String processCheckout(@RequestParam("address") String address,
                                   @RequestParam("note") String note,
                                   @RequestParam("paymentMethod") PaymentMethod paymentMethod,
-                                  @RequestParam("orderType") OrderType orderType, Model model) {
+                                  @RequestParam("orderType") OrderType orderType,
+                                  HttpSession session,
+                                  Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
             String email = authentication.getName();
@@ -76,29 +86,58 @@ public class OrderController {
             if (user != null) {
                 // Lấy giỏ hàng hiện tại
                 Cart cart = cartService.getOrCreateCart(user);
+                session.setAttribute("cart", cart);
                 // Tạo và lưu đơn hàng
                 Integer cartId = cartService.findCartIdByUserId(user.getUserId());
                 double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
                 if (paymentMethod.equals(PaymentMethod.CASH)) {
                     OrderStatus orderStatus = OrderStatus.PENDING_PAYMENT;
                     Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus);
+                    order = orderRepository.save(order);
                     model.addAttribute("order", order);
                     // Xóa giỏ hàng
                     cartService.clearCart(cart);
 
-                }
-                if (paymentMethod.equals(PaymentMethod.VNPAY)) {
-
+                }else if(paymentMethod.equals(PaymentMethod.VNPAY)) {
                     OrderStatus orderStatus = OrderStatus.PAYMENT_COMPLETE;
                     Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus);
-
-                    model.addAttribute("order", order);
-                    // Xóa giỏ hàng
-                    cartService.clearCart(cart);
+                    session.setAttribute("order", order);
+                    return "createOrder";
                 }
             }
 
         }
         return "redirect:/homepage";
     }
+
+    @GetMapping("/vnpay_return")
+    public String vnPayReturn(@RequestParam Map<String, String> params, Model model) {
+        // Xử lý phản hồi từ VNPay và cập nhật trạng thái đơn hàng
+        // ...
+        return "payment-result";
+    }
+
+
+    @GetMapping("/order-history")
+    public String viewOrderHistory(
+
+            Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
+            String email = authentication.getName();
+            User user = userService.findByEmail(email);
+
+            Integer userId = user.getUserId();
+            OrderStatus status=OrderStatus.PENDING_PAYMENT;
+//            OrderStatus orderStatus = OrderStatus.valueOf(status);
+            List<Order> orders = orderService.getOrdersByUserIdAndStatus(userId, status);
+            model.addAttribute("orders", orders);
+            model.addAttribute("status", status);
+        }
+        return "order-history";
+    }
+
+
 }

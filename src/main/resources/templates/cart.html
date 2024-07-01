@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
@@ -107,17 +107,16 @@
                     <td>
                         <div class="input-group quantity mt-4" style="width: 150px;">
                             <div class="input-group-btn">
-                                <button class="btn btn-sm btn-minus rounded-circle bg-light border custom-btn" onclick="decreaseQuantity([[${cartItem.food.id}]])">
+                                <button class="btn btn-sm btn-minus rounded-circle bg-light border custom-btn">
                                     <i class="fa fa-minus"></i>
                                 </button>
                             </div>
                             <input type="number" class="form-control form-control-sm text-center border-0 custom-input" id="quantity-[[${cartItem.food.id}]]" th:value="${cartItem.quantity}" min="1">
                             <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border custom-btn" onclick="increaseQuantity([[${cartItem.food.id}]])">
+                                <button class="btn btn-sm btn-plus rounded-circle bg-light border custom-btn">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
-                        </div>
                     </td>
 
 
@@ -204,6 +203,27 @@
 <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
 
 
+
+<script>
+    $(document).ready(function() {
+        $('.quantity button').on('click', function () {
+            var button = $(this);
+            console.log("button: ", button);
+            var oldValue = button.parent().parent().find('input').val();
+            if (button.hasClass('btn-plus')) {
+                var newVal = parseFloat(oldValue) + 1;
+            } else {
+                if (oldValue > 0) {
+                    var newVal = parseFloat(oldValue) - 1;
+                } else {
+                    newVal = 0;
+                }
+            }
+            console.log("Go here", newVal);
+            button.parent().parent().find('input').val(newVal);
+        });
+    });
+</script>
 <!-- JavaScript Libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -212,27 +232,9 @@
 <script th:src="@{lib/lightbox/js/lightbox.min.js}"></script>
 <script th:src="@{lib/owlcarousel/owl.carousel.min.js}"></script>
 
-<script>
-    function decreaseQuantity(foodId) {
-        const quantityInput = document.getElementById(`quantity-${foodId}`);
-        let quantity = parseInt(quantityInput.value);
-        if (quantity > 1) {
-            quantity--;
-            quantityInput.value = quantity;
-        }
-    }
-
-    function increaseQuantity(foodId) {
-        const quantityInput = document.getElementById(`quantity-${foodId}`);
-        let quantity = parseInt(quantityInput.value);
-        quantity++;
-        quantityInput.value = quantity;
-    }
-
-
-</script>
 <!-- Template Javascript -->
 <script th:src="@{/js/main_test.js}"></script>
+<script th:src="@{/js/main.js}"></script>
 </body>
 
 </html>

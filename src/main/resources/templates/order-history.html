@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Order History</h1>
+    <div class="btn-group mb-3">
+        <a th:href="@{/order-history(userId=${userId}, status='PAYMENT_COMPLETE')}" class="btn btn-primary" th:classappend="${status == 'PAYMENT_COMPLETE'} ? 'active' : ''">Completed Orders</a>
+        <a th:href="@{/order-history(userId=${userId}, status='PENDING_PAYMENT')}" class="btn btn-secondary" th:classappend="${status == 'PENDING_PAYMENT'} ? 'active' : ''">Pending Orders</a>
+    </div>
+    <div th:if="${orders.isEmpty()}">
+        <p>No orders found.</p>
+    </div>
+    <div th:if="${!orders.isEmpty()}">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Order Status</th>
+                <th>Order Total</th>
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.orderId}"></td>
+                <td th:text="${order.orderDate}"></td>
+                <td th:text="${order.status}"></td>
+                <td th:text="${order.totalOrderPrice}"></td>
+                <td>
+                    <button class="btn btn-info" type="button" th:onclick="'showOrderDetails(' + ${order.orderId} + ')'">View Details</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- Template Javascript -->
+<script th:src="@{/js/main.js}"></script>
+
+<script>
+    function showOrderDetails(orderId) {
+        // Thực hiện AJAX để lấy chi tiết đơn hàng và hiển thị chúng
+        // Bạn có thể tạo một modal để hiển thị chi tiết đơn hàng
+    }
+</script>
+</body>
+</html>

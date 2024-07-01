@@ -81,9 +81,9 @@ public String addToCart(@RequestParam("foodId") Integer foodId,
 
 
         Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-//        double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
+        Integer totalOrderPrice = (int) cartService.getTotalFoodPriceByCartId(cartId);
+//        int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
 
-        double totalOrderPrice=0;
         model.addAttribute("totalOrderPrice", totalOrderPrice);
 
 

@@ -29,8 +29,8 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentMethod(paymentMethod);
 
 
-        // Lưu Order trước để lấy ID
-        order = orderRepository.save(order);
+//        // Lưu Order trước để lấy ID
+//        order = orderRepository.save(order);
 
         // Thiết lập các OrderDetail và thêm vào Order đã lưu
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -54,9 +54,16 @@ public class OrderServiceImpl implements OrderService {
         // Debug: In ra số lượng OrderDetails trước khi lưu
         System.out.println("Total OrderDetails: " + orderDetails.size());
         // Lưu lại Order cùng với OrderDetail
-        order = orderRepository.save(order);
+
         // Debug: In ra ID của Order sau khi lưu
         System.out.println("Order ID: " + order.getOrderId());
         return order;
+    }
+
+
+
+
+    public List<Order> getOrdersByUserIdAndStatus(Integer userId, OrderStatus status) {
+        return orderRepository.findByUserUserIdAndStatus(userId, status);
     }
 }
