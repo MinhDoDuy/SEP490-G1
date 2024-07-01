@@ -48,7 +48,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/dashboard/**", "/register").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
-                .antMatchers("/", "/login/**", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_contact", "/food_details").permitAll()
+                .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_contact", "/food_details").permitAll()
                 .antMatchers("/add_to_cart").permitAll()
                 .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
@@ -75,6 +75,10 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                 .permitAll();
     }
 
-
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("user").password("{noop}password").roles("USER");
+    }
 
 }
