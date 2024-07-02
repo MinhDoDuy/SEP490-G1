@@ -46,6 +46,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Object[]> findRevenueDataByYear();
 
 
-    @Query("SELECT SUM(od.quantity * od.price) FROM Order o JOIN o.orderDetails od WHERE o.status = 'COMPLETE'")
+    @Query("SELECT SUM(od.quantity * od.price) FROM Order o JOIN o.orderDetails od WHERE o.status = 'PAYMENT_COMPLETE'")
     Double findTotalRevenue();
 }
