@@ -42,8 +42,6 @@ public class FoodManagementController {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             currentUserEmail = userDetails.getUsername();
-        } else {
-            currentUserEmail = authentication.getName(); // hoặc các cách khác để lấy email
         }
 
         User currentUser = userService.findByEmail(currentUserEmail);

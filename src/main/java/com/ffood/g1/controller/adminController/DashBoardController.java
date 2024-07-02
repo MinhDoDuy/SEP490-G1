@@ -29,7 +29,7 @@ public class DashBoardController {
         Integer userCount = userService.countUsers();
         Integer canteenCount = canteenService.countCanteens();
         Double totalRevenue = orderService.calculateTotalRevenue();
-        String formattedRevenue = new DecimalFormat("#,###").format(totalRevenue);
+
 
         List<Object[]> bestSellingItems = orderService.getBestSellingItems();
         List<Object[]> orderStats = orderService.getOrderStats();
@@ -74,7 +74,7 @@ public class DashBoardController {
         }
 
         model.addAttribute("userCount", userCount);
-        model.addAttribute("totalRevenue", formattedRevenue);
+        model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("canteenCount", canteenCount);
         model.addAttribute("bestSellingItemsLabels", bestSellingItemsLabels);
         model.addAttribute("bestSellingItemsData", bestSellingItemsData);

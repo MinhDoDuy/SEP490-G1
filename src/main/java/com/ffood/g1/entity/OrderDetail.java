@@ -31,5 +31,5 @@ public class OrderDetail {
     private Integer quantity;
 
     @Column(name = "price", nullable = false)
-    private Double price;
+    private Integer price;
 }
