@@ -65,4 +65,5 @@ public interface UserService extends UserDetailsService {
     Page<User> getStaffUsers(int page, int size);
 
     Page<User> searchStaff(String keyword, int page, int size);
+
 }
