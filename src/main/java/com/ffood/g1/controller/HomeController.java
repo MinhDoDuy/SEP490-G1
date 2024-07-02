@@ -36,7 +36,7 @@ public class HomeController {
     @Autowired
     CartRepository cartRepository;
 
-    @GetMapping({"/homepage"})
+    @GetMapping({"/homepage", ""})
     public String getCanteens(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
@@ -47,15 +47,15 @@ public class HomeController {
                 Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
                 int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
                 model.addAttribute("totalQuantity", totalQuantity);
-
             }
+
         }
-        //get All canteens and display in homepage
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
-        // get random 12 items and display in homepage
+
         List<Food> items_home = foodService.getRandomFood();
         model.addAttribute("items_home", items_home);
+
         return "/homepage";
     }
 
