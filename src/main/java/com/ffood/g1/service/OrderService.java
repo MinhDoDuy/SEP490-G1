@@ -12,7 +12,7 @@ import java.util.List;
 public interface OrderService {
 
 
-    Order createOrder(User user, String address, Double totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus);
+    Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus,String orderCode);
 
     List<Order> getOrdersByUserIdAndStatus(Integer userId, OrderStatus status);
 }

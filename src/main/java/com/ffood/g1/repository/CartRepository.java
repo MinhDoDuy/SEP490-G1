@@ -12,9 +12,12 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
-       Optional<Cart> findByUser(User user);
+//       Optional<Cart> findByUser(User user);
 //    @Query("SELECT c FROM Cart c WHERE c.user = :user")
 //    List<Cart> findByUser(@Param("user") User user);
+
+    @Query("SELECT c FROM Cart c WHERE c.user = :user AND c.status = 'active'")
+    Optional<Cart> findByUser(@Param("user") User user);
 
     @Query("SELECT c FROM Cart c WHERE c.user.userId = :userId")
     Optional<Cart> findByUserId(@Param("userId") Integer userId);
@@ -30,5 +33,5 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     Integer findCartIdByUserId(@Param("userId") Integer userId);
 
     @Query("SELECT SUM(ci.totalFoodPrice) FROM Cart c JOIN c.cartItems ci WHERE c.cartId = :cartId AND c.status = 'active'")
-    double getTotalFoodPriceByCartId(@Param("cartId") Integer cartId);
+    Integer getTotalFoodPriceByCartId(@Param("cartId") Integer cartId);
 }

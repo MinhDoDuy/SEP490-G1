@@ -11,7 +11,7 @@ import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.*;
 import com.ffood.g1.service.impl.VNPayService;
-import com.google.api.client.util.store.AbstractMemoryDataStore;
+import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +67,7 @@ public class OrderController {
         }
 
 
-        return "test";
+        return "order/check-out";
     }
 
 
@@ -89,10 +88,12 @@ public class OrderController {
                 session.setAttribute("cart", cart);
                 // Tạo và lưu đơn hàng
                 Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-                double totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
+                int totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
                 if (paymentMethod.equals(PaymentMethod.CASH)) {
                     OrderStatus orderStatus = OrderStatus.PENDING_PAYMENT;
-                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus);
+                    String orderCode=RandomOrderCodeGenerator.generateOrderCode();
+                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus,orderCode);
+                    cart.setStatus("deactive");
                     order = orderRepository.save(order);
                     model.addAttribute("order", order);
                     // Xóa giỏ hàng
@@ -100,9 +101,11 @@ public class OrderController {
 
                 }else if(paymentMethod.equals(PaymentMethod.VNPAY)) {
                     OrderStatus orderStatus = OrderStatus.PAYMENT_COMPLETE;
-                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus);
+                    String orderCode=RandomOrderCodeGenerator.generateOrderCode();
+                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus,orderCode);
                     session.setAttribute("order", order);
-                    return "createOrder";
+                    model.addAttribute("order", order);
+                    return "order/create-order";
                 }
             }
 
@@ -110,12 +113,12 @@ public class OrderController {
         return "redirect:/homepage";
     }
 
-    @GetMapping("/vnpay_return")
-    public String vnPayReturn(@RequestParam Map<String, String> params, Model model) {
-        // Xử lý phản hồi từ VNPay và cập nhật trạng thái đơn hàng
-        // ...
-        return "payment-result";
-    }
+//    @GetMapping("/vnpay_return")
+//    public String vnPayReturn(@RequestParam Map<String, String> params, Model model) {
+//        // Xử lý phản hồi từ VNPay và cập nhật trạng thái đơn hàng
+//        // ...
+//        return "payment-result";
+//    }
 
 
     @GetMapping("/order-history")
@@ -136,8 +139,7 @@ public class OrderController {
             model.addAttribute("orders", orders);
             model.addAttribute("status", status);
         }
-        return "order-history";
+        return "order/order-history";
     }
-
 
 }

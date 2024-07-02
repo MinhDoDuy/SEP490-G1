@@ -6,6 +6,7 @@ import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
+import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order createOrder(User user, String address, Double totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus) {
+    public Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus,String orderCode) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
@@ -27,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
         order.setNote(note);
         order.setOrderType(orderType);
         order.setPaymentMethod(paymentMethod);
+        order.setOrderCode(orderCode);
 
 
 //        // Lưu Order trước để lấy ID

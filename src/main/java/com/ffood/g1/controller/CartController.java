@@ -2,14 +2,12 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
-import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,9 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class CartController {
@@ -42,7 +38,7 @@ public class CartController {
 @PostMapping("/add_to_cart")
 public String addToCart(@RequestParam("foodId") Integer foodId,
                         @RequestParam("quantity") int quantity,
-                        @RequestParam("price") Double price,
+                        @RequestParam("price") Integer price,
                         RedirectAttributes redirectAttributes,
                         Model model) {
 
@@ -81,20 +77,25 @@ public String addToCart(@RequestParam("foodId") Integer foodId,
 
 
         Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-        Integer totalOrderPrice = (int) cartService.getTotalFoodPriceByCartId(cartId);
-//        int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
+
+//        Integer totalOrderPricefinal =  cartService.getTotalFoodPriceByCartId(cartId);
+//        int totalOrderPrice = totalOrderPricefinal != null ? totalOrderPricefinal : 0;
+
+        Integer totalOrderPricefinal = cartService.getTotalFoodPriceByCartId(cartId);
+        int totalOrderPrice = (totalOrderPricefinal != null) ? totalOrderPricefinal : 0;
+
 
         model.addAttribute("totalOrderPrice", totalOrderPrice);
-
 
         // Lấy các sản phẩm trong giỏ hàng của người dùng
         List<CartItem> cartItems = cartItemService.getCartItemsByUserId(userId);
 
+        System.out.println(cartItems);
         // Đưa dữ liệu giỏ hàng vào model
         model.addAttribute("cartItems", cartItems);
 
         // Trả về trang HTML
-        return "cart";
+        return "cart/cart";
     }
 
 

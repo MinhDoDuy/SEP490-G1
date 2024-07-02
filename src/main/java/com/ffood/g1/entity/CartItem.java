@@ -34,10 +34,10 @@ public class CartItem {
     private Integer quantity;
 
     @Column(name = "price", nullable = false)
-    private Double price;
+    private Integer price;
 
     @Column(name = "total_food_price", nullable = false)
-    private Double totalFoodPrice;
+    private Integer totalFoodPrice;
 
     @Column(name = "transaction_date")
     private LocalDateTime transactionDate;

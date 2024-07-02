@@ -3,13 +3,12 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.Order;
+import com.ffood.g1.repository.CartRepository;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.impl.VNPayService;
-import com.google.api.client.util.store.AbstractMemoryDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.rsocket.PayloadInterceptorOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -36,6 +34,9 @@ public class VNPayController {
     private CartService cartService;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private CartRepository cartRepository;
+
     @GetMapping("")
     public String pay(){
         return "redirect:/vnpay-payment";
@@ -76,17 +77,21 @@ public class VNPayController {
                 return "error";
             }
             try {
+                // Cập nhật trạng thái giỏ hàng
+                cart.setStatus("deactive");
+                cartRepository.save(cart); // Save cart
+
                 orderRepository.save(order);
                 cartService.clearCart(cart);
                 session.removeAttribute("orders");
                 session.removeAttribute("cart");
                 session.removeAttribute("totalItems");
-                return "orderSuccess";
+                return "order/order-success";
             } catch (Exception e) {
                 return "error";
             }
         } else {
-            return "orderFail";
+            return "order/order-fail";
         }
     }
 

@@ -41,7 +41,7 @@ public class Cart {
     private String status;
 
     @Column(name = "total_amount", nullable = false)
-    private Double totalAmount;
+    private Integer totalAmount;
 
     @Override
     public String toString() {

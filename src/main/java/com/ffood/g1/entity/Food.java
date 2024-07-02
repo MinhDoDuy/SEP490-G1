@@ -36,7 +36,7 @@ public class Food {
     private String description;
 
     @Column(name = "price", nullable = false)
-    private Double price;
+    private Integer price;
 
     @Column(name = "sales_count")
     private Integer salesCount;

@@ -43,14 +43,14 @@ public class CartServiceImpl implements CartService {
                 .transactionDate(LocalDateTime.now())
                 .createdAt(LocalDateTime.now())
                 .status("active")
-                .totalAmount(0.0)
+                .totalAmount(0)
                 .build();
         return cartRepository.save(cart);
     }
 
     @Override
     @Transactional
-    public void addToCart(Cart cart, Integer foodId, int quantity, LocalDateTime transactionDate, Double price) {
+    public void addToCart(Cart cart, Integer foodId, int quantity, LocalDateTime transactionDate, Integer price) {
         Food food = foodRepository.findById(foodId)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy sản phẩm"));
 
@@ -97,8 +97,6 @@ public class CartServiceImpl implements CartService {
     @Transactional
     @Override
     public Integer getTotalQuantityByUser(User user) {
-
-
            return cartRepository.getTotalQuantityByUser(user);
 
     }
@@ -110,7 +108,7 @@ public class CartServiceImpl implements CartService {
     }
     @Transactional
     @Override
-    public double getTotalFoodPriceByCartId(Integer cartId) {
+    public Integer getTotalFoodPriceByCartId(Integer cartId) {
         return cartRepository.getTotalFoodPriceByCartId(cartId);
     }
 
@@ -120,6 +118,7 @@ public class CartServiceImpl implements CartService {
         cart.getCartItems().clear();
         cartRepository.save(cart);
     }
+
 
 
 }

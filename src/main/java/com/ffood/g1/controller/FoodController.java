@@ -3,8 +3,6 @@ package com.ffood.g1.controller;
 import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
-import com.ffood.g1.repository.CartRepository;
-import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.CategoryService;
 import com.ffood.g1.service.FoodService;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Objects;
@@ -63,7 +60,6 @@ public class FoodController {
                 model.addAttribute("user", user);
                 Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
                 int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
-
                 model.addAttribute("totalQuantity", totalQuantity);
             }
         }
@@ -81,7 +77,7 @@ public class FoodController {
             List<Food> items_home = foodService.getRandomFood();
             model.addAttribute("items_home", items_home);
 
-            return "food_details";
+            return "canteen/food-details";
         } else {
             // Handle case when food is not found, e.g., redirect to an error page or show a message
             return "error";

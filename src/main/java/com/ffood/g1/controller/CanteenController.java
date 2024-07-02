@@ -88,7 +88,7 @@ public class CanteenController {
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
 
-        return "canteens";
+        return "canteen/canteens";
     }
 
     private Sort getSortDirection(String sort) {
