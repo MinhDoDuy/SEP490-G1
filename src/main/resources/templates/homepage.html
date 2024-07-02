@@ -60,30 +60,25 @@
 
 <div th:replace="header :: header"></div>
 
-<!--&lt;!&ndash; Modal Search Start &ndash;&gt;-->
-<!--<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-<!--    <div class="modal-dialog modal-fullscreen">-->
-<!--        <form id="categoryForm" action="/canteen_details" method="get">-->
-<!--            <div class="modal-content rounded-0">-->
-<!--                <div class="modal-header">-->
-<!--                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>-->
-
-<!--                    <button type="button" class="btn-close form-control" name="name" th:value="${name}"-->
-<!--                            onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }"-->
-<!--                            data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                </div>-->
-<!--                <div class="modal-body d-flex align-items-center">-->
-<!--                    <div class="input-group w-75 mx-auto d-flex">-->
-<!--                        <input type="search" class="form-control p-3" placeholder="keywords"-->
-<!--                               aria-describedby="search-icon-1">-->
-<!--                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
-<!--&lt;!&ndash; Modal Search End &ndash;&gt;-->
+<!-- Modal Search Start -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content rounded-0">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex align-items-center">
+                <div class="input-group w-75 mx-auto d-flex">
+                    <input type="search" class="form-control p-3" placeholder="keywords"
+                           aria-describedby="search-icon-1">
+                    <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Search End -->
 
 <!-- Hero Start -->
 <div class="container-fluid py-5 mb-5 hero-header">
@@ -92,25 +87,21 @@
             <div class="col-md-12 col-lg-7">
                 <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
                 <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
-                <form id="categoryForm" action="/canteen_details" method="get">
-                    <div class="position-relative mx-auto">
-                        <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
-                               name="name" th:value="${name}" placeholder="Search for food..."
-                               onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
-                        <button type="submit"
-                                class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
-                                style="top: 0; right: 25%;">Submit Now
-                        </button>
-                    </div>
-                </form>
+                <div class="position-relative mx-auto">
+                    <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number"
+                           placeholder="Search">
+                    <button type="submit"
+                            class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
+                            style="top: 0; right: 25%;">Submit Now
+                    </button>
+                </div>
             </div>
             <div class="col-md-12 col-lg-5">
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active rounded" th:each="canteen, stat : ${canteens}"
                              th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide"
-                                 style="height: 100px;width: 100px">
+                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide" style="height: 100px;width: 100px">
                             <div class="carousel-caption d-none d-md-block ">
                                 <h5 th:text="${canteen.canteenPhone}"></h5>
                                 <p th:text="${canteen.openingHours}"></p>
@@ -223,30 +214,27 @@
                                         <!-- Lặp qua danh sách sản phẩm -->
                                         <div class="col-md-6 col-lg-4 col-xl-3 " th:each="food : ${items_home}">
 
-                                            <div class="rounded position-relative fruite-item" co>
+                                            <div class="rounded position-relative fruite-item" >
                                                 <div class="fruite-img">
                                                     <img th:src="${food.imageFood}"
                                                          class="img-fluid w-100 rounded-top" alt=""
                                                          style="width: 100px;height: 180px ">
                                                 </div>
                                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                                     style="top: 10px; left: 10px;"><a th:href="@{#}" th:text="${food.category.categoryName}">Item
+                                                     style="top: 10px; left: 10px;"><a th:href="@{#}"
+                                                                                       th:text="${food.category.categoryName}">Item
                                                     Name</a></div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4><a th:href="@{#}" th:text="${food.foodName}"
-                                                           style="color: #db032b">Item Name</a></h4>
-                                                    <p><a th:href="@{#}" th:text="${food.price} "
-                                                          style="color: #db032b">Item Name</a></p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                                    <h4><a th:href="@{#}" th:text="${food.foodName}" >Item Name</a></h4>
+                                                    <p><a th:href="@{#}" th:text="${food.price} +' đồng'" >Item Name</a></p>
+                                                    <div class="d-flex justify-content-center flex-lg-wrap">
                                                         <!--                                            <p class="text-dark fs-5 fw-bold mb-0"><a th:text="${food.price}"></a></p>-->
-                                                        <a href="#"
+<!--                                                        <a href="#"-->
+<!--                                                           class="btn border border-secondary rounded-pill px-1 text-primary_test"><i-->
+<!--                                                                class="fa fa-shopping-bag me-2 text-primary_test" ></i> Add to cart</a>-->
+                                                        <a th:href="@{/food_details(id=${food.foodId})} "
                                                            class="btn border border-secondary rounded-pill px-1 text-primary_test"><i
-                                                                class="fa fa-shopping-bag me-2 text-primary_test"></i>
-                                                            Add to cart</a>
-                                                        <a th:href="@{/food_details(id=${food.foodId})}"
-                                                           class="btn border border-secondary rounded-pill px-1 text-primary_test"><i
-                                                                class="fa fa-utensils me-2 text-primary_test"></i> View
-                                                            Food</a>
+                                                                class="fa fa-utensils me-2 text-primary_test"></i> View Food</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -348,53 +336,37 @@
     </div>
 </div>
 
-<!--Footer-->
-<div th:replace="footer :: footer"></div>
-<!-- Js Plugins -->
-<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/jquery.nice-select.min.js}"></script>
-<script th:src="@{/js/jquery.barfiller.js}"></script>
-<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
-<script th:src="@{/js/jquery.slicknav.js}"></script>
-<script th:src="@{/js/owl.carousel.min.js}"></script>
-<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
-<script th:src="@{/js/main.js}"></script>
+    <!--Footer-->
+    <div th:replace="footer :: footer"></div>
+    <!-- Js Plugins -->
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/jquery.nice-select.min.js}"></script>
+    <script th:src="@{/js/jquery.barfiller.js}"></script>
+    <script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+    <script th:src="@{/js/jquery.slicknav.js}"></script>
+    <script th:src="@{/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/js/jquery.nicescroll.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
 
-<!-- Back to Top -->
-<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
-        class="fa fa-arrow-up"></i></a>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+            class="fa fa-arrow-up"></i></a>
 
 
-<script>
-    function submitForm(categoryId) {
-        // Tạo input ẩn chứa giá trị của categoryId
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'categoryId';
-        input.value = categoryId;
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
+    <script src="/lib/waypoints/waypoints.min.js"
+            th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+    <script src="/lib/lightbox/js/lightbox.min.js"
+            th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js"
+            th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 
-        // Thêm input ẩn vào form
-        const form = document.getElementById('categoryForm');
-        form.appendChild(input);
-
-        // Thực hiện submit form
-        form.submit();
-    }
-</script>
-<!-- JavaScript Libraries -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
-<script src="/lib/waypoints/waypoints.min.js"
-        th:src="@{/lib/waypoints/waypoints.min.js}"></script>
-<script src="/lib/lightbox/js/lightbox.min.js"
-        th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
-<script src="/lib/owlcarousel/owl.carousel.min.js"
-        th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
-
-<!-- Template Javascript -->
-<script src="/js/main_test.js" th:src="@{/js/main_test.js}"></script>
+    <!-- Template Javascript -->
+    <script src="/js/main_test.js" th:src="@{/js/main_test.js}"></script>
 </body>
 
 </html>

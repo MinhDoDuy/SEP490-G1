@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>Fruitables - Vegetable Website Template</title>
+    <title>Chợ Cóc</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -43,7 +43,7 @@
         <div class="container topbar bg-primary d-none d-lg-block">
             <div class="d-flex justify-content-between">
                 <div class="top-info ps-2">
-                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">123 Street, New York</a></small>
+                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Trường Đại Học FPT</a></small>
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">Email@Example.com</a></small>
                 </div>
                 <div class="top-link pe-2">
@@ -55,44 +55,49 @@
         </div>
         <div class="container px-0">
             <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Chợ Cóc</h1></a>
+                <a th:href="@{/homepage}" class="navbar-brand"><h1 class="text-primary display-6">Chợ Cóc</h1></a>
                 <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars text-primary"></span>
                 </button>
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
-                        <a th:href="@{/homepage}" class="nav-item nav-link active">Home</a>
-                        <a th:href="@{/canteen_details}" class="nav-item nav-link">Shop</a>
-                        <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
+                        <a th:href="@{/homepage}" class="nav-item nav-link active">Trang Chủ</a>
+                        <a th:href="@{/canteen_details}" class="nav-item nav-link">Căng Tin</a>
+<!--                        <a th:href="@{/order-history}" class="nav-item nav-link">Shop</a>-->
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                <a href="cart.html" class="dropdown-item">Cart</a>
-                                <a href="chackout.html" class="dropdown-item">Chackout</a>
-                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                <a href="404.html" class="dropdown-item">404 Page</a>
+                                <a href="chackout.html" class="dropdown-item">Giỏ hàng</a>
+                                <a th:href="@{/order-history}" class="dropdown-item">Lịch sử mua hàng</a>
+
+<!--                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>-->
+<!--                                <a href="404.html" class="dropdown-item">404 Page</a>-->
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
                     </div>
                     <div class="d-flex m-3 me-0">
-                        <a href="#" class="position-relative me-4 my-auto">
+<!--                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>-->
+                        <a th:href="@{/cart_items}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px; "   th:text="${totalQuantity}">0</span>
                         </a>
                         <button type="button" class="btn btn-danger"  th:if="${user == null}"> <a th:href="@{/login}" style="color: #0b0b0b">Login</a> </button>
                          <div class="nav-item dropdown ">
 
                             <a href="#" class="nav-link dropdown-toggle fas fa-user fa-2x" th:if="${user != null}"></a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0" th:if="${user != null}">
-                                <a href="cart.html" class="dropdown-item">Cart</a>
+                                <a href="cart/cart.html" class="dropdown-item">Cart</a>
                                 <a th:href="@{/view-profile/{userId}(userId=${user.userId})}" class="dropdown-item">Xem hồ sơ</a>
 
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_ADMIN'}">
 
-                                    <a th:href="@{/dashboard-admin}" class="dropdown-item">Bảng Điều Hành Quản Lý</a>
+                                    <a th:href="@{/manage-canteen}" class="dropdown-item">Quản Lý Canteen</a>
                                 </div>
+                                <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_ADMIN'}">
 
+                                    <a th:href="@{/manage-user}" class="dropdown-item">Quản Lý Người Dùng</a>
+                                </div>
 
                                 <a th:href="@{/logout}" class="dropdown-item">Logout</a>
                                 <a href="chackout.html" class="dropdown-item">Checkout</a>
@@ -100,21 +105,7 @@
                                 <a href="404.html" class="dropdown-item">404 Page</a>
                             </div>
                         </div>
-<!--                        <a href="#" class="my-auto nav-item dropdown" data-bs-toggle="dropdown">-->
 
-
-<!--                            <div class="nav-item dropdown fas fa-user fa-2x ">-->
-<!--                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>-->
-<!--                                <div class="dropdown-menu m-0 bg-secondary rounded-0">-->
-<!--                                    <a href="cart.html" class="dropdown-item">Cart</a>-->
-<!--                                    <a href="chackout.html" class="dropdown-item">Chackout</a>-->
-<!--                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>-->
-<!--                                    <a href="404.html" class="dropdown-item">404 Page</a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-
-<!--                        </a>-->
 
                     </div>
 
