@@ -11,4 +11,10 @@ public interface RoleService {
     List<Role> findRolesExcludingAdmin();
 
 
+    Role findRoleById(Integer roleId);
+
+
+    Role getRoleByName(String roleName);
+
+    Role getRoleById(Integer roleId);
 }

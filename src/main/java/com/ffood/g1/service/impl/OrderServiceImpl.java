@@ -4,11 +4,16 @@ import com.ffood.g1.entity.*;
 import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
+import com.ffood.g1.entity.*;
+import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.OrderType;
+import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +23,36 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus,String orderCode) {
+    public List<Object[]> getBestSellingItems() {
+        return orderRepository.findBestSellingItems();
+    }
+
+    public List<Object[]> getOrderStats() {
+        return orderRepository.findOrderStats();
+    }
+
+    @Override
+    public List<Object[]> getRevenueDataByDay() {
+        return orderRepository.findRevenueDataByDay();
+    }
+
+    @Override
+    public List<Object[]> getRevenueDataByMonth() {
+        return orderRepository.findRevenueDataByMonth();
+    }
+
+    @Override
+    public List<Object[]> getRevenueDataByYear() {
+        return orderRepository.findRevenueDataByYear();
+    }
+
+    @Override
+    public Double calculateTotalRevenue() {
+        return orderRepository.findTotalRevenue();
+    }
+
+
+    public Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus, String orderCode) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());

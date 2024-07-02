@@ -25,7 +25,7 @@
         <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
       </li>
       <li class="text-gray-600 mr-2 font-medium">/</li>
-      <li class="text-gray-600 mr-2 font-medium">Analytics</li>
+      <li class="text-gray-600 mr-2 font-medium">View All Canteen</li>
     </ul>
   </div>
 
@@ -71,9 +71,6 @@
               Opening Hours
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              Manager
-            </th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
               Status
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">
@@ -82,8 +79,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="canteen : ${canteenPage.content}">
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenId}">ID</td>
+          <tr th:each="canteen , iterStat  : ${canteenPage.content}">
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteenPage.number * canteenPage.size + iterStat.index + 1}">STT</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenName}">Name</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.location}">Location</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
@@ -91,7 +88,6 @@
             </td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenPhone}">Phone</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingHours}">Opening Hours</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.user.fullName}">Manager</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.isActive ? 'Active' : 'Inactive'}">Status</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
               <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Edit</a>

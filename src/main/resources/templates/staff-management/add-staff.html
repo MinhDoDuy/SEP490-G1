@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+  <title>Add Staff</title>
+  <style>
+    .search-bar input[type="text"] {
+      width: 250px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+    }
+
+    .search-bar button.search-btn {
+      padding: 10px;
+      border: none;
+      background-color: #2A2185FF;
+      color: white;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    .search-bar button.search-btn:hover {
+      background-color: #555;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: #2A2185FF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #2A2185FF;
+    }
+
+    .cardHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 10px;
+    }
+
+    .btn-icon {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pagination a {
+      text-decoration: none;
+      color: #2A2185FF;
+      padding: 5px 10px;
+      border: 1px solid #2A2185FF;
+      border-radius: 5px;
+    }
+
+    .pagination a:hover {
+      background-color: #2A2185FF;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<!-- start: Sidebar -->
+<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
+<!-- end: Sidebar -->
+
+<!-- start: Main -->
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
+  <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+    <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+      <i class="ri-menu-line"></i>
+    </button>
+    <ul class="flex items-center text-sm ml-4">
+      <li class="mr-2">
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+      </li>
+      <li class="text-gray-600 mr-2 font-medium">/</li>
+      <li class="text-gray-600 mr-2 font-medium">Add Staff</li>
+    </ul>
+  </div>
+
+  <div class="p-6 flex justify-center">
+    <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+      <div class="flex justify-between mb-4 items-start">
+        <div class="font-medium">Add New Staff</div>
+      </div>
+      <form th:action="@{/add-staff}" method="post" th:object="${user}" onsubmit="return validateForm()">
+        <input type="hidden" th:field="*{role.roleId}"/>
+        <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
+
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" th:field="*{fullName}" /><br/>
+        <p class="help-block text-danger" id="fullNameError" style="display: none; font-size: small; color: rgb(234, 77, 77);">
+          Full name cannot start or end with a space.</p>
+
+        <label for="codeName">Code Name:</label>
+        <input type="text" id="codeName" th:field="*{codeName}" /><br/>
+        <p class="help-block text-danger" id="codeNameError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" /><br/>
+        <p class="help-block text-danger" id="emailEmptyError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email is required</p>
+        <p class="help-block text-danger" id="emailFormatError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Invalid email format</p>
+        <p class="help-block text-danger" id="emailSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email cannot start or end with a space</p>
+        <p class="help-block text-danger" id="emailContainsSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email cannot contain spaces</p>
+        <p class="help-block text-danger" id="emailExistsError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" th:field="*{phone}" /><br/>
+        <p class="help-block text-danger" id="phoneError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" th:field="*{password}" /><br/>
+        <p class="help-block text-danger" id="passwordEmptyError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Password is required.</p>
+        <p class="help-block text-danger" id="passwordLengthError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Password must be at least 6 characters long.</p>
+        <p class="help-block text-danger" id="passwordSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Password cannot start or end with a space.</p>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" th:field="*{gender}" class="form-control">
+          <option value="true">Male</option>
+          <option value="false">Female</option>
+        </select><br/>
+
+        <!-- Disabled input for role -->
+        <label for="role">Role:</label>
+        <input type="text" id="role" value="STAFF" disabled /><br/>
+
+        <!-- Hidden input for canteenId -->
+        <label for="canteen">Canteen:</label>
+        <input type="text" id="canteen" th:value="${canteenName}" disabled /><br/>
+
+        <button type="submit">Save</button>
+        <p class="help-block text-danger" id="generalError" style="display: none; font-size: medium">Please correct the errors above and try again.</p>
+      </form>
+    </div>
+  </div>
+</main>
+<!-- end: Main -->
+
+<script>
+  function validateForm() {
+    const isFullNameValid = validateFullName();
+    const isCodeNameValid = validateCodeName();
+    const isPhoneValid = validatePhone();
+    const isEmailValid = validateEmail();
+    const isPasswordValid = validatePassword();
+
+    if (isFullNameValid && isCodeNameValid && isPhoneValid && isEmailValid && isPasswordValid) {
+      return true;
+    } else {
+      document.getElementById('generalError').style.display = 'block';
+      return false;
+    }
+  }
+
+  function validateFullName() {
+    const fullNameInput = document.getElementById('fullName');
+    const fullNameValue = fullNameInput.value;
+    const fullNameError = document.getElementById('fullNameError');
+
+    if (fullNameValue.trim() === '' || fullNameValue !== fullNameValue.trim()) {
+      fullNameError.style.display = 'block';
+      return false;
+    } else {
+      fullNameError.style.display = 'none';
+      return true;
+    }
+  }
+
+  function validateCodeName() {
+    const codeNameInput = document.getElementById('codeName');
+    const codeNameValue = codeNameInput.value;
+    const codeNamePattern = /^[a-zA-Z0-9]{6,20}$/;
+    const codeNameError = document.getElementById('codeNameError');
+
+    if (!codeNamePattern.test(codeNameValue)) {
+      codeNameError.textContent = 'Invalid code name. Please enter letters and numbers between 6-20 characters.';
+      codeNameError.style.display = 'block';
+      return false;
+    } else {
+      codeNameError.style.display = 'none';
+      return true;
+    }
+  }
+
+  function validatePhone() {
+    const phoneInput = document.getElementById('phone');
+    const phoneValue = phoneInput.value;
+    const phonePattern = /^\+?[0-9\s\-]{9,11}$/;
+    const phoneError = document.getElementById('phoneError');
+
+    if (!phonePattern.test(phoneValue)) {
+      phoneError.textContent = 'Invalid phone number format. Please use +123456789 or 123-456-7890.';
+      phoneError.style.display = 'block';
+      return false;
+    } else {
+      phoneError.style.display = 'none';
+      return true;
+    }
+  }
+
+  function validateEmail() {
+    const emailInput = document.getElementById('email');
+    const emailValue = emailInput.value.trim();
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailEmptyError = document.getElementById('emailEmptyError');
+    const emailFormatError = document.getElementById('emailFormatError');
+    const emailSpaceError = document.getElementById('emailSpaceError');
+    const emailContainsSpaceError = document.getElementById('emailContainsSpaceError');
+    const emailExistsError = document.getElementById('emailExistsError');
+
+    emailEmptyError.style.display = 'none';
+    emailFormatError.style.display = 'none';
+    emailSpaceError.style.display = 'none';
+    emailContainsSpaceError.style.display = 'none';
+    emailExistsError.style.display = 'none';
+
+    if (emailValue === '') {
+      emailEmptyError.style.display = 'block';
+      return false;
+    } else if (emailValue !== emailInput.value) {
+      emailSpaceError.style.display = 'block';
+      return false;
+    } else if (/\s/.test(emailValue)) {
+      emailContainsSpaceError.style.display = 'block';
+      return false;
+    } else if (!emailPattern.test(emailValue)) {
+      emailFormatError.style.display = 'block';
+      return false;
+    } else if (emailExists(emailValue)) {
+      emailExistsError.style.display = 'block';
+      return false;
+    }
+
+    return true;
+  }
+
+  function validatePassword() {
+    const passwordInput = document.getElementById('password');
+    const passwordValue = passwordInput.value;
+    const passwordEmptyError = document.getElementById('passwordEmptyError');
+    const passwordLengthError = document.getElementById('passwordLengthError');
+    const passwordSpaceError = document.getElementById('passwordSpaceError');
+
+    if (passwordValue.trim() === '' || passwordValue !== passwordValue.trim()) {
+      passwordSpaceError.style.display = 'block';
+      passwordEmptyError.style.display = 'none';
+      return false;
+    } else if (passwordValue.trim() === '') {
+      passwordEmptyError.style.display = 'block';
+      passwordLengthError.style.display = 'none';
+      return false;
+    } else {
+      passwordEmptyError.style.display = 'none';
+      if (passwordValue.length < 6) {
+        passwordLengthError.style.display = 'block';
+        return false;
+      } else {
+        passwordLengthError.style.display = 'none';
+        passwordSpaceError.style.display = 'none';
+        return true;
+      }
+    }
+  }
+
+  function emailExists(email) {
+    const existingEmails = ['test@example.com', 'hello@world.com'];
+    return existingEmails.includes(email);
+  }
+
+  document.getElementById('password').addEventListener('input', function () {
+    validatePassword();
+  });
+
+  document.getElementById('email').addEventListener('input', function () {
+    validateEmail();
+  });
+
+  document.getElementById('phone').addEventListener('input', function () {
+    validatePhone();
+  });
+
+  document.getElementById('codeName').addEventListener('input', function () {
+    validateCodeName();
+  });
+
+  document.getElementById('fullName').addEventListener('input', function () {
+    validateFullName();
+  });
+
+  $(document).ready(function() {
+    $(".toggle-password").click(function() {
+      $(this).toggleClass("mdi-eye mdi-eye-off");
+      var input = $($(this).attr("toggle"));
+      if (input.attr("type") === "password") {
+        input.attr("type", "text");
+      } else {
+        input.attr("type", "password");
+      }
+    });
+  });
+</script>
+</body>
+</html>

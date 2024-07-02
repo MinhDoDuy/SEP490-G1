@@ -24,4 +24,7 @@ public interface FoodService {
  Page<Food> getFilteredFoods(List<Integer> checkedCategories, List<Integer> checkedCanteens, String name, Pageable pageable);
 
  Optional<Food> getFoodByIdFoodDetails(Integer id);
+
+
+ List<Food> findByCanteenId(Integer canteenId);
 }

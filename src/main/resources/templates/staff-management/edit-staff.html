@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-    <title>Dashboard</title>
+    <title>Edit Staff</title>
 
     <style>
         .form-container {
@@ -68,11 +67,9 @@
         }
     </style>
 </head>
-
 <body class="text-gray-800 font-inter">
-
 <!-- start: Sidebar -->
-<div th:replace="sidebar :: sidebar"></div>
+
 <!-- end: Sidebar -->
 
 <!-- start: Main -->
@@ -86,59 +83,46 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Add New Manager</li>
+            <li class="text-gray-600 mr-2 font-medium">Staff</li>
         </ul>
     </div>
 
     <div class="p-6 flex justify-center">
-
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
             <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Add New Manager</div>
+                <div class="font-medium">Edit Staff Role</div>
             </div>
-            <div class="overflow-x-auto">
-                <form th:action="@{/add-user}" th:object="${user}" method="post">
-                    <div class="form-group">
-                        <label for="fullName">Full Name:</label>
-                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="codeName">Code Name:</label>
-                        <input type="text" id="codeName" th:field="*{codeName}" class="form-control"/>
-                        <div th:if="${codeNameError}" th:text="${codeNameError}" class="error-message"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" th:field="*{email}" class="form-control"/>
-                        <div th:if="${emailError}" th:text="${emailError}" class="error-message"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone:</label>
-                        <input type="text" id="phone" th:field="*{phone}" class="form-control"/>
-                        <div th:if="${phoneError}" th:text="${phoneError}" class="error-message"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Gender:</label>
-                        <select id="gender" th:field="*{gender}" class="form-control">
-                            <option value="true">Male</option>
-                            <option value="false">Female</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="canteen">Canteen:</label>
-                        <select id="canteen" th:field="*{canteen.canteenId}" class="form-control">
-                            <option th:each="canteen : ${canteens}" th:value="${canteen.canteenId}" th:text="${canteen.canteenName}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" th:field="*{password}" class="form-control"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
-                <a th:href="@{/manage-user}" class="back-link">Back to list</a>
-            </div>
+            <form th:action="@{/edit-staff(canteenId=${user.canteen.canteenId})}" method="post" th:object="${user}">
+                <input type="hidden" name="userId" th:value="${userId}"/>
+                <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" th:value="${user.email}" readonly="readonly" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="fullname">Fullname:</label>
+                    <input type="text" id="fullname" th:value="${user.fullName}" readonly="readonly" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" th:value="${user.gender ? 'Male' : 'Female'}" readonly="readonly" class="form-control"/>
+                </div>
 
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <input type="text" id="role" value="ROLE_STAFF" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label for="isActive">Status:</label>
+                    <select id="isActive" name="isActive" class="form-control">
+                        <option th:value="true" th:text="'Active'" th:selected="${user.isActive} == true"></option>
+                        <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive} == false"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+            <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="back-link">Back to list</a>
         </div>
     </div>
 </main>
@@ -147,8 +131,5 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
-<script>
-</script>
 </body>
-
 </html>

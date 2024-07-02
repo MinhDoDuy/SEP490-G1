@@ -62,4 +62,6 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Integer
     Page<Food> findByNameContainingIgnoreCase(@Param("name") String name, Pageable pageable);
 
 
+    @Query("SELECT f FROM Food f WHERE f.canteen.canteenId = :canteenId")
+    List<Food> findByCanteenId(@Param("canteenId") Integer canteenId);
 }

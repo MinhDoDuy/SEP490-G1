@@ -7,12 +7,25 @@ import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public interface OrderService {
 
 
+    List<Object[]> getBestSellingItems();
+
+    List<Object[]> getOrderStats();
+
+    List<Object[]> getRevenueDataByDay();
+
+    List<Object[]> getRevenueDataByMonth();
     Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus,String orderCode);
 
+    List<Object[]> getRevenueDataByYear();
+
+    Double calculateTotalRevenue();
     List<Order> getOrdersByUserIdAndStatus(Integer userId, OrderStatus status);
 }

@@ -22,4 +22,18 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> findRolesExcludingAdmin() {
         return roleRepository.findByRoleIdNot(4);
     }
+
+    @Override
+    public Role findRoleById(Integer roleId) {
+        return roleRepository.findById(roleId).orElse(null);
+    }
+
+    @Override
+    public Role getRoleByName(String roleName) {
+        return roleRepository.findByName(roleName);
+    }
+
+    public Role getRoleById(Integer roleId) {
+        return roleRepository.findById(roleId).orElse(null);
+    }
 }

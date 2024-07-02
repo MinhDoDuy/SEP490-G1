@@ -16,14 +16,12 @@ public interface CanteenService {
 
     Page<Canteen> searchCanteens(String keyword, int page, int size);
 
-    void deleteCanteenById(Integer canteenId);
-
     Canteen getCanteenById(Integer canteenId);
 
     void updateCanteen(Canteen canteen);
 
-
-
-
-
+    Canteen loadCanteenId(Integer canteenId);
+    Integer countCanteens();
+    boolean isPhoneExist(String phone);
+    boolean isCanteenNameExist(String canteenName);
 }

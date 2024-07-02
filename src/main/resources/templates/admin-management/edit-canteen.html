@@ -1,46 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
   <title>Edit Canteen</title>
-
   <style>
     .form-container {
       width: 50%;
       margin: auto;
     }
-
     .form-group {
       margin-bottom: 10px;
       display: flex;
       flex-direction: column;
     }
-
     .form-group label {
       margin-bottom: 5px;
       font-weight: bold;
     }
-
     .form-group input, .form-group select {
       padding: 8px;
       border: 2px solid #ccc;
       border-radius: 4px;
       font-size: 14px;
     }
-
     .form-group select {
       width: auto;
     }
-
     .error-message {
       color: red;
       font-size: 12px;
     }
-
     button[type="submit"] {
       background-color: #007bff;
       color: white;
@@ -50,11 +42,9 @@
       cursor: pointer;
       font-size: 14px;
     }
-
     button[type="submit"]:hover {
       background-color: #0056b3;
     }
-
     .back-link {
       display: inline-block;
       margin-top: 10px;
@@ -62,13 +52,11 @@
       color: #007bff;
       text-decoration: none;
     }
-
     .back-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
-
 <body class="text-gray-800 font-inter">
 
 <!-- start: Sidebar -->
@@ -91,17 +79,17 @@
   </div>
 
   <div class="p-6 flex justify-center">
-
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Edit Canteen</div>
       </div>
       <div class="overflow-x-auto">
-        <form th:action="@{/edit-canteen}" th:object="${canteen}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/edit-canteen}" th:object="${canteen}" method="post" enctype="multipart/form-data" id="canteenForm">
           <input type="hidden" th:field="*{canteenId}"/>
           <div class="form-group">
             <label for="canteenName">Canteen Name:</label>
             <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control"/>
+            <div th:if="${canteenNameError != null}" class="error-message" th:text="${canteenNameError}"></div>
           </div>
           <div class="form-group">
             <label for="location">Location:</label>
@@ -110,24 +98,36 @@
           <div class="form-group">
             <label for="canteenPhone">Phone:</label>
             <input type="text" id="canteenPhone" th:field="*{canteenPhone}" class="form-control"/>
+            <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
           </div>
           <div class="form-group">
-            <label for="openingHours">Opening Hours:</label>
-            <input type="text" id="openingHours" th:field="*{openingHours}" class="form-control"/>
+            <label for="openingHoursStart">Opening Hours Start:</label>
+            <select id="openingHoursStart" class="form-input"></select>
           </div>
           <div class="form-group">
-            <label for="manager">Manager:</label>
-            <select id="manager" th:field="*{user.userId}" class="form-control">
-              <option th:each="manager : ${managers}" th:value="${manager.userId}" th:text="${manager.fullName}"></option>
-            </select>
+            <label for="openingHoursEnd">Opening Hours End:</label>
+            <select id="openingHoursEnd" class="form-input"></select>
+          </div>
+          <div class="form-group">
+            <input type="hidden" id="openingHours" th:field="*{openingHours}">
           </div>
           <div class="form-group">
             <label for="imageCanteenInput">Canteen Image:</label>
-            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*"/>
+            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*" onchange="onChangeFileTrigger()"/>
+            <input type="hidden" id="currentImageUrl" th:field="*{canteenImg}" />
           </div>
           <div class="form-group">
-            <img id="displayImage" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
+            <img id="displayImage" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}"
+                 style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
           </div>
+          <div class="form-group">
+            <label for="isActive">Status:</label>
+            <select id="isActive" name="isActive" class="form-control">
+              <option th:value="true" th:text="'Active'" th:selected="${canteen.isActive} == true"></option>
+              <option th:value="false" th:text="'Inactive'" th:selected="${canteen.isActive} == false"></option>
+            </select>
+          </div>
+          <div class="error-message" id="error-message"></div>
           <button type="submit" class="btn btn-primary">Save changes</button>
         </form>
         <a th:href="@{/manage-canteen}" class="back-link">Back to list</a>
@@ -139,21 +139,68 @@
 
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:src="@{/js/manage.js}"></script>
 <script>
+  // Tạo danh sách thời gian
+  function generateTimeOptions() {
+    const selectStart = document.getElementById('openingHoursStart');
+    const selectEnd = document.getElementById('openingHoursEnd');
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        const optionStart = document.createElement('option');
+        optionStart.value = timeString;
+        optionStart.textContent = timeString;
+        selectStart.appendChild(optionStart);
+
+        const optionEnd = document.createElement('option');
+        optionEnd.value = timeString;
+        optionEnd.textContent = timeString;
+        selectEnd.appendChild(optionEnd);
+      }
+    }
+  }
+
+  function validateTime(start, end) {
+    const [startHour, startMinute] = start.split(':').map(Number);
+    const [endHour, endMinute] = end.split(':').map(Number);
+    return (endHour > startHour) || (endHour === startHour && endMinute > startMinute);
+  }
+
+  document.getElementById('canteenForm').addEventListener('submit', function(event) {
+    const start = document.getElementById('openingHoursStart').value;
+    const end = document.getElementById('openingHoursEnd').value;
+    const errorMessage = document.getElementById('error-message');
+
+    if (!validateTime(start, end)) {
+      event.preventDefault();
+      errorMessage.textContent = 'Opening Hours End must be after Opening Hours Start.';
+      return;
+    }
+
+    const openingHours = `${start} - ${end}`;
+    document.getElementById('openingHours').value = openingHours;
+    errorMessage.textContent = '';
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    generateTimeOptions();
+    // Điền sẵn giá trị cho giờ bắt đầu và giờ kết thúc khi chỉnh sửa
+    const canteenOpeningHours = document.getElementById('openingHours').value.split(' - ');
+    document.getElementById('openingHoursStart').value = canteenOpeningHours[0];
+    document.getElementById('openingHoursEnd').value = canteenOpeningHours[1];
+  });
+
   function onChangeFileTrigger() {
     const input = document.getElementById('imageCanteenInput');
     if (input && input.files && input.files[0]) {
       const reader = new FileReader();
       reader.onload = function (e) {
         document.getElementById('displayImage').src = e.target.result;
+        document.getElementById('currentImageUrl').value = ''; // Clear the current image URL
       }
       reader.readAsDataURL(input.files[0]);
     }
   }
-
-  document.getElementById('imageCanteenInput').addEventListener('change', onChangeFileTrigger);
 </script>
 </body>
-
 </html>

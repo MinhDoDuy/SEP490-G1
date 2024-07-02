@@ -58,31 +58,27 @@ public class UserManageController {
     @GetMapping("/edit-user/{userId}")
     public String editUserForm(@PathVariable Integer userId, Model model) {
         User user = userService.getUserById(userId);
-        List<Role> roles = roleService.findRolesExcludingAdmin();
         List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
         model.addAttribute("user", user);
-        model.addAttribute("roles", roles);
         model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
         return "./admin-management/edit-user";
     }
 
     @PostMapping("/edit-user")
     public String editUserRole(@RequestParam("userId") Integer userId,
-                               @RequestParam("roleId") Integer roleId,
                                @RequestParam("isActive") Boolean isActive,
                                @RequestParam(value = "canteenId", required = false) Integer canteenId) {
-        userService.updateUserRoleAndCanteen(userId, roleId, isActive, canteenId);
+
+
+        userService.updateUserRoleAndCanteen(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
         return "redirect:/manage-user";
     }
 
     @GetMapping("/add-user")
     public String showAddForm(Model model) {
         User user = new User();
-        List<Role> roles = roleService.findRolesExcludingAdmin();
         List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
-
         model.addAttribute("user", user);
-        model.addAttribute("roles", roles);
         model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
         return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
     }
@@ -108,10 +104,11 @@ public class UserManageController {
 
         if (hasErrors) {
             model.addAttribute("user", user);
-            model.addAttribute("roles", roleService.getAllRoles()); // Make sure to pass roles to the model
             model.addAttribute("canteens", canteenService.getAllCanteens()); // Pass canteens to the model
             return "./admin-management/add-user"; // Change to your actual form view name
         }
+
+        user.setRole(roleService.findRoleById(3)); // Thiết lập role_id = 3 cho Manager
         user.setCreatedDate(LocalDate.now());
 
         userService.saveUser(user);

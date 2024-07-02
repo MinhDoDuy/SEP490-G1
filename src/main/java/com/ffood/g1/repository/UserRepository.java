@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,8 +27,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	List<User> findByRoleRoleId(Integer role_id);
 
-	@Query("SELECT u FROM User u")
-	List<User> findAllUsers(Sort sort);
+
+
+	@Query("SELECT u FROM User u WHERE u.canteen.canteenId = :canteenId AND u.role.roleId = 2")
+	Page<User> findAllStaffByCanteenId(@Param("canteenId") Integer canteenId, Pageable pageable);
+
+	@Query("SELECT u FROM User u WHERE u.role.roleName = :roleName")
+	Page<User> findAllByRoleName(@Param("roleName") String roleName, Pageable pageable);
+
 
 
 }

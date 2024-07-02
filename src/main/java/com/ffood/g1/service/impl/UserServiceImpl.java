@@ -10,7 +10,6 @@ import com.ffood.g1.repository.RoleRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.UserService;
 import com.ffood.g1.utils.UrlUtil;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,7 +67,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public void sendResetPasswordEmail(String email, HttpServletRequest request) {
         User user = userRepository.findByEmail(email);
@@ -120,11 +118,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //update password cho người dùng khi ở trang profile
     public void updatePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
 
     @Override
     //ROLE_ADMIN quản lý user (quản lý role user) đã có phần page để phân trang
@@ -141,22 +139,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Integer userId) {
-        return userRepository.findById(userId).orElse(null);
+    public Page<User> getAllStaff(int page, int size, Integer canteenId) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAllStaffByCanteenId(canteenId, pageable);
     }
+
     @Override
-    public void updateUserRoleAndCanteen(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
+    public void updateUserRole(Integer userId, Integer roleId, Boolean isActive) {
         User user = userRepository.findById(userId).orElse(null);
         Role role = roleRepository.findById(roleId).orElse(null);
-        Canteen canteen = canteenId != null ? canteenRepository.findById(canteenId).orElse(null) : null;
+
         if (user != null && role != null) {
             user.setRole(role);
-            user.setIsActive(isActive);
-            user.setCanteen(canteen);
-            userRepository.save(user);
+            user.setIsActive(isActive); // Di chuyển việc thiết lập isActive sau khi đã kiểm tra user và role không phải là null
+            userRepository.save(user); // Lưu user chỉ sau khi đã thực hiện các bước kiểm tra và thiết lập
         }
     }
 
+
+    @Override
+    public User getUserById(Integer userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+
+    @Override
+    public void updateUserRoleAndCanteen(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
+        user.setIsActive(isActive);
+        if (canteenId != null) {
+            Canteen canteen = canteenRepository.findById(canteenId).orElse(null);
+            user.setCanteen(canteen);
+        } else {
+            user.setCanteen(null);
+        }
+        userRepository.save(user);
+    }
 
 
     @Override
@@ -175,11 +192,17 @@ public class UserServiceImpl implements UserService {
         return Math.toIntExact(userRepository.count());
     }
 
-    @Override
-    public List<User> getUsersSortedByCreatedDate() {
-        return userRepository.findAllUsers(Sort.by(Sort.Direction.DESC, "createdDate"));
 
+    public Page<User> getStaffUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAllByRoleName("staff", pageable);
     }
+
+    public Page<User> searchStaff(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
+    }
+
 
 
     @Override
@@ -188,7 +211,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //update profile người dùng
+//update profile người dùng
     public void updateUser(User user) {
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
         if (existingUser != null) {
@@ -226,7 +249,6 @@ public class UserServiceImpl implements UserService {
     public void saveUserWithDefaultRole(User user) {
         // Implement save user logic if needed
     }
-
 
 
     @Override

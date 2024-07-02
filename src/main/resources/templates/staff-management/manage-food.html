@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Food</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+</head>
+<body class="text-gray-800 font-inter">
+
+<!-- start: Sidebar -->
+<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
+<!-- end: Sidebar -->
+
+<!-- start: Main -->
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
+  <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+    <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+      <i class="ri-menu-line"></i>
+    </button>
+    <ul class="flex items-center text-sm ml-4">
+      <li class="mr-2">
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+      </li>
+      <li class="text-gray-600 mr-2 font-medium">/</li>
+      <li class="text-gray-600 mr-2 font-medium">Manage Food</li>
+    </ul>
+  </div>
+
+  <div class="p-6">
+    <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+      <div class="flex justify-between mb-4 items-start">
+        <div class="font-medium">Manage Food for Canteen: <span th:text="${canteenName}"></span></div>
+        <a th:href="@{/manage-food/add(canteenId=${canteenId})}" class="btn btn-primary"
+           style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Add New Food</a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[540px]">
+          <thead>
+          <tr>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Index</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Category ID</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Food Name</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Description</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Price</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Sales Count</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image Detail 1</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image Detail 2</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="food, iterStat : ${foods}">
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${iterStat.index + 1}">1</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.category.categoryName}">Category </td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Food Name</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.description}">Description</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.price}">100.0</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.salesCount}">50</td>
+            <td class="py-2 px-4 border-b border-b-gray-50">
+              <img th:src="@{${food.imageFood}}" alt="Food Image" width="50"/>
+            </td>
+            <td class="py-2 px-4 border-b border-b-gray-50">
+              <img th:src="@{${food.imageFoodDetail1}}" alt="Food Detail 1" width="50"/>
+            </td>
+            <td class="py-2 px-4 border-b border-b-gray-50">
+              <img th:src="@{${food.imageFoodDetail2}}" alt="Food Detail 2" width="50"/>
+            </td>
+            <td class="py-2 px-4 border-b border-b-gray-50">
+              <a th:href="@{/manage-food/edit/{foodId}(foodId=${food.foodId})}" class="btn btn-primary"
+                 style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Edit</a>
+              <a th:href="@{/manage-food/delete/{foodId}(foodId=${food.foodId})}" class="btn btn-danger"
+                 style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Delete</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- end: Main -->
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{/js/manage.js}"></script>
+</body>
+</html>
