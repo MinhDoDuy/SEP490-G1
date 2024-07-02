@@ -66,7 +66,7 @@ public class HomeController {
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
 
-        return "/canteen_contact";
+        return "./canteen/canteen-contact";
     }
 
 
