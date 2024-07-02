@@ -36,7 +36,7 @@ public class HomeController {
     @Autowired
     CartRepository cartRepository;
 
-    @GetMapping({"/homepage", ""})
+    @GetMapping({"/homepage"})
     public String getCanteens(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
