@@ -203,6 +203,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
     }
 
+
+
     @Override
     public boolean isPhoneExist(String phone) {
         return userRepository.findByPhone(phone) != null;
@@ -266,7 +268,6 @@ public class UserServiceImpl implements UserService {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 }
-
 
 
 

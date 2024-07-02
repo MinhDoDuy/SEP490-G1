@@ -81,7 +81,7 @@
                             <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                         </a>
                         <button type="button" class="btn btn-danger"  th:if="${user == null}"> <a th:href="@{/login}" style="color: #0b0b0b">Login</a> </button>
-                         <div class="nav-item dropdown ">
+                        <div class="nav-item dropdown ">
 
                             <a href="#" class="nav-link dropdown-toggle fas fa-user fa-2x" th:if="${user != null}"></a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0" th:if="${user != null}">
@@ -95,8 +95,9 @@
 
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_MANAGER'}">
 
-                                    <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Manager Canteen</a>
-
+                                    <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Manage Staff</a>
+                                    <a th:href="@{/canteen/edit-profile/{canteenId}(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Edit Canteen</a>
+                                    <a th:href="@{/manage-food(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Manage Food</a>
                                 </div>
 
 
@@ -106,21 +107,21 @@
                                 <a href="404.html" class="dropdown-item">404 Page</a>
                             </div>
                         </div>
-<!--                        <a href="#" class="my-auto nav-item dropdown" data-bs-toggle="dropdown">-->
+                        <!--                        <a href="#" class="my-auto nav-item dropdown" data-bs-toggle="dropdown">-->
 
 
-<!--                            <div class="nav-item dropdown fas fa-user fa-2x ">-->
-<!--                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>-->
-<!--                                <div class="dropdown-menu m-0 bg-secondary rounded-0">-->
-<!--                                    <a href="cart.html" class="dropdown-item">Cart</a>-->
-<!--                                    <a href="chackout.html" class="dropdown-item">Chackout</a>-->
-<!--                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>-->
-<!--                                    <a href="404.html" class="dropdown-item">404 Page</a>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                        <!--                            <div class="nav-item dropdown fas fa-user fa-2x ">-->
+                        <!--                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>-->
+                        <!--                                <div class="dropdown-menu m-0 bg-secondary rounded-0">-->
+                        <!--                                    <a href="cart.html" class="dropdown-item">Cart</a>-->
+                        <!--                                    <a href="chackout.html" class="dropdown-item">Chackout</a>-->
+                        <!--                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>-->
+                        <!--                                    <a href="404.html" class="dropdown-item">404 Page</a>-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
 
 
-<!--                        </a>-->
+                        <!--                        </a>-->
 
                     </div>
 

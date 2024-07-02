@@ -55,12 +55,6 @@ public class ProfileCanteenController {
             return "staff-management/edit-profile-canteen"; // Return to edit page if there are validation errors
         }
 
-//        // Upload file nếu có
-//        if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
-//            String avatarURL = fileS3Service.uploadFile(imageProfileInput);
-//            canteen.setCanteenImg(avatarURL);
-//        }
-
         // Check if a new image is uploaded
         // Fetch the existing canteen data from the database
         Canteen existingCanteen = canteenService.loadCanteenId(canteen.getCanteenId());

@@ -43,43 +43,23 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/resources/**", "/templates/**", "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**",
+                .antMatchers("/resources/**", "/templates/**", "/static/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/static/dashboard/**","/dashboard/**","/register").permitAll()
-                // Swagger config
+                        "/dashboard/**", "/register").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
-                //.antMatchers("/", "/login/**").permitAll()
-                //Homepage
-                .antMatchers("/","/canteens","/homepage/**","/canteen_details","/canteen_contact","/food_details").permitAll()
-
-                //Cart
+                .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_contact", "/food_details").permitAll()
                 .antMatchers("/add_to_cart").permitAll()
-                // Profile
-                .antMatchers("/view-profile/","/update-profile",
-                        "/staff-change-password/**", "/staff-change-password")
+                .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
-                .antMatchers( "/static/dashboard/**","/dashboard/**","/register","/forgot-password","/reset-password","/view-profile/","/update-profile","/change-password").permitAll()
-                // Swagger config
-//                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
-//                .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password","/items_in_all_shop").permitAll()
-//                // Profile
-                .antMatchers("/view-profile/","/update-profile",
-                        "/staff-change-password/**", "/staff-change-password")
-                .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
-                // Admin
-                .antMatchers("/search-staff", "/dashboard/","/manage-user","/manage-user/**",
-                        "/edit-profile","/edit-profile/**","/edit-user","/edit-user/**",
-                        "/add-user","/add-user/**",
-                        "/manage-canteen","/manage-canteen/**","/add-canteen","/search-canteen",
-                        "/edit-canteen","/edit-canteen/**",
-                        "/edit-canteen","/edit-canteen/**","/delete-canteen","/dashboard-admin"
-                ).hasRole("ADMIN")
-                // Manager
-                .antMatchers("/manage-staff", "/search-staff", "/add-staff", "/add-staff/**", "/add-staff-form", "/add-staff-form/**",
-                        "/edit-staff", "/edit-staff/**",
-                        "/canteen-details", "/canteen-details/**","/canteen/update-canteen/**",
-                        "/canteen/view-canteen/**") // Thêm các mẫu URL liên quan đến canteen
+                .antMatchers("/search-staff", "/dashboard/", "/manage-user/**",
+                        "/edit-profile/**", "/edit-user/**", "/add-user/**",
+                        "/manage-canteen/**", "/add-canteen", "/search-canteen",
+                        "/edit-canteen/**", "/delete-canteen", "/dashboard-admin")
+                .hasRole("ADMIN")
+                .antMatchers("/manage-staff/**", "/search-staff", "/add-staff/**",
+                        "/edit-staff/**", "/canteen-details/**", "/canteen/update-canteen/**",
+                        "/canteen/view-canteen/**","/manage-food/**","/manage-food","/add-food", "edit-food")
                 .hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
@@ -95,5 +75,10 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                 .permitAll();
     }
 
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("user").password("{noop}password").roles("USER");
+    }
 
 }

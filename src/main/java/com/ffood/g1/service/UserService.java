@@ -47,22 +47,17 @@ public interface UserService extends UserDetailsService {
     User getUserById(Integer userId);
 
     void updateUserRoleAndCanteen(Integer userId, Integer roleId , Boolean isActive , Integer canteenId);
-
-
-
+    
     void saveUser(User user);
 
     List<User> getAllManagers();
 
     Integer countUsers();
 
-
-
     Page<User> getAllStaff(int page, int size, Integer canteenId);
-
-
 
     Page<User> getStaffUsers(int page, int size);
 
     Page<User> searchStaff(String keyword, int page, int size);
+
 }

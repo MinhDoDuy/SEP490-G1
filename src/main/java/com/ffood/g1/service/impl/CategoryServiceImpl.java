@@ -24,7 +24,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll();
     }
 
-
     public Page<Food> getFoodByCategories(List<Integer> categoryIds, Pageable pageable) {
         if (categoryIds == null || categoryIds.isEmpty()) {
             return foodRepository.findAll(pageable);

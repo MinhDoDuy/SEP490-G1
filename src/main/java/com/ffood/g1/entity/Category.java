@@ -27,6 +27,10 @@ public class Category {
     @Column(name = "description")
     private String description;
 
+    public void setCanteen(Canteen canteen) {
+    }
+
+
 //    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 //    private Set<Food> foods = Collections.emptySet(); // Initialize as empty set
 }

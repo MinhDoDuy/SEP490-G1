@@ -12,6 +12,6 @@ public interface CategoryService {
     List<Category> getAllCategories();
 
 
-    Page<Food> getFoodByCategories(List<Integer> checkedCategories, Pageable pageable);
+
 }
 

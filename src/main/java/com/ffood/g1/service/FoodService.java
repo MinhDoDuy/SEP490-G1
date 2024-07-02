@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 public interface FoodService {
-   //get food random in home
+    //get food random in home
     List<Food> getRandomFood();
 
     //get all Food
@@ -21,7 +21,14 @@ public interface FoodService {
 
     Optional<Food> getFoodById(Integer id) ;
 
- Page<Food> getFilteredFoods(List<Integer> checkedCategories, List<Integer> checkedCanteens, String name, Pageable pageable);
+    Page<Food> getFilteredFoods(List<Integer> checkedCategories, List<Integer> checkedCanteens, String name, Pageable pageable);
 
- Optional<Food> getFoodByIdFoodDetails(Integer id);
+    Optional<Food> getFoodByIdFoodDetails(Integer id);
+
+
+    List<Food> findByCanteenId(Integer canteenId);
+
+    void updateFood(Food food);
+
+    void addFood(Food food);
 }
