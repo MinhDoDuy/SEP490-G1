@@ -52,7 +52,7 @@ public class HomeController {
         }
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
-
+        // get random 12 items and display in homepage
         List<Food> items_home = foodService.getRandomFood();
         model.addAttribute("items_home", items_home);
 
