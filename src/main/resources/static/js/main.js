@@ -232,6 +232,10 @@
         boxzoom: false
       });
 
+
+
+
+
 })(jQuery);
 
 // add hovered class to selected list item

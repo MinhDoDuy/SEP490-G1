@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	Page<User> findAll(Pageable pageable);
 
-	//search list user with fullname , codename , email
+    //search list user with fullname , codename , email
 	Page<User> findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase
 	(String fullName, String email, String codeName, Pageable pageable);
 

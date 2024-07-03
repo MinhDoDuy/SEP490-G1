@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class DashBoardController {
     public String showDashboard(Model model) {
         Integer userCount = userService.countUsers();
         Integer canteenCount = canteenService.countCanteens();
+        Double totalRevenue = orderService.calculateTotalRevenue();
+
 
         List<Object[]> bestSellingItems = orderService.getBestSellingItems();
         List<Object[]> orderStats = orderService.getOrderStats();
@@ -71,6 +74,7 @@ public class DashBoardController {
         }
 
         model.addAttribute("userCount", userCount);
+        model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("canteenCount", canteenCount);
         model.addAttribute("bestSellingItemsLabels", bestSellingItemsLabels);
         model.addAttribute("bestSellingItemsData", bestSellingItemsData);

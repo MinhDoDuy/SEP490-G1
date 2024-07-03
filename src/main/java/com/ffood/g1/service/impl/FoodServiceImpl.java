@@ -42,7 +42,7 @@ public class FoodServiceImpl implements FoodService {
     }
     @Override
     public Optional<Food> getFoodById(Integer id) {
-        return Optional.empty();
+        return foodRepository.findById(id);
     }
 
 
@@ -57,12 +57,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public void updateFood(Food food) {
-        foodRepository.save(food);
-    }
-
-    @Override
-    public void addFood(Food food) {
+    public void save(Food food) {
         foodRepository.save(food);
     }
 

@@ -1,65 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Manage Food</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            color: #333;
-        }
-        .sidebar-toggle {
-            cursor: pointer;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            padding: 5px 10px;
-            text-decoration: none;
-            border-radius: 2px;
-            transition: background-color 0.3s ease;
-        }
-        .btn-danger:hover {
-            background-color: #b02a37;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            text-align: left;
-            padding: 12px;
-        }
-        th {
-            background-color: #f8f9fa;
-            color: #495057;
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-        td {
-            border-bottom: 1px solid #e9ecef;
-        }
-        img {
-            width: 50px;
-            height: auto;
-            border-radius: 4px;
-        }
-    </style>
+  <title>Manage Food</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
 </head>
 <body class="text-gray-800 font-inter">
 
@@ -69,69 +15,66 @@
 
 <!-- start: Main -->
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
-    <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
-        <button type="button" class="text-lg text-gray-600 sidebar-toggle">
-            <i class="ri-menu-line"></i>
-        </button>
-        <ul class="flex items-center text-sm ml-4">
-            <li class="mr-2">
-                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
-            </li>
-            <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Manage Food</li>
-        </ul>
-    </div>
+  <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+    <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+      <i class="ri-menu-line"></i>
+    </button>
+    <ul class="flex items-center text-sm ml-4">
+      <li class="mr-2">
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+      </li>
+      <li class="text-gray-600 mr-2 font-medium">/</li>
+      <li class="text-gray-600 mr-2 font-medium">Manage Food</li>
+    </ul>
+  </div>
 
-    <div class="p-6">
-        <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
-            <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Manage Food for Canteen: <span th:text="${canteenName}"></span></div>
-                <a th:href="@{/manage-food/add(canteenId=${canteenId})}" class="btn btn-primary">Add New Food</a>
-            </div>
+  <div class="p-6">
+    <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+    <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+      <div class="flex justify-between mb-4 items-start">
+        <div class="font-medium">Manage Food for Canteen: <span th:text="${canteenName}"></span></div>
+        <a th:href="@{/add-food-form(canteenId=${canteenId})}" class="btn btn-primary"
+           style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Add New Food</a>
+      </div>
 
-            <div class="overflow-x-auto">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Category ID</th>
-                        <th>Food Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Sales Count</th>
-                        <th>Image</th>
-                        <th>Image Detail 1</th>
-                        <th>Image Detail 2</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="food, iterStat : ${foods}">
-                        <td th:text="${iterStat.index + 1}">1</td>
-                        <td th:text="${food.category.categoryName}">Category</td>
-                        <td th:text="${food.foodName}">Food Name</td>
-                        <td th:text="${food.description}">Description</td>
-                        <td th:text="${food.price}">100.0</td>
-                        <td th:text="${food.salesCount}">50</td>
-                        <td>
-                            <img th:src="@{${food.imageFood}}" alt="Food Image"/>
-                        </td>
-                        <td>
-                            <img th:src="@{${food.imageFoodDetail1}}" alt="Food Detail 1"/>
-                        </td>
-                        <td>
-                            <img th:src="@{${food.imageFoodDetail2}}" alt="Food Detail 2"/>
-                        </td>
-                        <td>
-                            <a th:href="@{/manage-food/edit/{foodId}(foodId=${food.foodId})}" class="btn btn-primary">Edit</a>
-<!--                            <a th:href="@{/manage-food/delete/{foodId}(foodId=${food.foodId})}" class="btn btn-danger">Delete</a>-->
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[540px]">
+          <thead>
+          <tr>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Index</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Category Name</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Food Name</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Description</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Price</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Sales Count</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="food, iterStat : ${foods}">
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${iterStat.index + 1}">1</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.category.categoryName}">Category Name</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Food Name</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.description}">Description</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.price}">100.0</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.salesCount}">50</td>
+            <td class="py-2 px-4 border-b border-b-gray-50">
+              <img th:src="@{${food.imageFood}}" alt="Food Image" width="50"/>
+            </td>
+            <td class="py-2 px-4 border-b border-b-gray-50">
+              <a th:href="@{/edit-food/{foodId}(foodId=${food.foodId})}" class="btn btn-primary"
+                 style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Edit</a>
+              <a th:href="@{/delete-food/{foodId}(foodId=${food.foodId})}" class="btn btn-danger"
+                 style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Delete</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </main>
 <!-- end: Main -->
 

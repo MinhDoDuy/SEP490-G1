@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -46,6 +47,19 @@ public class User implements UserDetails {
     @Column(name = "user_image")
     private String userImage;
 
+    public User(Integer userId) {
+    }
+
+    @Column(name = "created_date")
+    private LocalDate createdDate;
+
+    @Column(name = "updated_date")
+    private LocalDate updatedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "canteen_id")
+    private Canteen canteen;
+
     @Column(name = "gender")
     private Boolean gender = true;
 
@@ -61,13 +75,8 @@ public class User implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority(role.getRoleName()));
     }
 
-    @Column(name = "created_date")
-    private LocalDate createdDate;
-
-    @Column(name = "updated_date")
-    private LocalDate updatedDate;
-
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Cart> carts = new HashSet<>();
 
     @Override
     public String getUsername() {
@@ -78,9 +87,9 @@ public class User implements UserDetails {
         return fullName;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
+//    public Integer getUserId() {
+//        return userId;
+//    }
 
     @Override
     public String getPassword() {
@@ -107,16 +116,28 @@ public class User implements UserDetails {
         return true;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "canteen_id")
-    private Canteen canteen;
+//    @ManyToOne
+//    @JoinColumn(name = "canteen_id")
+//    private Canteen canteen;
 
-    public Canteen getCanteen() {
-        return canteen;
+//    public Canteen getCanteen() {
+//        return canteen;
+//    }
+//
+//    public void setCanteen(Canteen canteen) {
+//        this.canteen = canteen;
+//    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", fullName='" + fullName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                '}';
     }
-
-    public void setCanteen(Canteen canteen) {
-        this.canteen = canteen;
-    }
-
 }

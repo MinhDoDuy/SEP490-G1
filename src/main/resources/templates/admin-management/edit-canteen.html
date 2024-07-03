@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,7 +57,6 @@
     }
   </style>
 </head>
-
 <body class="text-gray-800 font-inter">
 
 <!-- start: Sidebar -->
@@ -115,7 +113,7 @@
           </div>
           <div class="form-group">
             <label for="imageCanteenInput">Canteen Image:</label>
-            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*"/>
+            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*" onchange="onChangeFileTrigger()"/>
             <input type="hidden" id="currentImageUrl" th:field="*{canteenImg}" />
           </div>
           <div class="form-group">
@@ -191,7 +189,18 @@
     document.getElementById('openingHoursStart').value = canteenOpeningHours[0];
     document.getElementById('openingHoursEnd').value = canteenOpeningHours[1];
   });
+
+  function onChangeFileTrigger() {
+    const input = document.getElementById('imageCanteenInput');
+    if (input && input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('displayImage').src = e.target.result;
+        document.getElementById('currentImageUrl').value = ''; // Clear the current image URL
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
 </script>
 </body>
-
 </html>

@@ -21,6 +21,10 @@ public class Canteen {
     @Column(name = "canteen_id")
     private Integer canteenId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "canteen_name", nullable = false)
     private String canteenName;
 

@@ -61,11 +61,11 @@
             <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
                 <div class="flex justify-between mb-6">
                     <div>
-                        <div class="text-2xl font-semibold mb-1"><span class="text-base font-normal text-gray-400 align-top">&dollar;</span>2,345</div>
-                        <div class="text-sm font-medium text-gray-400">Active orders</div>
+                        <div class="text-2xl font-semibold mb-1" th:text="${totalRevenue}">VND</div>
+                        <div class="text-sm font-medium text-gray-400">Complete orders</div>
                     </div>
                 </div>
-                <a href="#" class="text-blue-500 font-medium text-sm hover:text-blue-600">View details</a>
+
             </div>
         </div>
 
@@ -133,38 +133,6 @@
         }
     });
 
-    // Biểu đồ Revenue
-    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-    let revenueChart = new Chart(ctxRevenue, {
-        type: 'line',
-        data: {
-            labels: revenueLabelsByDay,
-            datasets: [{
-                label: 'Revenue',
-                data: revenueDataByDay,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: false
-            }]
-        }
-    });
-
-    document.getElementById('revenue-chart-type').addEventListener('change', function () {
-        const value = this.value;
-        let labels, data;
-        if (value === 'day') {
-            labels = revenueLabelsByDay;
-            data = revenueDataByDay;
-        } else if (value === 'month') {
-            labels = revenueLabelsByMonth;
-            data = revenueDataByMonth;
-        } else if (value === 'year') {
-            labels = revenueLabelsByYear;
-            data = revenueDataByYear;
-        }
-        revenueChart.data.labels = labels;
-        revenueChart.data.datasets[0].data = data;
-        revenueChart.update();
-    });
 
     // Biểu đồ Orders
     const ctxOrders = document.getElementById('ordersChart').getContext('2d');
@@ -188,6 +156,39 @@
                     'rgba(75, 192, 192, 1)'
                 ],
                 borderWidth: 1
+            }]
+        }
+    });
+
+    document.getElementById('revenue-chart-type').addEventListener('change', function () {
+        const value = this.value;
+        let labels, data;
+        if (value === 'day') {
+            labels = revenueLabelsByDay;
+            data = revenueDataByDay;
+        } else if (value === 'month') {
+            labels = revenueLabelsByMonth;
+            data = revenueDataByMonth;
+        } else if (value === 'year') {
+            labels = revenueLabelsByYear;
+            data = revenueDataByYear;
+        }
+        revenueChart.data.labels = labels;
+        revenueChart.data.datasets[0].data = data;
+        revenueChart.update();
+    });
+
+    // Biểu đồ Revenue
+    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+    let revenueChart = new Chart(ctxRevenue, {
+        type: 'line',
+        data: {
+            labels: revenueLabelsByDay,
+            datasets: [{
+                label: 'Revenue',
+                data: revenueDataByDay,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false
             }]
         }
     });

@@ -134,19 +134,6 @@
                     <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
                     <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image">
                 </div>
-
-                <div class="form-group">
-                    <label for="imageFoodDetail1" class="form-label">Image Detail 1</label>
-                    <input type="file" id="imageFoodDetail1" th:field="*{imageFoodDetail1}" class="form-control">
-                    <img th:if="${food.imageFoodDetail1}" th:src="@{${food.imageFoodDetail1}}" alt="Image Detail 1">
-                </div>
-
-                <div class="form-group">
-                    <label for="imageFoodDetail2" class="form-label">Image Detail 2</label>
-                    <input type="file" id="imageFoodDetail2" th:field="*{imageFoodDetail2}" class="form-control">
-                    <img th:if="${food.imageFoodDetail2}" th:src="@{${food.imageFoodDetail2}}" alt="Image Detail 2">
-                </div>
-
                 <button type="submit" class="btn btn-primary">Update Food</button>
             </form>
             <a th:href="@{/manage-food(canteenId=${canteenId})}" class="back-link">Back to list</a>

@@ -7,10 +7,12 @@ import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,30 +48,49 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @GetMapping("/login") // Xử lý yêu cầu GET tới /login
-    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, // Tạo một đối tượng LoginForm mới cho view
-                            Authentication authentication, // Nhận thông tin xác thực hiện tại
+    @GetMapping("/login")
+    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm,
+                            Authentication authentication,
                             Model model,
                             HttpSession session) {
         if (authentication != null && authentication.isAuthenticated()) {
-            return "redirect:/home"; // Nếu người dùng đã xác thực, chuyển hướng đến /home
+            return "redirect:/homepage";
         } else {
             if (session.getAttribute("verificationSuccessMessage") != null) {
-                model.addAttribute("successMessage", session.getAttribute("verificationSuccessMessage")); // Thêm thông báo thành công vào model
-                session.removeAttribute("verificationSuccessMessage"); // Xóa thông báo khỏi session
+                model.addAttribute("successMessage", session.getAttribute("verificationSuccessMessage"));
+                session.removeAttribute("verificationSuccessMessage");
             }
-            return "login"; // Trả về view login
+            return "login";
         }
     }
 
-    @PostMapping("/login") // Xử lý yêu cầu POST tới /login
-    public String loginSubmit(@ModelAttribute("loginForm") LoginForm loginForm, HttpSession session) {
-        UserDetails userDetails = userService.loadUserByUsername(loginForm.getEmail()); // Lấy chi tiết người dùng dựa trên email
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); // Tạo một đối tượng xác thực
-        SecurityContextHolder.getContext().setAuthentication(authentication); // Thiết lập xác thực trong ngữ cảnh bảo mật hiện tại
-        return "redirect:/home"; // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
+    @PostMapping("/login")
+    public String loginSubmit(@ModelAttribute("loginForm") LoginForm loginForm, HttpSession session, Model model) {
+        try {
+            UserDetails userDetails = userService.loadUserByUsername(loginForm.getEmail());
+
+            if (userDetails == null) {
+                model.addAttribute("errorMessage", "Email không tồn tại");
+                return "login";
+            }
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, loginForm.getPassword(), userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            return "redirect:/homepage";
+
+        } catch (BadCredentialsException e) {
+            model.addAttribute("errorMessage", "Mật khẩu không đúng");
+            return "login";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Đã xảy ra lỗi. Vui lòng thử lại.");
+            return "login";
+        }
     }
+
+
 
     //dẫn đến đường link forgot password
     @GetMapping("/forgot-password")
@@ -118,7 +139,6 @@ public class AuthController {
             return "redirect:/reset-password?token=" + token;
         }
     }
-
 
 
     @GetMapping("/register") // Xử lý yêu cầu GET tới /register

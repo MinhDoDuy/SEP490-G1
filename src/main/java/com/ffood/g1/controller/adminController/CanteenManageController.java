@@ -98,9 +98,7 @@ public class CanteenManageController {
     @GetMapping("/edit-canteen/{canteenId}")
     public String editCanteen(@PathVariable Integer canteenId, Model model) {
         Canteen canteen = canteenService.getCanteenById(canteenId);
-
         model.addAttribute("canteen", canteen);
-
         return "./admin-management/edit-canteen";
     }
 
@@ -138,11 +136,30 @@ public class CanteenManageController {
             canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
+        // Validate and set opening hours
+        String[] openingHoursParts = canteen.getOpeningHours().split(" - ");
+        if (openingHoursParts.length == 2) {
+            String start = openingHoursParts[0];
+            String end = openingHoursParts[1];
+            if (!validateTime(start, end)) {
+                model.addAttribute("timeError", "Opening Hours End must be after Opening Hours Start.");
+                model.addAttribute("canteen", canteen);
+                return "./admin-management/edit-canteen";
+            }
+        }
+
         // Cập nhật thông tin canteen
         canteenService.updateCanteen(canteen);
         return "redirect:/manage-canteen";
     }
 
-
-
+    private boolean validateTime(String start, String end) {
+        String[] startParts = start.split(":");
+        String[] endParts = end.split(":");
+        int startHour = Integer.parseInt(startParts[0]);
+        int startMinute = Integer.parseInt(startParts[1]);
+        int endHour = Integer.parseInt(endParts[0]);
+        int endMinute = Integer.parseInt(endParts[1]);
+        return (endHour > startHour) || (endHour == startHour && endMinute > startMinute);
+    }
 }

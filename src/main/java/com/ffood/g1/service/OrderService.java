@@ -1,5 +1,11 @@
 package com.ffood.g1.service;
 
+import com.ffood.g1.entity.Cart;
+import com.ffood.g1.entity.Order;
+import com.ffood.g1.entity.User;
+import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.OrderType;
+import com.ffood.g1.enum_pay.PaymentMethod;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +22,10 @@ public interface OrderService {
     List<Object[]> getRevenueDataByDay();
 
     List<Object[]> getRevenueDataByMonth();
+    Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus,String orderCode);
 
     List<Object[]> getRevenueDataByYear();
+
+    Double calculateTotalRevenue();
+    List<Order> getOrdersByUserIdAndStatus(Integer userId, OrderStatus status);
 }

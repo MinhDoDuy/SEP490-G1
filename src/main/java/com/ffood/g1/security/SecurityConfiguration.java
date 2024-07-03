@@ -56,10 +56,12 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/edit-profile/**", "/edit-user/**", "/add-user/**",
                         "/manage-canteen/**", "/add-canteen", "/search-canteen",
                         "/edit-canteen/**", "/delete-canteen", "/dashboard-admin")
-                .hasRole("ADMIN")
+                .hasAnyRole("ADMIN", "MANAGER")
                 .antMatchers("/manage-staff/**", "/search-staff", "/add-staff/**",
                         "/edit-staff/**", "/canteen-details/**", "/canteen/update-canteen/**",
-                        "/canteen/view-canteen/**","/manage-food/**","/manage-food","/add-food", "edit-food")
+                        "/canteen/view-canteen/**","/manage-food/**","/manage-food",
+                        "/add-food-form", "/add-food-form/**",
+                        "/add-food", "/add-food/**")
                 .hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
