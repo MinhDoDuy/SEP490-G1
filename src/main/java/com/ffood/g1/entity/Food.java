@@ -44,12 +44,7 @@ public class Food {
     @Column(name = "image_food")
     private String imageFood;
 
-    @Column(name = "image_food_detail1")
-    private String imageFoodDetail1;
-
-    @Column(name = "image_food_detail2")
-    private String imageFoodDetail2;
-
+   
     public Food(Integer foodId) {
     }
 
