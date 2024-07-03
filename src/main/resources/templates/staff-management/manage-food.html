@@ -47,8 +47,6 @@
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Price</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Sales Count</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image Detail 1</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image Detail 2</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
           </tr>
           </thead>
@@ -62,12 +60,6 @@
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.salesCount}">50</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
               <img th:src="@{${food.imageFood}}" alt="Food Image" width="50"/>
-            </td>
-            <td class="py-2 px-4 border-b border-b-gray-50">
-              <img th:src="@{${food.imageFoodDetail1}}" alt="Food Detail 1" width="50"/>
-            </td>
-            <td class="py-2 px-4 border-b border-b-gray-50">
-              <img th:src="@{${food.imageFoodDetail2}}" alt="Food Detail 2" width="50"/>
             </td>
             <td class="py-2 px-4 border-b border-b-gray-50">
               <a th:href="@{/manage-food/edit/{foodId}(foodId=${food.foodId})}" class="btn btn-primary"
