@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/canteen")
+@RequestMapping("canteen")
 public class ProfileCanteenController {
 
     @Autowired
@@ -28,31 +28,31 @@ public class ProfileCanteenController {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
-            return "staff-management/edit-profile-canteen"; // Thymeleaf template name
+            return "./staff-management/edit-profile-canteen"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "Canteen not found");
             return "error"; // Error page template
         }
     }
 
-    @GetMapping("/edit-profile/{canteenId}")
+    @GetMapping("/edit-profile-canteen/{canteenId}")
     public String editProfileCanteen(@PathVariable Integer canteenId, Model model) {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
-            return "staff-management/edit-profile-canteen"; // Thymeleaf template name
+            return "./staff-management/edit-profile-canteen"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "Canteen not found");
             return "error"; // Error page template
         }
     }
 
-    @PostMapping("/update-canteen")
+    @PostMapping("/update-profile-canteen")
     public String updateProfileCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
                                        @RequestParam("imageProfileInput") MultipartFile imageProfileInput, Model model)
             throws SpringBootFileUploadException, IOException {
         if (result.hasErrors()) {
-            return "staff-management/edit-profile-canteen"; // Return to edit page if there are validation errors
+            return "redirect:/staff-management/edit-profile-canteen"; // Return to edit page if there are validation errors
         }
 
         // Check if a new image is uploaded
@@ -73,6 +73,6 @@ public class ProfileCanteenController {
         }
 
         canteenService.updateCanteen(canteen);
-        return "redirect:/canteen/view-profile/" + canteen.getCanteenId();
+        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
     }
 }

@@ -52,14 +52,14 @@
             </div>
 
             <div class="flex justify-between items-center mb-4">
-                <form id="canteenForm" th:action="@{/edit-canteen}" method="post" th:object="${canteen}" enctype="multipart/form-data" class="w-full">
+                <form id="canteenForm" th:action="@{/canteen/update-profile-canteen}" method="post" th:object="${canteen}" enctype="multipart/form-data" class="w-full">
                     <input type="hidden" id="canteenId" name="canteenId" th:value="${canteen.canteenId}" />
                     <div class="card-body media align-items-center mb-4">
                         <img id="displayImage" alt="" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
                         <div class="media-body ml-4">
                             <label class="btn btn-outline-primary">
                                 Upload new photo
-                                <input type="file" id="image-upload" class="account-settings-fileinput" accept="image/*, .png, .jpg, .jpeg" name="imageCanteenInput" onchange="onChangeFileTrigger()">
+                                <input type="file" id="image-upload" class="account-settings-fileinput" accept="image/*, .png, .jpg, .jpeg" name="imageProfileInput" onchange="onChangeFileTrigger()">
                             </label>
                             <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
                         </div>

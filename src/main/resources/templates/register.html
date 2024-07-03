@@ -11,12 +11,11 @@
 
     <!-- STYLE CSS -->
     <link th:href="@{/css/style_register.css}" rel="stylesheet">
-
 </head>
 
 <body>
-<div class="wrapper" style="background-image: url('/img/food-background.jpg');">
 
+<div class="wrapper" style="background-image: url('/img/food-background.jpg');">
     <div class="inner">
         <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return validateForm()">
             <h3>Registration Canteen Member</h3>
@@ -28,8 +27,7 @@
                         <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}"
                                th:value="${fullName}"
                                autofocus="autofocus">
-                        <p class="help-block text-danger" id="fullNameError" th:if="${#fields.hasErrors('fullName')}"
-                           th:errors="*{fullName}" style="font-size: small; color: rgb(234, 77, 77);">
+                        <p class="help-block text-danger" id="fullNameError" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" style="font-size: small; color: rgb(234, 77, 77);">
                             Full name cannot start or end with a space.</p>
                     </div>
                 </div>
@@ -84,12 +82,11 @@
                 <!--Password-->
                 <div class="form-wrapper">
                     <label for="password">Password: <span style="color: rgb(234, 77, 77);"> *</span></label>
-                    <div class="form-holder-pass">
+                    <div class="form-holder">
                         <small class="form-text text-muted">Password must be at least 6 characters long</small>
                         <input type="password" class="form-control" placeholder="********" id="password" name="password"
                                th:field="*{password}"
                                th:value="${user.password}" minlength="6">
-                        <span toggle="#password" class="mdi mdi-eye toggle-password"></span>
                         <p class="help-block text-danger" id="passwordEmptyError"
                            style="display: none; font-size: small">Password is required.</p>
                         <p class="help-block text-danger" id="passwordLengthError"
@@ -99,6 +96,25 @@
                     </div>
                 </div>
             </div>
+
+            <!--Password-->
+            <!--            <div class="form-group">-->
+            <!--                <div class="form-wrapper" style="margin-top: 20px;">-->
+            <!--                    <label for="password">Password: <span style="color: rgb(234, 77, 77);"> *</span></label>-->
+            <!--                    <div class="form-holder">-->
+            <!--                        <small class="form-text text-muted">Password must be at least 6 characters long</small>-->
+            <!--                        <input type="password" class="form-control" placeholder="********" id="password" name="password"-->
+            <!--                               th:field="*{password}"-->
+            <!--                               th:value="${user.password}" minlength="6">-->
+            <!--                        <p class="help-block text-danger" id="passwordEmptyError"-->
+            <!--                           style="display: none; font-size: small">Password is required.</p>-->
+            <!--                        <p class="help-block text-danger" id="passwordLengthError"-->
+            <!--                           style="display: none; font-size: small">Password must be at least 6 characters long.</p>-->
+            <!--                        <p class="help-block text-danger" id="passwordSpaceError"-->
+            <!--                           style="display: none; font-size: small">Password cannot start or end with a space.</p>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
             <div class="form-end">
                 <div class="button-holder">
@@ -272,20 +288,6 @@
     document.getElementById('fullName').addEventListener('input', function () {
         validateFullName();
     });
-
-    // Toggle password visibility eye-icon
-    $(document).ready(function() {
-        $(".toggle-password").click(function() {
-            $(this).toggleClass("mdi-eye mdi-eye-off");
-            var input = $($(this).attr("toggle"));
-            if (input.attr("type") === "password") {
-                input.attr("type", "text");
-            } else {
-                input.attr("type", "password");
-            }
-        });
-    });
-
 </script>
 
 </body>
