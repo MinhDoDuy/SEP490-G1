@@ -35,28 +35,23 @@ public class CartController {
     FoodService foodService;
 
 
-    @PostMapping("/add_to_cart")
-    public String addToCart(@RequestParam("foodId") Integer foodId,
-                            @RequestParam("quantity") int quantity,
-                            @RequestParam("price") Integer price,
-                            RedirectAttributes redirectAttributes,
-                            Model model) {
+@PostMapping("/add_to_cart")
+public String addToCart(@RequestParam("foodId") Integer foodId,
+                        @RequestParam("quantity") int quantity,
+                        @RequestParam("price") Integer price,
+                        RedirectAttributes redirectAttributes,
+                        Model model) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
-            return "redirect:/login";
-        }
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+    User user = userService.findByEmail(email);
 
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
+    Cart cart = cartService.getOrCreateCart(user);
 
-        Cart cart = cartService.getOrCreateCart(user);
-        cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-
-        // Chuyển hướng về trang chủ sau khi thêm vào giỏ hàng
-        return "redirect:/food_details?id=" + foodId;
-    }
+    cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
+    // Chuyển hướng về trang chủ sau khi thêm vào giỏ hàng
+    return "redirect:/food_details?id=" + foodId  ;
+}
 
     @GetMapping("/cart_items")
     public String getCartItems(Model model) {

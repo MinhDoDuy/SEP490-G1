@@ -36,7 +36,7 @@ public class Food {
     private String description;
 
     @Column(name = "price", nullable = false)
-    private Double price;
+    private Integer price;
 
     @Column(name = "sales_count")
     private Integer salesCount;
@@ -44,8 +44,8 @@ public class Food {
     @Column(name = "image_food")
     private String imageFood;
 
-
     public Food(Integer foodId) {
+        this.foodId = foodId;
     }
 
 //    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)

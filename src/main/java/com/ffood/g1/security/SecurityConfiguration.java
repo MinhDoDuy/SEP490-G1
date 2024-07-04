@@ -43,17 +43,14 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/resources/**", "/templates/**", "/static/css/**", "/static/js/**", "/static/img/**", "/static/scss/**", "/static/vendors/**",
+                .antMatchers("/resources/**", "/templates/**", "/static/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/static/dashboard/**","/dashboard/**","/register").permitAll()
-                // Swagger config
+                        "/dashboard/**", "/register").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_contact", "/food_details").permitAll()
                 .antMatchers("/add_to_cart").permitAll()
-                // Profile
-                .antMatchers("/view-profile/","/update-profile",
-                        "/staff-change-password/**", "/staff-change-password")
+                .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 .antMatchers("/search-staff", "/dashboard/", "/manage-user/**",
                         "/edit-profile/**", "/edit-user/**", "/add-user/**",
@@ -80,5 +77,10 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                 .permitAll();
     }
 
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("user").password("{noop}password").roles("USER");
+    }
 
 }
