@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +38,7 @@ public class VNPayController {
     @Autowired
     private CartRepository cartRepository;
 
-    @GetMapping("")
+    @GetMapping("/vn")
     public String pay(){
         return "redirect:/vnpay-payment";
     }
@@ -45,11 +46,13 @@ public class VNPayController {
     @PostMapping("/submitOrder")
     public String submidOrder(@RequestParam("totalOrderPrice") int totalOrderPrice,
                               @RequestParam("orderInfo") String orderInfo,
-                              HttpServletRequest request){
+                              HttpServletRequest request , HttpServletResponse httpServletResponse){
         String urlFixed = String.valueOf(request.getRequestURL());
         String serverPath = urlFixed.replace(request.getRequestURI(), "");
         String vnpayUrl = vnPayService.createOrder(totalOrderPrice, orderInfo, serverPath);
-        return "redirect:" + vnpayUrl;
+        httpServletResponse.setHeader("Location", vnpayUrl);
+        httpServletResponse.setStatus(302);
+        return null;
     }
 
     @GetMapping("/now")

@@ -8,6 +8,7 @@ import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,23 +36,33 @@ public class CartController {
     FoodService foodService;
 
 
-@PostMapping("/add_to_cart")
-public String addToCart(@RequestParam("foodId") Integer foodId,
-                        @RequestParam("quantity") int quantity,
-                        @RequestParam("price") Integer price,
-                        RedirectAttributes redirectAttributes,
-                        Model model) {
+    @PostMapping("/add_to_cart")
+    public String addToCart(@RequestParam("foodId") Integer foodId,
+                            @RequestParam("quantity") int quantity,
+                            @RequestParam("price") Integer price,
+                            RedirectAttributes redirectAttributes,
+                            Model model) {
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName();
-    User user = userService.findByEmail(email);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    Cart cart = cartService.getOrCreateCart(user);
+        // Check if the user is authenticated
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            // Redirect to the login page if the user is not authenticated
+            redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
+            return "redirect:/login";
+        }
 
-    cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-    // Chuyển hướng về trang chủ sau khi thêm vào giỏ hàng
-    return "redirect:/food_details?id=" + foodId  ;
-}
+        String email = authentication.getName();
+        User user = userService.findByEmail(email);
+
+        Cart cart = cartService.getOrCreateCart(user);
+
+        cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
+
+        // Redirect to the food details page after adding to the cart
+        return "redirect:/food_details?id=" + foodId;
+    }
+
 
     @GetMapping("/cart_items")
     public String getCartItems(Model model) {
