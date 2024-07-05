@@ -51,7 +51,7 @@ public class UserManageController {
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
 
-        return "./admin-management/manage-user";
+        return "admin-management/manage-user";
     }
 
 
@@ -61,7 +61,7 @@ public class UserManageController {
         List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
         model.addAttribute("user", user);
         model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
-        return "./admin-management/edit-user";
+        return "admin-management/edit-user";
     }
 
     @PostMapping("/edit-user")
@@ -80,7 +80,7 @@ public class UserManageController {
         List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
         model.addAttribute("user", user);
         model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
-        return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
+        return "admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
     }
 
     @PostMapping("/add-user")
@@ -105,7 +105,7 @@ public class UserManageController {
         if (hasErrors) {
             model.addAttribute("user", user);
             model.addAttribute("canteens", canteenService.getAllCanteens()); // Pass canteens to the model
-            return "./admin-management/add-user"; // Change to your actual form view name
+            return "admin-management/add-user"; // Change to your actual form view name
         }
 
         user.setRole(roleService.findRoleById(3)); // Thiết lập role_id = 3 cho Manager

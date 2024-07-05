@@ -39,7 +39,7 @@ public class CanteenManageController {
                                @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<Canteen> canteenPage = canteenService.getAllCanteensPage(page, size);
         model.addAttribute("canteenPage", canteenPage);
-        return "./admin-management/manage-canteen";
+        return "admin-management/manage-canteen";
     }
 
     @GetMapping("/search-canteen")
@@ -57,13 +57,13 @@ public class CanteenManageController {
         model.addAttribute("canteenPage", canteenPage);
         model.addAttribute("keyword", keyword);
 
-        return "./admin-management/manage-canteen";
+        return "admin-management/manage-canteen";
     }
 
     @GetMapping("/add-canteen")
     public String showAddCanteenForm(Model model) {
         model.addAttribute("canteen", new Canteen());
-        return "./admin-management/add-canteen";
+        return "admin-management/add-canteen";
     }
 
     @PostMapping("/add-canteen")
@@ -83,7 +83,7 @@ public class CanteenManageController {
 
         if (hasErrors) {
             model.addAttribute("canteen", canteen);
-            return "./admin-management/add-canteen"; // Change to your actual form view name
+            return "admin-management/add-canteen"; // Change to your actual form view name
         }
 
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
@@ -99,7 +99,7 @@ public class CanteenManageController {
     public String editCanteen(@PathVariable Integer canteenId, Model model) {
         Canteen canteen = canteenService.getCanteenById(canteenId);
         model.addAttribute("canteen", canteen);
-        return "./admin-management/edit-canteen";
+        return "admin-management/edit-canteen";
     }
 
     @PostMapping("/edit-canteen")
@@ -125,7 +125,7 @@ public class CanteenManageController {
         // Nếu có lỗi, trả về form chỉnh sửa với các thông báo lỗi
         if (hasErrors) {
             model.addAttribute("canteen", canteen);
-            return "./admin-management/edit-canteen";
+            return "admin-management/edit-canteen";
         }
 
         // Xử lý upload ảnh nếu có
@@ -144,7 +144,7 @@ public class CanteenManageController {
             if (!validateTime(start, end)) {
                 model.addAttribute("timeError", "Opening Hours End must be after Opening Hours Start.");
                 model.addAttribute("canteen", canteen);
-                return "./admin-management/edit-canteen";
+                return "admin-management/edit-canteen";
             }
         }
 

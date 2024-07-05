@@ -56,7 +56,7 @@ public class HomeController {
         List<Food> items_home = foodService.getRandomFood();
         model.addAttribute("items_home", items_home);
 
-        return "/homepage";
+        return "homepage";
     }
 
     @GetMapping("/canteen_contact")
@@ -66,7 +66,7 @@ public class HomeController {
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
 
-        return "/canteen_contact";
+        return "canteen_contact";
     }
 
 
