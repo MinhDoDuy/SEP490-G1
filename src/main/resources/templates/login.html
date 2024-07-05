@@ -20,9 +20,6 @@
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
-                        <div class="brand-wrapper">
-                            <img src="/img/logo.png" alt="logo" class="logo">
-                        </div>
                         <p class="login-card-description">Sign into your account</p>
                         <form th:action="@{/login}" method="post">
                             <div th:if="${successMessage}" class="alert alert-success">
