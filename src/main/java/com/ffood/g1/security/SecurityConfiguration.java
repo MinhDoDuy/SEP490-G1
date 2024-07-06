@@ -45,7 +45,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
         http.authorizeRequests()
                 .antMatchers("/resources/**", "/templates/**", "/static/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/dashboard/**", "/register").permitAll()
+                        "/dashboard/**", "/register","/forgot-password","/reset-password/**").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_contact", "/food_details").permitAll()
