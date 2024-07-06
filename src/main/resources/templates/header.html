@@ -97,6 +97,8 @@
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_ADMIN'}">
 
                                     <a th:href="@{/manage-user}" class="dropdown-item">Quản Lý Người Dùng</a>
+                                    <a th:href="@{/dashboard-admin}" class="dropdown-item">Bảng quản lý hệ thống</a>
+
                                 </div>
 
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_MANAGER'}">

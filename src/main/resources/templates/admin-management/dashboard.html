@@ -84,7 +84,6 @@
             <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
                 <h4>Revenue Chart</h4>
                 <select id="revenue-chart-type" class="form-control mb-3">
-                    <option value="day">By Day</option>
                     <option value="month">By Month</option>
                     <option value="year">By Year</option>
                 </select>
@@ -108,9 +107,6 @@
     const ordersData = /*[[${orderStatsData}]]*/ [];
 
     // Dữ liệu Revenue Chart
-    const revenueLabelsByDay = /*[[${revenueLabelsByDay}]]*/ [];
-    const revenueDataByDay = /*[[${revenueDataByDay}]]*/ [];
-
     const revenueLabelsByMonth = /*[[${revenueLabelsByMonth}]]*/ [];
     const revenueDataByMonth = /*[[${revenueDataByMonth}]]*/ [];
 
@@ -163,10 +159,7 @@
     document.getElementById('revenue-chart-type').addEventListener('change', function () {
         const value = this.value;
         let labels, data;
-        if (value === 'day') {
-            labels = revenueLabelsByDay;
-            data = revenueDataByDay;
-        } else if (value === 'month') {
+        if (value === 'month') {
             labels = revenueLabelsByMonth;
             data = revenueDataByMonth;
         } else if (value === 'year') {
@@ -183,10 +176,10 @@
     let revenueChart = new Chart(ctxRevenue, {
         type: 'line',
         data: {
-            labels: revenueLabelsByDay,
+            labels: revenueLabelsByMonth,
             datasets: [{
                 label: 'Revenue',
-                data: revenueDataByDay,
+                data: revenueDataByMonth,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 fill: false
             }]

@@ -48,16 +48,11 @@ public class DashBoardController {
             orderStatsData.add((Long) stat[1]);
         }
 
-        List<Object[]> revenueDataByDay = orderService.getRevenueDataByDay();
+
         List<Object[]> revenueDataByMonth = orderService.getRevenueDataByMonth();
         List<Object[]> revenueDataByYear = orderService.getRevenueDataByYear();
 
-        List<String> revenueLabelsByDay = new ArrayList<>();
-        List<Double> revenueDataByDayList = new ArrayList<>();
-        for (Object[] data : revenueDataByDay) {
-            revenueLabelsByDay.add((String) data[0]);
-            revenueDataByDayList.add((Double) data[1]);
-        }
+
 
         List<String> revenueLabelsByMonth = new ArrayList<>();
         List<Double> revenueDataByMonthList = new ArrayList<>();
@@ -80,8 +75,7 @@ public class DashBoardController {
         model.addAttribute("bestSellingItemsData", bestSellingItemsData);
         model.addAttribute("orderStatsLabels", orderStatsLabels);
         model.addAttribute("orderStatsData", orderStatsData);
-        model.addAttribute("revenueLabelsByDay", revenueLabelsByDay);
-        model.addAttribute("revenueDataByDay", revenueDataByDayList);
+
         model.addAttribute("revenueLabelsByMonth", revenueLabelsByMonth);
         model.addAttribute("revenueDataByMonth", revenueDataByMonthList);
         model.addAttribute("revenueLabelsByYear", revenueLabelsByYear);

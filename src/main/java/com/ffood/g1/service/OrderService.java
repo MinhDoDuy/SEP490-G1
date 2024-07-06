@@ -19,7 +19,7 @@ public interface OrderService {
 
     List<Object[]> getOrderStats();
 
-    List<Object[]> getRevenueDataByDay();
+
 
     List<Object[]> getRevenueDataByMonth();
     Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus,String orderCode);
