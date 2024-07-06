@@ -29,4 +29,5 @@ public interface FoodService {
     List<Food> findByCanteenId(Integer canteenId);
 
     void save(Food food);
+
 }

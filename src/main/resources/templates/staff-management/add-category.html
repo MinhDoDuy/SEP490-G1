@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Add Category</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-    <title>Edit Staff</title>
-
     <style>
         .form-container {
             width: 50%;
@@ -24,14 +23,14 @@
             font-weight: bold;
         }
 
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             padding: 8px;
             border: 2px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
         }
 
-        .form-group select {
+        .form-group select, .form-group textarea {
             width: auto;
         }
 
@@ -68,6 +67,7 @@
     </style>
 </head>
 <body class="text-gray-800 font-inter">
+
 <!-- start: Sidebar -->
 <div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
 <!-- end: Sidebar -->
@@ -83,50 +83,25 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Edit Staff</li>
+            <li class="text-gray-600 mr-2 font-medium">Add Category</li>
         </ul>
     </div>
 
     <div class="p-6 flex justify-center">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
             <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Edit Staff Role</div>
+                <div class="font-medium">Add New Category</div>
             </div>
-            <form th:action="@{/edit-staff}" method="post" th:object="${user}">
-                <input type="hidden" th:field="*{userId}"/>
+            <form th:action="@{/add-category(canteenId=${canteenId})}" method="post" th:object="${category}">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
-
                 <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="text" id="email" th:field="*{email}" readonly="readonly" class="form-control"/>
+                    <label for="categoryName" class="form-label">Category Name</label>
+                    <input type="text" id="categoryName" th:field="*{categoryName}" class="form-control">
                 </div>
 
-                <div class="form-group">
-                    <label for="fullName" class="form-label">Full Name</label>
-                    <input type="text" id="fullName" th:field="*{fullName}" readonly="readonly" class="form-control"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="gender" class="form-label">Gender</label>
-                    <input type="text" id="gender" th:value="${user.gender ? 'Male' : 'Female'}" readonly="readonly" class="form-control"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="role" class="form-label">Role</label>
-                    <input type="text" id="role" value="ROLE_STAFF" disabled class="form-control"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="isActive" class="form-label">Status</label>
-                    <select id="isActive" th:field="*{isActive}" class="form-control">
-                        <option th:value="true" th:text="'Active'" th:selected="${user.isActive == true}"></option>
-                        <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive == false}"></option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Add Category</button>
             </form>
-            <a th:href="@{/manage-staff(canteenId=${canteenId})}" class="back-link">Back to list</a>
+            <a th:href="@{/manage-food}" class="back-link">Back to list</a>
         </div>
     </div>
 </main>

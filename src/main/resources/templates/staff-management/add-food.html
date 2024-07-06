@@ -10,10 +10,14 @@
         .form-container {
             width: 50%;
             margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
         }
@@ -21,17 +25,20 @@
         .form-group label {
             margin-bottom: 5px;
             font-weight: bold;
+            color: #333;
         }
 
         .form-group input, .form-group select, .form-group textarea {
-            padding: 8px;
-            border: 2px solid #ccc;
+            padding: 10px;
+            border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+            transition: border-color 0.3s ease-in-out;
         }
 
-        .form-group select, .form-group textarea {
-            width: auto;
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         .error-message {
@@ -40,17 +47,18 @@
         }
 
         button[type="submit"] {
-            background-color: #007bff;
+            background: linear-gradient(90deg, #007bff, #0056b3);
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
+            transition: background 0.3s ease-in-out;
         }
 
         button[type="submit"]:hover {
-            background-color: #0056b3;
+            background: linear-gradient(90deg, #0056b3, #003f7f);
         }
 
         .back-link {
@@ -59,9 +67,11 @@
             font-size: 14px;
             color: #007bff;
             text-decoration: none;
+            transition: color 0.3s ease-in-out;
         }
 
         .back-link:hover {
+            color: #0056b3;
             text-decoration: underline;
         }
     </style>
@@ -88,10 +98,10 @@
 
     <div class="p-6 flex justify-center">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
-            <div class="flex justify-between mb=4 items-start">
+            <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Add Food for Canteen: <span th:text="${canteenName}"></span></div>
             </div>
-            <form th:action="@{/add-food}" method="post" th:object="${food}" enctype="multipart/form-data">
+            <form th:action="@{/add-food}" method="post" th:object="${food}" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
 
                 <div class="form-group">
@@ -103,12 +113,14 @@
 
                 <div class="form-group">
                     <label for="foodName" class="form-label">Food Name</label>
-                    <input type="text" id="foodName" th:field="*{foodName}" class="form-control">
+                    <input type="text" id="foodName" th:field="*{foodName}" class="form-control" oninput="capitalizeWords(this)">
+                    <div class="error-message" id="foodNameError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="form-label">Description</label>
-                    <textarea id="description" th:field="*{description}" class="form-control" rows="4"></textarea>
+                    <textarea id="description" th:field="*{description}" class="form-control" rows="4" oninput="capitalizeWords(this)"></textarea>
+                    <div class="error-message" id="descriptionError"></div>
                 </div>
 
                 <div class="form-group">
@@ -137,5 +149,58 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+    function capitalizeWords(input) {
+        input.value = input.value.replace(/\b\w/g, function(match) {
+            return match.toUpperCase();
+        });
+    }
+
+    function validateForm() {
+        let isValid = true;
+
+        const foodName = document.getElementById('foodName');
+        const description = document.getElementById('description');
+        const foodNameError = document.getElementById('foodNameError');
+        const descriptionError = document.getElementById('descriptionError');
+
+        foodNameError.textContent = '';
+        descriptionError.textContent = '';
+
+        if (foodName.value.trim().startsWith(' ')) {
+            foodNameError.textContent = 'Food name cannot start with a space.';
+            isValid = false;
+        }
+
+        if (description.value.trim().startsWith(' ')) {
+            descriptionError.textContent = 'Description cannot start with a space.';
+            isValid = false;
+        }
+
+        if (!isUniqueFoodName(foodName.value.trim())) {
+            foodNameError.textContent = 'Food name already exists.';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function isUniqueFoodName(foodName) {
+        let isUnique = false;
+        $.ajax({
+            url: '/check-food-name',
+            type: 'GET',
+            data: { foodName: foodName },
+            async: false,
+            success: function(response) {
+                isUnique = response;
+            },
+            error: function() {
+                isUnique = false;
+            }
+        });
+        return isUnique;
+    }
+</script>
 </body>
 </html>

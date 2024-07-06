@@ -61,8 +61,10 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
                         "/edit-staff/**", "/canteen-details/**", "/canteen/update-profile-canteen/**",
                         "/canteen/edit-profile-canteen/**","/manage-food/**","/manage-food","/canteen/**",
                         "/add-food-form", "/add-food-form/**",
-                        "/add-food", "/add-food/**")
+                        "/add-food", "/add-food/**",
+                        "/manage-category/**", "/add-category-form", "/add-category", "/edit-category/**")
                 .hasRole("MANAGER")
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -1,6 +1,7 @@
 package com.ffood.g1.controller.manageStaff;
 
 import com.ffood.g1.entity.Canteen;
+import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.exception.SpringBootFileUploadException;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -75,7 +77,7 @@ public class FoodManagementController {
                 model.addAttribute("errorMessage", error);
             }
 
-            return "staff-management/manage-food";
+            return "./staff-management/manage-food";
         } else {
             // If not a manager or managing the wrong canteen, return error page or unauthorized message
             return "error/403";
@@ -102,6 +104,21 @@ public class FoodManagementController {
     public String addFood(@ModelAttribute("food") Food food, BindingResult result, Model model,
                           @RequestParam("canteenId") Integer canteenId,
                           @RequestParam("imageFood") MultipartFile imageFood) {
+        if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
+            result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
+        }
+
+        if (food.getDescription().trim().startsWith(" ")) {
+            result.rejectValue("description", "error.food", "Description cannot start with a space.");
+        }
+
+
+        if (result.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("canteenId", canteenId);
+            return "staff-management/add-food";
+        }
+
         try {
             Canteen canteen = canteenService.getCanteenById(canteenId);
             food.setCanteen(canteen);
@@ -137,6 +154,21 @@ public class FoodManagementController {
     public String editFood(@ModelAttribute("food") Food food, BindingResult result, Model model,
                            @RequestParam("canteenId") Integer canteenId,
                            @RequestParam("imageFood") MultipartFile imageFood) {
+        if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
+            result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
+        }
+
+        if (food.getDescription().trim().startsWith(" ")) {
+            result.rejectValue("description", "error.food", "Description cannot start with a space.");
+        }
+
+
+        if (result.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("canteenId", canteenId);
+            return "staff-management/edit-food";
+        }
+
         try {
             Canteen canteen = canteenService.getCanteenById(canteenId);
             food.setCanteen(canteen);
@@ -152,14 +184,57 @@ public class FoodManagementController {
         }
         return "redirect:/manage-food?canteenId=" + canteenId + "&success=edit";
     }
+
+    @GetMapping("/manage-category")
+    public String manageCategory(Model model,
+                                 @RequestParam("canteenId") Integer canteenId,
+                                 @RequestParam(value = "success", required = false) String success,
+                                 @RequestParam(value = "error", required = false) String error) {
+        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("canteenId", canteenId);
+
+        if ("add".equals(success)) {
+            model.addAttribute("successMessage", "Category added successfully!");
+        } else if ("edit".equals(success)) {
+            model.addAttribute("successMessage", "Category edited successfully!");
+        }
+
+        if (error != null) {
+            model.addAttribute("errorMessage", error);
+        }
+
+        return "./staff-management/manage-category";
+    }
+
+    @GetMapping("/add-category-form")
+    public String showAddCategoryForm(@RequestParam("canteenId") Integer canteenId, Model model) {
+        model.addAttribute("category", new Category());
+        model.addAttribute("canteenId", canteenId);
+        return "./staff-management/add-category";
+    }
+
+    @PostMapping("/add-category")
+    public String addCategory(@ModelAttribute("category") Category category,
+                              @RequestParam("canteenId") Integer canteenId, BindingResult result, Model model) {
+        categoryService.saveCategory(category);
+        return "redirect:/manage-category?canteenId=" + canteenId  + "&success=add";
+    }
+
+    @GetMapping("/edit-category/{categoryId}")
+    public String showEditCategoryForm(@PathVariable("categoryId") Integer categoryId,
+                                       @RequestParam("canteenId") Integer canteenId, Model model) {
+        Category category = categoryService.getCategoryById(categoryId);
+        model.addAttribute("category", category);
+        model.addAttribute("canteenId", canteenId);
+        return "./staff-management/edit-category";
+    }
+
+    @PostMapping("/edit-category")
+    public String editCategory(@ModelAttribute("category") Category category, BindingResult result,
+                               @RequestParam("canteenId") Integer canteenId, Model model) {
+        categoryService.saveCategory(category);
+        return "redirect:/manage-category?canteenId=" + canteenId + "&success=edit";
+    }
+
 }
-
-
-
-
-
-
-
-
-
-

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -19,6 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private FoodRepository foodRepository;
 
+    @Override
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
@@ -30,4 +32,13 @@ public class CategoryServiceImpl implements CategoryService {
         return foodRepository.findByCategoryIds(categoryIds, pageable);
     }
 
+    @Override
+    public Category getCategoryById(Integer categoryId) {
+        return categoryRepository.findById(categoryId).orElse(null);
+    }
+
+    @Override
+    public void saveCategory(Category category) {
+        categoryRepository.save(category);
+    }
 }
