@@ -70,7 +70,7 @@ public class UserManageController {
                                @RequestParam(value = "canteenId", required = false) Integer canteenId) {
 
 
-        userService.updateUserRoleAndCanteen(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
+        userService.updateUserStatus(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
         return "redirect:/manage-user";
     }
 
