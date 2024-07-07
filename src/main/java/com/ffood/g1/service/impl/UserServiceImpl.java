@@ -163,6 +163,7 @@ public class UserServiceImpl implements UserService {
         } else {
             user.setCanteen(null);
         }
+        user.setUpdatedDate(LocalDate.now());
         userRepository.save(user);
     }
 
@@ -170,6 +171,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreatedDate(LocalDate.now());
         userRepository.save(user);
     }
 

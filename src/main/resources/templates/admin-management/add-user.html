@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-    <title>Dashboard</title>
+    <title>Add New Manager</title>
 
     <style>
         .form-container {
@@ -25,7 +25,8 @@
             font-weight: bold;
         }
 
-        .form-group input, .form-group select {
+        .form-group input,
+        .form-group select {
             padding: 8px;
             border: 2px solid #ccc;
             border-radius: 4px;
@@ -66,6 +67,38 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            position: relative;
+            animation: fadeIn 0.5s;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .alert .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: inherit;
+        }
     </style>
 </head>
 
@@ -91,8 +124,14 @@
     </div>
 
     <div class="p-6 flex justify-center">
-
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+            <!-- Success message -->
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}" id="successMessage">
+                <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Add New Manager</div>
             </div>
@@ -100,21 +139,21 @@
                 <form th:action="@{/add-user}" th:object="${user}" method="post">
                     <div class="form-group">
                         <label for="fullName">Full Name:</label>
-                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control"/>
+                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="codeName">Code Name:</label>
-                        <input type="text" id="codeName" th:field="*{codeName}" class="form-control"/>
+                        <input type="text" id="codeName" th:field="*{codeName}" class="form-control" />
                         <div th:if="${codeNameError}" th:text="${codeNameError}" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" th:field="*{email}" class="form-control"/>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" />
                         <div th:if="${emailError}" th:text="${emailError}" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone:</label>
-                        <input type="text" id="phone" th:field="*{phone}" class="form-control"/>
+                        <input type="text" id="phone" th:field="*{phone}" class="form-control" />
                         <div th:if="${phoneError}" th:text="${phoneError}" class="error-message"></div>
                     </div>
                     <div class="form-group">
@@ -132,13 +171,12 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Password:</label>
-                        <input type="password" id="password" th:field="*{password}" class="form-control"/>
+                        <input type="password" id="password" th:field="*{password}" class="form-control" />
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
                 <a th:href="@{/manage-user}" class="back-link">Back to list</a>
             </div>
-
         </div>
     </div>
 </main>
@@ -147,7 +185,16 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            setTimeout(function () {
+                window.location.href = '/manage-user';
+            }, 1000); // 1 giây
+        }
+    });
 </script>
 </body>
 

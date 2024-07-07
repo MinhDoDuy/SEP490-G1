@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,7 +34,7 @@ public class UserManageController {
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<User> userPage = userService.getAllUsers(page, size);
         model.addAttribute("userPage", userPage);
-        return "./admin-management/manage-user";
+        return "admin-management/manage-user";
     }
 
     @GetMapping("/search")
@@ -65,14 +66,17 @@ public class UserManageController {
     }
 
     @PostMapping("/edit-user")
-    public String editUserRole(@RequestParam("userId") Integer userId,
+    public String editUserStatus(@RequestParam("userId") Integer userId,
                                @RequestParam("isActive") Boolean isActive,
-                               @RequestParam(value = "canteenId", required = false) Integer canteenId) {
-
+                               @RequestParam(value = "canteenId", required = false) Integer canteenId,
+                               RedirectAttributes redirectAttributes) {
 
         userService.updateUserStatus(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
-        return "redirect:/manage-user";
+        redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
+
+        return "redirect:/edit-user/" + userId;
     }
+
 
     @GetMapping("/add-user")
     public String showAddForm(Model model) {
@@ -84,7 +88,7 @@ public class UserManageController {
     }
 
     @PostMapping("/add-user")
-    public String addUser(@ModelAttribute("user") User user, Model model) {
+    public String addUser(@ModelAttribute("user") User user, Model model, RedirectAttributes redirectAttributes) {
         boolean hasErrors = false;
 
         if (userService.isEmailExist(user.getEmail())) {
@@ -109,11 +113,14 @@ public class UserManageController {
         }
 
         user.setRole(roleService.findRoleById(3)); // Thiết lập role_id = 3 cho Manager
-        user.setCreatedDate(LocalDate.now());
-
         userService.saveUser(user);
-        return "redirect:/manage-user";
+
+        redirectAttributes.addFlashAttribute("successMessage", "User added successfully");
+
+        return "redirect:/add-user";
     }
+
+
 
 
 }
