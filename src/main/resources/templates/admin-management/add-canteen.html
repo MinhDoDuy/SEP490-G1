@@ -12,28 +12,66 @@
       width: 50%;
       margin: auto;
     }
+
     .form-group {
       margin-bottom: 10px;
       display: flex;
       flex-direction: column;
     }
+
     .form-group label {
       margin-bottom: 5px;
       font-weight: bold;
     }
-    .form-group input, .form-group select {
+
+    .form-group input,
+    .form-group select {
       padding: 8px;
       border: 2px solid #ccc;
       border-radius: 4px;
       font-size: 14px;
     }
+
     .form-group select {
       width: auto;
     }
+
     .error-message {
       color: red;
       font-size: 12px;
     }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      position: relative;
+      animation: fadeIn 0.5s;
+    }
+
+    .alert-success {
+      color: #3c763d;
+      background-color: #dff0d8;
+      border-color: #d6e9c6;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .alert .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: inherit;
+    }
+
     button[type="submit"] {
       background-color: #007bff;
       color: white;
@@ -43,9 +81,11 @@
       cursor: pointer;
       font-size: 14px;
     }
+
     button[type="submit"]:hover {
       background-color: #0056b3;
     }
+
     .back-link {
       display: inline-block;
       margin-top: 10px;
@@ -53,6 +93,7 @@
       color: #007bff;
       text-decoration: none;
     }
+
     .back-link:hover {
       text-decoration: underline;
     }
@@ -82,6 +123,13 @@
 
   <div class="p-6 flex justify-center">
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+      <!-- Success message -->
+      <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}" id="successMessage">
+        <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Add New Canteen</div>
       </div>
@@ -89,16 +137,16 @@
         <form th:action="@{/add-canteen}" th:object="${canteen}" method="post" enctype="multipart/form-data" id="canteenForm">
           <div class="form-group">
             <label for="canteenName">Canteen Name:</label>
-            <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control"/>
+            <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control" />
             <div th:if="${canteenNameError != null}" class="error-message" th:text="${canteenNameError}"></div>
           </div>
           <div class="form-group">
             <label for="location">Location:</label>
-            <input type="text" id="location" th:field="*{location}" class="form-control"/>
+            <input type="text" id="location" th:field="*{location}" class="form-control" />
           </div>
           <div class="form-group">
             <label for="canteenPhone">Phone:</label>
-            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" class="form-control"/>
+            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" class="form-control" />
             <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
           </div>
           <div class="form-group">
@@ -114,7 +162,7 @@
           </div>
           <div class="form-group">
             <label for="imageCanteenInput">Canteen Image:</label>
-            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*"/>
+            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*" />
           </div>
           <div class="error-message" id="error-message"></div>
           <button type="submit" class="btn btn-primary">Add Canteen</button>
@@ -171,7 +219,18 @@
     errorMessage.textContent = '';
   });
 
-  document.addEventListener('DOMContentLoaded', generateTimeOptions);
+  document.addEventListener('DOMContentLoaded', function() {
+    generateTimeOptions();
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const successMessage = document.getElementById('successMessage');
+    if (successMessage) {
+      setTimeout(function () {
+        window.location.href = '/manage-canteen';
+      }, 1000); // 1 giây
+    }
+  });
 </script>
 </body>
 

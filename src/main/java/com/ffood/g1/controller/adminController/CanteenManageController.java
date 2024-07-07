@@ -1,12 +1,9 @@
 package com.ffood.g1.controller.adminController;
 
 import com.ffood.g1.entity.Canteen;
-import com.ffood.g1.entity.User;
 import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FileS3Service;
-import com.ffood.g1.service.RoleService;
-import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -14,18 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class CanteenManageController {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RoleService roleService;
 
     @Autowired
     private CanteenService canteenService;
@@ -63,12 +54,13 @@ public class CanteenManageController {
     @GetMapping("/add-canteen")
     public String showAddCanteenForm(Model model) {
         model.addAttribute("canteen", new Canteen());
-        return "admin-management/add-canteen";
+        return "./admin-management/add-canteen";
     }
 
     @PostMapping("/add-canteen")
     public String addCanteen(@ModelAttribute("canteen") Canteen canteen, Model model,
-                             @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput) throws IOException, SpringBootFileUploadException {
+                             @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput,
+                             RedirectAttributes redirectAttributes) throws IOException, SpringBootFileUploadException {
         boolean hasErrors = false;
 
         if (canteenService.isPhoneExist(canteen.getCanteenPhone())) {
@@ -83,7 +75,7 @@ public class CanteenManageController {
 
         if (hasErrors) {
             model.addAttribute("canteen", canteen);
-            return "admin-management/add-canteen"; // Change to your actual form view name
+            return "./admin-management/add-canteen"; // Change to your actual form view name
         }
 
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
@@ -92,7 +84,9 @@ public class CanteenManageController {
         }
 
         canteenService.saveCanteen(canteen);
-        return "redirect:/manage-canteen";
+        redirectAttributes.addFlashAttribute("successMessage", "Canteen added successfully");
+
+        return "redirect:/add-canteen";
     }
 
     @GetMapping("/edit-canteen/{canteenId}")
@@ -104,7 +98,8 @@ public class CanteenManageController {
 
     @PostMapping("/edit-canteen")
     public String updateCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result, Model model,
-                                @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput) throws IOException, SpringBootFileUploadException {
+                                @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput,
+                                RedirectAttributes redirectAttributes) throws IOException, SpringBootFileUploadException {
         boolean hasErrors = false;
 
         // Lấy thông tin canteen hiện tại từ database
@@ -136,30 +131,10 @@ public class CanteenManageController {
             canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
-        // Validate and set opening hours
-        String[] openingHoursParts = canteen.getOpeningHours().split(" - ");
-        if (openingHoursParts.length == 2) {
-            String start = openingHoursParts[0];
-            String end = openingHoursParts[1];
-            if (!validateTime(start, end)) {
-                model.addAttribute("timeError", "Opening Hours End must be after Opening Hours Start.");
-                model.addAttribute("canteen", canteen);
-                return "admin-management/edit-canteen";
-            }
-        }
-
         // Cập nhật thông tin canteen
         canteenService.updateCanteen(canteen);
-        return "redirect:/manage-canteen";
-    }
+        redirectAttributes.addFlashAttribute("successMessage", "Canteen updated successfully");
 
-    private boolean validateTime(String start, String end) {
-        String[] startParts = start.split(":");
-        String[] endParts = end.split(":");
-        int startHour = Integer.parseInt(startParts[0]);
-        int startMinute = Integer.parseInt(startParts[1]);
-        int endHour = Integer.parseInt(endParts[0]);
-        int endMinute = Integer.parseInt(endParts[1]);
-        return (endHour > startHour) || (endHour == startHour && endMinute > startMinute);
+        return "redirect:/edit-canteen/" + canteen.getCanteenId();
     }
 }
