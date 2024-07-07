@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +50,8 @@ public class ProfileController {
 
     @PostMapping("/update-profile")
     public String updateProfile(@ModelAttribute User user, BindingResult result,
-                                @RequestParam("imageProfileInput") MultipartFile imageProfileInput, Model model)
+                                @RequestParam("imageProfileInput") MultipartFile imageProfileInput,
+                                RedirectAttributes redirectAttributes)
             throws SpringBootFileUploadException, IOException {
         if (result.hasErrors()) {
             return "profile"; // Return to profile page if there are validation errors
@@ -66,6 +68,7 @@ public class ProfileController {
         }
 
         userService.updateUser(user);
+        redirectAttributes.addFlashAttribute("successMessage", "Update successful");
         return "redirect:/view-profile/" + user.getUserId();
     }
 

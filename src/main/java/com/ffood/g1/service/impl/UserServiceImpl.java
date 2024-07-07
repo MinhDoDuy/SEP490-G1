@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -210,6 +211,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setEmail(user.getEmail());
             existingUser.setUserImage(user.getUserImage());
             existingUser.setGender(user.getGender());
+            existingUser.setUpdatedDate(LocalDate.now());
             userRepository.save(existingUser);
         }
     }
