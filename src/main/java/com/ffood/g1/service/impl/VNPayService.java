@@ -1,6 +1,5 @@
 package com.ffood.g1.service.impl;
 
-
 import com.ffood.g1.config.VNPayConfig;
 import org.springframework.stereotype.Service;
 
@@ -38,13 +37,20 @@ public class VNPayService {
         vnp_Params.put("vnp_ReturnUrl", urlReturn + VNPayConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
+        // Lấy thời gian hiện tại theo múi giờ Việt Nam
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
 
+        // Thêm 3 giờ để thiết lập thời gian hết hạn
         cld.add(Calendar.HOUR, 3);
-        String vnp_ExpireDate = formatter.format(cld.getTime());
+
+        // Chuyển đổi thời gian hết hạn về múi giờ US East (N. Virginia)
+        SimpleDateFormat usFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        usFormatter.setTimeZone(TimeZone.getTimeZone("Etc/GMT+4"));
+        String vnp_ExpireDate = usFormatter.format(cld.getTime());
+
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldNames = new ArrayList(vnp_Params.keySet());
