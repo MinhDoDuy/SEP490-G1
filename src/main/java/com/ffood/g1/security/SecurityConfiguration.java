@@ -1,7 +1,12 @@
 package com.ffood.g1.security;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,12 +20,28 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class    SecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     @Autowired
     private UserService userService;
 
+    @Value("${aws.accessKey}")
+    private String accessKey;
 
+    @Value("${aws.secretKey}")
+    private String secretKey;
+
+    @Value("${aws.region}")
+    private String region;
+
+    @Bean
+    public AmazonS3 s3Client() {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+        return AmazonS3ClientBuilder.standard()
+                .withRegion(region)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                .build();
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -45,7 +66,7 @@ public class    SecurityConfiguration extends WebSecurityConfigurerAdapter imple
         http.authorizeRequests()
                 .antMatchers("/resources/**", "/templates/**", "/static/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/dashboard/**", "/register").permitAll()
+                        "/dashboard/**", "/register","/forgot-password","/reset-password/**").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_contact", "/food_details").permitAll()

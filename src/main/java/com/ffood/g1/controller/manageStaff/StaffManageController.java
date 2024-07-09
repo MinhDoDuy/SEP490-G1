@@ -41,7 +41,7 @@ public class StaffManageController {
         model.addAttribute("staffPage", staffPage);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("canteen", canteen); // Add canteen to the model
-        return "./staff-management/manage-staff";
+        return "staff-management/manage-staff";
     }
 
     @GetMapping("/search-staff")
@@ -63,7 +63,7 @@ public class StaffManageController {
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("canteen", canteen); // Add canteen to the model
 
-        return "./staff-management/manage-staff";
+        return "staff-management/manage-staff";
     }
 
 
@@ -80,7 +80,7 @@ public class StaffManageController {
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
         model.addAttribute("canteen", canteen); // Add canteen to the model
-        return "./staff-management/edit-staff";
+        return "staff-management/edit-staff";
     }
 
 

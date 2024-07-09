@@ -28,7 +28,7 @@ public class DashBoardController {
     public String showDashboard(Model model) {
         Integer userCount = userService.countUsers();
         Integer canteenCount = canteenService.countCanteens();
-        Double totalRevenue = orderService.calculateTotalRevenue();
+        Double totalOrder = orderService.calculateTotalOrder();
 
 
         List<Object[]> bestSellingItems = orderService.getBestSellingItems();
@@ -48,16 +48,11 @@ public class DashBoardController {
             orderStatsData.add((Long) stat[1]);
         }
 
-        List<Object[]> revenueDataByDay = orderService.getRevenueDataByDay();
+
         List<Object[]> revenueDataByMonth = orderService.getRevenueDataByMonth();
         List<Object[]> revenueDataByYear = orderService.getRevenueDataByYear();
 
-        List<String> revenueLabelsByDay = new ArrayList<>();
-        List<Double> revenueDataByDayList = new ArrayList<>();
-        for (Object[] data : revenueDataByDay) {
-            revenueLabelsByDay.add((String) data[0]);
-            revenueDataByDayList.add((Double) data[1]);
-        }
+
 
         List<String> revenueLabelsByMonth = new ArrayList<>();
         List<Double> revenueDataByMonthList = new ArrayList<>();
@@ -74,14 +69,13 @@ public class DashBoardController {
         }
 
         model.addAttribute("userCount", userCount);
-        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("totalOrder", totalOrder);
         model.addAttribute("canteenCount", canteenCount);
         model.addAttribute("bestSellingItemsLabels", bestSellingItemsLabels);
         model.addAttribute("bestSellingItemsData", bestSellingItemsData);
         model.addAttribute("orderStatsLabels", orderStatsLabels);
         model.addAttribute("orderStatsData", orderStatsData);
-        model.addAttribute("revenueLabelsByDay", revenueLabelsByDay);
-        model.addAttribute("revenueDataByDay", revenueDataByDayList);
+
         model.addAttribute("revenueLabelsByMonth", revenueLabelsByMonth);
         model.addAttribute("revenueDataByMonth", revenueDataByMonthList);
         model.addAttribute("revenueLabelsByYear", revenueLabelsByYear);

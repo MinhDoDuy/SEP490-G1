@@ -42,11 +42,10 @@ public interface UserService extends UserDetailsService {
     //search user
     Page<User> searchUsers(String keyword, int page, int size);
 
-    void updateUserRole(Integer userId, Integer roleId, Boolean isActive);
 
     User getUserById(Integer userId);
 
-    void updateUserRoleAndCanteen(Integer userId, Integer roleId , Boolean isActive , Integer canteenId);
+    void updateUserStatus(Integer userId, Integer roleId , Boolean isActive , Integer canteenId);
     
     void saveUser(User user);
 

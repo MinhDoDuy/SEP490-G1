@@ -36,7 +36,7 @@ public class HomeController {
     @Autowired
     CartRepository cartRepository;
 
-    @GetMapping({"/homepage", ""})
+    @GetMapping({"/","/homepage"})
     public String getCanteens(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
@@ -56,7 +56,7 @@ public class HomeController {
         List<Food> items_home = foodService.getRandomFood();
         model.addAttribute("items_home", items_home);
 
-        return "/homepage";
+        return "homepage";
     }
 
     @GetMapping("/canteen_contact")
@@ -66,7 +66,7 @@ public class HomeController {
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
 
-        return "/canteen_contact";
+        return "canteen_contact";
     }
 
 

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -144,26 +145,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllStaffByCanteenId(canteenId, pageable);
     }
 
-    @Override
-    public void updateUserRole(Integer userId, Integer roleId, Boolean isActive) {
-        User user = userRepository.findById(userId).orElse(null);
-        Role role = roleRepository.findById(roleId).orElse(null);
-
-        if (user != null && role != null) {
-            user.setRole(role);
-            user.setIsActive(isActive); // Di chuyển việc thiết lập isActive sau khi đã kiểm tra user và role không phải là null
-            userRepository.save(user); // Lưu user chỉ sau khi đã thực hiện các bước kiểm tra và thiết lập
-        }
-    }
-
 
     @Override
     public User getUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
 
+
+
     @Override
-    public void updateUserRoleAndCanteen(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
+    public void updateUserStatus(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
         user.setIsActive(isActive);
         if (canteenId != null) {
@@ -172,6 +163,7 @@ public class UserServiceImpl implements UserService {
         } else {
             user.setCanteen(null);
         }
+        user.setUpdatedDate(LocalDate.now());
         userRepository.save(user);
     }
 
@@ -179,6 +171,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreatedDate(LocalDate.now());
         userRepository.save(user);
     }
 
@@ -220,6 +213,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setEmail(user.getEmail());
             existingUser.setUserImage(user.getUserImage());
             existingUser.setGender(user.getGender());
+            existingUser.setUpdatedDate(LocalDate.now());
             userRepository.save(existingUser);
         }
     }
@@ -260,13 +254,7 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName())));
     }
 
-    public boolean checkEmailAndPassword(String email, String rawPassword) {
-        User user = findByEmail(email);
-        if (user == null) {
-            return false;
-        }
-        return passwordEncoder.matches(rawPassword, user.getPassword());
-    }
+
 }
 
 

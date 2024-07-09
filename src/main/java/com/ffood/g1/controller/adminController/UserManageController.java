@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,7 +34,7 @@ public class UserManageController {
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<User> userPage = userService.getAllUsers(page, size);
         model.addAttribute("userPage", userPage);
-        return "./admin-management/manage-user";
+        return "admin-management/manage-user";
     }
 
     @GetMapping("/search")
@@ -51,7 +52,7 @@ public class UserManageController {
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
 
-        return "./admin-management/manage-user";
+        return "admin-management/manage-user";
     }
 
 
@@ -61,18 +62,21 @@ public class UserManageController {
         List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
         model.addAttribute("user", user);
         model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
-        return "./admin-management/edit-user";
+        return "admin-management/edit-user";
     }
 
     @PostMapping("/edit-user")
-    public String editUserRole(@RequestParam("userId") Integer userId,
+    public String editUserStatus(@RequestParam("userId") Integer userId,
                                @RequestParam("isActive") Boolean isActive,
-                               @RequestParam(value = "canteenId", required = false) Integer canteenId) {
+                               @RequestParam(value = "canteenId", required = false) Integer canteenId,
+                               RedirectAttributes redirectAttributes) {
 
+        userService.updateUserStatus(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
+        redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
 
-        userService.updateUserRoleAndCanteen(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
-        return "redirect:/manage-user";
+        return "redirect:/edit-user/" + userId;
     }
+
 
     @GetMapping("/add-user")
     public String showAddForm(Model model) {
@@ -80,11 +84,11 @@ public class UserManageController {
         List<Canteen> canteens = canteenService.getAllCanteens(); // Lấy danh sách canteen
         model.addAttribute("user", user);
         model.addAttribute("canteens", canteens); // Truyền danh sách canteen đến view
-        return "./admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
+        return "admin-management/add-user"; // Đường dẫn tới template Thymeleaf để hiển thị form thêm người dùng
     }
 
     @PostMapping("/add-user")
-    public String addUser(@ModelAttribute("user") User user, Model model) {
+    public String addUser(@ModelAttribute("user") User user, Model model, RedirectAttributes redirectAttributes) {
         boolean hasErrors = false;
 
         if (userService.isEmailExist(user.getEmail())) {
@@ -105,15 +109,18 @@ public class UserManageController {
         if (hasErrors) {
             model.addAttribute("user", user);
             model.addAttribute("canteens", canteenService.getAllCanteens()); // Pass canteens to the model
-            return "./admin-management/add-user"; // Change to your actual form view name
+            return "admin-management/add-user"; // Change to your actual form view name
         }
 
         user.setRole(roleService.findRoleById(3)); // Thiết lập role_id = 3 cho Manager
-        user.setCreatedDate(LocalDate.now());
-
         userService.saveUser(user);
-        return "redirect:/manage-user";
+
+        redirectAttributes.addFlashAttribute("successMessage", "User added successfully");
+
+        return "redirect:/add-user";
     }
+
+
 
 
 }

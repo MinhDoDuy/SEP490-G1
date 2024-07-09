@@ -31,10 +31,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findOrderStats();
     }
 
-    @Override
-    public List<Object[]> getRevenueDataByDay() {
-        return orderRepository.findRevenueDataByDay();
-    }
 
     @Override
     public List<Object[]> getRevenueDataByMonth() {
@@ -47,8 +43,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Double calculateTotalRevenue() {
-        return orderRepository.findTotalRevenue();
+    public Double calculateTotalOrder() {
+        return orderRepository.findTotalOrder();
     }
 
 

@@ -28,7 +28,7 @@ public class ProfileCanteenController {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
-            return "./staff-management/edit-profile-canteen"; // Thymeleaf template name
+            return "staff-management/edit-profile-canteen"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "Canteen not found");
             return "error"; // Error page template
@@ -40,7 +40,7 @@ public class ProfileCanteenController {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
-            return "./staff-management/edit-profile-canteen"; // Thymeleaf template name
+            return "staff-management/edit-profile-canteen"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "Canteen not found");
             return "error"; // Error page template

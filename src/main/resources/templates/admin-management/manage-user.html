@@ -82,7 +82,7 @@
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                             Role
                         </th>
-                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                             Action
                         </th>
                     </tr>
@@ -101,8 +101,7 @@
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}" th:text="${user.role.roleName}">Role</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.role.roleId != 4}"></td>
                         <td class="py-2 px-4 border-b border-b-gray-50" >
-                            <a th:if="${user.role.roleId != 4}" th:href="@{/edit-user/{userId}(userId=${user.userId})}" class="btn btn-primary">
-
+                            <a th:if="${user.role.roleId != 4}" th:href="@{/edit-user/{userId}(userId=${user.userId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">
                                 Edit
                             </a>
                         </td>
