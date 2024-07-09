@@ -57,9 +57,9 @@ spring:
 aws:
   bucket:
     name: croakorder
+  region: us-east-1
   accessKey: AKIA3FLDYW6HEFNAXQBL
   secretKey: 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
-  region: us-east-1
 
 logging:
   level:
