@@ -26,6 +26,6 @@ public interface OrderService {
 
     List<Object[]> getRevenueDataByYear();
 
-    Double calculateTotalRevenue();
+    Double calculateTotalOrder();
     List<Order> getOrdersByUserIdAndStatus(Integer userId, OrderStatus status);
 }

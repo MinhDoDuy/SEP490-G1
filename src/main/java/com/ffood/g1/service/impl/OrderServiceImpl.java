@@ -43,8 +43,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Double calculateTotalRevenue() {
-        return orderRepository.findTotalRevenue();
+    public Double calculateTotalOrder() {
+        return orderRepository.findTotalOrder();
     }
 
 
