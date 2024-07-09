@@ -104,22 +104,15 @@ public class FoodManagementController {
     public String addFood(@ModelAttribute("food") Food food, BindingResult result, Model model,
                           @RequestParam("canteenId") Integer canteenId,
                           @RequestParam("imageFood") MultipartFile imageFood) {
-        if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
-            result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
-        }
-
-        if (food.getDescription().trim().startsWith(" ")) {
-            result.rejectValue("description", "error.food", "Description cannot start with a space.");
-        }
-
-
-        if (result.hasErrors()) {
-            model.addAttribute("categories", categoryService.getAllCategories());
-            model.addAttribute("canteenId", canteenId);
-            return "staff-management/add-food";
-        }
-
         try {
+            if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
+                result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
+            }
+
+            if (food.getDescription().trim().startsWith(" ")) {
+                result.rejectValue("description", "error.food", "Description cannot start with a space.");
+            }
+
             Canteen canteen = canteenService.getCanteenById(canteenId);
             food.setCanteen(canteen);
 
@@ -127,7 +120,6 @@ public class FoodManagementController {
                 String foodImageUrl = fileS3Service.uploadFile(imageFood);
                 food.setImageFood(foodImageUrl);
             }
-
             foodService.save(food);
         } catch (SpringBootFileUploadException | IOException e) {
             return "redirect:/manage-food?canteenId=" + canteenId + "&error=" + e.getMessage();
