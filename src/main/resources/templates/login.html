@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
-                        <p class="login-card-description">Sign into your account</p>
+                        <p class="login-card-description">Đăng nhập tài khoản của bạn</p>
                         <form th:action="@{/login}" method="post">
                             <div th:if="${successMessage}" class="alert alert-success">
                                 <span th:text="${successMessage}"></span>
@@ -45,11 +45,11 @@
                                     <input type="checkbox" id="remember-me" name="remember-me">
                                     <label for="remember-me">Remember me</label>
                                 </div>
-                                <a class="forgot-password-link" th:href="@{/forgot-password}">Forgot Password?</a>
+                                <a class="forgot-password-link" th:href="@{/forgot-password}">Quên mật khẩu?</a>
                             </div>
                             <div class="buttons mt-4">
-                                <button type="submit" class="btn btn-block login-btn mb-4">Login</button>
-                                <a th:href="@{/register}" type="button" class="btn btn-block signup-btn">Register</a>
+                                <button type="submit" class="btn btn-block login-btn mb-4">Đăng nhập</button>
+                                <a th:href="@{/register}" type="button" class="btn btn-block signup-btn">Đăng Ký</a>
                             </div>
                         </form>
                         <nav class="login-card-footer-nav">
