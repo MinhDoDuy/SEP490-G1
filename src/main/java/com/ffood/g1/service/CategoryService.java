@@ -16,5 +16,7 @@ public interface CategoryService {
     void saveCategory(Category category);
 
     Page<Food> getFoodByCategories(List<Integer> categoryIds, Pageable pageable);
+
+    boolean existsByCategoryName(String categoryName);
 }
 

@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -154,13 +155,6 @@ public class FoodManagementController {
             result.rejectValue("description", "error.food", "Description cannot start with a space.");
         }
 
-
-        if (result.hasErrors()) {
-            model.addAttribute("categories", categoryService.getAllCategories());
-            model.addAttribute("canteenId", canteenId);
-            return "staff-management/edit-food";
-        }
-
         try {
             Canteen canteen = canteenService.getCanteenById(canteenId);
             food.setCanteen(canteen);
@@ -176,6 +170,7 @@ public class FoodManagementController {
         }
         return "redirect:/manage-food?canteenId=" + canteenId + "&success=edit";
     }
+
 
     @GetMapping("/manage-category")
     public String manageCategory(Model model,
@@ -207,11 +202,33 @@ public class FoodManagementController {
     }
 
     @PostMapping("/add-category")
-    public String addCategory(@ModelAttribute("category") Category category,
+    public String addCategory(@Valid @ModelAttribute("category") Category category,
                               @RequestParam("canteenId") Integer canteenId, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("canteenId", canteenId);
+            return "./staff-management/add-category";
+        }
+
+        // Kiểm tra xem tên danh mục có rỗng hoặc bắt đầu bằng dấu cách không
+        if (category.getCategoryName().trim().isEmpty()) {
+            result.rejectValue("categoryName", "error.category", "Category name cannot start with a space");
+            model.addAttribute("canteenId", canteenId);
+            return "./staff-management/add-category";
+        }
+
+        // Kiểm tra xem tên danh mục đã tồn tại hay chưa
+        if (categoryService.existsByCategoryName(category.getCategoryName())) {
+            result.rejectValue("categoryName", "error.category", "Category name already exists");
+            model.addAttribute("canteenId", canteenId);
+            return "./staff-management/add-category";
+        }
+
         categoryService.saveCategory(category);
-        return "redirect:/manage-category?canteenId=" + canteenId  + "&success=add";
+        return "redirect:/manage-category?canteenId=" + canteenId + "&success=add";
     }
+
+
+
 
     @GetMapping("/edit-category/{categoryId}")
     public String showEditCategoryForm(@PathVariable("categoryId") Integer categoryId,

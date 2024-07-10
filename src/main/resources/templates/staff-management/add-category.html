@@ -92,11 +92,12 @@
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Add New Category</div>
             </div>
-            <form th:action="@{/add-category(canteenId=${canteenId})}" method="post" th:object="${category}">
+            <form th:action="@{/add-category(canteenId=${canteenId})}" method="post" th:object="${category}" onsubmit="return validateForm()">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
                 <div class="form-group">
                     <label for="categoryName" class="form-label">Category Name</label>
-                    <input type="text" id="categoryName" th:field="*{categoryName}" class="form-control">
+                    <input type="text" id="categoryName" th:field="*{categoryName}" class="form-control" onblur="capitalizeFirstLetter()" required>
+                    <div class="error-message" th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}"></div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Add Category</button>
