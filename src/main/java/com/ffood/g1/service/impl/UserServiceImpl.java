@@ -140,6 +140,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<User> searchUsersFilter(String keyword, Integer roleId, Integer canteenId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.searchUsers(keyword, roleId, canteenId, pageable);
+    }
+
+    @Override
     public Page<User> getAllStaff(int page, int size, Integer canteenId) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAllStaffByCanteenId(canteenId, pageable);

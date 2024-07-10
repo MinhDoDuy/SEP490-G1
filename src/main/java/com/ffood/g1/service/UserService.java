@@ -41,6 +41,7 @@ public interface UserService extends UserDetailsService {
 
     //search user
     Page<User> searchUsers(String keyword, int page, int size);
+    Page<User> searchUsersFilter(String keyword, Integer roleId, Integer canteenId, int page, int size);
 
 
     User getUserById(Integer userId);

@@ -34,6 +34,8 @@ public class UserManageController {
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<User> userPage = userService.getAllUsers(page, size);
         model.addAttribute("userPage", userPage);
+        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("canteens", canteenService.getAllCanteens());
         return "admin-management/manage-user";
     }
 
@@ -41,16 +43,23 @@ public class UserManageController {
     public String searchUsers(Model model,
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size,
-                              @RequestParam(value = "keyword", required = false) String keyword) {
+                              @RequestParam(value = "keyword", required = false) String keyword,
+                              @RequestParam(value = "role", required = false) Integer roleId,
+                              @RequestParam(value = "canteen", required = false) Integer canteenId) {
         Page<User> userPage;
 
-        if (keyword == null || keyword.isEmpty()) {
+        if ((keyword == null || keyword.isEmpty()) && roleId == null && canteenId == null) {
             userPage = userService.getAllUsers(page, size);
         } else {
-            userPage = userService.searchUsers(keyword, page, size);
+            userPage = userService.searchUsersFilter(keyword, roleId, canteenId, page, size);
         }
+
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("roleId", roleId);
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("canteens", canteenService.getAllCanteens());
 
         return "admin-management/manage-user";
     }
