@@ -6,6 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <style>
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #snackbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+    </style>
 </head>
 <body class="text-gray-800 font-inter">
 
@@ -30,8 +73,8 @@
     </div>
 
     <div class="p-6">
-        <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
-        <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+        <div th:if="${successMessage}" class="hidden" th:text="${successMessage}" id="successMessage"></div>
+        <div th:if="${errorMessage}" class="hidden" th:text="${errorMessage}" id="errorMessage"></div>
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Manage Categories</div>
@@ -55,8 +98,8 @@
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <a th:href="@{/edit-category/{categoryId}(categoryId=${category.categoryId}, canteenId=${canteenId})}" class="btn btn-primary"
                                style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Edit</a>
-<!--                            <a th:href="@{/delete-category/{categoryId}(categoryId=${category.id})}" class="btn btn-danger"-->
-<!--                               style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Delete</a>-->
+                            <a th:href="@{/delete-category/{categoryId}(categoryId=${category.categoryId}, canteenId=${canteenId})}" class="btn btn-danger"
+                               style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Delete</a>
                         </td>
                     </tr>
                     </tbody>
@@ -64,11 +107,33 @@
             </div>
         </div>
     </div>
+
+    <!-- Snackbar / Toast -->
+    <div id="snackbar">Some text some message..</div>
 </main>
 <!-- end: Main -->
 
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+    function myFunction(message) {
+        var x = document.getElementById("snackbar");
+        x.textContent = message;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    window.onload = function() {
+        var successMessageElement = document.getElementById("successMessage");
+        var errorMessageElement = document.getElementById("errorMessage");
+
+        if (successMessageElement && successMessageElement.textContent.trim() !== "") {
+            myFunction(successMessageElement.textContent);
+        } else if (errorMessageElement && errorMessageElement.textContent.trim() !== "") {
+            myFunction(errorMessageElement.textContent);
+        }
+    }
+</script>
 </body>
 </html>

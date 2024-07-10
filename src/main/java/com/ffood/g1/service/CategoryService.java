@@ -18,5 +18,7 @@ public interface CategoryService {
     Page<Food> getFoodByCategories(List<Integer> categoryIds, Pageable pageable);
 
     boolean existsByCategoryName(String categoryName);
+
+    void deleteCategoryById(Integer categoryId);
 }
 

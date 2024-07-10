@@ -47,7 +47,7 @@
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Food Name</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Description</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Price</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Sales Count</th>
+<!--            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Sales Count</th>-->
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Image</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
           </tr>
@@ -59,15 +59,15 @@
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Food Name</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.description}">Description</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.price}">100.0</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.salesCount}">50</td>
+<!--            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.salesCount}">50</td>-->
             <td class="py-2 px-4 border-b border-b-gray-50">
               <img th:src="@{${food.imageFood}}" alt="Food Image" width="50"/>
             </td>
             <td class="py-2 px-4 border-b border-b-gray-50">
               <a th:href="@{/edit-food/{foodId}(foodId=${food.foodId})}" class="btn btn-primary"
                  style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Edit</a>
-              <a th:href="@{/delete-food/{foodId}(foodId=${food.foodId})}" class="btn btn-danger"
-                 style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Delete</a>
+<!--              <a th:href="@{/delete-food/{foodId}(foodId=${food.foodId})}" class="btn btn-danger"-->
+<!--                 style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Delete</a>-->
             </td>
           </tr>
           </tbody>

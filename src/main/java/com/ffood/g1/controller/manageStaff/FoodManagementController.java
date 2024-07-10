@@ -108,10 +108,16 @@ public class FoodManagementController {
         try {
             if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
                 result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
+                model.addAttribute("message", "Food name cannot be empty or start with a space.");
+                model.addAttribute("messageType", "error");
+                return "staff-management/add-food";
             }
 
             if (food.getDescription().trim().startsWith(" ")) {
                 result.rejectValue("description", "error.food", "Description cannot start with a space.");
+                model.addAttribute("message", "Description cannot start with a space.");
+                model.addAttribute("messageType", "error");
+                return "staff-management/add-food";
             }
 
             Canteen canteen = canteenService.getCanteenById(canteenId);
@@ -122,11 +128,17 @@ public class FoodManagementController {
                 food.setImageFood(foodImageUrl);
             }
             foodService.save(food);
+            model.addAttribute("message", "Food added successfully!");
+            model.addAttribute("messageType", "success");
         } catch (SpringBootFileUploadException | IOException e) {
-            return "redirect:/manage-food?canteenId=" + canteenId + "&error=" + e.getMessage();
+            model.addAttribute("message", "Error: " + e.getMessage());
+            model.addAttribute("messageType", "error");
+            return "staff-management/add-food";
         }
         return "redirect:/manage-food?canteenId=" + canteenId + "&success=add";
     }
+
+
 
     @GetMapping("/edit-food/{foodId}")
     public String showEditFoodForm(@PathVariable("foodId") Integer foodId, Model model) {
@@ -147,6 +159,7 @@ public class FoodManagementController {
     public String editFood(@ModelAttribute("food") Food food, BindingResult result, Model model,
                            @RequestParam("canteenId") Integer canteenId,
                            @RequestParam("imageFood") MultipartFile imageFood) {
+        Optional<Food> existingFood = foodService.getFoodById(food.getFoodId());
         if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
             result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
         }
@@ -162,6 +175,14 @@ public class FoodManagementController {
             if (!imageFood.isEmpty()) {
                 String foodImageUrl = fileS3Service.uploadFile(imageFood);
                 food.setImageFood(foodImageUrl);
+            }
+            // Check if a new image is uploaded
+            if (imageFood != null && !imageFood.isEmpty()) {
+                String foodImageUrl = fileS3Service.uploadFile(imageFood);
+                food.setImageFood(foodImageUrl);
+            } else {
+                // Retain the existing image if no new image is uploaded
+                food.setImageFood(existingFood.get().getImageFood());
             }
 
             foodService.save(food);
@@ -185,6 +206,8 @@ public class FoodManagementController {
             model.addAttribute("successMessage", "Category added successfully!");
         } else if ("edit".equals(success)) {
             model.addAttribute("successMessage", "Category edited successfully!");
+        } else if ("delete".equals(success)) {
+            model.addAttribute("successMessage", "Category deleted successfully!");
         }
 
         if (error != null) {
@@ -244,6 +267,17 @@ public class FoodManagementController {
                                @RequestParam("canteenId") Integer canteenId, Model model) {
         categoryService.saveCategory(category);
         return "redirect:/manage-category?canteenId=" + canteenId + "&success=edit";
+    }
+
+    @GetMapping("/delete-category/{categoryId}")
+    public String deleteCategory(@PathVariable("categoryId") Integer categoryId,
+                                 @RequestParam("canteenId") Integer canteenId, Model model) {
+        try {
+            categoryService.deleteCategoryById(categoryId);
+            return "redirect:/manage-category?canteenId=" + canteenId + "&success=delete";
+        } catch (Exception e) {
+            return "redirect:/manage-category?canteenId=" + canteenId + "&error=Unable to delete category";
+        }
     }
 
 }

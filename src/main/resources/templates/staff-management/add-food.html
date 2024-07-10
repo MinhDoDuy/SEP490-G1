@@ -46,6 +46,11 @@
             font-size: 12px;
         }
 
+        .success-message {
+            color: green;
+            font-size: 12px;
+        }
+
         button[type="submit"] {
             background: linear-gradient(90deg, #007bff, #0056b3);
             color: white;
@@ -101,6 +106,11 @@
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Add Food for Canteen: <span th:text="${canteenName}"></span></div>
             </div>
+
+            <div th:if="${message}" th:classappend="${messageType == 'error'} ? 'error-message' : 'success-message'">
+                <span th:text="${message}"></span>
+            </div>
+
             <form th:action="@{/add-food}" method="post" th:object="${food}" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
 
@@ -113,14 +123,14 @@
 
                 <div class="form-group">
                     <label for="foodName" class="form-label">Food Name</label>
-                    <input type="text" id="foodName" th:field="*{foodName}" class="form-control" oninput="capitalizeWords(this)">
-                    <div class="error-message" id="foodNameError"></div>
+                    <input type="text" id="foodName" th:field="*{foodName}" class="form-control" oninput="capitalizeWords(this)" required>
+                    <div class="error-message" th:errors="*{foodName}"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="form-label">Description</label>
                     <textarea id="description" th:field="*{description}" class="form-control" rows="4" oninput="capitalizeWords(this)"></textarea>
-                    <div class="error-message" id="descriptionError"></div>
+                    <div class="error-message" th:errors="*{description}"></div>
                 </div>
 
                 <div class="form-group">
