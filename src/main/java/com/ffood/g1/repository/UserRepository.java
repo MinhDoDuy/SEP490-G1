@@ -33,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 			"AND (:canteenId IS NULL OR u.canteen.id = :canteenId)")
 	Page<User> searchUsers(String keyword, Integer roleId, Integer canteenId, Pageable pageable);
 
-	List<User> findByRoleRoleId(Integer role_id);
+
 
 
 

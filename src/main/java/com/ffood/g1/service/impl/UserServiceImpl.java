@@ -132,12 +132,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable);
     }
 
-    @Override
-    //ROLE_ADMIN tìm kiếm người dùng thông quan fullname, codeName , Email
-    public Page<User> searchUsers(String keyword, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
-    }
+
 
     @Override
     public Page<User> searchUsersFilter(String keyword, Integer roleId, Integer canteenId, int page, int size) {
@@ -181,10 +176,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public List<User> getAllManagers() {
-        return userRepository.findByRoleRoleId(3);
-    }
+
 
     @Override
     public Integer countUsers() {
@@ -245,10 +237,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public void saveUserWithDefaultRole(User user) {
-        // Implement save user logic if needed
-    }
 
 
     @Override

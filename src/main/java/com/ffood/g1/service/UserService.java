@@ -23,7 +23,6 @@ public interface UserService extends UserDetailsService {
 
     void registerNewUser(User user);
 
-    void saveUserWithDefaultRole(User user);
 
     boolean isCodeNameExist(String codeName);
 
@@ -35,12 +34,10 @@ public interface UserService extends UserDetailsService {
     //change pass
     void updatePassword(User user, String newPassword);
 
-
     //List người dùng cho admin đã có phân trang
     Page<User>  getAllUsers(int page, int size);
 
     //search user
-    Page<User> searchUsers(String keyword, int page, int size);
     Page<User> searchUsersFilter(String keyword, Integer roleId, Integer canteenId, int page, int size);
 
 
@@ -50,7 +47,6 @@ public interface UserService extends UserDetailsService {
     
     void saveUser(User user);
 
-    List<User> getAllManagers();
 
     Integer countUsers();
 
