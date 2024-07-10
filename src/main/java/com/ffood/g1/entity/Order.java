@@ -2,6 +2,7 @@ package com.ffood.g1.entity;
 
 import com.ffood.g1.converter.OrderStatusConverter;
 import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 import lombok.*;
@@ -35,8 +36,8 @@ public class Order {
     private LocalDateTime orderDate;
 
     @Convert(converter = OrderStatusConverter.class)
-    @Column(name = "status")
-    private OrderStatus status;
+    @Column(name = "payment_status")
+    private PaymentStatus paymentStatus;
 
     @Column(name = "order_address")
     private String orderAddress;
@@ -52,10 +53,14 @@ public class Order {
     private PaymentMethod paymentMethod;
 
 
+
     @Enumerated(EnumType.STRING)
     @Column(name = "order_type", nullable = false)
     private OrderType orderType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<OrderDetail> orderDetails = new ArrayList<>();

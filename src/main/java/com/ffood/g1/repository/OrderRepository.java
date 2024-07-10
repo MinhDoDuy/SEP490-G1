@@ -1,7 +1,7 @@
 package com.ffood.g1.repository;
 
 import com.ffood.g1.entity.Order;
-import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,14 +13,14 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT f.foodName, SUM(od.quantity) " +
             "FROM Order o JOIN o.orderDetails od JOIN od.food f " +
-            "WHERE o.status = 'PAYMENT_COMPLETE' " +
+            "WHERE o.paymentStatus = 'PAYMENT_COMPLETE' " +
             "GROUP BY f.foodName " +
             "ORDER BY SUM(od.quantity) DESC")
     List<Object[]> findBestSellingItems();
 
     @Query("SELECT c.canteenName, COUNT(o.orderId) " +
             "FROM Order o JOIN o.orderDetails od JOIN od.food f JOIN f.canteen c " +
-            "WHERE o.status = 'PAYMENT_COMPLETE' " +
+            "WHERE o.paymentStatus = 'PAYMENT_COMPLETE' " +
             "GROUP BY c.canteenName " +
             "ORDER BY COUNT(o.orderId) DESC")
     List<Object[]> findOrderStats();
@@ -28,20 +28,20 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM'), SUM(CAST(od.price * od.quantity AS double)) " +
             "FROM Order o JOIN o.orderDetails od " +
-            "WHERE o.status = 'PAYMENT_COMPLETE' " +
+            "WHERE o.paymentStatus = 'PAYMENT_COMPLETE' " +
             "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM') " +
             "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM')")
     List<Object[]> findRevenueDataByMonth();
 
     @Query("SELECT TO_CHAR(o.orderDate, 'YYYY'), SUM(CAST(od.price * od.quantity AS double)) " +
             "FROM Order o JOIN o.orderDetails od " +
-            "WHERE o.status = 'PAYMENT_COMPLETE' " +
+            "WHERE o.paymentStatus = 'PAYMENT_COMPLETE' " +
             "GROUP BY TO_CHAR(o.orderDate, 'YYYY') " +
             "ORDER BY TO_CHAR(o.orderDate, 'YYYY')")
     List<Object[]> findRevenueDataByYear();
 
 
-    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = 'PAYMENT_COMPLETE'")
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.paymentStatus = 'PAYMENT_COMPLETE'")
     Double findTotalOrder();
-    List<Order> findByUserUserIdAndStatus(Integer userId, OrderStatus status);
+    List<Order> findByUserUserIdAndPaymentStatus(Integer userId, PaymentStatus paymentStatus);
 }

@@ -4,7 +4,7 @@ import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.User;
-import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class OrderController {
@@ -90,9 +89,9 @@ public class OrderController {
                 Integer cartId = cartService.findCartIdByUserId(user.getUserId());
                 int totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
                 if (paymentMethod.equals(PaymentMethod.CASH)) {
-                    OrderStatus orderStatus = OrderStatus.PENDING_PAYMENT;
+                    PaymentStatus paymentStatus = PaymentStatus.PENDING_PAYMENT;
                     String orderCode=RandomOrderCodeGenerator.generateOrderCode();
-                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus,orderCode);
+                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, paymentStatus,orderCode);
                     cart.setStatus("deactive");
                     order = orderRepository.save(order);
                     model.addAttribute("order", order);
@@ -100,9 +99,9 @@ public class OrderController {
                     cartService.clearCart(cart);
 
                 }else if(paymentMethod.equals(PaymentMethod.VNPAY)) {
-                    OrderStatus orderStatus = OrderStatus.PAYMENT_COMPLETE;
+                    PaymentStatus paymentStatus = PaymentStatus.PAYMENT_COMPLETE;
                     String orderCode=RandomOrderCodeGenerator.generateOrderCode();
-                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, orderStatus,orderCode);
+                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, paymentStatus,orderCode);
                     session.setAttribute("order", order);
                     model.addAttribute("order", order);
                     return "order/create-order";
@@ -133,7 +132,7 @@ public class OrderController {
             User user = userService.findByEmail(email);
 
             Integer userId = user.getUserId();
-            OrderStatus status=OrderStatus.PENDING_PAYMENT;
+            PaymentStatus status= PaymentStatus.PENDING_PAYMENT;
 //            OrderStatus orderStatus = OrderStatus.valueOf(status);
             List<Order> orders = orderService.getOrdersByUserIdAndStatus(userId, status);
             model.addAttribute("orders", orders);

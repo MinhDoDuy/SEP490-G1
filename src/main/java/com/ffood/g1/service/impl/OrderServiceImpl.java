@@ -2,15 +2,11 @@ package com.ffood.g1.service.impl;
 
 import com.ffood.g1.entity.*;
 import com.ffood.g1.enum_pay.OrderStatus;
-import com.ffood.g1.enum_pay.OrderType;
-import com.ffood.g1.enum_pay.PaymentMethod;
-import com.ffood.g1.entity.*;
-import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
-import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,17 +44,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    public Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, OrderStatus orderStatus, String orderCode) {
+    public Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, PaymentStatus paymentStatus, String orderCode) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus(orderStatus);
+        order.setPaymentStatus(paymentStatus);
         order.setOrderAddress(address);
         order.setTotalOrderPrice(totalOrderPrice);
         order.setNote(note);
         order.setOrderType(orderType);
         order.setPaymentMethod(paymentMethod);
         order.setOrderCode(orderCode);
+        order.setOrderStatus(OrderStatus.READY);
 
 
 //        // Lưu Order trước để lấy ID
@@ -95,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
 
 
 
-    public List<Order> getOrdersByUserIdAndStatus(Integer userId, OrderStatus status) {
-        return orderRepository.findByUserUserIdAndStatus(userId, status);
+    public List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus paymentStatus) {
+        return orderRepository.findByUserUserIdAndPaymentStatus(userId, paymentStatus);
     }
 }
