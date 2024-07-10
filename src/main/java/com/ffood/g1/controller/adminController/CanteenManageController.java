@@ -63,13 +63,30 @@ public class CanteenManageController {
                              RedirectAttributes redirectAttributes) throws IOException, SpringBootFileUploadException {
         boolean hasErrors = false;
 
-        if (canteenService.isPhoneExist(canteen.getCanteenPhone())) {
+        // Kiểm tra các trường không được rỗng
+        if (canteen.getCanteenName() == null || canteen.getCanteenName().isEmpty()) {
+            model.addAttribute("canteenNameError", "Canteen name cannot be empty.");
+            hasErrors = true;
+        } else if (canteenService.isCanteenNameExist(canteen.getCanteenName())) {
+            model.addAttribute("canteenNameError", "Canteen name already exists.");
+            hasErrors = true;
+        }
+
+        if (canteen.getCanteenPhone() == null || canteen.getCanteenPhone().isEmpty()) {
+            model.addAttribute("phoneError", "Phone number cannot be empty.");
+            hasErrors = true;
+        } else if (canteenService.isPhoneExist(canteen.getCanteenPhone())) {
             model.addAttribute("phoneError", "Phone number already exists.");
             hasErrors = true;
         }
 
-        if (canteenService.isCanteenNameExist(canteen.getCanteenName())) {
-            model.addAttribute("canteenNameError", "Canteen name already exists.");
+        if (canteen.getLocation() == null || canteen.getLocation().isEmpty()) {
+            model.addAttribute("locationError", "Location cannot be empty.");
+            hasErrors = true;
+        }
+
+        if (canteen.getOpeningHours() == null || canteen.getOpeningHours().isEmpty()) {
+            model.addAttribute("openingHoursError", "Opening hours cannot be empty.");
             hasErrors = true;
         }
 

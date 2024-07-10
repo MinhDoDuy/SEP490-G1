@@ -139,21 +139,22 @@
                 <form th:action="@{/add-user}" th:object="${user}" method="post">
                     <div class="form-group">
                         <label for="fullName">Full Name:</label>
-                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control" />
+                        <input type="text" id="fullName" th:field="*{fullName}" required class="form-control" />
+                        <div th:if="${fullName}" th:text="${fullName}" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="codeName">Code Name:</label>
-                        <input type="text" id="codeName" th:field="*{codeName}" class="form-control" />
+                        <input type="text" id="codeName" th:field="*{codeName}" required class="form-control" />
                         <div th:if="${codeNameError}" th:text="${codeNameError}" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" th:field="*{email}" class="form-control" />
+                        <input type="email" id="email" th:field="*{email}" required class="form-control" />
                         <div th:if="${emailError}" th:text="${emailError}" class="error-message"></div>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone:</label>
-                        <input type="text" id="phone" th:field="*{phone}" class="form-control" />
+                        <input type="text" id="phone" th:field="*{phone}" required class="form-control" />
                         <div th:if="${phoneError}" th:text="${phoneError}" class="error-message"></div>
                     </div>
                     <div class="form-group">
@@ -165,13 +166,14 @@
                     </div>
                     <div class="form-group">
                         <label for="canteen">Canteen:</label>
-                        <select id="canteen" th:field="*{canteen.canteenId}" class="form-control">
+                        <select id="canteen" th:field="*{canteen.canteenId}" required class="form-control">
                             <option th:each="canteen : ${canteens}" th:value="${canteen.canteenId}" th:text="${canteen.canteenName}"></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="password">Password:</label>
-                        <input type="password" id="password" th:field="*{password}" class="form-control" />
+                        <input type="password" id="password" th:field="*{password}" required class="form-control" />
+                        <div th:if="${password}" th:text="${password}" class="error-message"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>

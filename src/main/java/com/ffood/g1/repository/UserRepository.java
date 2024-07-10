@@ -29,8 +29,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 			"(LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
 			"OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
 			"OR LOWER(u.codeName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-			"AND (:roleId IS NULL OR u.role.id = :roleId) " +
-			"AND (:canteenId IS NULL OR u.canteen.id = :canteenId)")
+			"AND (:roleId IS NULL OR u.role.roleId = :roleId) " +
+			"AND (:canteenId IS NULL OR u.canteen.canteenId = :canteenId)")
 	Page<User> searchUsers(String keyword, Integer roleId, Integer canteenId, Pageable pageable);
 
 

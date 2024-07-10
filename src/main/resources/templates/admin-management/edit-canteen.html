@@ -143,11 +143,11 @@
           </div>
           <div class="form-group">
             <label for="location">Location:</label>
-            <input type="text" id="location" th:field="*{location}" class="form-control" />
+            <input type="text" id="location" th:field="*{location}" required class="form-control"/>
           </div>
           <div class="form-group">
             <label for="canteenPhone">Phone:</label>
-            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" class="form-control" />
+            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" required class="form-control"/>
             <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
           </div>
           <div class="form-group">
