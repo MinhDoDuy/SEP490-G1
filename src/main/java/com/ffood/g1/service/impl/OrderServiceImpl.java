@@ -95,4 +95,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus paymentStatus) {
         return orderRepository.findByUserUserIdAndPaymentStatus(userId, paymentStatus);
     }
+
+    @Override
+    public List<Order> getOrdersByCanteen(Integer canteenId) {
+        return orderRepository.findOrdersByCanteenId(canteenId);
+    }
 }

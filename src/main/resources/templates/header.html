@@ -107,7 +107,9 @@
                                     <a th:href="@{/canteen/edit-profile-canteen/{canteenId}(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Edit Canteen</a>
                                     <a th:href="@{/manage-food(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Manage Food</a>
                                 </div>
-
+                                <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_STAFF'}">
+                                    <a th:href="@{/order-list/{canteenId}(canteenId=${user.canteen.canteenId})}" class="dropdown-item">Order List</a>
+                                </div>
 
                                 <a th:href="@{/logout}" class="dropdown-item">Đăng Xuất</a>
                             </div>

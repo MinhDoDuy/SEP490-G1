@@ -29,4 +29,6 @@ public interface OrderService {
 
     Double calculateTotalOrder();
     List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus status);
+
+    List<Order> getOrdersByCanteen(Integer canteenId);
 }
