@@ -47,7 +47,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     Double findTotalOrder();
     List<Order> findByUserUserIdAndPaymentStatus(Integer userId, PaymentStatus paymentStatus);
 
-    @Query("SELECT o FROM Order o " +
+    @Query("SELECT DISTINCT o FROM Order o " +
             "JOIN o.user u " +
             "JOIN o.orderDetails od " +
             "JOIN od.food f " +
