@@ -84,8 +84,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/add-food-form", "/add-food-form/**",
                         "/add-food", "/add-food/**")
                 .hasRole("MANAGER")
-                .antMatchers("/order-list","/order-list/**")
+                .antMatchers()
                 .hasRole("STAFF")
+                .antMatchers("/order-list","/order-list/**").hasAnyRole("STAFF", "MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

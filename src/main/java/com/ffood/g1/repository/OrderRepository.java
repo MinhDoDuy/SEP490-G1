@@ -1,6 +1,7 @@
 package com.ffood.g1.repository;
 
 import com.ffood.g1.entity.Order;
+import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -50,6 +51,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "JOIN o.user u " +
             "JOIN o.orderDetails od " +
             "JOIN od.food f " +
-            "WHERE f.canteen.canteenId = :canteenId")
-    List<Order> findOrdersByCanteenId(@Param("canteenId") Integer canteenId);
+            "WHERE f.canteen.canteenId = :canteenId " +
+            "AND o.orderStatus IN :statuses " +
+            "ORDER BY o.orderDate DESC")
+    List<Order> findOrdersByCanteenIdAndStatuses(@Param("canteenId") Integer canteenId, @Param("statuses") List<OrderStatus> statuses);
+
 }

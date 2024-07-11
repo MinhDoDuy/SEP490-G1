@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -97,7 +99,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrdersByCanteen(Integer canteenId) {
-        return orderRepository.findOrdersByCanteenId(canteenId);
+    public List<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses) {
+        return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses);
     }
+
+
 }
