@@ -90,10 +90,13 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-
-
-
     public List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus paymentStatus) {
         return orderRepository.findByUserUserIdAndPaymentStatus(userId, paymentStatus);
     }
+
+    @Override
+    public List<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses) {
+        return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses);
+    }
+
 }

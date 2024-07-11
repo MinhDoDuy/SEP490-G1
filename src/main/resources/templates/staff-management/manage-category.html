@@ -68,7 +68,7 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Manage Category</li>
+            <li class="text-gray-600 mr-2 font-medium">Quản Lý Sản Phẩm</li>
         </ul>
     </div>
 
@@ -77,18 +77,18 @@
         <div th:if="${errorMessage}" class="hidden" th:text="${errorMessage}" id="errorMessage"></div>
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Manage Categories</div>
+                <div class="font-medium">Quản Lý Sản Phẩm</div>
                 <a th:href="@{/add-category-form(canteenId=${canteenId})}" class="btn btn-primary"
-                   style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Add New Category</a>
+                   style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Thêm Sản Phẩm</a>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[540px]">
                     <thead>
                     <tr>
-                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Index</th>
-                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Category Name</th>
-                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">ID</th>
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên Sản Phẩm</th>
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Hành Động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -97,9 +97,9 @@
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${category.categoryName}">Category Name</td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <a th:href="@{/edit-category/{categoryId}(categoryId=${category.categoryId}, canteenId=${canteenId})}" class="btn btn-primary"
-                               style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Edit</a>
+                               style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Sửa</a>
                             <a th:href="@{/delete-category/{categoryId}(categoryId=${category.categoryId}, canteenId=${canteenId})}" class="btn btn-danger"
-                               style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Delete</a>
+                               style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 2px;">Xóa</a>
                         </td>
                     </tr>
                     </tbody>

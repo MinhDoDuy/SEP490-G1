@@ -43,7 +43,7 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Canteen Settings</li>
+            <li class="text-gray-600 mr-2 font-medium">Canteen</li>
         </ul>
     </div>
 
@@ -52,7 +52,7 @@
         <div th:if="${errorMessage}" class="hidden" th:text="${errorMessage}" id="errorMessage"></div>
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Edit Canteen</div>
+                <div class="font-medium">Cài Đặt Canteen</div>
             </div>
 
             <div class="flex justify-between items-center mb-4">
@@ -65,7 +65,7 @@
                              style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
                         <div class="media-body ml-4">
                             <label class="btn btn-outline-primary">
-                                Upload new photo
+                                Thay Đổi Ảnh
                                 <input type="file" id="image-upload" class="account-settings-fileinput"
                                        accept="image/*, .png, .jpg, .jpeg" name="imageProfileInput"
                                        onchange="onChangeFileTrigger()">
@@ -74,26 +74,26 @@
                         </div>
                     </div>
                     <div class="form-group mb-4">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">Tên</label>
                         <input type="text" class="form-control" th:field="*{canteenName}">
                     </div>
                     <div class="form-group mb-4">
-                        <label class="form-label">Location</label>
+                        <label class="form-label">Vị Trí</label>
                         <input type="text" class="form-control" th:field="*{location}">
                     </div>
                     <div class="form-group mb-4">
-                        <label class="form-label">Phone</label>
+                        <label class="form-label">Số Điện Thoại</label>
                         <input type="text" class="form-control" th:field="*{canteenPhone}">
                     </div>
                     <div class="form-group mb-4">
-                        <label class="form-label">Opening Hours</label>
+                        <label class="form-label">Giờ Mở Cửa</label>
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="openingHoursStart">Start</label>
+                                <label for="openingHoursStart">Bắt Đầu</label>
                                 <select id="openingHoursStart" class="form-control"></select>
                             </div>
                             <div class="col-md-6">
-                                <label for="openingHoursEnd">End</label>
+                                <label for="openingHoursEnd">Kết Thúc</label>
                                 <select id="openingHoursEnd" class="form-control"></select>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                         <div id="error-message" class="text-danger mt-2"></div>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="isActive">Status:</label>
+                        <label for="isActive">Hành Động:</label>
                         <select id="isActive" name="isActive" class="form-control">
                             <option th:value="true" th:text="'Active'"
                                     th:selected="${canteen.isActive} == true"></option>
@@ -110,8 +110,8 @@
                         </select>
                     </div>
                     <div class="text-right mt-3">
-                        <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
-                        <button type="button" class="btn btn-default" onclick="window.history.back();">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>&nbsp;
+                        <button type="button" class="btn btn-default" onclick="window.history.back();">Hủy</button>
                     </div>
                 </form>
             </div>

@@ -28,7 +28,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	List<User> findByRoleRoleId(Integer role_id);
 
 
-
 	@Query("SELECT u FROM User u WHERE u.canteen.canteenId = :canteenId AND u.role.roleId = 2")
 	Page<User> findAllStaffByCanteenId(@Param("canteenId") Integer canteenId, Pageable pageable);
 
@@ -36,5 +35,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Page<User> findAllByRoleName(@Param("roleName") String roleName, Pageable pageable);
 
 
-
+	@Query("SELECT u FROM User u WHERE " +
+			"(LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+			"OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+			"OR LOWER(u.codeName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+			"AND (:roleId IS NULL OR u.role.roleId = :roleId) " +
+			"AND (:canteenId IS NULL OR u.canteen.canteenId = :canteenId)")
+	Page<User> searchUsers(String keyword, Integer roleId, Integer canteenId, Pageable pageable);
 }

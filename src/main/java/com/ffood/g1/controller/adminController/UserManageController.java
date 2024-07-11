@@ -34,6 +34,8 @@ public class UserManageController {
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<User> userPage = userService.getAllUsers(page, size);
         model.addAttribute("userPage", userPage);
+        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("canteens", canteenService.getAllCanteens());
         return "admin-management/manage-user";
     }
 
@@ -41,16 +43,23 @@ public class UserManageController {
     public String searchUsers(Model model,
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size,
-                              @RequestParam(value = "keyword", required = false) String keyword) {
+                              @RequestParam(value = "keyword", required = false) String keyword,
+                              @RequestParam(value = "role", required = false) Integer roleId,
+                              @RequestParam(value = "canteen", required = false) Integer canteenId) {
         Page<User> userPage;
 
-        if (keyword == null || keyword.isEmpty()) {
+        if ((keyword == null || keyword.isEmpty()) && roleId == null && canteenId == null) {
             userPage = userService.getAllUsers(page, size);
         } else {
-            userPage = userService.searchUsers(keyword, page, size);
+            userPage = userService.searchUsersFilter(keyword, roleId, canteenId, page, size);
         }
+
         model.addAttribute("userPage", userPage);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("roleId", roleId);
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("canteens", canteenService.getAllCanteens());
 
         return "admin-management/manage-user";
     }
@@ -67,9 +76,9 @@ public class UserManageController {
 
     @PostMapping("/edit-user")
     public String editUserStatus(@RequestParam("userId") Integer userId,
-                               @RequestParam("isActive") Boolean isActive,
-                               @RequestParam(value = "canteenId", required = false) Integer canteenId,
-                               RedirectAttributes redirectAttributes) {
+                                 @RequestParam("isActive") Boolean isActive,
+                                 @RequestParam(value = "canteenId", required = false) Integer canteenId,
+                                 RedirectAttributes redirectAttributes) {
 
         userService.updateUserStatus(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
         redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
@@ -91,18 +100,38 @@ public class UserManageController {
     public String addUser(@ModelAttribute("user") User user, Model model, RedirectAttributes redirectAttributes) {
         boolean hasErrors = false;
 
-        if (userService.isEmailExist(user.getEmail())) {
+        // Kiểm tra các trường không được rỗng
+        if (user.getFullName() == null || user.getFullName().isEmpty()) {
+            model.addAttribute("fullNameError", "Full Name cannot be empty.");
+            hasErrors = true;
+        }
+
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            model.addAttribute("emailError", "Email cannot be empty.");
+            hasErrors = true;
+        } else if (userService.isEmailExist(user.getEmail())) {
             model.addAttribute("emailError", "Email already exists.");
             hasErrors = true;
         }
 
-        if (userService.isCodeNameExist(user.getCodeName())) {
+        if (user.getCodeName() == null || user.getCodeName().isEmpty()) {
+            model.addAttribute("codeNameError", "Code Name cannot be empty.");
+            hasErrors = true;
+        } else if (userService.isCodeNameExist(user.getCodeName())) {
             model.addAttribute("codeNameError", "Code Name already exists.");
             hasErrors = true;
         }
 
-        if (userService.isPhoneExist(user.getPhone())) {
+        if (user.getPhone() == null || user.getPhone().isEmpty()) {
+            model.addAttribute("phoneError", "Phone cannot be empty.");
+            hasErrors = true;
+        } else if (userService.isPhoneExist(user.getPhone())) {
             model.addAttribute("phoneError", "Phone already exists.");
+            hasErrors = true;
+        }
+
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            model.addAttribute("passwordError", "Password cannot be empty.");
             hasErrors = true;
         }
 
@@ -119,6 +148,7 @@ public class UserManageController {
 
         return "redirect:/add-user";
     }
+
 
 
 

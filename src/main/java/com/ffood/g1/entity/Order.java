@@ -52,7 +52,6 @@ public class Order {
     @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "order_type", nullable = false)
     private OrderType orderType;

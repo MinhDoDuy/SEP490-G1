@@ -70,9 +70,9 @@ public class FoodManagementController {
             model.addAttribute("canteenId", canteenId);
 
             if ("add".equals(success)) {
-                model.addAttribute("successMessage", "Food added successfully!");
+                model.addAttribute("successMessage", "Đồ Ăn Đã Được Thêm Thành Công!");
             } else if ("edit".equals(success)) {
-                model.addAttribute("successMessage", "Food edited successfully!");
+                model.addAttribute("successMessage", "Đồ Ăn Đã Được Sửa Thành Công!");
             }
 
             if (error != null) {
@@ -109,14 +109,14 @@ public class FoodManagementController {
         try {
             if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
                 result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
-                model.addAttribute("message", "Food name cannot be empty or start with a space.");
+                model.addAttribute("message", "Tên món ăn không được để trống hoặc bắt đầu bằng khoảng cách.");
                 model.addAttribute("messageType", "error");
                 return "staff-management/add-food";
             }
 
             if (food.getDescription().trim().startsWith(" ")) {
                 result.rejectValue("description", "error.food", "Description cannot start with a space.");
-                model.addAttribute("message", "Description cannot start with a space.");
+                model.addAttribute("message", "Mô tả không được bắt đầu bằng dấu cách.");
                 model.addAttribute("messageType", "error");
                 return "staff-management/add-food";
             }
@@ -204,11 +204,11 @@ public class FoodManagementController {
         model.addAttribute("canteenId", canteenId);
 
         if ("add".equals(success)) {
-            model.addAttribute("successMessage", "Category added successfully!");
+            model.addAttribute("successMessage", "Sản Phẩm Đã Được Thêm Thành Công!");
         } else if ("edit".equals(success)) {
-            model.addAttribute("successMessage", "Category edited successfully!");
+            model.addAttribute("successMessage", "Sản Phẩm Đã Được Sửa Thành Công!");
         } else if ("delete".equals(success)) {
-            model.addAttribute("successMessage", "Category deleted successfully!");
+            model.addAttribute("successMessage", "Sản Phẩm Đã Được Xóa Thành Công!");
         }
 
         if (error != null) {

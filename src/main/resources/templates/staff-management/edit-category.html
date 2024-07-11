@@ -83,27 +83,27 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Edit Category</li>
+            <li class="text-gray-600 mr-2 font-medium">Sửa Sản Phẩm</li>
         </ul>
     </div>
 
     <div class="p-6 flex justify-center">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
             <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Edit Category</div>
+                <div class="font-medium">Sửa Sản Phẩm</div>
             </div>
             <form th:action="@{/edit-category(canteenId=${canteenId})}" method="post" th:object="${category}">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
                 <input type="hidden" th:field="*{categoryId}" />
 
                 <div class="form-group">
-                    <label for="categoryName" class="form-label">Category Name</label>
+                    <label for="categoryName" class="form-label">Tên Sản Phẩm</label>
                     <input type="text" id="categoryName" th:field="*{categoryName}" class="form-control">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Update Category</button>
+                <button type="submit" class="btn btn-primary">Cập Nhật Sản Phẩm</button>
             </form>
-            <a th:href="@{/manage-category(canteenId=${canteenId})}" class="back-link">Back to list</a>
+            <a th:href="@{/manage-category(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
         </div>
     </div>
 </main>
