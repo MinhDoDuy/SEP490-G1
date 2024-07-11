@@ -127,11 +127,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="salesCount" class="form-label">Sales Count</label>
-                    <input type="number" id="salesCount" th:field="*{salesCount}" class="form-control">
-                </div>
-
-                <div class="form-group">
                     <label for="imageFood" class="form-label">Food Image</label>
                     <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
                     <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image">

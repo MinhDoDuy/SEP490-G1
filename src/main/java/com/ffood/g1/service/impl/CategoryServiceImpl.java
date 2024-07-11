@@ -5,6 +5,7 @@ import com.ffood.g1.entity.Food;
 import com.ffood.g1.repository.CategoryRepository;
 import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.service.CategoryService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,11 +43,14 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category);
     }
 
+    @Override
     public boolean existsByCategoryName(String categoryName) {
         return categoryRepository.existsByCategoryName(categoryName);
     }
 
+    @Override
     public void deleteCategoryById(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
     }
+
 }

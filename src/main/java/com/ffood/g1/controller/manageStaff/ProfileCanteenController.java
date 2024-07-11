@@ -36,10 +36,18 @@ public class ProfileCanteenController {
     }
 
     @GetMapping("/edit-profile-canteen/{canteenId}")
-    public String editProfileCanteen(@PathVariable Integer canteenId, Model model) {
+    public String editProfileCanteen(@PathVariable Integer canteenId, Model model,
+                                     @RequestParam(value = "success", required = false) String success,
+                                     @RequestParam(value = "error", required = false) String error) {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
+            if (success != null) {
+                model.addAttribute("successMessage", success);
+            }
+            if (error != null) {
+                model.addAttribute("errorMessage", error);
+            }
             return "staff-management/edit-profile-canteen"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "Canteen not found");
@@ -52,27 +60,22 @@ public class ProfileCanteenController {
                                        @RequestParam("imageProfileInput") MultipartFile imageProfileInput, Model model)
             throws SpringBootFileUploadException, IOException {
         if (result.hasErrors()) {
-            return "redirect:/staff-management/edit-profile-canteen"; // Return to edit page if there are validation errors
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=Validation error";
         }
 
-        // Check if a new image is uploaded
-        // Fetch the existing canteen data from the database
         Canteen existingCanteen = canteenService.loadCanteenId(canteen.getCanteenId());
         if (existingCanteen == null) {
-            model.addAttribute("error", "Canteen not found");
-            return "error"; // Error page template
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=Canteen not found";
         }
 
-        // Check if a new image is uploaded
         if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
             String avatarURL = fileS3Service.uploadFile(imageProfileInput);
             canteen.setCanteenImg(avatarURL);
         } else {
-            // Retain the existing image if no new image is uploaded
             canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
         canteenService.updateCanteen(canteen);
-        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
+        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?success=Profile updated successfully";
     }
 }
