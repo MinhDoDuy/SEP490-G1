@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,19 +37,22 @@ public class HomeController {
     @Autowired
     CartRepository cartRepository;
 
-    @GetMapping({"/","/homepage"})
-    public String getCanteens(Model model) {
+    @GetMapping({"/", "/homepage"})
+    public String getCanteens(Model model, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
             String email = authentication.getName();
             User user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
+                if (!user.getIsActive()) {
+                    model.addAttribute("isBanned", true);
+                    return "homepage";
+                }
                 model.addAttribute("user", user);
                 Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
                 int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
                 model.addAttribute("totalQuantity", totalQuantity);
             }
-
         }
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
@@ -58,7 +62,6 @@ public class HomeController {
 
         return "homepage";
     }
-
     @GetMapping("/canteen_contact")
     public String getCanteenContact(Model model) {
 

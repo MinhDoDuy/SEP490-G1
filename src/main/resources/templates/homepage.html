@@ -29,7 +29,6 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
     <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
 
-
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,33 +57,7 @@
     <div class="loader"></div>
 </div>
 
-
 <div th:replace="header :: header"></div>
-
-<!--&lt;!&ndash; Modal Search Start &ndash;&gt;-->
-<!--<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-<!--    <div class="modal-dialog modal-fullscreen">-->
-<!--        <form id="categoryForm" action="/canteen_details" method="get">-->
-<!--            <div class="modal-content rounded-0">-->
-<!--                <div class="modal-header">-->
-<!--                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>-->
-
-<!--                    <button type="button" class="btn-close form-control" name="name" th:value="${name}"-->
-<!--                            onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }"-->
-<!--                            data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                </div>-->
-<!--                <div class="modal-body d-flex align-items-center">-->
-<!--                    <div class="input-group w-75 mx-auto d-flex">-->
-<!--                        <input type="search" class="form-control p-3" placeholder="keywords"-->
-<!--                               aria-describedby="search-icon-1">-->
-<!--                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
-<!--&lt;!&ndash; Modal Search End &ndash;&gt;-->
 
 <!-- Hero Start -->
 <div class="container-fluid py-5 mb-5 hero-header">
@@ -136,61 +109,6 @@
 </div>
 <!-- Hero End -->
 
-
-<!-- Featurs Section Start -->
-<!--<div class="container-fluid featurs py-5">-->
-<!--    <div class="container py-5">-->
-<!--        <div class="row g-4">-->
-<!--            <div class="col-md-6 col-lg-3">-->
-<!--                <div class="featurs-item text-center rounded bg-light p-4">-->
-<!--                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">-->
-<!--                        <i class="fas fa-car-side fa-3x text-white"></i>-->
-<!--                    </div>-->
-<!--                    <div class="featurs-content text-center">-->
-<!--                        <h5>Free Shipping</h5>-->
-<!--                        <p class="mb-0">Free on order over $300</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-md-6 col-lg-3">-->
-<!--                <div class="featurs-item text-center rounded bg-light p-4">-->
-<!--                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">-->
-<!--                        <i class="fas fa-user-shield fa-3x text-white"></i>-->
-<!--                    </div>-->
-<!--                    <div class="featurs-content text-center">-->
-<!--                        <h5>Security Payment</h5>-->
-<!--                        <p class="mb-0">100% security payment</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-md-6 col-lg-3">-->
-<!--                <div class="featurs-item text-center rounded bg-light p-4">-->
-<!--                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">-->
-<!--                        <i class="fas fa-exchange-alt fa-3x text-white"></i>-->
-<!--                    </div>-->
-<!--                    <div class="featurs-content text-center">-->
-<!--                        <h5>30 Day Return</h5>-->
-<!--                        <p class="mb-0">30 day money guarantee</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-md-6 col-lg-3">-->
-<!--                <div class="featurs-item text-center rounded bg-light p-4">-->
-<!--                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">-->
-<!--                        <i class="fa fa-phone-alt fa-3x text-white"></i>-->
-<!--                    </div>-->
-<!--                    <div class="featurs-content text-center">-->
-<!--                        <h5>24/7 Support</h5>-->
-<!--                        <p class="mb-0">Support every time fast</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!-- Featurs Section End -->
-
-
 <!-- Categories Section Begin -->
 <div class="categories">
     <div class="container">
@@ -237,10 +155,6 @@
                                                     <h4><a th:href="@{#}" th:text="${food.foodName}" >Item Name</a></h4>
                                                     <p><a th:href="@{#}" th:text="${food.price} +' đồng'" >Item Name</a></p>
                                                     <div class="d-flex justify-content-center flex-lg-wrap">
-                                                        <!--                                            <p class="text-dark fs-5 fw-bold mb-0"><a th:text="${food.price}"></a></p>-->
-<!--                                                        <a href="#"-->
-<!--                                                           class="btn border border-secondary rounded-pill px-1 text-primary_test"><i-->
-<!--                                                                class="fa fa-shopping-bag me-2 text-primary_test" ></i> Add to cart</a>-->
                                                         <a th:href="@{/food_details(id=${food.foodId})} "
                                                            class="btn border border-secondary rounded-pill px-1 text-primary_test"><i
                                                                 class="fa fa-utensils me-2 text-primary_test"></i> View Food</a>
@@ -257,96 +171,29 @@
             </div>
         </div>
         <!-- Fruits Shop End-->
-
-
-        <!-- Class Section Begin -->
-        <section class="class spad">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="class__form">
-                            <div class="section-title">
-                                <span>Class cakes</span>
-                                <h2>Made from your <br/>own hands</h2>
-                            </div>
-                            <form action="#">
-                                <input type="text" placeholder="Name">
-                                <input type="text" placeholder="Phone">
-                                <select>
-                                    <option value="">Studying Class</option>
-                                    <option value="">Writting Class</option>
-                                    <option value="">Reading Class</option>
-                                </select>
-                                <input type="text" placeholder="Type your requirements">
-                                <button type="submit" class="site-btn">registration</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="class__video set-bg" data-setbg="img/class-video.jpg">
-                    <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
-                       class="play-btn video-popup"><i class="fa fa-play"></i></a>
-                </div>
-            </div>
-        </section>
-        <!-- Class Section End -->
-
-        <!-- Instagram Section Begin -->
-        <section class="instagram spad">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 p-0">
-                        <div class="instagram__text">
-                            <div class="section-title">
-                                <span>Follow us on instagram</span>
-                                <h2>Sweet moments are saved as memories.</h2>
-                            </div>
-                            <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                                <div class="instagram__pic">
-                                    <img src="img/instagram/instagram-1.jpg" alt="">
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                                <div class="instagram__pic middle__pic">
-                                    <img src="img/instagram/instagram-2.jpg" alt="">
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                                <div class="instagram__pic">
-                                    <img src="img/instagram/instagram-3.jpg" alt="">
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                                <div class="instagram__pic">
-                                    <img src="img/instagram/instagram-4.jpg" alt="">
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                                <div class="instagram__pic middle__pic">
-                                    <img src="img/instagram/instagram-5.jpg" alt="">
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                                <div class="instagram__pic">
-                                    <img src="img/instagram/instagram-3.jpg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Instagram Section End -->
     </div>
 </div>
 
 <!--Footer-->
 <div th:replace="footer :: footer"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="banModal" tabindex="-1" aria-labelledby="banModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title" id="banModalLabel">Xin Chào</h5>
+            </div>
+            <div class="modal-body">
+                Tài Khoản bạn đã bị Khóa<br>Hãy liên hệ với admin nhé!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="okButton">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Js Plugins -->
 <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
@@ -362,8 +209,23 @@
 <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
         class="fa fa-arrow-up"></i></a>
 
-
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if ([[${isBanned}]] == true) {
+            var banModal = new bootstrap.Modal(document.getElementById('banModal'), {
+                backdrop: 'static',
+                keyboard: false
+            });
+            banModal.show();
+            document.getElementById('okButton').addEventListener('click', function() {
+                window.location.href = "/logout";
+            });
+            setTimeout(function() {
+                window.location.href = "/logout";
+            }, 3000);
+        }
+    });
+
     function submitForm(categoryId) {
         // Tạo input ẩn chứa giá trị của categoryId
         const input = document.createElement('input');
@@ -379,19 +241,16 @@
         form.submit();
     }
 </script>
+
 <!-- JavaScript Libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
-<script src="/lib/waypoints/waypoints.min.js"
-        th:src="@{/lib/waypoints/waypoints.min.js}"></script>
-<script src="/lib/lightbox/js/lightbox.min.js"
-        th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
-<script src="/lib/owlcarousel/owl.carousel.min.js"
-        th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+<script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+<script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 
 <!-- Template Javascript -->
 <script src="/js/main_test.js" th:src="@{/js/main_test.js}"></script>
 </body>
-
 </html>
