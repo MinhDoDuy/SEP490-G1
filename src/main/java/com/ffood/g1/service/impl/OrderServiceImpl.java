@@ -104,4 +104,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Override
+    public List<Object[]> findRevenueDataCanteenByMonth(Integer canteenId) {
+        return orderRepository.findRevenueCanteenDataByMonth(canteenId);
+    }
+
+    @Override
+    public List<Object[]> findRevenueDataCanteenByYear(Integer canteenId) {
+        return orderRepository.findRevenueDataCanteenByYear(canteenId);
+    }
+
+    @Override
+    public Integer countCompletedOrdersByCanteenId(Integer canteenId) {
+        return orderRepository.countCompletedOrdersByCanteenId(canteenId);
+    }
+
 }

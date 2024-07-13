@@ -238,7 +238,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
@@ -248,6 +247,10 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName())));
     }
 
+    @Override
+    public Integer countStaffByCanteenId(Integer canteenId) {
+        return userRepository.countStaffByCanteenId(canteenId);
+    }
 
 }
 

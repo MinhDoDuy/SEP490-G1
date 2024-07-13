@@ -34,15 +34,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Page<User> searchUsers(String keyword, Integer roleId, Integer canteenId, Pageable pageable);
 
 
-
-
-
 	@Query("SELECT u FROM User u WHERE u.canteen.canteenId = :canteenId AND u.role.roleId = 2")
 	Page<User> findAllStaffByCanteenId(@Param("canteenId") Integer canteenId, Pageable pageable);
 
 	@Query("SELECT u FROM User u WHERE u.role.roleName = :roleName")
 	Page<User> findAllByRoleName(@Param("roleName") String roleName, Pageable pageable);
 
+
+	@Query("SELECT COUNT(u) FROM User u WHERE u.role.roleId = 2 AND u.canteen.canteenId = :canteenId")
+	Integer countStaffByCanteenId(@Param("canteenId") Integer canteenId);
 
 
 }

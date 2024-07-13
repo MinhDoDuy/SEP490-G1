@@ -56,4 +56,6 @@ public interface UserService extends UserDetailsService {
 
     Page<User> searchStaff(String keyword, int page, int size);
 
+    Integer countStaffByCanteenId(Integer canteenId);
+
 }

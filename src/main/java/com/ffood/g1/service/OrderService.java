@@ -32,4 +32,9 @@ public interface OrderService {
     List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus status);
 
     List<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses);
+
+    List<Object[]> findRevenueDataCanteenByMonth(Integer canteenId);
+    List<Object[]> findRevenueDataCanteenByYear(Integer canteenId);
+
+    Integer countCompletedOrdersByCanteenId(Integer canteenId);
 }

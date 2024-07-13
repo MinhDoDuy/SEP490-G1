@@ -3,6 +3,7 @@ package com.ffood.g1.repository;
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.PaymentStatus;
+import io.swagger.models.auth.In;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -55,5 +56,30 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "AND o.orderStatus IN :statuses " +
             "ORDER BY o.orderDate DESC")
     List<Order> findOrdersByCanteenIdAndStatuses(@Param("canteenId") Integer canteenId, @Param("statuses") List<OrderStatus> statuses);
+
+
+    //doanh thu theo tháng của canteen cụ thể
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM'), SUM(CAST(od.price * od.quantity AS double)) " +
+            "FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
+            "JOIN Food f ON od.food.foodId = f.foodId " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM')")
+    List<Object[]> findRevenueCanteenDataByMonth(@Param("canteenId") Integer canteenId);
+
+    //doanh thu theo năm của canteen cụ thể
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY'), SUM(CAST(od.price * od.quantity AS double)) " +
+            "FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
+            "JOIN Food f ON od.food.foodId = f.foodId " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY')")
+    List<Object[]> findRevenueDataCanteenByYear(@Param("canteenId") Integer canteenId);
+
+
+    @Query("SELECT COUNT(o) FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
+            "JOIN Food f ON od.food.foodId = f.foodId " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId")
+    Integer countCompletedOrdersByCanteenId(@Param("canteenId") Integer canteenId);
 
 }

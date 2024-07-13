@@ -21,7 +21,6 @@ import java.util.Optional;
 @Repository
 public interface FoodRepository extends PagingAndSortingRepository<Food, Integer> {
 
-
     @Transactional
     @Modifying
     //Modifying annotation để giúp JPA đang thực hiện thao tác delete
@@ -61,7 +60,9 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Integer
     @Query("SELECT f FROM Food f WHERE LOWER(f.foodName) LIKE LOWER(CONCAT('%', :name, '%'))")
     Page<Food> findByNameContainingIgnoreCase(@Param("name") String name, Pageable pageable);
 
-
     @Query("SELECT f FROM Food f WHERE f.canteen.canteenId = :canteenId")
     List<Food> findByCanteenId(@Param("canteenId") Integer canteenId);
+
+    @Query("SELECT COUNT(f) FROM Food f WHERE f.canteen.canteenId = :canteenId")
+    Integer countFoodByCanteenId(@Param("canteenId") Integer canteenId);
 }

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+  <title>Dashboard</title>
+  <style>
+    .chart-container {
+      height: 400px; /* Adjust as needed */
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body class="text-gray-800 font-inter">
+
+<!-- start: Sidebar -->
+<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
+<!-- end: Sidebar -->
+
+<!-- start: Main -->
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
+  <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+    <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+      <i class="ri-menu-line"></i>
+    </button>
+    <ul class="flex items-center text-sm ml-4">
+      <li class="mr-2">
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+      </li>
+      <li class="text-gray-600 mr-2 font-medium">/</li>
+      <li class="text-gray-600 mr-2 font-medium">Analytics</li>
+    </ul>
+  </div>
+  <div class="p-6">
+    <div class="stats-grid mb-6">
+      <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+        <div class="flex justify-between mb-6">
+          <div>
+            <div class="text-2xl font-semibold mb-1" th:text="${foodCount}">0</div>
+            <div class="text-sm font-medium text-gray-400">Tổng Số Món Ăn</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+        <div class="flex justify-between mb-4">
+          <div>
+            <div class="flex items-center mb-1">
+              <div class="text-2xl font-semibold" th:text="${staffCount}">0</div>
+            </div>
+            <div class="text-sm font-medium text-gray-400">Tổng Số Nhân Viên</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+        <div class="flex justify-between mb-6">
+          <div>
+            <div class="text-2xl font-semibold mb-1" th:text="${completedOrdersCount}">0</div>
+            <div class="text-sm font-medium text-gray-400">Đơn Hàng Hoàn Thành</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 mb-6">
+      <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+        <h4>Biểu Đồ Doanh Thu</h4>
+        <select id="revenue-chart-type" class="form-control mb-3">
+          <option value="month">Theo Tháng</option>
+          <option value="year">Theo Năm</option>
+        </select>
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- end: Main -->
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{./js/manage.js}"></script>
+<script th:inline="javascript">
+  // Dữ liệu Revenue Chart
+  const revenueLabelsByMonth = /*[[${revenueLabelsByMonth}]]*/ [];
+  const revenueDataByMonth = /*[[${revenueDataByMonth}]]*/ [];
+
+  const revenueLabelsByYear = /*[[${revenueLabelsByYear}]]*/ [];
+  const revenueDataByYear = /*[[${revenueDataByYear}]]*/ [];
+
+  document.getElementById('revenue-chart-type').addEventListener('change', function () {
+    const value = this.value;
+    let labels, data;
+    if (value === 'month') {
+      labels = revenueLabelsByMonth;
+      data = revenueDataByMonth;
+    } else if (value === 'year') {
+      labels = revenueLabelsByYear;
+      data = revenueDataByYear;
+    }
+    revenueChart.data.labels = labels;
+    revenueChart.data.datasets[0].data = data;
+    revenueChart.update();
+  });
+
+  // Biểu đồ Revenue
+  const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+  let revenueChart = new Chart(ctxRevenue, {
+    type: 'line',
+    data: {
+      labels: revenueLabelsByMonth,
+      datasets: [{
+        label: 'Doanh Thu',
+        data: revenueDataByMonth,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        fill: false
+      }]
+    }
+  });
+</script>
+</body>
+</html>
