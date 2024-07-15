@@ -212,7 +212,7 @@ public class FoodManagementController {
         }
 
         if (error != null) {
-            model.addAttribute("errorMessage", error);
+            model.addAttribute("errorMessage", "Sản Phẩm Không Thể Xóa!");
         }
 
         return "./staff-management/manage-category";
@@ -325,7 +325,7 @@ public class FoodManagementController {
             categoryService.deleteCategoryById(categoryId);
             return "redirect:/manage-category?canteenId=" + canteenId + "&success=delete";
         } catch (Exception e) {
-            return "redirect:/manage-category?canteenId=" + canteenId + "&error=Unable to delete category";
+            return "redirect:/manage-category?canteenId=" + canteenId + "&error=Không thể xóa ảnh";
         }
     }
 
