@@ -226,30 +226,51 @@ public class FoodManagementController {
     }
 
     @PostMapping("/add-category")
-    public String addCategory(@Valid @ModelAttribute("category") Category category,
-                              @RequestParam("canteenId") Integer canteenId, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("canteenId", canteenId);
-            return "./staff-management/add-category";
-        }
+    public String addCategory(@ModelAttribute("category") Category category, BindingResult result, Model model,
+                              @RequestParam("canteenId") Integer canteenId,
+                              @RequestParam("categoryImage") MultipartFile categoryImage) {
+        try {
+            if (category.getCategoryName().trim().isEmpty() || category.getCategoryName().trim().startsWith(" ")) {
+                result.rejectValue("categoryName", "error.category", "Category name cannot be empty or start with a space.");
+                model.addAttribute("message", "Tên danh mục không được để trống hoặc bắt đầu bằng khoảng cách.");
+                model.addAttribute("messageType", "error");
+                return "staff-management/add-category";
+            }
 
-        // Kiểm tra xem tên danh mục có rỗng hoặc bắt đầu bằng dấu cách không
-        if (category.getCategoryName().trim().isEmpty()) {
-            result.rejectValue("categoryName", "error.category", "Category name cannot start with a space");
-            model.addAttribute("canteenId", canteenId);
-            return "./staff-management/add-category";
-        }
+            if (category.getDescription().trim().startsWith(" ")) {
+                result.rejectValue("description", "error.category", "Description cannot start with a space.");
+                model.addAttribute("message", "Mô tả không được bắt đầu bằng dấu cách.");
+                model.addAttribute("messageType", "error");
+                return "staff-management/add-category";
+            }
 
-        // Kiểm tra xem tên danh mục đã tồn tại hay chưa
-        if (categoryService.existsByCategoryName(category.getCategoryName())) {
-            result.rejectValue("categoryName", "error.category", "Category name already exists");
-            model.addAttribute("canteenId", canteenId);
-            return "./staff-management/add-category";
-        }
+            if (categoryService.existsByCategoryName(category.getCategoryName())) {
+                result.rejectValue("categoryName", "error.category", "Category name already exists");
+                model.addAttribute("message", "Tên danh mục đã tồn tại");
+                model.addAttribute("messageType", "error");
+                return "staff-management/add-category";
+            }
 
-        categoryService.saveCategory(category);
+            Canteen canteen = canteenService.getCanteenById(canteenId);
+            category.setCanteen(canteen);
+
+            if (!categoryImage.isEmpty()) {
+                String categoryImageUrl = fileS3Service.uploadFile(categoryImage);
+                category.setCategoryImage(categoryImageUrl);
+            }
+
+            categoryService.saveCategory(category);
+            model.addAttribute("message", "Category added successfully!");
+            model.addAttribute("messageType", "success");
+        } catch (SpringBootFileUploadException | IOException e) {
+            model.addAttribute("message", "Error: " + e.getMessage());
+            model.addAttribute("messageType", "error");
+            return "staff-management/add-category";
+        }
         return "redirect:/manage-category?canteenId=" + canteenId + "&success=add";
     }
+
+
 
 
 
@@ -265,8 +286,35 @@ public class FoodManagementController {
 
     @PostMapping("/edit-category")
     public String editCategory(@ModelAttribute("category") Category category, BindingResult result,
-                               @RequestParam("canteenId") Integer canteenId, Model model) {
-        categoryService.saveCategory(category);
+                               @RequestParam("canteenId") Integer canteenId,
+                               @RequestParam("categoryImage") MultipartFile categoryImage, Model model) {
+
+        Category existingCategory = categoryService.getCategoryById(category.getCategoryId());
+        if (category.getCategoryName().trim().isEmpty() || category.getCategoryName().trim().startsWith(" ")) {
+            result.rejectValue("categoryName", "error.category", "Category cannot be empty or start with a space.");
+        }
+
+        if (category.getDescription().trim().startsWith(" ")) {
+            result.rejectValue("description", "error.category", "Description cannot start with a space.");
+        }
+
+        try {
+            Canteen canteen = canteenService.getCanteenById(canteenId);
+            category.setCanteen(canteen);
+
+            if (!categoryImage.isEmpty()) {
+                String categoryImageUrl = fileS3Service.uploadFile(categoryImage);
+                category.setCategoryImage(categoryImageUrl);
+            } else {
+                // Retain the existing image if no new image is uploaded
+                category.setCategoryImage(existingCategory.getCategoryImage());
+            }
+
+            categoryService.saveCategory(category);
+        } catch (SpringBootFileUploadException | IOException e) {
+            return "redirect:/edit-category?canteenId=" + canteenId + "&error=" + e.getMessage();
+        }
+
         return "redirect:/manage-category?canteenId=" + canteenId + "&success=edit";
     }
 

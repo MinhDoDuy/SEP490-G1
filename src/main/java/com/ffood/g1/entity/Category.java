@@ -27,6 +27,9 @@ public class Category {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "category_image")
+    private String categoryImage;
+
     public void setCanteen(Canteen canteen) {
     }
 

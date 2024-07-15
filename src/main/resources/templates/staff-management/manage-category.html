@@ -88,6 +88,8 @@
                     <tr>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">ID</th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên Sản Phẩm</th>
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mô tả</th>
+                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ảnh</th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Hành Động</th>
                     </tr>
                     </thead>
@@ -95,6 +97,10 @@
                     <tr th:each="category, iterStat : ${categories}">
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${iterStat.index + 1}">1</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${category.categoryName}">Category Name</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${category.description}">Description</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50">
+                            <img th:src="@{${category.categoryImage}}" alt="Category Image" style="width: 100px; height: auto;"/>
+                        </td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <a th:href="@{/edit-category/{categoryId}(categoryId=${category.categoryId}, canteenId=${canteenId})}" class="btn btn-primary"
                                style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Sửa</a>
