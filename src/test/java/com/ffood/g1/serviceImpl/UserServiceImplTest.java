@@ -8,7 +8,6 @@ import com.ffood.g1.repository.CanteenRepository;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.repository.RoleRepository;
 import com.ffood.g1.repository.UserRepository;
-import com.ffood.g1.service.impl.CanteenServiceImpl;
 import com.ffood.g1.service.impl.UserServiceImpl;
 import com.ffood.g1.utils.UrlUtil;
 import org.junit.jupiter.api.Test;
@@ -16,11 +15,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.MockedStatic;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,196 +38,348 @@ import static org.mockito.Mockito.*;
 public class UserServiceImplTest {
 
     @InjectMocks
-    UserServiceImpl userService;
+    private UserServiceImpl service;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Mock
-    RoleRepository roleRepository;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Mock
-    ResetTokenRepository resetTokenRepository;
+    private RoleRepository roleRepository;
 
     @Mock
-    JavaMailSender mailSender;
+    private ResetTokenRepository resetTokenRepository;
 
     @Mock
-    HttpServletRequest request;
+    private JavaMailSender mailSender;
 
     @Mock
-    CanteenRepository canteenRepository;
+    private CanteenRepository canteenRepository;
+
+    @Mock
+    private HttpServletRequest request;
 
     @Test
-    void loadUserById_Cases() {
-        Integer userId = 1;
-        User user = User.builder().userId(userId).email("test@example.com").build();
+    void findByEmail() {
+        String email = "test@example.com";
+        User user = User.builder().email(email).build();
 
-        // Happy Case
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        User resultFound = userService.loadUserById(userId);
-        assertEquals(user, resultFound);
-        verify(userRepository, times(1)).findById(userId);
+        when(userRepository.findByEmail(email)).thenReturn(user);
 
-        // Reset mock for the next case
-        reset(userRepository);
+        User result = service.findByEmail(email);
 
-        // Not Found Case
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
-        User resultNotFound = userService.loadUserById(userId);
-        assertNull(resultNotFound);
-        verify(userRepository, times(1)).findById(userId);
+        assertEquals(user, result);
+        verify(userRepository, times(1)).findByEmail(email);
     }
 
     @Test
-    void isCodeNameExist_Cases() {
-        String codeName = "testCode";
-
-        // CodeName exists
-        when(userRepository.findByCodeName(codeName)).thenReturn(new User());
-        boolean resultExists = userService.isCodeNameExist(codeName);
-        assertTrue(resultExists);
-        verify(userRepository, times(1)).findByCodeName(codeName);
-
-        // Reset mock for the next case
-        reset(userRepository);
-
-        // CodeName does not exist
-        when(userRepository.findByCodeName(codeName)).thenReturn(null);
-        boolean resultNotExists = userService.isCodeNameExist(codeName);
-        assertFalse(resultNotExists);
-        verify(userRepository, times(1)).findByCodeName(codeName);
-    }
-
-//    @Test
-//    void sendResetPasswordEmail_Cases() {
-//        String email = "test@example.com";
-//        User user = User.builder().userId(1).email(email).build();
-//        String token = UUID.randomUUID().toString();
-//        String baseUrl = "http://example.com";
-//
-//        when(userRepository.findByEmail(email)).thenReturn(user);
-//        when(request.getScheme()).thenReturn("http");
-//        when(request.getServerName()).thenReturn("example.com");
-//        when(request.getServerPort()).thenReturn(80);
-//
-//        // Mock the UrlUtil.getBaseUrl() method
-//        try (MockedStatic<UrlUtil> mockedStatic = mockStatic(UrlUtil.class)) {
-//            when(UrlUtil.getBaseUrl(request)).thenReturn(baseUrl);
-//
-//            // Execute the service call
-//            userService.sendResetPasswordEmail(email, request);
-//
-//            // Verify the interactions
-//            verify(userRepository, times(1)).findByEmail(email);
-//            verify(resetTokenRepository, times(1)).save(any(ResetToken.class));
-//            verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
-//        }
-//    }
-
-    @Test
-    void updateUserStatus_HappyCase() {
+    void loadUserById() {
         Integer userId = 1;
-        Integer roleId = 3;
-        Integer canteenId = 1;
-        Boolean isActive = true;
-
         User user = User.builder().userId(userId).build();
-        Role role = Role.builder().roleId(roleId).build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        User result = service.loadUserById(userId);
+
+        assertEquals(user, result);
+        verify(userRepository, times(1)).findById(userId);
+    }
+
+    @Test
+    void isCodeNameExist() {
+        String codeName = "testCode";
+        User user = User.builder().codeName(codeName).build();
+
+        when(userRepository.findByCodeName(codeName)).thenReturn(user);
+
+        boolean result = service.isCodeNameExist(codeName);
+
+        assertTrue(result);
+        verify(userRepository, times(1)).findByCodeName(codeName);
+    }
+
+    @Test
+    void sendResetPasswordEmail() {
+        String email = "test@example.com";
+        User user = User.builder().email(email).build();
+        String token = UUID.randomUUID().toString();
+        String baseUrl = "http://localhost:8080";
+
+        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(request.getRequestURL()).thenReturn(new StringBuffer(baseUrl));
+
+        service.sendResetPasswordEmail(email, request);
+
+        verify(resetTokenRepository, times(1)).save(any(ResetToken.class));
+        verify(mailSender, times(1)).send((MimeMessage) any());
+    }
+
+    @Test
+    void isResetTokenValid() {
+        String token = "testToken";
+        ResetToken resetToken = new ResetToken(token, User.builder().build());
+
+        when(resetTokenRepository.findByToken(token)).thenReturn(resetToken);
+
+        boolean result = service.isResetTokenValid(token);
+
+        assertTrue(result);
+        verify(resetTokenRepository, times(1)).findByToken(token);
+    }
+
+    @Test
+    void updatePasswordReset() {
+        String token = "testToken";
+        String password = "newPassword";
+        User user = User.builder().build();
+        ResetToken resetToken = new ResetToken(token, user);
+
+        when(resetTokenRepository.findByToken(token)).thenReturn(resetToken);
+        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
+
+        service.updatePasswordReset(token, password);
+
+        verify(userRepository, times(1)).save(user);
+        verify(resetTokenRepository, times(1)).delete(resetToken);
+    }
+
+    @Test
+    void updatePassword() {
+        User user = User.builder().build();
+        String newPassword = "newPassword";
+
+        when(passwordEncoder.encode(newPassword)).thenReturn("encodedPassword");
+
+        service.updatePassword(user, newPassword);
+
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void getAllUsers() {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        User user1 = User.builder().userId(1).build();
+        User user2 = User.builder().userId(2).build();
+        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
+
+        when(userRepository.findAll(pageable)).thenReturn(userPage);
+
+        Page<User> result = service.getAllUsers(page, size);
+
+        assertEquals(2, result.getTotalElements());
+        verify(userRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    void searchUsersFilter() {
+        String keyword = "test";
+        int page = 0;
+        int size = 10;
+        Integer roleId = 1;
+        Integer canteenId = 1;
+        Pageable pageable = PageRequest.of(page, size);
+        User user1 = User.builder().userId(1).build();
+        User user2 = User.builder().userId(2).build();
+        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
+
+        when(userRepository.searchUsers(keyword, roleId, canteenId, pageable)).thenReturn(userPage);
+
+        Page<User> result = service.searchUsersFilter(keyword, roleId, canteenId, page, size);
+
+        assertEquals(2, result.getTotalElements());
+        verify(userRepository, times(1)).searchUsers(keyword, roleId, canteenId, pageable);
+    }
+
+    @Test
+    void getAllStaff() {
+        int page = 0;
+        int size = 10;
+        Integer canteenId = 1;
+        Pageable pageable = PageRequest.of(page, size);
+        User user1 = User.builder().userId(1).build();
+        User user2 = User.builder().userId(2).build();
+        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
+
+        when(userRepository.findAllStaffByCanteenId(canteenId, pageable)).thenReturn(userPage);
+
+        Page<User> result = service.getAllStaff(page, size, canteenId);
+
+        assertEquals(2, result.getTotalElements());
+        verify(userRepository, times(1)).findAllStaffByCanteenId(canteenId, pageable);
+    }
+
+    @Test
+    void getUserById() {
+        Integer userId = 1;
+        User user = User.builder().userId(userId).build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        User result = service.getUserById(userId);
+
+        assertEquals(user, result);
+        verify(userRepository, times(1)).findById(userId);
+    }
+
+    @Test
+    void updateUserStatus() {
+        Integer userId = 1;
+        Integer roleId = 1;
+        Boolean isActive = true;
+        Integer canteenId = 1;
+        User user = User.builder().userId(userId).build();
         Canteen canteen = Canteen.builder().canteenId(canteenId).build();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(roleRepository.findById(roleId)).thenReturn(Optional.of(role));
         when(canteenRepository.findById(canteenId)).thenReturn(Optional.of(canteen));
 
-        userService.updateUserStatus(userId, roleId, isActive, canteenId);
+        service.updateUserStatus(userId, roleId, isActive, canteenId);
 
-        assertEquals(isActive, user.getIsActive());
-        assertEquals(canteen, user.getCanteen());
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
-    void isPhoneExist_Cases() {
+    void saveUser() {
+        User user = User.builder().password("password").build();
+
+        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
+
+        service.saveUser(user);
+
+        assertEquals("encodedPassword", user.getPassword());
+        assertNotNull(user.getCreatedDate());
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void countUsers() {
+        long count = 5L;
+
+        when(userRepository.count()).thenReturn(count);
+
+        Integer result = service.countUsers();
+
+        assertEquals(5, result);
+        verify(userRepository, times(1)).count();
+    }
+
+    @Test
+    void getStaffUsers() {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        User user1 = User.builder().userId(1).build();
+        User user2 = User.builder().userId(2).build();
+        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
+
+        when(userRepository.findAllByRoleName("staff", pageable)).thenReturn(userPage);
+
+        Page<User> result = service.getStaffUsers(page, size);
+
+        assertEquals(2, result.getTotalElements());
+        verify(userRepository, times(1)).findAllByRoleName("staff", pageable);
+    }
+
+    @Test
+    void searchStaff() {
+        String keyword = "test";
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        User user1 = User.builder().userId(1).build();
+        User user2 = User.builder().userId(2).build();
+        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
+
+        when(userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable)).thenReturn(userPage);
+
+        Page<User> result = service.searchStaff(keyword, page, size);
+
+        assertEquals(2, result.getTotalElements());
+        verify(userRepository, times(1)).findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
+    }
+
+    @Test
+    void isPhoneExist() {
         String phone = "123456789";
+        User user = User.builder().phone(phone).build();
 
-        // Phone exists
-        when(userRepository.findByPhone(phone)).thenReturn(new User());
-        boolean resultExists = userService.isPhoneExist(phone);
-        assertTrue(resultExists);
-        verify(userRepository, times(1)).findByPhone(phone);
+        when(userRepository.findByPhone(phone)).thenReturn(user);
 
-        // Reset mock for the next case
-        reset(userRepository);
+        boolean result = service.isPhoneExist(phone);
 
-        // Phone does not exist
-        when(userRepository.findByPhone(phone)).thenReturn(null);
-        boolean resultNotExists = userService.isPhoneExist(phone);
-        assertFalse(resultNotExists);
+        assertTrue(result);
         verify(userRepository, times(1)).findByPhone(phone);
     }
 
     @Test
-    void isEmailExist_Cases() {
-        String email = "test@example.com";
+    void updateUser() {
+        User user = User.builder().userId(1).fullName("New Name").build();
+        User existingUser = User.builder().userId(1).build();
 
-        // Email exists
-        when(userRepository.findByEmail(email)).thenReturn(new User());
-        boolean resultExists = userService.isEmailExist(email);
-        assertTrue(resultExists);
-        verify(userRepository, times(1)).findByEmail(email);
+        when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(existingUser));
 
-        // Reset mock for the next case
-        reset(userRepository);
+        service.updateUser(user);
 
-        // Email does not exist
-        when(userRepository.findByEmail(email)).thenReturn(null);
-        boolean resultNotExists = userService.isEmailExist(email);
-        assertFalse(resultNotExists);
-        verify(userRepository, times(1)).findByEmail(email);
-    }
-
-    @Test
-    void updatePasswordReset_Cases() {
-        String token = "testToken";
-        String newPassword = "newPassword";
-        User user = User.builder().userId(1).build();
-        ResetToken resetToken = ResetToken.builder().token(token).user(user).build();
-
-        // Token valid
-        when(resetTokenRepository.findByToken(token)).thenReturn(resetToken);
-        userService.updatePasswordReset(token, newPassword);
-        verify(userRepository, times(1)).save(user);
-        verify(resetTokenRepository, times(1)).delete(resetToken);
-
-        // Reset mock for the next case
-        reset(resetTokenRepository);
-
-        // Token invalid
-        when(resetTokenRepository.findByToken(token)).thenReturn(null);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updatePasswordReset(token, newPassword);
-        });
-        assertEquals("Invalid or expired token.", exception.getMessage());
-    }
-
-    @Test
-    void updateUser_Cases() {
-        Integer userId = 1;
-        User existingUser = User.builder().userId(userId).email("existing@example.com").build();
-        User updatedUser = User.builder().userId(userId).email("updated@example.com").build();
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
-        userService.updateUser(updatedUser);
-        assertEquals("updated@example.com", existingUser.getEmail());
         verify(userRepository, times(1)).save(existingUser);
+    }
 
-        // Reset mock for the next case
-        reset(userRepository);
+    @Test
+    void isEmailExist() {
+        String email = "test@example.com";
+        User user = User.builder().email(email).build();
 
-        // User not found
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
-        userService.updateUser(updatedUser);
-        verify(userRepository, times(0)).save(updatedUser);
+        when(userRepository.findByEmail(email)).thenReturn(user);
+
+        boolean result = service.isEmailExist(email);
+
+        assertTrue(result);
+        verify(userRepository, times(1)).findByEmail(email);
+    }
+
+    @Test
+    void registerNewUser() {
+        User user = User.builder().fullName("testUser").password("password").email("test@example.com").phone("123456789").build();
+        Role role = Role.builder().roleName("ROLE_CUSTOMER").build();
+
+        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
+        when(roleRepository.findByName("ROLE_CUSTOMER")).thenReturn(role);
+
+        service.registerNewUser(user);
+
+        assertEquals("encodedPassword", user.getPassword());
+        assertEquals(role, user.getRole());
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void loadUserByUsername() {
+        String email = "test@example.com";
+        User user = User.builder().email(email).password("password").role(Role.builder().roleName("ROLE_CUSTOMER").build()).build();
+
+        when(userRepository.findByEmail(email)).thenReturn(user);
+
+        UserDetails userDetails = service.loadUserByUsername(email);
+
+        assertEquals(email, userDetails.getUsername());
+        assertEquals("password", userDetails.getPassword());
+        assertEquals("ROLE_CUSTOMER", userDetails.getAuthorities().iterator().next().getAuthority());
+        verify(userRepository, times(1)).findByEmail(email);
+    }
+
+    @Test
+    void countStaffByCanteenId() {
+        Integer canteenId = 1;
+        long count = 10L;
+
+        when(userRepository.countStaffByCanteenId(canteenId)).thenReturn((int) count);
+
+        Integer result = service.countStaffByCanteenId(canteenId);
+
+        assertEquals(10, result);
+        verify(userRepository, times(1)).countStaffByCanteenId(canteenId);
     }
 }

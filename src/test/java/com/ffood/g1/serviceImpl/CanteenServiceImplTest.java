@@ -13,35 +13,30 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CanteenServiceImplTest {
 
     @InjectMocks
-    CanteenServiceImpl service;
+    private CanteenServiceImpl service;
 
     @Mock
-    CanteenRepository repository;
+    private CanteenRepository repository;
 
     @Test
     void getAllCanteens() {
         Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen1").isActive(true).build();
         Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen2").isActive(true).build();
-
         List<Canteen> canteens = Arrays.asList(canteen1, canteen2);
 
         when(repository.findAll()).thenReturn(canteens);
 
-        //test
         List<Canteen> empList = service.getAllCanteens();
 
         assertEquals(2, empList.size());
@@ -53,28 +48,18 @@ public class CanteenServiceImplTest {
         String keyword = "Canteen";
         int page = 0;
         int size = 10;
-
         Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen One").location("Location One").canteenPhone("123456789").build();
         Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-        Canteen canteen3 = Canteen.builder().canteenId(3).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-        Canteen canteen4 = Canteen.builder().canteenId(4).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-        Canteen canteen5 = Canteen.builder().canteenId(5).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-        Canteen canteen6 = Canteen.builder().canteenId(6).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-        Canteen canteen7 = Canteen.builder().canteenId(7).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-        Canteen canteen8 = Canteen.builder().canteenId(8).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-
-
-        List<Canteen> canteens = Arrays.asList(canteen1, canteen2,canteen3,canteen4,canteen5,canteen6,canteen7,canteen8);
+        List<Canteen> canteens = Arrays.asList(canteen1, canteen2);
         Page<Canteen> canteenPage = new PageImpl<>(canteens);
 
         Pageable pageable = PageRequest.of(page, size);
         when(repository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
                 keyword, keyword, keyword, pageable)).thenReturn(canteenPage);
 
-        //test
         Page<Canteen> result = service.searchCanteens(keyword, page, size);
 
-        assertEquals(9, result.getTotalElements());
+        assertEquals(2, result.getTotalElements());
         assertEquals(1, result.getTotalPages());
         assertEquals(canteens, result.getContent());
         verify(repository, times(1)).findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
@@ -176,5 +161,4 @@ public class CanteenServiceImplTest {
         assertFalse(result);
         verify(repository, times(1)).findByCanteenName(canteenName);
     }
-
 }
