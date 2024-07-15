@@ -31,4 +31,5 @@ public interface FoodService {
     void save(Food food);
 
  Integer countFoodByCanteenId(Integer canteenId);
+
 }

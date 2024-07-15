@@ -60,7 +60,6 @@ public class FoodServiceImpl implements FoodService {
     public void save(Food food) {
         foodRepository.save(food);
     }
-
     @Override
     public Integer countFoodByCanteenId(Integer canteenId) {
         return foodRepository.countFoodByCanteenId(canteenId);

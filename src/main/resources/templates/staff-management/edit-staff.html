@@ -69,7 +69,7 @@
 </head>
 <body class="text-gray-800 font-inter">
 <!-- start: Sidebar -->
-
+<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
 <!-- end: Sidebar -->
 
 <!-- start: Main -->
@@ -83,46 +83,51 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Staff</li>
+            <li class="text-gray-600 mr-2 font-medium">Chỉnh Sửa Nhân Viên</li>
         </ul>
     </div>
 
     <div class="p-6 flex justify-center">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
             <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Edit Staff Role</div>
+                <div class="font-medium">Sửa Trạng Thái Nhân Viên</div>
             </div>
-            <form th:action="@{/edit-staff(canteenId=${user.canteen.canteenId})}" method="post" th:object="${user}">
-                <input type="hidden" name="userId" th:value="${userId}"/>
-                <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
+            <form th:action="@{/edit-staff}" method="post" th:object="${user}">
+                <input type="hidden" th:field="*{userId}"/>
+                <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}"/>
+
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" th:value="${user.email}" readonly="readonly" class="form-control"/>
-                </div>
-                <div class="form-group">
-                    <label for="fullname">Fullname:</label>
-                    <input type="text" id="fullname" th:value="${user.fullName}" readonly="readonly" class="form-control"/>
-                </div>
-                <div class="form-group">
-                    <label for="gender">Gender:</label>
-                    <input type="text" id="gender" th:value="${user.gender ? 'Male' : 'Female'}" readonly="readonly" class="form-control"/>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" id="email" th:field="*{email}" readonly="readonly" class="form-control"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="role">Role:</label>
-                    <input type="text" id="role" value="ROLE_STAFF" disabled />
+                    <label for="fullName" class="form-label">Họ Tên</label>
+                    <input type="text" id="fullName" th:field="*{fullName}" readonly="readonly" class="form-control"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="isActive">Status:</label>
-                    <select id="isActive" name="isActive" class="form-control">
-                        <option th:value="true" th:text="'Active'" th:selected="${user.isActive} == true"></option>
-                        <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive} == false"></option>
+                    <label for="gender" class="form-label">Giới Tính</label>
+                    <input type="text" id="gender" th:value="${user.gender ? 'Male' : 'Female'}" readonly="readonly"
+                           class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="role" class="form-label">Vị Trí</label>
+                    <input type="text" id="role" value="ROLE_STAFF" disabled class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="isActive" class="form-label">Trạng Thái</label>
+                    <select id="isActive" th:field="*{isActive}" class="form-control">
+                        <option th:value="true" th:text="'Active'" th:selected="${user.isActive == true}"></option>
+                        <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive == false}"></option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+
+                <button type="submit" class="btn btn-primary">Lưu</button>
             </form>
-            <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="back-link">Back to list</a>
+            <a th:href="@{/manage-staff(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
         </div>
     </div>
 </main>

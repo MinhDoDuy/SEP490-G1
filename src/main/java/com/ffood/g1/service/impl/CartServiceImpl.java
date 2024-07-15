@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +29,7 @@ public class CartServiceImpl implements CartService {
     private CartItemRepository cartItemRepository;
 
     @Autowired
-    FoodRepository foodRepository;
+    private FoodRepository foodRepository;
 
     @Override
     @Transactional
@@ -97,7 +98,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     @Override
     public Integer getTotalQuantityByUser(User user) {
-           return cartRepository.getTotalQuantityByUser(user);
+        return cartRepository.getTotalQuantityByUser(user);
 
     }
 
@@ -119,6 +120,10 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
+
+    public List<Food> findByCategoryId(Integer categoryId) {
+        return foodRepository.findByCategoryId(categoryId);
+    }
 
 
 }

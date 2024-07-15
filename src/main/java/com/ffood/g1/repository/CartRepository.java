@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CartRepository extends JpaRepository<Cart, Integer> {
+public interface   CartRepository extends JpaRepository<Cart, Integer> {
 //       Optional<Cart> findByUser(User user);
 //    @Query("SELECT c FROM Cart c WHERE c.user = :user")
 //    List<Cart> findByUser(@Param("user") User user);

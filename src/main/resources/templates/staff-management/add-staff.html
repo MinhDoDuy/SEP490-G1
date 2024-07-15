@@ -7,77 +7,67 @@
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
   <title>Add Staff</title>
   <style>
-    .search-bar input[type="text"] {
-      width: 250px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px 0 0 5px;
+    .form-container {
+      width: 50%;
+      margin: auto;
     }
 
-    .search-bar button.search-btn {
-      padding: 10px;
-      border: none;
-      background-color: #2A2185FF;
+    .form-group {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .form-group select, .form-group textarea {
+      width: auto;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 12px;
+    }
+
+    button[type="submit"] {
+      background-color: #007bff;
       color: white;
-      border-radius: 0 5px 5px 0;
-      cursor: pointer;
-    }
-
-    .search-bar button.search-btn:hover {
-      background-color: #555;
-    }
-
-    .btn {
       padding: 10px 20px;
-      background-color: #2A2185FF;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
+      font-size: 14px;
     }
 
-    .btn:hover {
-      background-color: #2A2185FF;
+    button[type="submit"]:hover {
+      background-color: #0056b3;
     }
 
-    .cardHeader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .search-container {
-      display: flex;
-      justify-content: flex-start;
+    .back-link {
+      display: inline-block;
       margin-top: 10px;
-    }
-
-    .btn-icon {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.875rem;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .pagination a {
+      font-size: 14px;
+      color: #007bff;
       text-decoration: none;
-      color: #2A2185FF;
-      padding: 5px 10px;
-      border: 1px solid #2A2185FF;
-      border-radius: 5px;
     }
 
-    .pagination a:hover {
-      background-color: #2A2185FF;
-      color: white;
+    .back-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
-<body>
+<body class="text-gray-800 font-inter">
+
 <!-- start: Sidebar -->
 <div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
 <!-- end: Sidebar -->
@@ -93,63 +83,81 @@
         <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
       </li>
       <li class="text-gray-600 mr-2 font-medium">/</li>
-      <li class="text-gray-600 mr-2 font-medium">Add Staff</li>
+      <li class="text-gray-600 mr-2 font-medium">Thêm Nhân Viên</li>
     </ul>
   </div>
 
   <div class="p-6 flex justify-center">
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
       <div class="flex justify-between mb-4 items-start">
-        <div class="font-medium">Add New Staff</div>
+        <div class="font-medium">Thêm Nhân Viên</div>
       </div>
       <form th:action="@{/add-staff}" method="post" th:object="${user}" onsubmit="return validateForm()">
         <input type="hidden" th:field="*{role.roleId}"/>
         <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
 
-        <label for="fullName">Full Name:</label>
-        <input type="text" id="fullName" th:field="*{fullName}" /><br/>
-        <p class="help-block text-danger" id="fullNameError" style="display: none; font-size: small; color: rgb(234, 77, 77);">
-          Full name cannot start or end with a space.</p>
+        <div class="form-group">
+          <label for="fullName" class="form-label">Họ Tên</label>
+          <input type="text" id="fullName" th:field="*{fullName}" class="form-control">
+          <p class="help-block text-danger" id="fullNameError" style="display: none; font-size: small; color: rgb(234, 77, 77);">
+            Họ Tên không được bắt đầu bằng dấu cách. </p>
+        </div>
 
-        <label for="codeName">Code Name:</label>
-        <input type="text" id="codeName" th:field="*{codeName}" /><br/>
-        <p class="help-block text-danger" id="codeNameError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+        <div class="form-group">
+          <label for="codeName" class="form-label">Code Name</label>
+          <input type="text" id="codeName" th:field="*{codeName}" class="form-control">
+          <p class="help-block text-danger" id="codeNameError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+        </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}" /><br/>
-        <p class="help-block text-danger" id="emailEmptyError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email is required</p>
-        <p class="help-block text-danger" id="emailFormatError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Invalid email format</p>
-        <p class="help-block text-danger" id="emailSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email cannot start or end with a space</p>
-        <p class="help-block text-danger" id="emailContainsSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email cannot contain spaces</p>
-        <p class="help-block text-danger" id="emailExistsError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" th:field="*{email}" class="form-control">
+          <p class="help-block text-danger" id="emailEmptyError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Bắt Buộc có Email.</p>
+          <p class="help-block text-danger" id="emailFormatError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Định dạng email không hợp lệ.</p>
+          <p class="help-block text-danger" id="emailSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email không được bắt đầu bằng dấu cách.</p>
+          <p class="help-block text-danger" id="emailContainsSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Email không được chứa dấu cách.</p>
+          <p class="help-block text-danger" id="emailExistsError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+        </div>
 
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone" th:field="*{phone}" /><br/>
-        <p class="help-block text-danger" id="phoneError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+        <div class="form-group">
+          <label for="phone" class="form-label">Số Điện Thoại</label>
+          <input type="text" id="phone" th:field="*{phone}" class="form-control">
+          <p class="help-block text-danger" id="phoneError" style="display: none; font-size: small; color: rgb(234, 77, 77);"></p>
+        </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" th:field="*{password}" /><br/>
-        <p class="help-block text-danger" id="passwordEmptyError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Password is required.</p>
-        <p class="help-block text-danger" id="passwordLengthError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Password must be at least 6 characters long.</p>
-        <p class="help-block text-danger" id="passwordSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Password cannot start or end with a space.</p>
+        <div class="form-group">
+          <label for="password" class="form-label">Mật Khẩu</label>
+          <input type="password" id="password" th:field="*{password}" class="form-control">
+          <p class="help-block text-danger" id="passwordEmptyError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Bắt buộc phải điền mật khẩu.</p>
+          <p class="help-block text-danger" id="passwordLengthError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Mật khẩu phải có độ dài ít nhất 6 ký tự.</p>
+          <p class="help-block text-danger" id="passwordSpaceError" style="display: none; font-size: small; color: rgb(234, 77, 77);">Mật khẩu không thể bắt đầu hoặc kết thúc bằng dấu cách.</p>
+        </div>
 
-        <label for="gender">Gender:</label>
-        <select id="gender" th:field="*{gender}" class="form-control">
-          <option value="true">Male</option>
-          <option value="false">Female</option>
-        </select><br/>
+        <div class="form-group">
+          <label for="gender" class="form-label">Giới Tính</label>
+          <select id="gender" th:field="*{gender}" class="form-control">
+            <option value="true">Nam</option>
+            <option value="false">Nữ</option>
+          </select>
+        </div>
 
         <!-- Disabled input for role -->
-        <label for="role">Role:</label>
-        <input type="text" id="role" value="STAFF" disabled /><br/>
+        <div class="form-group">
+          <label for="role" class="form-label">Vị Trí</label>
+          <input type="text" id="role" value="STAFF" disabled class="form-control">
+        </div>
 
         <!-- Hidden input for canteenId -->
-        <label for="canteen">Canteen:</label>
-        <input type="text" id="canteen" th:value="${canteenName}" disabled /><br/>
+        <div class="form-group">
+          <label for="canteen" class="form-label">Canteen</label>
+          <input type="text" id="canteen" th:value="${canteenName}" disabled class="form-control">
+        </div>
 
-        <button type="submit">Save</button>
-        <p class="help-block text-danger" id="generalError" style="display: none; font-size: medium">Please correct the errors above and try again.</p>
+        <button type="submit" class="btn btn-primary">Thêm Nhân Viên</button>
+        <p class="help-block text-danger" id="generalError" style="display: none; font-size: medium">Vui lòng sửa các lỗi trên và thử lại.</p>
       </form>
+      <a th:if="${user != null && user.canteen != null}" th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}" class="back-link">Quay lại trang</a>
+      <a th:if="${user == null || user.canteen == null}" href="#" class="back-link">Quay lại trang</a>
     </div>
   </div>
 </main>

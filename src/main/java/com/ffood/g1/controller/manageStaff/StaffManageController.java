@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.Console;
 import java.util.List;
@@ -34,16 +35,26 @@ public class StaffManageController {
     public String listStaff(Model model,
                             @RequestParam(value = "page", defaultValue = "0") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,
-                            @RequestParam(value = "canteenId") Integer canteenId) {
+                            @RequestParam(value = "canteenId") Integer canteenId,
+                            @RequestParam(value = "success", required = false) String success) {
         page = Math.max(page, 0);
         Page<User> staffPage = userService.getAllStaff(page, size, canteenId);
         Canteen canteen = canteenService.getCanteenById(canteenId); // Retrieve the canteen object
         model.addAttribute("staffPage", staffPage);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("canteen", canteen); // Add canteen to the model
+
+        // Get canteen name
+        model.addAttribute("canteenName", canteen.getCanteenName());
+        model.addAttribute("canteenId", canteenId);
+
+        if ("add".equals(success)) {
+            model.addAttribute("successMessage", "Nhân viên đã được thêm thành công!");
+        } else if ("edit".equals(success)) {
+            model.addAttribute("successMessage", "Nhân viên đã được chỉnh sửa thành công!");
+        }
         return "staff-management/manage-staff";
     }
-
     @GetMapping("/search-staff")
     public String searchStaff(Model model,
                               @RequestParam(value = "page", defaultValue = "0") int page,
@@ -87,10 +98,13 @@ public class StaffManageController {
     @PostMapping("/edit-staff")
     public String updateStaffRole(@RequestParam Integer userId,
                                   @RequestParam("isActive") Boolean isActive,
-                                  @RequestParam(value = "canteenId") Integer canteenId) {
+                                  @RequestParam(value = "canteenId") Integer canteenId,
+                                  RedirectAttributes redirectAttributes) {
         User user = userService.getUserById(userId);
         user.setIsActive(isActive);  // Cập nhật trạng thái hoạt động của người dùng
         userService.saveUser(user);  // Lưu thay đổi
+
+        redirectAttributes.addFlashAttribute("success", "edit");
         return "redirect:/manage-staff?canteenId=" + canteenId;
     }
 
@@ -116,7 +130,6 @@ public class StaffManageController {
         Canteen canteen = canteenService.getCanteenById(canteenId);
         user.setCanteen(canteen);
         userService.saveUser(user);
-        return "redirect:/manage-staff?canteenId=" + canteenId;
+        return "redirect:/manage-staff?canteenId=" + canteenId + "&success=add";
     }
-
 }
