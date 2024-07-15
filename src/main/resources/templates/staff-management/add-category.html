@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/manage-category.css}" rel="stylesheet" type="text/css">
     <style>
         .form-container {
             width: 50%;
@@ -109,11 +109,12 @@
 
                 <div class="form-group">
                     <label for="categoryImage" class="form-label">Ảnh Danh Mục</label>
-                    <input type="file" id="categoryImage" name="categoryImage" class="form-control" accept="image/*">
+
                     <div class="error-message" th:if="${#fields.hasErrors('categoryImage')}" th:errors="*{categoryImage}"></div>
+                    <input type="file" id="categoryImage" name="categoryImage" class="form-control" accept="image/*">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Thêm</button>
+                <button type="submit" class="btn btn-primary">Thêm Sản Phẩm</button>
             </form>
             <a th:href="@{/manage-category(canteenId=${canteenId})}" class="back-link">Quay lại Trang</a>
         </div>

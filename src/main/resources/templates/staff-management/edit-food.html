@@ -30,7 +30,8 @@
             font-size: 14px;
         }
 
-        .form-group select, .form-group textarea {
+        .form-group textarea {
+            height: 150px; /* Increase the height for more visible area */
             width: auto;
         }
 
@@ -95,9 +96,6 @@
 
     <div class="p-6 flex justify-center">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
-<!--            <div class="flex justify-between mb-4 items-start">-->
-<!--                <div class="font-medium">Chỉnh sửa đồ ăn của : <span th:text="${canteenName}"></span></div>-->
-<!--            </div>-->
             <form th:action="@{/edit-food}" method="post" th:object="${food}" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{foodId}">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
@@ -109,15 +107,15 @@
                     </select>
                 </div>
 
-                        <div class="form-group">
-                            <label for="foodName" class="form-label">Tên Đồ Ăn</label>
+                <div class="form-group">
+                    <label for="foodName" class="form-label">Tên Đồ Ăn</label>
                     <input type="text" id="foodName" th:field="*{foodName}" class="form-control">
                     <div th:if="${#fields.hasErrors('foodName')}" th:errors="*{foodName}" class="error-message"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="form-label">Mô Tả</label>
-                    <textarea id="description" th:field="*{description}" class="form-control" rows="4"></textarea>
+                    <textarea id="description" th:field="*{description}" class="form-control" rows="10"></textarea>
                     <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message"></div>
                 </div>
 

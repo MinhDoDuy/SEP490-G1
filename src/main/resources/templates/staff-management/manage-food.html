@@ -48,6 +48,15 @@
       from {bottom: 30px; opacity: 1;}
       to {bottom: 0; opacity: 0;}
     }
+
+    /* Custom striped rows */
+    .custom-striped tbody tr:nth-of-type(odd) {
+      background-color: #f2f2f2;
+    }
+
+    .custom-striped tbody tr:nth-of-type(even) {
+      background-color: #ffffff;
+    }
   </style>
 </head>
 <body class="text-gray-800 font-inter">
@@ -72,17 +81,17 @@
   </div>
 
   <div class="p-6">
-    <div th:if="${successMessage}" class="hidden" th:text="${successMessage}" id="successMessage"></div>
-    <div th:if="${errorMessage}" class="hidden" th:text="${errorMessage}" id="errorMessage"></div>
+    <div th:if="${successMessage}" class="alert alert-success hidden" th:text="${successMessage}" id="successMessage"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger hidden" th:text="${errorMessage}" id="errorMessage"></div>
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Quản lý đồ ăn của: <span th:text="${canteenName}"></span></div>
         <a th:href="@{/add-food-form(canteenId=${canteenId})}" class="btn btn-primary"
-           style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Thêm Đồ Ăn</a>
+           style="padding: 10px 20px; background-color: #FF914D; color: white; text-decoration: none; border-radius: 4px;">Thêm Đồ Ăn</a>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full min-w-[540px]">
+        <table class="custom-striped w-full min-w-[540px]">
           <thead>
           <tr>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">ID</th>
@@ -102,12 +111,11 @@
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.description}">Description</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.price}">100.0</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
-              <img th:src="@{${food.imageFood}}" alt="Food Image" width="50"/>
+              <img th:src="@{${food.imageFood}}" alt="Food Image" width="150"/>
             </td>
             <td class="py-2 px-4 border-b border-b-gray-50">
               <a th:href="@{/edit-food/{foodId}(foodId=${food.foodId})}" class="btn btn-primary"
-                 style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Sửa</a>
-
+                 style="padding: 5px 10px; background-color: #FF914D; color: white; text-decoration: none; border-radius: 2px;">Sửa</a>
             </td>
           </tr>
           </tbody>

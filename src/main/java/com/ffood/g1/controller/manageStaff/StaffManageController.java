@@ -44,6 +44,10 @@ public class StaffManageController {
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("canteen", canteen); // Add canteen to the model
 
+        // Get canteen name
+        model.addAttribute("canteenName", canteen.getCanteenName());
+        model.addAttribute("canteenId", canteenId);
+
         if ("add".equals(success)) {
             model.addAttribute("successMessage", "Nhân viên đã được thêm thành công!");
         } else if ("edit".equals(success)) {

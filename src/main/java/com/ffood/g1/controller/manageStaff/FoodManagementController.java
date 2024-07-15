@@ -62,6 +62,10 @@ public class FoodManagementController {
         if (currentUser.getRole().getRoleName().equals("ROLE_MANAGER") && currentUser.getCanteen().getCanteenId().equals(canteenId)) {
             // Get the list of foods for the canteen managed by the user
             List<Food> foods = foodService.findByCanteenId(canteenId);
+
+            // Sort foods by category name
+            foods.sort((f1, f2) -> f1.getCategory().getCategoryName().compareToIgnoreCase(f2.getCategory().getCategoryName()));
+
             model.addAttribute("foods", foods);
 
             // Get canteen name
@@ -85,6 +89,7 @@ public class FoodManagementController {
             return "error/403";
         }
     }
+
 
     @GetMapping("/add-food-form")
     public String showAddFoodForm(@RequestParam("canteenId") Integer canteenId, Model model) {
@@ -201,6 +206,11 @@ public class FoodManagementController {
                                  @RequestParam(value = "error", required = false) String error) {
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
+        model.addAttribute("canteenId", canteenId);
+
+        // Get canteen name
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        model.addAttribute("canteenName", canteen.getCanteenName());
         model.addAttribute("canteenId", canteenId);
 
         if ("add".equals(success)) {
