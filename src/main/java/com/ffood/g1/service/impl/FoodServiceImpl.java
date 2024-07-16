@@ -81,6 +81,12 @@ public class FoodServiceImpl implements FoodService {
         return foodRepository.countFoodByCanteenId(canteenId);
     }
 
+    @Override
+    public Page<Food> findFoodByCanteenId(Integer canteenId, Pageable pageable) {
+        return foodRepository.findFoodByCanteenId(canteenId, pageable);
+    }
+
+
     public Page<Food> getFilteredFoods(List<Integer> categoryIds, List<Integer> canteenIds, String name, Pageable pageable) {
         if (categoryIds != null && !categoryIds.isEmpty() && canteenIds != null && !canteenIds.isEmpty() && name != null) {
             return foodRepository.findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable);

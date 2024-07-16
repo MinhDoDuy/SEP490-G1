@@ -38,4 +38,7 @@ public interface FoodService {
 
  Integer countFoodByCanteenId(Integer canteenId);
 
+
+  Page<Food> findFoodByCanteenId(Integer canteenId, Pageable pageable);
+
 }

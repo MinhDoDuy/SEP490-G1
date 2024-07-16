@@ -74,4 +74,8 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Integer
 
     @Query("SELECT COUNT(f) FROM Food f WHERE f.canteen.canteenId = :canteenId")
     Integer countFoodByCanteenId(@Param("canteenId") Integer canteenId);
+
+
+    @Query("SELECT f FROM Food f WHERE f.canteen.canteenId = :canteenId")
+    Page<Food> findFoodByCanteenId(@Param("canteenId") Integer canteenId, Pageable pageable);
 }
