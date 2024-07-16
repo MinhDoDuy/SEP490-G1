@@ -140,6 +140,17 @@
                 <span>Đánh Giá: <span>0</span></span>
             </div>
         </div>
+
+        <div>
+            <img src="/img/chococ.png" alt="Canteen Image" width="80" height="80">
+            <div>
+                <span th:text="${canteenInformation.canteenName}">Canteen Name</span>
+                <span>Sản Phẩm: <span th:text="${countFoodsByCanteenId}"></span></span>
+                <span>Đang Theo: <span>0</span></span>
+                <span>Đánh Giá: <span>0</span></span>
+            </div>
+        </div>
+
         <div>
             <button class="btn btn-primary">Theo Dõi</button>
             <button class="btn btn-secondary">Chat</button>
@@ -324,18 +335,18 @@
             dots: true,
             autoplay: true,
             autoplayTimeout: 5000, // Chuyển slide sau mỗi 5 giây
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                1000: {
-                    items: 4
-                }
-            },
-            navText: ["<i class='fa fa-arrow-left'></i>", "<i class='fa fa-arrow-right'></i>"]
+            // responsive: {
+            //     0: {
+            //         items: 1
+            //     },
+            //     600: {
+            //         items: 2
+            //     },
+            //     1000: {
+            //         items: 4
+            //     }
+            // },
+            // navText: ["<i class='fa fa-arrow-left'></i>", "<i class='fa fa-arrow-right'></i>"]
         });
     });
 </script>

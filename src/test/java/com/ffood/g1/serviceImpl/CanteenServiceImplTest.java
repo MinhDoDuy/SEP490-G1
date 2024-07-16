@@ -33,7 +33,7 @@ public class CanteenServiceImplTest {
     CanteenRepository repository;
 
     @Test
-    void getAllCanteens() {
+    void getAllCanteens_nomal() {
         Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen1").isActive(true).build();
         Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen2").isActive(true).build();
 
@@ -47,6 +47,23 @@ public class CanteenServiceImplTest {
         assertEquals(2, empList.size());
         verify(repository, times(1)).findAll();
     }
+
+    @Test
+    void getAllCanteens_binalry() {
+        Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen1").isActive(true).build();
+        Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen2").isActive(true).build();
+
+        List<Canteen> canteens = Arrays.asList(canteen1, canteen2);
+
+        when(repository.findAll()).thenReturn(canteens);
+
+        //test
+        List<Canteen> empList = service.getAllCanteens();
+
+        assertEquals(2, empList.size());
+        verify(repository, times(1)).findAll();
+    }
+
 
     @Test
     void searchCanteens() {
