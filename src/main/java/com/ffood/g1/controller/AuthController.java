@@ -103,7 +103,7 @@ public class AuthController {
     public String processForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
             userService.sendResetPasswordEmail(email, request);
-            redirectAttributes.addFlashAttribute("successMessage", "Password reset email sent.");
+            redirectAttributes.addFlashAttribute("successMessage", "đặt lại mật khẩu đã gửi về mail.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
         }

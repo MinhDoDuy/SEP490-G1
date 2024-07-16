@@ -25,23 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
     @Autowired
     private UserService userService;
 
-    @Value("${aws.accessKey}")
-    private String accessKey;
 
-    @Value("${aws.secretKey}")
-    private String secretKey;
-
-    @Value("${aws.region}")
-    private String region;
-
-    @Bean
-    public AmazonS3 s3Client() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
-        return AmazonS3ClientBuilder.standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                .build();
-    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
