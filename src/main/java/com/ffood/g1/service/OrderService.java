@@ -11,6 +11,7 @@ import com.ffood.g1.enum_pay.PaymentMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface OrderService {
@@ -37,4 +38,13 @@ public interface OrderService {
     List<Object[]> findRevenueDataCanteenByYear(Integer canteenId);
 
     Integer countCompletedOrdersByCanteenId(Integer canteenId);
+
+
+    //đặt order
+    void updateOrderStatus(Integer orderId, OrderStatus newStatus);
+
+    void cancelOrder(Integer orderId);
+
+
+
 }

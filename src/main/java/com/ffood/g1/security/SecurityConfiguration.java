@@ -72,7 +72,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                .hasRole("MANAGER")
                 .antMatchers()
                 .hasRole("STAFF")
-                .antMatchers("/order-list","/order-list/**").hasAnyRole("STAFF", "MANAGER")
+                .antMatchers("/order-list","/order-list/**","/update-order-status"
+                ,"/update-order-status/**","/cancel-order","/cancel-order/**").hasAnyRole("STAFF", "MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

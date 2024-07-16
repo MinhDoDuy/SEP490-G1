@@ -12,13 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+    public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
@@ -119,5 +116,23 @@ public class OrderServiceImpl implements OrderService {
     public Integer countCompletedOrdersByCanteenId(Integer canteenId) {
         return orderRepository.countCompletedOrdersByCanteenId(canteenId);
     }
+
+
+
+    @Override
+    public void updateOrderStatus(Integer orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        order.setOrderStatus(newStatus);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void cancelOrder(Integer orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        order.setOrderStatus(OrderStatus.CANCEL);
+        orderRepository.save(order);
+    }
+
+
 
 }
