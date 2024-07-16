@@ -186,6 +186,40 @@
                 }
             }
         }
+        .nav-item1 {
+            margin-right: 45px;
+            position: relative;
+
+            &:after {
+                position: absolute;
+                right: -25px;
+                top: 0;
+                content: "|";
+                color: #444444;
+            }
+
+            &:last-child {
+                margin-right: 0;
+
+                &:after {
+                    display: none;
+                }
+            }
+
+            .nav-link {
+                font-size: 16px;
+                color: #444444;
+                padding: 0;
+                border: none;
+                padding-bottom: 12px;
+                border-bottom: 2px solid transparent;
+
+                &.active {
+                    color: $heading-color;
+                    border-bottom: 1px solid $heading-color;
+                }
+            }
+        }
     }
 
     .tab-content {
