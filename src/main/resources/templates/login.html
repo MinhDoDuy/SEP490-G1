@@ -20,7 +20,10 @@
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
-                        <p class="login-card-description">Đăng nhập tài khoản của bạn</p>
+                        <div class="brand-wrapper" style="text-align: center;">
+                            <img src="/img/chococ.png" alt="logo" style="width: 75px; height: 95px; object-fit: contain;">
+                        </div>
+                        <p class="login-card-description">Đăng nhập</p>
                         <form th:action="@{/login}" method="post">
                             <div th:if="${successMessage}" class="alert alert-success">
                                 <span th:text="${successMessage}"></span>
@@ -32,11 +35,11 @@
                                 <div class="alert alert-success">Đăng xuất thành công.</div>
                             </div>
                             <div class="form-group">
-                                <label for="email" class="sr-only">Email</label>
+                                <label for="email">Email: <span style="color: rgb(234, 77, 77);"> *</span></label>
                                 <input type="email" name="username" id="email" class="form-control" placeholder="*****@email.com" autofocus="autofocus">
                             </div>
                             <div class="form-group mb-4">
-                                <label for="password" class="sr-only">Password</label>
+                                <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> *</span></label>
                                 <input type="password" name="password" id="password" class="form-control" placeholder="***********" >
                                 <span toggle="#password" class="mdi mdi-eye toggle-password"></span>
                             </div>
@@ -49,7 +52,11 @@
                             </div>
                             <div class="buttons mt-4">
                                 <button type="submit" class="btn btn-block login-btn mb-4">Đăng nhập</button>
-                                <a th:href="@{/register}" type="button" class="btn btn-block signup-btn">Đăng Ký</a>
+<!--                                <a th:href="@{/register}" type="button" class="btn btn-block signup-btn">Đăng Ký</a>-->
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/register}" class="btn btn-secondary flex-grow-1 mr-2">Đăng Ký</a>
+                                <a th:href="@{/homepage}" class="btn btn-secondary flex-grow-1">Quay lại trang chủ</a>
                             </div>
                         </form>
                         <nav class="login-card-footer-nav">

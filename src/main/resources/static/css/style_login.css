@@ -14,7 +14,7 @@ body {
 }
 
 .brand-wrapper .logo {
-    height: 50px; /* Adjusted for better visibility */
+    height: 75px; /* Adjusted for better visibility */
 }
 
 .login-card {
@@ -23,8 +23,8 @@ body {
     box-shadow: 0 10px 30px 0 rgba(172, 168, 168, 0.43);
     overflow: hidden;
     width: 100%;
-    max-width: 900px; /* Slightly reduced width for better look */
-    height: 100%; /* Make the card take full height */
+    max-width: 1200px; /* Adjusted width for better look */
+    height: auto; /* Make the card take full height */
     display: flex;
     flex-direction: row; /* Ensure row direction for better alignment */
     background: #fff; /* Added background color */
@@ -130,10 +130,11 @@ body {
 .form-group {
     position: relative;
 }
+
 .toggle-password {
     position: absolute;
     right: 10px;
-    top: 50%;
+    top: 72%;
     transform: translateY(-50%);
     cursor: pointer;
 }
