@@ -103,9 +103,9 @@ public class AuthController {
     public String processForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
             userService.sendResetPasswordEmail(email, request);
-            redirectAttributes.addFlashAttribute("successMessage", "Password reset email sent.");
+            redirectAttributes.addFlashAttribute("successMessage", "Chúng tôi đã gửi Email về cho bạn");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Chúng tôi không thấy có Email người dùng ");
         }
         return "redirect:/forgot-password";
     }
@@ -113,7 +113,7 @@ public class AuthController {
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
         if (!userService.isResetTokenValid(token)) {
-            model.addAttribute("errorMessage", "Invalid or expired reset token.");
+            model.addAttribute("errorMessage", "Mã thông báo đặt lại không hợp lệ hoặc đã hết hạn.");
             return "reset-password";
         }
 
@@ -126,13 +126,13 @@ public class AuthController {
                                        @RequestParam("password") String password,
                                        RedirectAttributes redirectAttributes) {
         if (password.length() < 6) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Password must be at least 6 characters long.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Mật Khẩu phải dài ít nhất 6 ký tự.");
             return "redirect:/reset-password?token=" + token;
         }
 
         try {
             userService.updatePasswordReset(token, password);
-            redirectAttributes.addFlashAttribute("successMessage", "Password reset successful.");
+            redirectAttributes.addFlashAttribute("successMessage", "Đặt lại Mật Khẩu thành công.");
             return "redirect:/login";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
@@ -169,12 +169,12 @@ public class AuthController {
             }
 
             if (!user.getCodeName().matches(codeNamePattern)) {
-                redirectAttributes.addAttribute("codeNameExistsError", "Invalid code name. Please enter letters and numbers between 6-20 characters.");
+                redirectAttributes.addAttribute("codeNameExistsError", "MSSV không hợp lệ. Vui lòng nhập các chữ cái và số trong khoảng 6-20 ký tự.");
                 hasError = true;
             }
 
             if (userService.isCodeNameExist(user.getCodeName())) {
-                redirectAttributes.addAttribute("codeNameExistsError", "Code Name này đã được đăng ký. Vui lòng sử dụng một code name khác.");
+                redirectAttributes.addAttribute("codeNameExistsError", "MSSV này đã được đăng ký. Vui lòng sử dụng một MSSV khác.");
                 hasError = true;
             }
 

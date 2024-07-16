@@ -20,7 +20,10 @@
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
-                        <p class="login-card-description">Đăng nhập tài khoản của bạn</p>
+                        <div class="brand-wrapper" style="text-align: center;">
+                            <img src="/img/chococ.png" alt="logo" style="width: 75px; height: 95px; object-fit: contain;">
+                        </div>
+                        <p class="login-card-description">Đăng nhập</p>
                         <form th:action="@{/login}" method="post">
                             <div th:if="${successMessage}" class="alert alert-success">
                                 <span th:text="${successMessage}"></span>
@@ -36,7 +39,7 @@
                                 <input type="email" name="username" id="email" class="form-control" placeholder="*****@email.com" autofocus="autofocus">
                             </div>
                             <div class="form-group mb-4">
-                                <label for="password">Password: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                                <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> *</span></label>
                                 <input type="password" name="password" id="password" class="form-control" placeholder="***********" >
                                 <span toggle="#password" class="mdi mdi-eye toggle-password"></span>
                             </div>

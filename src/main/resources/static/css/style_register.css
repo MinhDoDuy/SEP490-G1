@@ -41,14 +41,6 @@ body {
     cursor: pointer;
 }
 
-.toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
-
 input, textarea, select, button {
     font-family: "Karla", sans-serif;
     color: #333;
@@ -286,5 +278,24 @@ button:hover {
         font-size: 30px;
         margin-bottom: 40px;
     }
+}
+
+/* Additional CSS for Back to Login Button */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #6d5555;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: background 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #5a4848;
 }
 
