@@ -35,10 +35,13 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Integer
 
     List<Food> findByCategory(Category category);
 
+    @Query("SELECT f FROM Food f WHERE f.category.categoryId = :categoryId")
+    List<Food> getFoodsByCategoryId(@Param("categoryId") Integer categoryId);
 
     Optional<Food> findById(Integer id);
     //Page<Item> findAll(Pageable pageable);
-
+    @Query("SELECT COUNT(f) FROM Food f WHERE f.canteen.canteenId = :canteenId")
+    Integer countByCanteenId(@Param("canteenId") Integer canteenId);
 
     @Query("SELECT f FROM Food f JOIN f.category c JOIN f.canteen cn WHERE c.categoryId IN :categoryIds AND cn.canteenId IN :canteenIds AND LOWER(f.foodName) LIKE LOWER(CONCAT('%', :name, '%'))")
     Page<Food> findByCategoriesAndCanteensAndName(@Param("categoryIds") List<Integer> categoryIds, @Param("canteenIds") List<Integer> canteenIds, @Param("name") String name, Pageable pageable);

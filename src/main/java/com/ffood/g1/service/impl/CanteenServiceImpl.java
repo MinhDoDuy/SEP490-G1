@@ -73,4 +73,5 @@ public class CanteenServiceImpl implements CanteenService {
         return canteenRepository.findByCanteenName(canteenName) != null;
     }
 
+
 }

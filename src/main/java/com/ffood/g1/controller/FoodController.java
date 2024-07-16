@@ -3,6 +3,7 @@ package com.ffood.g1.controller;
 import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.CategoryService;
 import com.ffood.g1.service.FoodService;
@@ -12,9 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -34,18 +33,30 @@ public class FoodController {
     private UserService userService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private FoodRepository categoryRepository;
+
     @Controller
     @RequestMapping("/categories")
     public class CategoryController {
-
-
         @GetMapping
         public ModelAndView getAllCategories(Model model) {
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
             return new ModelAndView("categories");
         }
+    }
 
+//    @GetMapping("/foodByCategory/{categoryId}")
+//    public List<Food> getFoodsByCategoryId(@PathVariable Integer categoryId ,Model model) {
+//        List<Food> foods = foodService.getFoodsByCategoryId(categoryId);
+//        model.addAttribute("foods", foods);
+//        return foods;
+//    }
+
+    @GetMapping("/foodByCategory/{categoryId}")
+    public @ResponseBody List<Food> getFoodsByCategoryId(@PathVariable Integer categoryId) {
+        return foodService.getFoodsByCategoryId(categoryId);
     }
 
     @GetMapping("/food_details")

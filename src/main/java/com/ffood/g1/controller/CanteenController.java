@@ -39,9 +39,24 @@ public class CanteenController {
 
     @Autowired
     private CanteenService canteenService;
-
     @Autowired
     private CartService cartService;
+
+    @GetMapping("/canteen_info")
+    public String getFoodsByCanteensId(@RequestParam("canteenId") Integer canteenId
+            , Model model) {
+        List<Food> listFoodByCanteenId = foodService.getFoodsByCanteenId(canteenId);
+        model.addAttribute("listFoodByCanteenId", listFoodByCanteenId);
+
+        Canteen canteen_information=canteenService.getCanteenById(canteenId);
+        model.addAttribute("canteenInformation", canteen_information);
+
+        Integer countFoodsByCanteenId = foodService.countFoodsByCanteenId(canteenId);
+        model.addAttribute("countFoodsByCanteenId", countFoodsByCanteenId);
+        return "canteen/canteen-info";
+    }
+
+
     @GetMapping("/canteen_details")
     public String viewCanteens(@RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "categoryId", required = false) Integer categoryId,

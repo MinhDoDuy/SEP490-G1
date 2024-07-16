@@ -30,6 +30,12 @@ public interface FoodService {
 
     void save(Food food);
 
+    List<Food> getFoodsByCategoryId(Integer categoryId);
+
+ List<Food> getFoodsByCanteenId(Integer canteenId);
+
+    Integer countFoodsByCanteenId(Integer canteenId);
+
  Integer countFoodByCanteenId(Integer canteenId);
 
 }
