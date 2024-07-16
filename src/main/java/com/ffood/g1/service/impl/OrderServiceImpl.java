@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderType(orderType);
         order.setPaymentMethod(paymentMethod);
         order.setOrderCode(orderCode);
-        order.setOrderStatus(OrderStatus.READY);
+        order.setOrderStatus(OrderStatus.PENDING);
 
 
 //        // Lưu Order trước để lấy ID

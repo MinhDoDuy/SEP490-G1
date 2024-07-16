@@ -1,21 +1,9 @@
 <!DOCTYPE html>
 <html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description"
-          content="Croak Order - Your go-to solution for ordering delicious meals from the canteens at FPT University. Enjoy a variety of food options with the convenience of online ordering.">
-    <meta name="keywords"
-          content="Croak Order, food delivery, canteen, FPT University, online ordering, student meals, convenient dining">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta property="og:image"
-          content="https://croakorder.s3.amazonaws.com/1720542839497-Screenshot_2024-07-09_233317.png">
+
     <title>Croak Order</title>
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
+
     <!-- Css Styles -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
@@ -28,54 +16,16 @@
     <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
     <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
-          rel="stylesheet">
+
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Libraries Stylesheet -->
-    <link th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
     <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
     <!-- Template Stylesheet -->
     <link href="/css/style_test.css" th:href="@{/css/style_test.css}" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-
     <style>
-        .owl-prev, .owl-next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #fff;
-            border-radius: 50%;
-            border: 1px solid #ccc;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        .owl-prev {
-            left: -20px;
-        }
-
-        .owl-next {
-            right: -20px;
-        }
-
-        .owl-prev i, .owl-next i {
-            font-size: 20px;
-        }
-
         .section-divider {
             border: none;
             height: 3px;
@@ -85,11 +35,6 @@
     </style>
 </head>
 <body>
-<!-- Page Preloder -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
-
 <div th:replace="header :: header"></div>
 
 <!-- Hero Start -->
@@ -123,7 +68,8 @@
                                 <p th:text="${canteen.openingHours}"></p>
                             </div>
 
-                            <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}" class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}">Fruites</a>
+                            <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}"
+                               class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}">Fruites</a>
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
@@ -146,7 +92,6 @@
 <hr class="section-divider">
 
 
-
 <!-- Categories Section Begin -->
 <div class="categories">
     <div class="container">
@@ -166,7 +111,7 @@
                                         <span class="text-dark" style="width: 130px;">Bán chạy</span>
                                     </a>
                                 </li>
-                                <li class="nav-item" th:each="category : ${categories}">
+                                <li class="nav-item1" th:each="category : ${categories}">
                                     <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2"
                                        th:data-category-id="${category.categoryId}">
                                         <span class="text-dark" style="width: 130px;"
@@ -194,18 +139,18 @@
                                                 </div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
 
-                                                        <h4><a th:href="@{/food_details(id=${food.foodId})} "
-                                                               th:text="${food.foodName}"></a></h4>
-                                                        <p><span th:text="${food.canteen.canteenName}"></span></p>
-                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                    <h4><a th:href="@{/food_details(id=${food.foodId})} "
+                                                           th:text="${food.foodName}"></a></h4>
+                                                    <p><span th:text="${food.canteen.canteenName}"></span></p>
+                                                    <div class="d-flex justify-content-between flex-lg-wrap">
 
-                                                            <p class="text-dark fs-5 fw-bold mb-0"><span
-                                                                    th:text="${food.price} + ' đ'"></span></p>
-                                                                <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
-                                                                   class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
-                                                                </a>
-                                                        </div>
+                                                        <p class="text-dark fs-5 fw-bold mb-0"><span
+                                                                th:text="${food.price} + ' đ'"></span></p>
+                                                        <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
+                                                           class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                            <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
+                                                        </a>
+                                                    </div>
 
                                                 </div>
                                             </div>
@@ -276,15 +221,15 @@
 </div>
 
 
-
 <!-- Nội dung trang web của bạn -->
 <div class="container-fluid vesitable py-5">
-    <div class="container py-5"><hr class="section-divider">
+    <div class="container py-5">
+        <hr class="section-divider">
         <h1 class="mb-0">Các sản phẩm bán chạy nhất</h1>
         <div style="margin-top: 10px"></div>
         <div class="owl-carousel vegetable-carousel justify-content-center">
-            <div class="border border-primary rounded position-relative vesitable-item" th:each="food : ${items_home}"
-                 style="margin-left: 10px">
+            <div class="border border-primary rounded position-relative " th:each="food : ${items_home}"
+            >
                 <div class="vesitable-img">
                     <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt="" style="height: 220px">
                 </div>
@@ -307,107 +252,94 @@
             <!-- Repeat similar structure for other items -->
         </div>
     </div>
-</div>
-<!-- Vesitable Shop Start -->
 
-<hr class="section-divider">
+    <!-- Vesitable Shop Start -->
 
-<!-- Các service -->
-<div class="container-fluid featurs py-5" style="background-color: #cccccc">
-    <div class="container py-5">
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fas fa-car-side fa-3x text-white"></i>
-                    </div>
-                    <div class="featurs-content text-center">
-                        <h5>Free Shipping</h5>
-                        <p class="mb-0">Free on order over $300</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fas fa-user-shield fa-3x text-white"></i>
-                    </div>
-                    <div class="featurs-content text-center">
-                        <h5>Security Payment</h5>
-                        <p class="mb-0">100% security payment</p>
+    <hr class="section-divider">
+
+    <!-- Các service -->
+    <div class="container-fluid featurs py-5" style="background-color: #cccccc">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fas fa-car-side fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>Free Shipping</h5>
+                            <p class="mb-0">Free on order over $300</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fas fa-exchange-alt fa-3x text-white"></i>
-                    </div>
-                    <div class="featurs-content text-center">
-                        <h5>30 Day Return</h5>
-                        <p class="mb-0">30 day money guarantee</p>
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fas fa-user-shield fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>Security Payment</h5>
+                            <p class="mb-0">100% security payment</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fa fa-phone-alt fa-3x text-white"></i>
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fas fa-exchange-alt fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>30 Day Return</h5>
+                            <p class="mb-0">30 day money guarantee</p>
+                        </div>
                     </div>
-                    <div class="featurs-content text-center">
-                        <h5>24/7 Support</h5>
-                        <p class="mb-0">Support every time fast</p>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fa fa-phone-alt fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>24/7 Support</h5>
+                            <p class="mb-0">Support every time fast</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Featurs Section End -->
+
+    <div th:replace="footer :: footer"></div>
 
 
-<div th:replace="footer :: footer"></div>
-<!-- Js Plugins -->
-<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/jquery.nice-select.min.js}"></script>
-<script th:src="@{/js/jquery.barfiller.js}"></script>
-<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
-<script th:src="@{/js/jquery.slicknav.js}"></script>
-<script th:src="@{/js/owl.carousel.min.js}"></script>
-<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
-<script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
 
-<!-- Back to Top -->
-<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top">
-    <i class="fa fa-arrow-up"></i>
-</a>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.nav-item1 a').forEach(item => {
+                item.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    let categoryId = this.getAttribute('data-category-id');
+                    console.log("Category ID: " + categoryId); // Ghi lại giá trị của categoryId
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.nav-item a').forEach(item => {
-            item.addEventListener('click', function (event) {
-                event.preventDefault();
-                let categoryId = this.getAttribute('data-category-id');
-                console.log("Category ID: " + categoryId); // Ghi lại giá trị của categoryId
+                    fetch(`/foodByCategory/${categoryId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok ' + response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Data received: ", data); // Ghi lại dữ liệu nhận được từ API
 
-                fetch(`/foodByCategory/${categoryId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Data received: ", data); // Ghi lại dữ liệu nhận được từ API
+                            let foodContainer = document.getElementById('food-container');
+                            foodContainer.innerHTML = '';
 
-                        let foodContainer = document.getElementById('food-container');
-                        foodContainer.innerHTML = '';
-
-                        data.forEach(food => {
-                            let foodElement = document.createElement('div');
-                            foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
-                            foodElement.innerHTML = `
+                            data.forEach(food => {
+                                let foodElement = document.createElement('div');
+                                foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
+                                foodElement.innerHTML = `
                                  <div class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
                                         <img src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="${food.foodName}">
@@ -427,87 +359,51 @@
                                     </div>
                                 </div>
                             `;
-                            foodContainer.appendChild(foodElement);
+                                foodContainer.appendChild(foodElement);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('There was a problem with the fetch operation:', error);
                         });
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
+                });
             });
         });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $(".owl-carousel").owlCarousel({
-            items: 4, // Số lượng item hiển thị cùng lúc
-            loop: true,
-            margin: 10,
-            nav: true,
-            dots: true,
-            autoplay: true,
-            autoplayTimeout: 5000, // Chuyển slide sau mỗi 5 giây
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                1000: {
-                    items: 4
-                }
-            },
-            navText: ["<i class='fa fa-arrow-left'></i>", "<i class='fa fa-arrow-right'></i>"]
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if ([[${isBanned}]] == true) {
+                var banModal = new bootstrap.Modal(document.getElementById('banModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                banModal.show();
+                document.getElementById('okButton').addEventListener('click', function () {
+                    window.location.href = "/logout";
+                });
+                setTimeout(function () {
+                    window.location.href = "/logout";
+                }, 3000);
+            }
         });
-    });
-    document.addEventListener("DOMContentLoaded", function() {
-        if ([[${isBanned}]] == true) {
-            var banModal = new bootstrap.Modal(document.getElementById('banModal'), {
-                backdrop: 'static',
-                keyboard: false
-            });
-            banModal.show();
-            document.getElementById('okButton').addEventListener('click', function() {
-                window.location.href = "/logout";
-            });
-            setTimeout(function() {
-                window.location.href = "/logout";
-            }, 3000);
-        }
-    });
 
-    function submitForm(categoryId) {
-        // Tạo input ẩn chứa giá trị của categoryId
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'categoryId';
-        input.value = categoryId;
+    </script>
 
-        // Thêm input ẩn vào form
-        const form = document.getElementById('categoryForm');
-        form.appendChild(input);
+    <!-- JavaScript Libraries -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Thực hiện submit form
-        form.submit();
-    }
-</script>
+    <script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
+    <script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+    <script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+    <script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+    <script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 
-<!-- JavaScript Libraries -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
-<script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
-<script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
-<script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
-<script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
-<script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
-<script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
-
-<!-- Template Javascript -->
-<script src="/js/main_test.js" th:src="@{/js/main_test.js}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+    <!-- Template Javascript -->
+    <script src="/js/main_test.js" th:src="@{/js/main_test.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
 
 </body>
 </html>

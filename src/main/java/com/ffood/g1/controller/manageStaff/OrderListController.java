@@ -18,7 +18,7 @@ public class OrderListController {
 
     @GetMapping("/order-list/{canteenId}")
     public String getOrdersByCanteen(@PathVariable Integer canteenId, Model model) {
-        List<OrderStatus> readyAndRepairStatuses = Arrays.asList(OrderStatus.READY, OrderStatus.REPAIR);
+        List<OrderStatus> readyAndRepairStatuses = Arrays.asList(OrderStatus.PENDING, OrderStatus.PREPARE);
         List<OrderStatus> completeStatus = Collections.singletonList(OrderStatus.COMPLETE);
 
         List<Order> readyAndRepairOrders = orderService.getOrdersByCanteen(canteenId, readyAndRepairStatuses);
