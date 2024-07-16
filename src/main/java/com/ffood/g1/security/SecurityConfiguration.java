@@ -70,7 +70,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_contact", "/food_details").permitAll()
-                .antMatchers("/add_to_cart").permitAll()
+                .antMatchers("/add_to_cart","/foodByCategory/{categoryId}","/canteen_info/{canteenId}").permitAll()
                 .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 .antMatchers("/search-staff", "/dashboard/", "/manage-user/**",

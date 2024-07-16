@@ -1,14 +1,12 @@
 package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Canteen;
+import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.CartRepository;
 import com.ffood.g1.repository.FoodRepository;
-import com.ffood.g1.service.CanteenService;
-import com.ffood.g1.service.CartService;
-import com.ffood.g1.service.FoodService;
-import com.ffood.g1.service.UserService;
+import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,11 +30,12 @@ public class HomeController {
     private UserService userService;
     @Autowired
     private CartService cartService;
-
+    @Autowired
+    private CategoryService categoryService;
     @Autowired
     CartRepository cartRepository;
 
-    @GetMapping({"/","/homepage"})
+    @GetMapping({"/", "/homepage"})
     public String getCanteens(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
@@ -56,6 +55,9 @@ public class HomeController {
         List<Food> items_home = foodService.getRandomFood();
         model.addAttribute("items_home", items_home);
 
+        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+
         return "homepage";
     }
 
@@ -68,9 +70,6 @@ public class HomeController {
 
         return "canteen_contact";
     }
-
-
-
 
 
 }

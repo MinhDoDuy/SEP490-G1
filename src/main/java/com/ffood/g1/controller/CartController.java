@@ -63,6 +63,64 @@ public class CartController {
         return "redirect:/food_details?id=" + foodId;
     }
 
+    @GetMapping("/add_to_cart_home")
+    public String addToCartHome(@RequestParam("foodId") Integer foodId,
+                                @RequestParam("price") Integer price,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Check if the user is authenticated
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            // Redirect to the login page if the user is not authenticated
+            redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
+            return "redirect:/login";
+        }
+
+        int quantity = 1;
+        String email = authentication.getName();
+        User user = userService.findByEmail(email);
+
+        Cart cart = cartService.getOrCreateCart(user);
+
+        cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
+
+        // Add success message to redirect attributes
+        redirectAttributes.addFlashAttribute("successMessage", "Item added to cart successfully!");
+
+        // Redirect to the food details page after adding to the cart
+        return "redirect:/homepage";
+    }
+
+//    @GetMapping("/add_to_cart_home")
+//    public String addToCartHome(@RequestParam("foodId") Integer foodId,
+//                            @RequestParam("price") Integer price,
+//                            RedirectAttributes redirectAttributes,
+//                            Model model) {
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        // Check if the user is authenticated
+//        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//            // Redirect to the login page if the user is not authenticated
+//            redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
+//            return "redirect:/login";
+//        }
+//
+//        int quantity=1;
+//        String email = authentication.getName();
+//        User user = userService.findByEmail(email);
+//
+//        Cart cart = cartService.getOrCreateCart(user);
+//
+//        cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
+//
+//        // Redirect to the food details page after adding to the cart
+//      //  return "redirect:/food_details?id=" + foodId;
+//        return "redirect:/homepage";
+//    }
+
 
     @GetMapping("/cart_items")
     public String getCartItems(Model model) {

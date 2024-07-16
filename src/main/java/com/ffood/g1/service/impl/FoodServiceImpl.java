@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @Service
 public class FoodServiceImpl implements FoodService {
+
     @Autowired
     private FoodRepository foodRepository;
 
@@ -40,6 +41,21 @@ public class FoodServiceImpl implements FoodService {
         category.setCategoryId(categoryId);
         return foodRepository.findByCategory(category);
     }
+
+    public List<Food> getFoodsByCategoryId(Integer categoryId) {
+        return foodRepository.getFoodsByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Food> getFoodsByCanteenId(Integer canteenId) {
+        return foodRepository.findByCanteenId(canteenId);
+    }
+
+    @Override
+    public Integer countFoodsByCanteenId(Integer canteenId) {
+        return foodRepository.countByCanteenId(canteenId);
+    }
+
     @Override
     public Optional<Food> getFoodById(Integer id) {
         return foodRepository.findById(id);

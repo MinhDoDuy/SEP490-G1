@@ -46,7 +46,6 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-
     <style>
         .owl-prev, .owl-next {
             position: absolute;
@@ -78,9 +77,35 @@
 
         .section-divider {
             border: none;
-            height: 3px;
-            background-color: #0c0202; /* Màu cam nhạt */
+            height: 2px;
+            background-color: #FFA07A; /* Màu cam nhạt */
             margin: 40px 0; /* Khoảng cách trên và dưới của đường ngang */
+        }
+
+        .canteen-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .canteen-info img {
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .canteen-info div {
+            display: flex;
+            align-items: center;
+        }
+
+        .canteen-info span {
+            margin-right: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -92,63 +117,34 @@
 
 <div th:replace="header :: header"></div>
 
-<!-- Hero Start -->
-<div class="container-fluid py-5 mb-5 hero-header">
-    <div class="container py-5">
-        <div class="row g-5 align-items-center">
-            <div class="col-md-12 col-lg-7">
-                <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
-                <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
-                <form id="categoryForm" action="/canteen_details" method="get">
-                    <div class="position-relative mx-auto">
-                        <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
-                               name="name" th:value="${name}" placeholder="Search for food..."
-                               onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
-                        <button type="submit"
-                                class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
-                                style="top: 0; right: 25%;">Submit Now
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-12 col-lg-5">
-                <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
-                    <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active rounded" th:each="canteen, stat : ${canteens}"
-                             th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide"
-                                 style="height: 100px;width: 100px">
-                            <div class="carousel-caption d-none d-md-block ">
-                                <h5 th:text="${canteen.canteenPhone}"></h5>
-                                <p th:text="${canteen.openingHours}"></p>
-                            </div>
-
-                            <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}" class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}">Fruites</a>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
-                            data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselId"
-                            data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container-fluid page-header py-5">
+<h1 class="text-center text-white display-6">Shop Detail</h1>
+<ol class="breadcrumb justify-content-center mb-0">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+    <li class="breadcrumb-item active text-white">Shop Detail</li>
+</ol>
 </div>
-<!-- Hero End -->
-
-<hr class="section-divider">
-
-
-
 <!-- Categories Section Begin -->
 <div class="categories">
+    <hr class="section-divider">
+
+    <!-- New Information Section -->
+    <div class="container canteen-info" style="margin-top: 30px">
+        <div>
+            <img src="/img/chococ.png" alt="Canteen Image" width="80" height="80">
+            <div>
+                <span th:text="${canteenInformation.canteenName}">Canteen Name</span>
+                <span>Sản Phẩm: <span th:text="${countFoodsByCanteenId}"></span></span>
+                <span>Đang Theo: <span>0</span></span>
+                <span>Đánh Giá: <span>0</span></span>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-primary">Theo Dõi</button>
+            <button class="btn btn-secondary">Chat</button>
+        </div>
+    </div>
     <div class="container">
         <div class="container-fluid fruite py-3">
             <div class="container py-3">
@@ -163,16 +159,16 @@
                                 <li class="nav-item">
                                     <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill"
                                        href="#tab-1">
-                                        <span class="text-dark" style="width: 130px;">Bán chạy</span>
+                                        <span class="text-dark" style="width: 130px;">Tất cả sản phẩm</span>
                                     </a>
                                 </li>
-                                <li class="nav-item" th:each="category : ${categories}">
-                                    <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2"
-                                       th:data-category-id="${category.categoryId}">
-                                        <span class="text-dark" style="width: 130px;"
-                                              th:text="${category.categoryName}"></span>
-                                    </a>
-                                </li>
+                                <!--                                <li class="nav-item" th:each="category : ${categories}">-->
+                                <!--                                    <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2"-->
+                                <!--                                       th:data-category-id="${category.categoryId}">-->
+                                <!--                                        <span class="text-dark" style="width: 130px;"-->
+                                <!--                                              th:text="${category.categoryName}"></span>-->
+                                <!--                                    </a>-->
+                                <!--                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -182,7 +178,7 @@
                             <div class="row g-4">
                                 <div class="col-lg-12">
                                     <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3" th:each="food : ${items_home}">
+                                        <div class="col-md-6 col-lg-4 col-xl-3" th:each="food : ${listFoodByCanteenId}">
                                             <div class="rounded position-relative fruite-item">
                                                 <div class="fruite-img">
                                                     <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top"
@@ -194,18 +190,18 @@
                                                 </div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
 
-                                                        <h4><a th:href="@{/food_details(id=${food.foodId})} "
-                                                               th:text="${food.foodName}"></a></h4>
-                                                        <p><span th:text="${food.canteen.canteenName}"></span></p>
-                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                    <h4><a th:href="@{/food_details(id=${food.foodId})} "
+                                                           th:text="${food.foodName}"></a></h4>
+                                                    <p><span th:text="${food.canteen.canteenName}"></span></p>
+                                                    <div class="d-flex justify-content-between flex-lg-wrap">
 
-                                                            <p class="text-dark fs-5 fw-bold mb-0"><span
-                                                                    th:text="${food.price} + ' đ'"></span></p>
-                                                                <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
-                                                                   class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
-                                                                </a>
-                                                        </div>
+                                                        <p class="text-dark fs-5 fw-bold mb-0"><span
+                                                                th:text="${food.price} + ' đ'"></span></p>
+                                                        <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
+                                                           class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                            <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
+                                                        </a>
+                                                    </div>
 
                                                 </div>
                                             </div>
@@ -224,147 +220,28 @@
             </div>
         </div>
 
-
-        <hr class="section-divider">
-        <!-- Banner giảm giá-->
-        <div class="container-fluid service py-4">
-            <div class="container py-4">
-                <div class="row g-4 justify-content-center">
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-secondary rounded border border-secondary">
-                                <img src="/img/chococ.png" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-primary text-center p-4 rounded">
-                                        <h5 class="text-white">Fresh Apples</h5>
-                                        <h3 class="mb-0">20% OFF</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-dark rounded border border-dark">
-                                <img src="/img/chococ.png" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-light text-center p-4 rounded">
-                                        <h5 class="text-primary">Tasty Fruits</h5>
-                                        <h3 class="mb-0">Free delivery</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-primary rounded border border-primary">
-                                <img src="/img/chococ.png" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-secondary text-center p-4 rounded">
-                                        <h5 class="text-white">Exotic Vegitable</h5>
-                                        <h3 class="mb-0">Discount 30$</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
-
-
-
-<!-- Nội dung trang web của bạn -->
-<div class="container-fluid vesitable py-5">
-    <div class="container py-5"><hr class="section-divider">
-        <h1 class="mb-0">Các sản phẩm bán chạy nhất</h1>
-        <div style="margin-top: 10px"></div>
-        <div class="owl-carousel vegetable-carousel justify-content-center">
-            <div class="border border-primary rounded position-relative vesitable-item" th:each="food : ${items_home}"
-                 style="margin-left: 10px">
-                <div class="vesitable-img">
-                    <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt="" style="height: 220px">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">
-                    <span th:text="${food.category.categoryName}">Vegetable</span>
-                </div>
-                <div class="p-4 rounded-bottom">
-                    <h4><a th:href="@{/food_details(id=${food.foodId})} " th:text="${food.foodName}">Parsely</a></h4>
-                    <p><span th:text="${food.canteen.canteenName}"></span></p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        <p class="text-dark fs-5 fw-bold mb-0"><span th:text="${food.price} + ' đ'">$4.99 / kg</span>
-                        </p>
-                        <a th:href="@{/food_details(id=${food.foodId})} "
-                           class="btn border border-secondary rounded-pill px-3 text-primary">
-                            <i class="fa fa-shopping-bag me-2 text-primary"></i>View
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeat similar structure for other items -->
-        </div>
-    </div>
-</div>
-<!-- Vesitable Shop Start -->
-
 <hr class="section-divider">
 
-<!-- Các service -->
-<div class="container-fluid featurs py-5" style="background-color: #cccccc">
-    <div class="container py-5">
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fas fa-car-side fa-3x text-white"></i>
-                    </div>
-                    <div class="featurs-content text-center">
-                        <h5>Free Shipping</h5>
-                        <p class="mb-0">Free on order over $300</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fas fa-user-shield fa-3x text-white"></i>
-                    </div>
-                    <div class="featurs-content text-center">
-                        <h5>Security Payment</h5>
-                        <p class="mb-0">100% security payment</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fas fa-exchange-alt fa-3x text-white"></i>
-                    </div>
-                    <div class="featurs-content text-center">
-                        <h5>30 Day Return</h5>
-                        <p class="mb-0">30 day money guarantee</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="featurs-item text-center rounded bg-light p-4">
-                    <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fa fa-phone-alt fa-3x text-white"></i>
-                    </div>
-                    <div class="featurs-content text-center">
-                        <h5>24/7 Support</h5>
-                        <p class="mb-0">Support every time fast</p>
-                    </div>
-                </div>
-            </div>
+<!-- New Information Section -->
+<div class="container canteen-info">
+    <div>
+        <img src="/img/chococ.png" alt="Canteen Image" width="80" height="80">
+        <div>
+            <span th:text="${canteenInformation.canteenName}">Canteen Name</span>
+            <span>Sản Phẩm:>0</span></span>
+            <span>Đang Theo: <span>0</span></span>
+            <span>Đánh Giá: <span>0</span></span>
         </div>
     </div>
+    <div>
+        <button class="btn btn-primary">Theo Dõi</button>
+        <button class="btn btn-secondary">Chat</button>
+    </div>
 </div>
-<!-- Featurs Section End -->
 
+<hr class="section-divider">
 
 <div th:replace="footer :: footer"></div>
 <!-- Js Plugins -->

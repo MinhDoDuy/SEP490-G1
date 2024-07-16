@@ -228,7 +228,7 @@
 @media (min-width: 992px) {
     .hero-header,
     .page-header {
-        margin-top: 152px !important;
+        margin-top: 10px !important;
     }
 }
 
@@ -604,5 +604,6 @@ html:not(.dark-style) .account-settings-links .list-group-item.active {
     padding     : 0.85rem 1.5rem;
     border-color: rgba(24, 28, 33, 0.03) !important;
 }
+
 /*** Footer End ***/
 
