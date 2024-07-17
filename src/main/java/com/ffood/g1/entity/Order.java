@@ -2,9 +2,9 @@ package com.ffood.g1.entity;
 
 import com.ffood.g1.converter.OrderStatusConverter;
 import com.ffood.g1.enum_pay.OrderStatus;
-import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
+import com.ffood.g1.enum_pay.PaymentStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,7 +29,7 @@ public class Order {
     private String orderCode;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "order_date")
@@ -59,6 +59,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<OrderDetail> orderDetails = new ArrayList<>();

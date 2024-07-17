@@ -39,9 +39,10 @@ public class HomeController {
     @GetMapping({"/", "/homepage"})
     public String getCanteens(Model model, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
             String email = authentication.getName();
-            User user = userService.findByEmail(email);
+            user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
                 if (!user.getIsActive()) {
                     model.addAttribute("isBanned", true);
@@ -63,6 +64,7 @@ public class HomeController {
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
 
+        session.setAttribute("user",user);
         return "homepage";
     }
 

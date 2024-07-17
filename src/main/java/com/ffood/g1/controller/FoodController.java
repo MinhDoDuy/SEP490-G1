@@ -1,13 +1,12 @@
 package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Category;
+import com.ffood.g1.entity.Feedback;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.enum_pay.FeedbackStatus;
 import com.ffood.g1.repository.FoodRepository;
-import com.ffood.g1.service.CartService;
-import com.ffood.g1.service.CategoryService;
-import com.ffood.g1.service.FoodService;
-import com.ffood.g1.service.UserService;
+import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +35,8 @@ public class FoodController {
     @Autowired
     private FoodRepository categoryRepository;
 
+    @Autowired
+    private FeedbackService feedbackService;
     @Controller
     @RequestMapping("/categories")
     public class CategoryController {
@@ -60,8 +61,8 @@ public class FoodController {
     }
 
     @GetMapping("/food_details")
-    public String viewFoodDetails(@RequestParam("id") Integer id, Model model) {
-        Optional<Food> foodOptional = foodService.getFoodByIdFoodDetails(id);
+    public String viewFoodDetails(@RequestParam("id") Integer foodId, Model model) {
+        Optional<Food> foodOptional = foodService.getFoodByIdFoodDetails(foodId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
             String email = authentication.getName();
@@ -89,6 +90,11 @@ public class FoodController {
             // get random 12 items and display in homepage
             List<Food> items_home = foodService.getRandomFood();
             model.addAttribute("items_home", items_home);
+
+
+
+            List<Feedback> feedbacksFood = feedbackService.getFeedbacksByFoodIdAndStatus(foodId, FeedbackStatus.COMPLETE);
+            model.addAttribute("feedbacksFood", feedbacksFood);
 
             return "canteen/food-details";
 

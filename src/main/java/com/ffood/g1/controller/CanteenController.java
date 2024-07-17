@@ -1,9 +1,7 @@
 package com.ffood.g1.controller;
 
-import com.ffood.g1.entity.Canteen;
-import com.ffood.g1.entity.Category;
-import com.ffood.g1.entity.Food;
-import com.ffood.g1.entity.User;
+import com.ffood.g1.entity.*;
+import com.ffood.g1.enum_pay.FeedbackStatus;
 import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,17 +41,43 @@ public class CanteenController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private FeedbackService feedbackService;
+
     @GetMapping("/canteen_info")
     public String getFoodsByCanteensId(@RequestParam("canteenId") Integer canteenId
-            , Model model) {
+            , Model model, HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            user = userService.findByEmail(email);
+            if (Objects.nonNull(user)) {
+                if (!user.getIsActive()) {
+                    model.addAttribute("isBanned", true);
+                    return "homepage";
+                }
+                model.addAttribute("user", user);
+                Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
+                int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
+                model.addAttribute("totalQuantity", totalQuantity);
+            }
+
+        }
         List<Food> listFoodByCanteenId = foodService.getFoodsByCanteenId(canteenId);
         model.addAttribute("listFoodByCanteenId", listFoodByCanteenId);
 
-        Canteen canteen_information=canteenService.getCanteenById(canteenId);
+        Canteen canteen_information = canteenService.getCanteenById(canteenId);
         model.addAttribute("canteenInformation", canteen_information);
 
         Integer countFoodsByCanteenId = foodService.countFoodsByCanteenId(canteenId);
         model.addAttribute("countFoodsByCanteenId", countFoodsByCanteenId);
+
+
+        List<Feedback> feedbacksCanteen = feedbackService.getFeedbacksByCanteenIdAndStatus(canteenId, FeedbackStatus.COMPLETE);
+        model.addAttribute("feedbacksCanteen", feedbacksCanteen);
+
+
         return "canteen/canteen-info";
     }
 

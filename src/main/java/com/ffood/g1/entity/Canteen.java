@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.Set;
 
 @Entity
 @Data
@@ -33,17 +31,14 @@ public class Canteen {
     @Column(name = "opening_hours")
     private String openingHours;
 
+    @Column(name = "opening_day")
+    private String openingDay;
+
     @Column(name = "canteen_img")
     private String canteenImg;
-
 
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-//    public Integer getId() {
-//        return canteenId;
-//    }
 
-//    @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL)
-//    private Set<Food> foods = Collections.emptySet(); // Initialize as empty set
 }

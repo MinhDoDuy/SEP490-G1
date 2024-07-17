@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<html lang="vn" xmlns:th="http://www.thymeleaf.org">
 <head>
 
     <title>Croak Order</title>
@@ -42,8 +42,8 @@
     <div class="container py-5">
         <div class="row g-5 align-items-center">
             <div class="col-md-12 col-lg-7">
-                <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
-                <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
+                <h4 class="mb-3 text-secondary">100% Nguyên liệu sạch</h4>
+                <h1 class="mb-5 display-3 text-primary">Bữa ăn tiện lợi, trọn vị yêu thương!</h1>
                 <form id="categoryForm" action="/canteen_details" method="get">
                     <div class="position-relative mx-auto">
                         <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
@@ -61,7 +61,8 @@
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active rounded" th:each="canteen, stat : ${canteens}"
                              th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide"
+<!--                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide"-->
+                            <img src="/img/chococ.png" class="img-fluid w-100 h-100 rounded" alt="First slide"
                                  style="height: 100px;width: 100px">
                             <div class="carousel-caption d-none d-md-block ">
                                 <h5 th:text="${canteen.canteenPhone}"></h5>
@@ -225,7 +226,7 @@
 <div class="container-fluid vesitable py-5">
     <div class="container py-5">
         <hr class="section-divider">
-        <h1 class="mb-0">Các sản phẩm bán chạy nhất</h1>
+        <h1 class="mb-0">Có thể bạn sẽ thích </h1>
         <div style="margin-top: 10px"></div>
         <div class="owl-carousel vegetable-carousel justify-content-center">
             <div class="border border-primary rounded position-relative " th:each="food : ${items_home}"
@@ -242,9 +243,9 @@
                     <div class="d-flex justify-content-between flex-lg-wrap">
                         <p class="text-dark fs-5 fw-bold mb-0"><span th:text="${food.price} + ' đ'">$4.99 / kg</span>
                         </p>
-                        <a th:href="@{/food_details(id=${food.foodId})} "
+                        <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
                            class="btn border border-secondary rounded-pill px-3 text-primary">
-                            <i class="fa fa-shopping-bag me-2 text-primary"></i>View
+                            <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
                         </a>
                     </div>
                 </div>
@@ -340,7 +341,7 @@
                                 let foodElement = document.createElement('div');
                                 foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
                                 foodElement.innerHTML = `
-                                 <div class="rounded position-relative fruite-item">
+                                <div class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
                                         <img src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="${food.foodName}">
                                     </div>
@@ -348,12 +349,12 @@
                                         <span>${food.category.categoryName}</span>
                                     </div>
                                     <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                        <h4><a href="#">${food.foodName}</a></h4>
+                                        <h4><a href="/food_details?id=${food.foodId}" class="text-dark">${food.foodName}</a></h4>
                                         <p><span>${food.canteen.canteenName}</span></p>
                                         <div class="d-flex justify-content-between flex-lg-wrap">
                                             <p class="text-dark fs-5 fw-bold mb-0">${food.price} đ</p>
-                                           <a th:href="@{/food_details(id=${food.foodId})} " class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> View
+                                            <a href="/add_to_cart_home?foodId=${food.foodId}&price=${food.price}" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add
                                             </a>
                                         </div>
                                     </div>
@@ -369,6 +370,7 @@
             });
         });
     </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             if ([[${isBanned}]] == true) {

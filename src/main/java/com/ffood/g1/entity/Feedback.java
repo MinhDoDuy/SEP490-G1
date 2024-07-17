@@ -1,5 +1,7 @@
 package com.ffood.g1.entity;
 
+import com.ffood.g1.enum_pay.FeedbackStatus;
+import com.ffood.g1.enum_pay.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,5 +32,14 @@ public class Feedback {
     @Column(name = "time_created", nullable = false)
     private LocalDateTime timeCreated;
 
+    @Column(name = "food_id")
+    private Integer foodId;;
+
+    @Column(name = "canteen_id")
+    private Integer canteenId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "feedback_status")
+    private FeedbackStatus feedbackStatus;
 
 }
