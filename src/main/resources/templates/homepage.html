@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vn" xmlns:th="http://www.thymeleaf.org">
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 <head>
 
     <title>Croak Order</title>
@@ -140,18 +140,18 @@
                                                 </div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
 
-                                                    <h4><a th:href="@{/food_details(id=${food.foodId})} "
-                                                           th:text="${food.foodName}"></a></h4>
-                                                    <p><span th:text="${food.canteen.canteenName}"></span></p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                                        <h4><a th:href="@{/food_details(id=${food.foodId})} "
+                                                               th:text="${food.foodName}"></a></h4>
+                                                        <p><span th:text="${food.canteen.canteenName}"></span></p>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
 
-                                                        <p class="text-dark fs-5 fw-bold mb-0"><span
-                                                                th:text="${food.price} + ' đ'"></span></p>
-                                                        <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
-                                                           class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                            <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
-                                                        </a>
-                                                    </div>
+                                                            <p class="text-dark fs-5 fw-bold mb-0"><span
+                                                                    th:text="${food.price} + ' đ'"></span></p>
+                                                                <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
+                                                                   class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
+                                                                </a>
+                                                        </div>
 
                                                 </div>
                                             </div>

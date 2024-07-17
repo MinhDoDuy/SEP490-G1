@@ -7,6 +7,10 @@ import com.ffood.g1.entity.User;
 import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,50 +48,19 @@ public class FoodManagementController {
 
     @GetMapping("/manage-food")
     public String manageFood(@RequestParam("canteenId") Integer canteenId,
-                             @RequestParam(value = "success", required = false) String success,
-                             @RequestParam(value = "error", required = false) String error,
-                             Model model, Principal principal) {
-        // Get current user details
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserEmail = "";
+                             @RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size,
+                             Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Food> foodPage = foodService.findFoodByCanteenId(canteenId, pageable);
 
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            currentUserEmail = userDetails.getUsername();
-        }
+        model.addAttribute("foodPage", foodPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", foodPage.getTotalPages());
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("canteenName", canteenService.getCanteenById(canteenId).getCanteenName());
 
-        User currentUser = userService.findByEmail(currentUserEmail);
-
-        // Check if the user is a manager and manages the correct canteen
-        if (currentUser.getRole().getRoleName().equals("ROLE_MANAGER") && currentUser.getCanteen().getCanteenId().equals(canteenId)) {
-            // Get the list of foods for the canteen managed by the user
-            List<Food> foods = foodService.findByCanteenId(canteenId);
-
-            // Sort foods by category name
-            foods.sort((f1, f2) -> f1.getCategory().getCategoryName().compareToIgnoreCase(f2.getCategory().getCategoryName()));
-
-            model.addAttribute("foods", foods);
-
-            // Get canteen name
-            Canteen canteen = canteenService.getCanteenById(canteenId);
-            model.addAttribute("canteenName", canteen.getCanteenName());
-            model.addAttribute("canteenId", canteenId);
-
-            if ("add".equals(success)) {
-                model.addAttribute("successMessage", "Đồ Ăn Đã Được Thêm Thành Công!");
-            } else if ("edit".equals(success)) {
-                model.addAttribute("successMessage", "Đồ Ăn Đã Được Sửa Thành Công!");
-            }
-
-            if (error != null) {
-                model.addAttribute("errorMessage", error);
-            }
-
-            return "./staff-management/manage-food";
-        } else {
-            // If not a manager or managing the wrong canteen, return error page or unauthorized message
-            return "error/403";
-        }
+        return "staff-management/manage-food";
     }
 
 

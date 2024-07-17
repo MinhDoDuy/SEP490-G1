@@ -8,19 +8,22 @@ import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+    public class OrderServiceImpl implements OrderService {
+
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public List<Object[]> getBestSellingItems() {
         return orderRepository.findBestSellingItems();
@@ -58,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderType(orderType);
         order.setPaymentMethod(paymentMethod);
         order.setOrderCode(orderCode);
-        order.setOrderStatus(OrderStatus.READY);
+        order.setOrderStatus(OrderStatus.PENDING);
 
 
 //        // Lưu Order trước để lấy ID
@@ -119,5 +122,66 @@ public class OrderServiceImpl implements OrderService {
     public Integer countCompletedOrdersByCanteenId(Integer canteenId) {
         return orderRepository.countCompletedOrdersByCanteenId(canteenId);
     }
+
+
+    private void sendEmail(String email, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+
+    private String getOrderDetails(Order order) {
+        StringBuilder details = new StringBuilder();
+        details.append("Chi tiết đơn hàng:\n");
+        details.append("Căn tin: ").append(order.getOrderDetails().get(0).getFood().getCanteen().getCanteenName()).append("\n");
+        for (OrderDetail detail : order.getOrderDetails()) {
+            details.append("Món ăn: ").append(detail.getFood().getFoodName())
+                    .append(", Số lượng: ").append(detail.getQuantity())
+                    .append(", Giá: ").append(detail.getPrice())
+                    .append("\n");
+        }
+        return details.toString();
+    }
+
+    @Override
+    public void updateOrderStatus(Integer orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        order.setOrderStatus(newStatus);
+        orderRepository.save(order);
+
+        // Lấy thông tin chi tiết đơn hàng
+        String orderDetails = getOrderDetails(order);
+
+        // Gửi email thông cho người dùng
+        if (newStatus == OrderStatus.PREPARE) {
+            String subject = "Đơn hàng của bạn đã được chuẩn bị";
+            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được chuẩn bị và sẵn sàng để lấy. Mời bạn xuống lấy hàng.\n\n" + orderDetails;
+            sendEmail(order.getUser().getEmail(), subject, text);
+        } else if (newStatus == OrderStatus.COMPLETE) {
+            String subject = "Đơn hàng của bạn đã hoàn thành";
+            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được giao thành công.\n\n" + orderDetails;
+            sendEmail(order.getUser().getEmail(), subject, text);
+        }
+    }
+    @Override
+    public void cancelOrder(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        order.setOrderStatus(OrderStatus.CANCEL);
+        orderRepository.save(order);
+
+        // Lấy thông tin chi tiết đơn hàng
+        String orderDetails = getOrderDetails(order);
+
+        // Gửi email thông báo khi đơn hàng bị hủy
+        String subject = "Đơn hàng của bạn đã bị hủy";
+        String text = "Đơn hàng của bạn với mã số " + orderId + " đã bị hủy.\n\n" + orderDetails;
+        sendEmail(order.getUser().getEmail(), subject, text);
+    }
+
+
 
 }
