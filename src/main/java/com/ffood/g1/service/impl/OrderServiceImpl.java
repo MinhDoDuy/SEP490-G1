@@ -132,6 +132,19 @@ import java.util.*;
         mailSender.send(message);
     }
 
+    private String getOrderDetails(Order order) {
+        StringBuilder details = new StringBuilder();
+        details.append("Chi tiết đơn hàng:\n");
+        details.append("Căn tin: ").append(order.getOrderDetails().get(0).getFood().getCanteen().getCanteenName()).append("\n");
+        for (OrderDetail detail : order.getOrderDetails()) {
+            details.append("Món ăn: ").append(detail.getFood().getFoodName())
+                    .append(", Số lượng: ").append(detail.getQuantity())
+                    .append(", Giá: ").append(detail.getPrice())
+                    .append("\n");
+        }
+        return details.toString();
+    }
+
     @Override
     public void updateOrderStatus(Integer orderId, OrderStatus newStatus) {
         Order order = orderRepository.findById(orderId)
@@ -139,21 +152,20 @@ import java.util.*;
         order.setOrderStatus(newStatus);
         orderRepository.save(order);
 
+        // Lấy thông tin chi tiết đơn hàng
+        String orderDetails = getOrderDetails(order);
 
-        // Gửi email thông báo nếu cần thiết
+        // Gửi email thông cho người dùng
         if (newStatus == OrderStatus.PREPARE) {
             String subject = "Đơn hàng của bạn đã được chuẩn bị";
-            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được chuẩn bị và sẵn sàng để lấy. Mời bạn xuống lấy hàng.";
+            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được chuẩn bị và sẵn sàng để lấy. Mời bạn xuống lấy hàng.\n\n" + orderDetails;
             sendEmail(order.getUser().getEmail(), subject, text);
         } else if (newStatus == OrderStatus.COMPLETE) {
             String subject = "Đơn hàng của bạn đã hoàn thành";
-            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được giao thành công.";
+            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được giao thành công.\n\n" + orderDetails;
             sendEmail(order.getUser().getEmail(), subject, text);
         }
     }
-
-
-
     @Override
     public void cancelOrder(Integer orderId) {
         Order order = orderRepository.findById(orderId)
@@ -161,9 +173,12 @@ import java.util.*;
         order.setOrderStatus(OrderStatus.CANCEL);
         orderRepository.save(order);
 
+        // Lấy thông tin chi tiết đơn hàng
+        String orderDetails = getOrderDetails(order);
+
         // Gửi email thông báo khi đơn hàng bị hủy
         String subject = "Đơn hàng của bạn đã bị hủy";
-        String text = "Đơn hàng của bạn với mã số " + orderId + " đã bị hủy.";
+        String text = "Đơn hàng của bạn với mã số " + orderId + " đã bị hủy.\n\n" + orderDetails;
         sendEmail(order.getUser().getEmail(), subject, text);
     }
 
