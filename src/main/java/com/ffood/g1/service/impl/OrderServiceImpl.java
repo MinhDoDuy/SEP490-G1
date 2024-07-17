@@ -8,6 +8,8 @@ import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
@@ -16,8 +18,12 @@ import java.util.*;
 
 @Service
     public class OrderServiceImpl implements OrderService {
+
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public List<Object[]> getBestSellingItems() {
         return orderRepository.findBestSellingItems();
@@ -118,19 +124,47 @@ import java.util.*;
     }
 
 
-
-    @Override
-    public void updateOrderStatus(Integer orderId, OrderStatus newStatus) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
-        order.setOrderStatus(newStatus);
-        orderRepository.save(order);
+    private void sendEmail(String email, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
     }
 
     @Override
+    public void updateOrderStatus(Integer orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        order.setOrderStatus(newStatus);
+        orderRepository.save(order);
+
+
+        // Gửi email thông báo nếu cần thiết
+        if (newStatus == OrderStatus.PREPARE) {
+            String subject = "Đơn hàng của bạn đã được chuẩn bị";
+            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được chuẩn bị và sẵn sàng để lấy. Mời bạn xuống lấy hàng.";
+            sendEmail(order.getUser().getEmail(), subject, text);
+        } else if (newStatus == OrderStatus.COMPLETE) {
+            String subject = "Đơn hàng của bạn đã hoàn thành";
+            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được giao thành công.";
+            sendEmail(order.getUser().getEmail(), subject, text);
+        }
+    }
+
+
+
+    @Override
     public void cancelOrder(Integer orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
         order.setOrderStatus(OrderStatus.CANCEL);
         orderRepository.save(order);
+
+        // Gửi email thông báo khi đơn hàng bị hủy
+        String subject = "Đơn hàng của bạn đã bị hủy";
+        String text = "Đơn hàng của bạn với mã số " + orderId + " đã bị hủy.";
+        sendEmail(order.getUser().getEmail(), subject, text);
     }
 
 
