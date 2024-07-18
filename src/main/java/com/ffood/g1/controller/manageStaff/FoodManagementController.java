@@ -370,10 +370,11 @@ public class FoodManagementController {
             updatedFood.setFoodQuantity(updatedFood.getFoodQuantity() + newQuantity);
             foodService.save(updatedFood);
             redirectAttributes.addFlashAttribute("successMessage", "Số lượng đã được cập nhật thành công!");
-            return "redirect:/manage-food?canteenId=" + canteenId + "&success=edit";
         } else {
-            return "redirect:/manage-food?canteenId=" + canteenId + "&error=Food not found";
+            redirectAttributes.addFlashAttribute("errorMessage", "Food not found!");
         }
+
+        return "redirect:/manage-food?canteenId=" + canteenId;
     }
 
 }
