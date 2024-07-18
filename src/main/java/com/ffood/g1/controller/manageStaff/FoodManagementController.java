@@ -58,11 +58,35 @@ public class FoodManagementController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", foodPage.getTotalPages());
         model.addAttribute("canteenId", canteenId);
+        model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("canteenName", canteenService.getCanteenById(canteenId).getCanteenName());
 
         return "staff-management/manage-food";
     }
 
+
+    @GetMapping("/search-food")
+    public String searchFood(@RequestParam("canteenId") Integer canteenId,
+                             @RequestParam(value = "keyword", required = false) String keyword,
+                             @RequestParam(value = "categoryId", required = false) Integer categoryId,
+                             @RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size,
+                             Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Food> foodPage = foodService.searchFoods(keyword, categoryId, canteenId, pageable);
+
+        model.addAttribute("foodPage", foodPage);
+
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        model.addAttribute("canteenName", canteen.getCanteenName());
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("categories", categoryService.getAllCategories());
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedCategoryId", categoryId);
+
+        return "./staff-management/manage-food";
+    }
 
     @GetMapping("/add-food-form")
     public String showAddFoodForm(@RequestParam("canteenId") Integer canteenId, Model model) {
@@ -101,6 +125,10 @@ public class FoodManagementController {
 
             Canteen canteen = canteenService.getCanteenById(canteenId);
             food.setCanteen(canteen);
+
+            if (food.getFoodQuantity() == null) {
+                food.setFoodQuantity(0);
+            }
 
             if (!imageFood.isEmpty()) {
                 String foodImageUrl = fileS3Service.uploadFile(imageFood);
@@ -150,6 +178,10 @@ public class FoodManagementController {
         try {
             Canteen canteen = canteenService.getCanteenById(canteenId);
             food.setCanteen(canteen);
+
+            if (food.getFoodQuantity() == null) {
+                food.setFoodQuantity(0);
+            }
 
             if (!imageFood.isEmpty()) {
                 String foodImageUrl = fileS3Service.uploadFile(imageFood);
@@ -310,6 +342,39 @@ public class FoodManagementController {
         } catch (Exception e) {
             return "redirect:/manage-category?canteenId=" + canteenId + "&error=Không thể xóa ảnh";
         }
+    }
+
+
+    @GetMapping("/add-quantity/{foodId}")
+    public String showAddQuantityForm(@PathVariable("foodId") Integer foodId, Model model) {
+        Optional<Food> optionalFood = foodService.getFoodById(foodId);
+
+        if (optionalFood.isPresent()) {
+            Food food = optionalFood.get();
+            model.addAttribute("food", food);
+            model.addAttribute("canteenId", food.getCanteen().getCanteenId());
+            return "staff-management/add-quantity";
+        } else {
+            return "redirect:/manage-food?error=Food not found";
+        }
+    }
+
+    @PostMapping("/add-quantity")
+    public String addQuantity(@ModelAttribute("food") Food food, BindingResult result, Model model,
+                              @RequestParam("canteenId") Integer canteenId,
+                              @RequestParam("newQuantity") Integer newQuantity, RedirectAttributes redirectAttributes) {
+        Optional<Food> existingFood = foodService.getFoodById(food.getFoodId());
+
+        if (existingFood.isPresent()) {
+            Food updatedFood = existingFood.get();
+            updatedFood.setFoodQuantity(updatedFood.getFoodQuantity() + newQuantity);
+            foodService.save(updatedFood);
+            redirectAttributes.addFlashAttribute("successMessage", "Số lượng đã được cập nhật thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Food not found!");
+        }
+
+        return "redirect:/manage-food?canteenId=" + canteenId;
     }
 
 }

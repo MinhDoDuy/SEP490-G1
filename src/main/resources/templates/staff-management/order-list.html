@@ -64,11 +64,9 @@
     </ul>
 
     <div class="tab-content">
-      <div class="tab-pane container active" id="all">
-        <!-- Nội dung cho Tất cả đơn hàng -->
-      </div>
+
+      <!-- Tab for Pending Orders -->
       <div class="tab-pane container fade" id="pending">
-        <!-- Nội dung cho Chờ xác nhận -->
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md mb-4">
           <div class="flex justify-between mb-4 items-start">
             <div class="font-medium">Manage Orders (PENDING)</div>
@@ -82,6 +80,8 @@
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
               </tr>
               </thead>
@@ -92,7 +92,12 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
+                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
+                    <i class="ri-eye-line"></i>
+                  </button>
                   <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" style="display: inline;">
                     <input type="hidden" name="newStatus" value="PREPARE"/>
                     <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
@@ -106,6 +111,38 @@
                       <i class="ri-close-line"></i>
                     </button>
                   </form>
+
+                  <!-- Modal -->
+                  <div class="modal fade" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul>
+                            <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
+                            <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
+                            <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
+                            <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
+                            <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
+                            <li><strong>Note:</strong> <span th:text="${order.note}">Note</span><br></li>
+                            <li th:each="detail : ${order.orderDetails}" class="mb-2">
+                              <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
+                              <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
+                              <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -113,8 +150,10 @@
           </div>
         </div>
       </div>
+  
+
+      <!-- Tab for Prepare Orders -->
       <div class="tab-pane container fade" id="prepare">
-        <!-- Nội dung cho Đang làm -->
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md mb-4">
           <div class="flex justify-between mb-4 items-start">
             <div class="font-medium">Manage Orders (PREPARE)</div>
@@ -128,6 +167,8 @@
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
               </tr>
               </thead>
@@ -138,7 +179,12 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
+                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
+                    <i class="ri-eye-line"></i>
+                  </button>
                   <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" style="display: inline;">
                     <input type="hidden" name="newStatus" value="READY"/>
                     <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
@@ -152,6 +198,38 @@
                       <i class="ri-close-line"></i>
                     </button>
                   </form>
+
+                  <!-- Modal -->
+                  <div class="modal fade" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul>
+                            <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
+                            <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
+                            <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
+                            <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
+                            <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
+                            <li><strong>Note:</strong> <span th:text="${order.note}">Note</span><br></li>
+                            <li th:each="detail : ${order.orderDetails}" class="mb-2">
+                              <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
+                              <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
+                              <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -159,8 +237,10 @@
           </div>
         </div>
       </div>
+
+
+      <!-- Tab for Ready Orders -->
       <div class="tab-pane container fade" id="ready">
-        <!-- Nội dung cho Đã nấu xong -->
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md mb-4">
           <div class="flex justify-between mb-4 items-start">
             <div class="font-medium">Manage Orders (READY)</div>
@@ -174,6 +254,8 @@
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
               </tr>
               </thead>
@@ -184,7 +266,12 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
+                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
+                    <i class="ri-eye-line"></i>
+                  </button>
                   <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" style="display: inline;">
                     <input type="hidden" name="newStatus" value="COMPLETE"/>
                     <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
@@ -198,6 +285,38 @@
                       <i class="ri-close-line"></i>
                     </button>
                   </form>
+
+                  <!-- Modal -->
+                  <div class="modal fade" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul>
+                            <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
+                            <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
+                            <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
+                            <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
+                            <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
+                            <li><strong>Note:</strong> <span th:text="${order.note}">Note</span><br></li>
+                            <li th:each="detail : ${order.orderDetails}" class="mb-2">
+                              <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
+                              <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
+                              <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -205,8 +324,9 @@
           </div>
         </div>
       </div>
+
+      <!-- Tab for Complete Orders -->
       <div class="tab-pane container fade" id="complete">
-        <!-- Nội dung cho Đã giao -->
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md mb-4">
           <div class="flex justify-between mb-4 items-start">
             <div class="font-medium">Manage Orders (COMPLETE)</div>
@@ -220,6 +340,8 @@
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
               </tr>
               </thead>
@@ -230,7 +352,44 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
+                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
+                    <i class="ri-eye-line"></i>
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul>
+                            <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
+                            <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
+                            <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
+                            <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
+                            <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
+                            <li><strong>Note:</strong> <span th:text="${order.note}">Note</span><br></li>
+                            <li th:each="detail : ${order.orderDetails}" class="mb-2">
+                              <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
+                              <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
+                              <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -238,8 +397,8 @@
           </div>
         </div>
       </div>
-      <div class="tab-pane container fade" id="cancel">
-        <!-- Nội dung cho Đơn hủy -->
+      <!-- Tab for Cancel Orders -->
+      <div class="tab-pane container active" id="cancel">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md mb-4">
           <div class="flex justify-between mb-4 items-start">
             <div class="font-medium">Manage Orders (CANCEL)</div>
@@ -253,6 +412,8 @@
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
               </tr>
               </thead>
@@ -263,14 +424,44 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
-                  <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" style="display: inline;">
-                    <input type="hidden" name="newStatus" value="CANCEL"/>
-                    <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
-                    <button class="btn btn-danger" type="submit">
-                      <i class="ri-close-line"></i>
-                    </button>
-                  </form>
+                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
+                    <i class="ri-eye-line"></i>
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <ul>
+                            <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
+                            <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
+                            <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
+                            <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
+                            <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
+                            <li><strong>Note:</strong> <span th:text="${order.note}">Note</span><br></li>
+                            <li th:each="detail : ${order.orderDetails}" class="mb-2">
+                              <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
+                              <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
+                              <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -278,6 +469,8 @@
           </div>
         </div>
       </div>
+
+
     </div>
   </div>
 </main>

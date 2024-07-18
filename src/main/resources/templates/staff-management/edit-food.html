@@ -96,6 +96,12 @@
 
     <div class="p-6 flex justify-center">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}" id="successMessage">
+                <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
             <form th:action="@{/edit-food}" method="post" th:object="${food}" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{foodId}">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
@@ -125,6 +131,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="foodQuantity" class="form-label">Số Lượng</label>
+                    <input type="number" id="foodQuantity" th:field="*{foodQuantity}" class="form-control">
+                </div>
+
+                <div class="form-group">
                     <label for="imageFood" class="form-label">Ảnh Đồ Ăn</label>
                     <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
                     <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image">
@@ -135,10 +146,18 @@
         </div>
     </div>
 </main>
+
 <!-- end: Main -->
 
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:src="@{/js/manage.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            setTimeout(function () {
+                window.location.href = '/manage-food?canteenId=' + ${canteenId};
+            }, 1000); // 1 giây
+        }
+    });
+</script>
 </body>
 </html>

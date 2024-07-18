@@ -83,4 +83,20 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId")
     Integer countCompletedOrdersByCanteenId(@Param("canteenId") Integer canteenId);
 
+
+    //đơn thành công theo tháng của canteen
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM'), COUNT(o.orderId) " +
+            "FROM Order o JOIN o.orderDetails od JOIN od.food f JOIN f.canteen c " +
+            "WHERE o.orderStatus = 'COMPLETE' AND c.canteenId = :canteenId " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM')")
+    List<Object[]> findOrderStatsByCanteenAndMonth(@Param("canteenId") Integer canteenId);
+
+    //các đồ ăn bán chạy của canteen đó
+    @Query("SELECT f.foodName, SUM(od.quantity) " +
+            "FROM Order o JOIN o.orderDetails od JOIN od.food f " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId " +
+            "GROUP BY f.foodName " +
+            "ORDER BY SUM(od.quantity) DESC")
+    List<Object[]> findBestSellingItemsByCanteen(@Param("canteenId") Integer canteenId);
 }

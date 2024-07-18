@@ -47,6 +47,25 @@ public class DashboardManagerController {
             revenueDataByYearList.add((Double) data[1]);
         }
 
+        List<Object[]> orderStats = orderService.getOrderStatsByCanteenAndMonth(canteenId);
+        List<Object[]> bestSellingItems = orderService.getBestSellingItemsByCanteen(canteenId);
+
+        List<String> orderLabels = new ArrayList<>();
+        List<Long> orderData = new ArrayList<>();
+        for (Object[] data : orderStats) {
+            orderLabels.add((String) data[0]);
+            orderData.add(((Number) data[1]).longValue());
+        }
+
+        List<String> bestSellingLabels = new ArrayList<>();
+        List<Long> bestSellingData = new ArrayList<>();
+        for (Object[] data : bestSellingItems) {
+            bestSellingLabels.add((String) data[0]);
+            bestSellingData.add(((Number) data[1]).longValue());
+        }
+
+
+
         model.addAttribute("staffCount", staffCount);
         model.addAttribute("foodCount", foodCount);
         model.addAttribute("completedOrdersCount", completedOrdersCount);
@@ -54,6 +73,10 @@ public class DashboardManagerController {
         model.addAttribute("revenueDataByMonth", revenueDataByMonthList);
         model.addAttribute("revenueLabelsByYear", revenueLabelsByYear);
         model.addAttribute("revenueDataByYear", revenueDataByYearList);
+        model.addAttribute("orderLabels", orderLabels);
+        model.addAttribute("orderData", orderData);
+        model.addAttribute("bestSellingLabels", bestSellingLabels);
+        model.addAttribute("bestSellingData", bestSellingData);
         model.addAttribute("canteenId", canteenId);
 
         return "staff-management/dashboard-manager";

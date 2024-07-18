@@ -116,17 +116,11 @@
 
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_MANAGER'}">
 
-                                    <a th:href="@{/manage-staff(canteenId=${user.canteen.canteenId})}"
-                                       class="dropdown-item">Manage Staff</a>
-                                    <a th:href="@{/canteen/edit-profile-canteen/{canteenId}(canteenId=${user.canteen.canteenId})}"
-                                       class="dropdown-item">Edit Canteen</a>
-                                    <a th:href="@{/manage-food(canteenId=${user.canteen.canteenId})}"
-                                       class="dropdown-item">Manage Food</a>
                                     <a th:href="@{/dashboard-manager(canteenId=${user.canteen.canteenId})}"
                                        class="dropdown-item">Dashboard</a>
                                 </div>
 
-                                <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_STAFF' or user.role.roleName == 'ROLE_MANAGER'}">
+                                <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_STAFF'}">
                                     <a th:href="@{/order-list/{canteenId}(canteenId=${user.canteen.canteenId})}"
                                        class="dropdown-item">Order List</a>
                                 </div>
