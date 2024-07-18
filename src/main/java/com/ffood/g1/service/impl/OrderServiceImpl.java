@@ -182,6 +182,14 @@ import java.util.*;
         sendEmail(order.getUser().getEmail(), subject, text);
     }
 
+    @Override
+    public List<Object[]> getOrderStatsByCanteenAndMonth(Integer canteenId) {
+        return orderRepository.findOrderStatsByCanteenAndMonth(canteenId);
+    }
 
+    @Override
+    public List<Object[]> getBestSellingItemsByCanteen(Integer canteenId) {
+        return orderRepository.findBestSellingItemsByCanteen(canteenId);
+    }
 
 }

@@ -81,6 +81,8 @@ public class DashBoardController {
         model.addAttribute("revenueLabelsByYear", revenueLabelsByYear);
         model.addAttribute("revenueDataByYear", revenueDataByYearList);
 
+
+
         return "admin-management/dashboard";
     }
 }

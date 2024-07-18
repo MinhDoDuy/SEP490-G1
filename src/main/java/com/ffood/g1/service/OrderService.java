@@ -45,6 +45,7 @@ public interface OrderService {
 
     void cancelOrder(Integer orderId);
 
-
+    List<Object[]> getOrderStatsByCanteenAndMonth(Integer canteenId);
+    List<Object[]> getBestSellingItemsByCanteen(Integer canteenId);
 
 }
