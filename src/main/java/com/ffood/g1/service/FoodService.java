@@ -41,4 +41,6 @@ public interface FoodService {
 
   Page<Food> findFoodByCanteenId(Integer canteenId, Pageable pageable);
 
+ Page<Food> searchFoods(String keyword, Integer categoryId, Integer canteenId, Pageable pageable);
+
 }

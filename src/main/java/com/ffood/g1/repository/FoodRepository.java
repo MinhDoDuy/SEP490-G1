@@ -78,4 +78,14 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Integer
 
     @Query("SELECT f FROM Food f WHERE f.canteen.canteenId = :canteenId")
     Page<Food> findFoodByCanteenId(@Param("canteenId") Integer canteenId, Pageable pageable);
+
+
+    @Query("SELECT f FROM Food f WHERE " +
+            "(LOWER(f.foodName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:categoryId IS NULL OR f.category.categoryId = :categoryId) " +
+            "AND f.canteen.canteenId = :canteenId")
+    Page<Food> searchFoods(@Param("keyword") String keyword,
+                           @Param("categoryId") Integer categoryId,
+                           @Param("canteenId") Integer canteenId,
+                           Pageable pageable);
 }
