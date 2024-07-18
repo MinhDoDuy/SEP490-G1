@@ -43,7 +43,7 @@ public interface OrderService {
     //đặt order
     void updateOrderStatus(Integer orderId, OrderStatus newStatus);
 
-    void assignShipperAndUpdateStatus(Integer orderId, Integer shipperId, OrderStatus newStatus);
+    void assignShipperAndUpdateStatus(Integer orderId, Integer shipperId, OrderStatus newStatus, String staffName);
 
     void rejectOrder(Integer orderId);
 

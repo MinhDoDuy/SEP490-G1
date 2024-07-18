@@ -174,10 +174,11 @@ import java.util.*;
     }
 
     @Override
-    public void assignShipperAndUpdateStatus(Integer orderId, Integer deliveryRoleId, OrderStatus newStatus) {
+    public void assignShipperAndUpdateStatus(Integer orderId, Integer deliveryRoleId, OrderStatus newStatus, String staffName) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("Order not found"));
         order.setDeliveryRoleId(deliveryRoleId);
         order.setOrderStatus(newStatus);
+        order.setDeliveryRoleName(staffName);
         orderRepository.save(order);
     }
 

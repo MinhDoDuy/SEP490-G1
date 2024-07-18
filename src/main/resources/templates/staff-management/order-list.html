@@ -96,7 +96,9 @@
                     <div class="form-group">
                       <label for="deliveryRoleId">Select Shipper</label>
                       <select class="form-control" id="deliveryRoleId" name="deliveryRoleId">
-                        <option th:each="staff : ${staffList}" th:value="${staff.userId}" th:text="${staff.fullName}"></option>
+                        <option th:each="staff : ${staffList}" th:value="${staff.userId}" th:text="${staff.fullName}">
+
+                        </option>
                       </select>
                     </div>
                     <input type="hidden" name="newStatus" value="PROGRESS"/>
@@ -181,6 +183,7 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.deliveryRoleName}">Staff</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">

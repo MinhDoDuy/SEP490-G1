@@ -49,9 +49,12 @@ public class OrderManagementController {
     }
 
     @PostMapping("/update-order-status/{orderId}")
-    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId, @RequestParam Integer deliveryRoleId, @RequestParam OrderStatus newStatus, @RequestParam Integer canteenId, RedirectAttributes redirectAttributes) {
+    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId, @RequestParam Integer deliveryRoleId, @RequestParam OrderStatus newStatus, @RequestParam Integer canteenId,
+            RedirectAttributes redirectAttributes) {
+
         try {
-            orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, newStatus);
+            User staffShip = userService.getUserById(deliveryRoleId);
+            orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, newStatus, staffShip.getFullName());
             redirectAttributes.addFlashAttribute("message", "Shipper assigned and order status updated successfully");
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
