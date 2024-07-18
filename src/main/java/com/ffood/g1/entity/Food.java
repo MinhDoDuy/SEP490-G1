@@ -44,10 +44,10 @@ public class Food {
     @Column(name = "image_food")
     private String imageFood;
 
-    @Column(name = "food_quantity", nullable = false)
+    @Column(name = "food_quantity")
     private Integer foodQuantity;
 
-    @Column(name = "food_status_active", nullable = false)
+    @Column(name = "food_status_active")
     private Boolean foodStatusActive;
 
     public Food(Integer foodId) {

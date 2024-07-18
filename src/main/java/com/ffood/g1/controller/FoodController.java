@@ -59,7 +59,6 @@ public class FoodController {
     public @ResponseBody List<Food> getFoodsByCategoryId(@PathVariable Integer categoryId) {
         return foodService.getFoodsByCategoryId(categoryId);
     }
-
     @GetMapping("/food_details")
     public String viewFoodDetails(@RequestParam("id") Integer foodId, Model model) {
         Optional<Food> foodOptional = foodService.getFoodByIdFoodDetails(foodId);
@@ -83,7 +82,6 @@ public class FoodController {
             List<Food> relatedFoods = foodService.getFoodsByCategory(food.getCategory().getCategoryId());
             model.addAttribute("relatedFoods", relatedFoods);
 
-
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
 
@@ -91,16 +89,15 @@ public class FoodController {
             List<Food> items_home = foodService.getRandomFood();
             model.addAttribute("items_home", items_home);
 
-
-
             List<Feedback> feedbacksFood = feedbackService.getFeedbacksByFoodIdAndStatus(foodId, FeedbackStatus.COMPLETE);
             model.addAttribute("feedbacksFood", feedbacksFood);
 
+            model.addAttribute("message","Okess" );
             return "canteen/food-details";
-
         } else {
             // Handle case when food is not found, e.g., redirect to an error page or show a message
             return "error";
         }
     }
+
 }

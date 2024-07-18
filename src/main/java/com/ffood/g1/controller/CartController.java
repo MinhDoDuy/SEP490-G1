@@ -2,6 +2,7 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
+import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartItemService;
@@ -13,12 +14,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class CartController {
@@ -56,12 +61,38 @@ public class CartController {
         User user = userService.findByEmail(email);
 
         Cart cart = cartService.getOrCreateCart(user);
+        List<CartItem> cartItems = cartItemService.getCartItemsByUserId(user.getUserId());
+
+        // Get the canteen of the food item to be added
+        Optional<Food> newFoodOpt = foodService.getFoodById(foodId);
+        if (!newFoodOpt.isPresent()) {
+            redirectAttributes.addFlashAttribute("message", "The food item does not exist.");
+            return "redirect:/food_details?id=" + foodId;
+        }
+        Food newFood = newFoodOpt.get();
+        Integer newFoodCanteenId = newFood.getCanteen().getCanteenId();
+
+        // Check if the cart is empty
+        if (!cartItems.isEmpty()) {
+            // Check if the cart already contains items from a different canteen
+            for (CartItem cartItem : cartItems) {
+                Food existingFood = cartItem.getFood();
+                if (!existingFood.getCanteen().getCanteenId().equals(newFoodCanteenId)) {
+                    model.addAttribute("message", "You can only add items from the same canteen.");
+                    return "redirect:/food_details?id=" + foodId;
+                }
+            }
+        }
 
         cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-
+        model.addAttribute("message", "Add susscess");
         // Redirect to the food details page after adding to the cart
         return "redirect:/food_details?id=" + foodId;
     }
+
+
+
+
 
     @GetMapping("/add_to_cart_home")
     public String addToCartHome(@RequestParam("foodId") Integer foodId,
@@ -93,35 +124,6 @@ public class CartController {
         return "redirect:/homepage";
     }
 
-//    @GetMapping("/add_to_cart_home")
-//    public String addToCartHome(@RequestParam("foodId") Integer foodId,
-//                            @RequestParam("price") Integer price,
-//                            RedirectAttributes redirectAttributes,
-//                            Model model) {
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        // Check if the user is authenticated
-//        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-//            // Redirect to the login page if the user is not authenticated
-//            redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
-//            return "redirect:/login";
-//        }
-//
-//        int quantity=1;
-//        String email = authentication.getName();
-//        User user = userService.findByEmail(email);
-//
-//        Cart cart = cartService.getOrCreateCart(user);
-//
-//        cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-//
-//        // Redirect to the food details page after adding to the cart
-//      //  return "redirect:/food_details?id=" + foodId;
-//        return "redirect:/homepage";
-//    }
-
-
     @GetMapping("/cart_items")
     public String getCartItems(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -139,16 +141,11 @@ public class CartController {
             }
         }
 
-
         String email = authentication.getName();
         User user = userService.findByEmail(email);
         Integer userId = user.getUserId();
 
-
         Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-
-//        Integer totalOrderPricefinal =  cartService.getTotalFoodPriceByCartId(cartId);
-//        int totalOrderPrice = totalOrderPricefinal != null ? totalOrderPricefinal : 0;
 
         Integer totalOrderPricefinal = cartService.getTotalFoodPriceByCartId(cartId);
         int totalOrderPrice = (totalOrderPricefinal != null) ? totalOrderPricefinal : 0;
@@ -173,7 +170,6 @@ public class CartController {
         cartService.removeCartItem(cartItemId);
         return "redirect:/cart_items";
     }
-
 
 
 }

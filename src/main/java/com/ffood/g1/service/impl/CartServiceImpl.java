@@ -55,13 +55,29 @@ public class CartServiceImpl implements CartService {
         Food food = foodRepository.findById(foodId)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy sản phẩm"));
 
+        // Lấy danh sách các sản phẩm trong giỏ hàng
+        List<CartItem> cartItems = cartItemRepository.findByCart(cart);
+
+        // Kiểm tra xem giỏ hàng có rỗng không
+        if (!cartItems.isEmpty()) {
+            Integer newFoodCanteenId = food.getCanteen().getCanteenId();
+
+            // Kiểm tra xem giỏ hàng đã có món ăn từ một căng tin khác chưa
+            for (CartItem cartItem : cartItems) {
+                Food existingFood = cartItem.getFood();
+                if (!existingFood.getCanteen().getCanteenId().equals(newFoodCanteenId)) {
+                    throw new IllegalStateException("Bạn chỉ có thể thêm các món ăn từ cùng một căng tin.");
+                }
+            }
+        }
+
         Optional<CartItem> optionalCartItem = cartItemRepository.findByCartAndFood(cart, food);
 
         if (optionalCartItem.isPresent()) {
             CartItem cartItem = optionalCartItem.get();
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
             cartItem.setTotalFoodPrice(cartItem.getTotalFoodPrice() + (food.getPrice() * quantity));
-//            cartItem.setTransactionDate(transactionDate);
+//        cartItem.setTransactionDate(transactionDate);
             cartItemRepository.save(cartItem);
         } else {
             CartItem cartItem = CartItem.builder()
@@ -74,15 +90,9 @@ public class CartServiceImpl implements CartService {
                     .build();
             cartItemRepository.save(cartItem);
         }
-
-//        // Cập nhật tổng số tiền của giỏ hàng
-//        double totalAmount = cart.getCartItems().stream()
-//                .mapToDouble(CartItem::getPrice)
-//                .sum();
-//        cart.setTotalAmount(totalAmount);
-//
-//        cartRepository.save(cart);
     }
+
+
 
     @Override
     public Cart getCartByUserId(Integer userId) {

@@ -60,6 +60,9 @@ public class Order {
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
+    @Column(name = "delivery_role")
+    private Integer deliveryRole;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<OrderDetail> orderDetails = new ArrayList<>();
@@ -76,4 +79,5 @@ public class Order {
     public int hashCode() {
         return Objects.hash(orderId);
     }
+
 }
