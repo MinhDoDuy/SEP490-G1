@@ -73,7 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .antMatchers()
                 .hasRole("STAFF")
                 .antMatchers("/order-list","/order-list/**","/update-order-status"
-                ,"/update-order-status/**","/cancel-order","/cancel-order/**").hasAnyRole("STAFF", "MANAGER")
+                ,"/update-order-status/**","/reject-order","/reject-order/**").hasAnyRole("STAFF", "MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

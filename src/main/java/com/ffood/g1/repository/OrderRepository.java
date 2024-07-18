@@ -2,6 +2,7 @@ package com.ffood.g1.repository;
 
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentStatus;
 import io.swagger.models.auth.In;
 import com.ffood.g1.enum_pay.PaymentStatus;
@@ -58,6 +59,19 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "ORDER BY o.orderDate DESC")
     List<Order> findOrdersByCanteenIdAndStatuses(@Param("canteenId") Integer canteenId, @Param("statuses") List<OrderStatus> statuses);
 
+    @Query("SELECT DISTINCT o FROM Order o " +
+            "JOIN o.user u " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.food f " +
+            "WHERE f.canteen.canteenId = :canteenId " +
+            "AND o.orderStatus IN :statuses " +
+            "AND o.orderType = :orderType " +
+            "ORDER BY o.orderDate DESC")
+    List<Order> findOrdersByCanteenIdAndStatusesAndOrderTypePendingOnline(
+            @Param("canteenId") Integer canteenId,
+            @Param("statuses") List<OrderStatus> statuses,
+            @Param("orderType") OrderType orderType
+    );
 
     //doanh thu theo tháng của canteen cụ thể
     @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM'), SUM(CAST(od.price * od.quantity AS double)) " +

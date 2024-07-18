@@ -107,6 +107,12 @@ import java.util.*;
         return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses);
     }
 
+    @Override
+    public List<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType) {
+        return orderRepository.findOrdersByCanteenIdAndStatusesAndOrderTypePendingOnline(canteenId, statuses, orderType);
+    }
+
+
 
     @Override
     public List<Object[]> findRevenueDataCanteenByMonth(Integer canteenId) {
@@ -156,7 +162,7 @@ import java.util.*;
         String orderDetails = getOrderDetails(order);
 
         // Gửi email thông cho người dùng
-        if (newStatus == OrderStatus.PREPARE) {
+        if (newStatus == OrderStatus.PROGRESS) {
             String subject = "Đơn hàng của bạn đã được chuẩn bị";
             String text = "Đơn hàng của bạn với mã số " + orderId + " đã được chuẩn bị và sẵn sàng để lấy. Mời bạn xuống lấy hàng.\n\n" + orderDetails;
             sendEmail(order.getUser().getEmail(), subject, text);
@@ -166,11 +172,20 @@ import java.util.*;
             sendEmail(order.getUser().getEmail(), subject, text);
         }
     }
+
     @Override
-    public void cancelOrder(Integer orderId) {
+    public void assignShipperAndUpdateStatus(Integer orderId, Integer deliveryRoleId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("Order not found"));
+        order.setDeliveryRoleId(deliveryRoleId);
+        order.setOrderStatus(newStatus);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void rejectOrder(Integer orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
-        order.setOrderStatus(OrderStatus.CANCEL);
+        order.setOrderStatus(OrderStatus.REJECT);
         orderRepository.save(order);
 
         // Lấy thông tin chi tiết đơn hàng

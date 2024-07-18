@@ -39,11 +39,13 @@ public interface OrderService {
 
     Integer countCompletedOrdersByCanteenId(Integer canteenId);
 
-
+    List<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType);
     //đặt order
     void updateOrderStatus(Integer orderId, OrderStatus newStatus);
 
-    void cancelOrder(Integer orderId);
+    void assignShipperAndUpdateStatus(Integer orderId, Integer shipperId, OrderStatus newStatus);
+
+    void rejectOrder(Integer orderId);
 
     List<Object[]> getOrderStatsByCanteenAndMonth(Integer canteenId);
     List<Object[]> getBestSellingItemsByCanteen(Integer canteenId);

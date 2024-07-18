@@ -255,6 +255,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.countStaffByCanteenId(canteenId);
     }
 
+    @Override
+    public List<User> getStaffByCanteenToShip(Integer canteenId) {
+        return userRepository.findAllStaffByCanteenIdToShip(canteenId);
+    }
+
 }
 
 

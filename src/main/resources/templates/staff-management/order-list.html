@@ -44,16 +44,10 @@
   <div class="p-6">
     <ul class="nav nav-tabs justify-content-center">
       <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#all">Tất cả</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#pending">Chờ xác nhận</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#prepare">Đang làm</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#ready">Đã nấu xong</a>
+        <a class="nav-link" data-toggle="tab" href="#prepare">Đang Chuyển</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#complete">Đã giao</a>
@@ -99,13 +93,19 @@
                     <i class="ri-eye-line"></i>
                   </button>
                   <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" style="display: inline;">
-                    <input type="hidden" name="newStatus" value="PREPARE"/>
+                    <div class="form-group">
+                      <label for="deliveryRoleId">Select Shipper</label>
+                      <select class="form-control" id="deliveryRoleId" name="deliveryRoleId">
+                        <option th:each="staff : ${staffList}" th:value="${staff.userId}" th:text="${staff.fullName}"></option>
+                      </select>
+                    </div>
+                    <input type="hidden" name="newStatus" value="PROGRESS"/>
                     <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
                     <button class="btn btn-success" type="submit">
                       <i class="ri-check-line"></i>
                     </button>
                   </form>
-                  <form th:action="@{'/cancel-order/' + ${order.orderId}}" method="post" style="display: inline;">
+                  <form th:action="@{'/reject-order/' + ${order.orderId}}" method="post" style="display: inline;">
                     <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
                     <button class="btn btn-danger" type="submit">
                       <i class="ri-close-line"></i>
@@ -156,7 +156,7 @@
       <div class="tab-pane container fade" id="prepare">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md mb-4">
           <div class="flex justify-between mb-4 items-start">
-            <div class="font-medium">Manage Orders (PREPARE)</div>
+            <div class="font-medium">Manage Orders (PROGRESS)</div>
           </div>
           <div class="overflow-x-auto">
             <table class="table w-full min-w-[540px]">
@@ -169,11 +169,12 @@
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Shipper</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
               </tr>
               </thead>
               <tbody>
-              <tr th:each="order : ${prepareOrders}">
+              <tr th:each="order : ${progressOrder}">
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Order ID</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Customer Name</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
@@ -186,13 +187,13 @@
                     <i class="ri-eye-line"></i>
                   </button>
                   <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" style="display: inline;">
-                    <input type="hidden" name="newStatus" value="READY"/>
+                    <input type="hidden" name="newStatus" value=""/>
                     <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
                     <button class="btn btn-success" type="submit">
                       <i class="ri-check-line"></i>
                     </button>
                   </form>
-                  <form th:action="@{'/cancel-order/' + ${order.orderId}}" method="post" style="display: inline;">
+                  <form th:action="@{'/reject-order/' + ${order.orderId}}" method="post" style="display: inline;">
                     <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
                     <button class="btn btn-danger" type="submit">
                       <i class="ri-close-line"></i>
@@ -238,92 +239,6 @@
         </div>
       </div>
 
-
-      <!-- Tab for Ready Orders -->
-      <div class="tab-pane container fade" id="ready">
-        <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md mb-4">
-          <div class="flex justify-between mb-4 items-start">
-            <div class="font-medium">Manage Orders (READY)</div>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="table w-full min-w-[540px]">
-              <thead>
-              <tr>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order ID</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Customer Name</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:each="order : ${readyOrders}">
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Order ID</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Customer Name</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
-                <td class="py-2 px-4 border-b border-b-gray-50">
-                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
-                    <i class="ri-eye-line"></i>
-                  </button>
-                  <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" style="display: inline;">
-                    <input type="hidden" name="newStatus" value="COMPLETE"/>
-                    <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
-                    <button class="btn btn-success" type="submit">
-                      <i class="ri-check-line"></i>
-                    </button>
-                  </form>
-                  <form th:action="@{'/cancel-order/' + ${order.orderId}}" method="post" style="display: inline;">
-                    <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
-                    <button class="btn btn-danger" type="submit">
-                      <i class="ri-close-line"></i>
-                    </button>
-                  </form>
-
-                  <!-- Modal -->
-                  <div class="modal fade" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <ul>
-                            <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
-                            <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
-                            <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
-                            <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
-                            <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
-                            <li><strong>Note:</strong> <span th:text="${order.note}">Note</span><br></li>
-                            <li th:each="detail : ${order.orderDetails}" class="mb-2">
-                              <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
-                              <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
-                              <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
 
       <!-- Tab for Complete Orders -->
       <div class="tab-pane container fade" id="complete">
