@@ -6,6 +6,7 @@
   <title>Manage Food</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+
 </head>
 <body class="text-gray-800 font-inter">
 
@@ -32,53 +33,86 @@
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Quản lý đồ ăn của: <span th:text="${canteenName}"></span></div>
-        <a th:href="@{/add-food-form(canteenId=${canteenId})}" class="btn btn-primary"
-           style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Thêm Đồ Ăn</a>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full min-w-[540px]">
-          <thead>
-          <tr>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên Sản Phẩm</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên Đồ Ăn</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Giá</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ảnh</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Hành Động</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="food, iterStat : ${foodPage.content}">
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${foodPage.number * foodPage.size + iterStat.index + 1}">STT</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.category.categoryName}">Category Name</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Food Name</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.price}">100.0</td>
-            <td class="py-2 px-4 border-b border-b-gray-50">
-              <img th:src="@{${food.imageFood}}" alt="Food Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"/>
-            </td>
-            <td class="py-2 px-4 border-b border-b-gray-50">
-              <a th:href="@{/edit-food/{foodId}(foodId=${food.foodId})}" class="btn btn-primary"
-                 style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Sửa</a> 
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-        <span th:if="${foodPage.hasPrevious()}">
-          <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number - 1}, size=${foodPage.size})}" class="page-link">&laquo;</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(0, foodPage.totalPages - 1)}">
-          <a th:classappend="${i} == ${foodPage.number} ? 'active' : ''"
-             th:href="@{/manage-food(canteenId=${canteenId}, page=${i}, size=${foodPage.size})}" class="page-link">
-            <span th:text="${i + 1}">1</span>
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <form th:action="@{/search-food}" method="get" class="search-bar flex items-center">
+            <input type="hidden" name="canteenId" th:value="${canteenId}">
+            <div class="relative w-64 mr-2">
+              <input type="text"
+                     class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500"
+                     placeholder="Tìm kiếm theo tên đồ ăn"
+                     name="keyword" th:value="${keyword}">
+              <i class="ri-search-line absolute top-1/2 left-4 -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <!-- Filter by Category -->
+            <div class="relative w-64 mr-2">
+              <select name="categoryId" class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500">
+                <option value="">Tất cả danh mục</option>
+                <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}" th:selected="${category.categoryId == selectedCategoryId}"></option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Tìm kiếm</button>
+          </form>
+          <a th:href="@{/add-food-form(canteenId=${canteenId})}" class="btn btn-primary"
+             style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+            Thêm đồ ăn mới
           </a>
-        </span>
-        <span th:if="${foodPage.hasNext()}">
-          <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number + 1}, size=${foodPage.size})}" class="page-link">&raquo;</a>
-        </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[540px]">
+            <thead>
+            <tr>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Danh mục Đồ Ăn</th>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên Đồ Ăn</th>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Giá</th>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Số lượng</th>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng Thái</th>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ảnh</th>
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Hành Động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="food, iterStat : ${foodPage.content}">
+              <td class="py-2 px-4 border-b border-b-gray-50" th:text="${foodPage.number * foodPage.size + iterStat.index + 1}">STT</td>
+              <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.category.categoryName}">Category Name</td>
+              <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Food Name</td>
+              <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.price}">100.0</td>
+              <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodQuantity}">foodQuantity</td>
+              <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodStatusActive ? 'Active' : 'Inactive'}">Trạng Thái</td>
+              <td class="py-2 px-4 border-b border-b-gray-50">
+                <img th:src="@{${food.imageFood}}" alt="Food Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"/>
+              </td>
+              <td class="py-2 px-4 border-b border-b-gray-50">
+                <a th:href="@{/edit-food/{foodId}(foodId=${food.foodId})}" class="btn-icon" title="Sửa">
+                  <i class="ri-edit-2-line icon"></i>
+                </a>
+                <a th:href="@{/add-quantity/{foodId}(foodId=${food.foodId})}" class="btn-icon" title="Thêm Số Lượng">
+                  <i class="ri-add-line icon"></i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
+          <span th:if="${foodPage.hasPrevious()}">
+            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number - 1}, size=${foodPage.size})}" class="page-link">&laquo;</a>
+          </span>
+          <span th:each="i : ${#numbers.sequence(0, foodPage.totalPages - 1)}">
+            <a th:classappend="${i} == ${foodPage.number} ? 'active' : ''"
+               th:href="@{/manage-food(canteenId=${canteenId}, page=${i}, size=${foodPage.size})}" class="page-link">
+              <span th:text="${i + 1}">1</span>
+            </a>
+          </span>
+          <span th:if="${foodPage.hasNext()}">
+            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number + 1}, size=${foodPage.size})}" class="page-link">&raquo;</a>
+          </span>
+        </div>
       </div>
     </div>
   </div>

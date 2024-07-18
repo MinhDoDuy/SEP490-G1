@@ -48,7 +48,7 @@ public class Food {
     private Integer foodQuantity;
 
     @Column(name = "food_status_active", nullable = false)
-    private Boolean foodStatusActive;
+    private Boolean foodStatusActive = true;
 
     public Food(Integer foodId) {
         this.foodId = foodId;
