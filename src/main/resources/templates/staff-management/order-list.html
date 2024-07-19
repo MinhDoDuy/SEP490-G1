@@ -6,7 +6,7 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <title>Order Management</title>
+  <title>Quản lý đơn hàng</title>
   <style>
     .nav-tabs {
       justify-content: center;
@@ -32,10 +32,10 @@
     </button>
     <ul class="flex items-center text-sm ml-4">
       <li class="mr-2">
-        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Bảng điều khiển</a>
       </li>
       <li class="text-gray-600 mr-2 font-medium">/</li>
-      <li class="text-gray-600 mr-2 font-medium">Xem Tất Cả Đơn Hàng</li>
+      <li class="text-gray-600 mr-2 font-medium">Xem tất cả đơn hàng</li>
     </ul>
   </div>
 
@@ -47,115 +47,54 @@
 
       <ul class="nav nav-tabs" id="orderTabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="pending-orders-tab" data-toggle="tab" href="#pending-orders" role="tab" aria-controls="pending-orders" aria-selected="false">Pending Orders</a>
+          <a class="nav-link active" id="pending-orders-tab" data-toggle="tab" href="#pending-orders" role="tab" aria-controls="pending-orders" aria-selected="true">Đơn hàng chờ xử lý</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " id="progress-orders-tab" data-toggle="tab" href="#progress-orders" role="tab" aria-controls="progress-orders" aria-selected="true">Progress Orders</a>
+          <a class="nav-link" id="progress-orders-tab" data-toggle="tab" href="#progress-orders" role="tab" aria-controls="progress-orders" aria-selected="false">Đơn hàng đang xử lý</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="complete-orders-tab" data-toggle="tab" href="#complete-orders" role="tab" aria-controls="complete-orders" aria-selected="false">Complete Orders</a>
+          <a class="nav-link" id="complete-orders-tab" data-toggle="tab" href="#complete-orders" role="tab" aria-controls="complete-orders" aria-selected="false">Đơn hàng hoàn thành</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="cancel-orders-tab" data-toggle="tab" href="#cancel-orders" role="tab" aria-controls="cancel-orders" aria-selected="false">Reject Orders</a>
+          <a class="nav-link" id="cancel-orders-tab" data-toggle="tab" href="#cancel-orders" role="tab" aria-controls="cancel-orders" aria-selected="false">Đơn hàng bị hủy</a>
         </li>
       </ul>
 
       <div class="tab-content" id="orderTabsContent">
-        <!-- Progress Orders Tab -->
-        <div class="tab-pane fade show active" id="progress-orders" role="tabpanel" aria-labelledby="progress-orders-tab">
-          <div class="overflow-x-auto">
-            <table class="w-full min-w-[540px]">
-              <thead>
-              <tr>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order ID</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Customer Name</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Nhân Viên</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Type</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Payment Method</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:each="order : ${progressOrders.content}">
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Order ID</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Customer Name</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.deliveryRoleName}">Staff</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Order Type</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Payment Method</td>
-                <td class="py-2 px-4 border-b border-b-gray-50">
-                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
-                    <i class="ri-eye-line"></i>
-                  </button>
-                  <form th:action="@{'/reject-order/' + ${order.orderId}}" method="post" style="display: inline;">
-                    <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
-                    <button class="btn btn-danger" type="submit">
-                      <i class="ri-close-line"></i>
-                    </button>
-                  </form>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                            <span th:if="${progressOrders.hasPrevious()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${progressOrders.number - 1}, size=${progressOrders.size})}" class="page-link">&laquo;</a>
-                            </span>
-              <span th:each="i : ${#numbers.sequence(0, progressOrders.totalPages - 1)}">
-                                <a th:classappend="${i} == ${progressOrders.number} ? 'active' : ''"
-                                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${progressOrders.size})}" class="page-link">
-                                    <span th:text="${i + 1}">1</span>
-                                </a>
-                            </span>
-              <span th:if="${progressOrders.hasNext()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${progressOrders.number + 1}, size=${progressOrders.size})}" class="page-link">&raquo;</a>
-                            </span>
-            </div>
-          </div>
-        </div>
 
         <!-- Pending Orders Tab -->
-        <div class="tab-pane fade" id="pending-orders" role="tabpanel" aria-labelledby="pending-orders-tab">
+        <div class="tab-pane fade show active" id="pending-orders" role="tabpanel" aria-labelledby="pending-orders-tab">
           <div class="overflow-x-auto">
             <table class="w-full min-w-[540px]">
               <thead>
               <tr>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order ID</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Customer Name</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Type</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Payment Method</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Staff</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Actions</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tổng giá</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Địa chỉ giao hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ghi chú</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Loại đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Phương thức thanh toán</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Nhân viên giao hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
               </tr>
               </thead>
               <tbody>
               <tr th:if="${#lists.isEmpty(pendingOrders.content)}">
-                <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="11">No pending orders available</td>
+                <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="11">Không có đơn hàng chờ xử lý</td>
               </tr>
               <tr th:each="order : ${pendingOrders.content}">
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Order ID</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Customer Name</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Order Type</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Payment Method</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Tên khách hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Ngày đặt hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Trạng thái</td>
+                <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Địa chỉ giao hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Ghi chú</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Loại đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Phương thức thanh toán</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <select class="form-control" name="deliveryRoleId" form="form-update-status-${order.orderId}">
                     <option th:each="staff : ${staffList}" th:value="${staff.userId}" th:text="${staff.fullName}"></option>
@@ -183,21 +122,85 @@
               </tbody>
             </table>
             <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                            <span th:if="${pendingOrders.hasPrevious()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${pendingOrders.number - 1}, size=${pendingOrders.size})}" class="page-link">&laquo;</a>
-                            </span>
+              <span th:if="${pendingOrders.hasPrevious()}">
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${pendingOrders.number - 1}, size=${pendingOrders.size})}" class="page-link">&laquo;</a>
+              </span>
               <span th:each="i : ${#numbers.sequence(0, pendingOrders.totalPages - 1)}">
-                                <a th:classappend="${i} == ${pendingOrders.number} ? 'active' : ''"
-                                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${pendingOrders.size})}" class="page-link">
-                                    <span th:text="${i + 1}">1</span>
-                                </a>
-                            </span>
+                <a th:classappend="${i} == ${pendingOrders.number} ? 'active' : ''"
+                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${pendingOrders.size})}" class="page-link">
+                  <span th:text="${i + 1}">1</span>
+                </a>
+              </span>
               <span th:if="${pendingOrders.hasNext()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${pendingOrders.number + 1}, size=${pendingOrders.size})}" class="page-link">&raquo;</a>
-                            </span>
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${pendingOrders.number + 1}, size=${pendingOrders.size})}" class="page-link">&raquo;</a>
+              </span>
             </div>
           </div>
         </div>
+
+        <!-- Progress Orders Tab -->
+        <div class="tab-pane fade" id="progress-orders" role="tabpanel" aria-labelledby="progress-orders-tab">
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[540px]">
+              <thead>
+              <tr>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tổng giá</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Địa chỉ giao hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ghi chú</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Nhân viên giao hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Loại đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Phương thức thanh toán</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="order : ${progressOrders.content}">
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Tên khách hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Ngày đặt hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Trạng thái</td>
+                <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Địa chỉ giao hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Ghi chú</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.deliveryRoleName}">Nhân viên giao hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Loại đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Phương thức thanh toán</td>
+                <td class="py-2 px-4 border-b border-b-gray-50">
+                  <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                  <form th:action="@{'/reject-order/' + ${order.orderId}}" method="post" style="display: inline;">
+                    <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
+                    <button class="btn btn-danger" type="submit">
+                      <i class="ri-close-line"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
+              <span th:if="${progressOrders.hasPrevious()}">
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${progressOrders.number - 1}, size=${progressOrders.size})}" class="page-link">&laquo;</a>
+              </span>
+              <span th:each="i : ${#numbers.sequence(0, progressOrders.totalPages - 1)}">
+                <a th:classappend="${i} == ${progressOrders.number} ? 'active' : ''"
+                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${progressOrders.size})}" class="page-link">
+                  <span th:text="${i + 1}">1</span>
+                </a>
+              </span>
+              <span th:if="${progressOrders.hasNext()}">
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${progressOrders.number + 1}, size=${progressOrders.size})}" class="page-link">&raquo;</a>
+              </span>
+            </div>
+          </div>
+        </div>
+
+
 
         <!-- Complete Orders Tab -->
         <div class="tab-pane fade" id="complete-orders" role="tabpanel" aria-labelledby="complete-orders-tab">
@@ -205,29 +208,29 @@
             <table class="w-full min-w-[540px]">
               <thead>
               <tr>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order ID</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Customer Name</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Type</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Payment Method</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Actions</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tổng giá</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Địa chỉ giao hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ghi chú</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Loại đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Phương thức thanh toán</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
               </tr>
               </thead>
               <tbody>
               <tr th:each="order : ${completeOrders.content}">
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Order ID</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Customer Name</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Order Type</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Payment Method</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Tên khách hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Ngày đặt hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Trạng thái</td>
+                <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Địa chỉ giao hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Ghi chú</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Loại đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Phương thức thanh toán</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
                     <i class="ri-eye-line"></i>
@@ -237,18 +240,18 @@
               </tbody>
             </table>
             <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                            <span th:if="${completeOrders.hasPrevious()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${completeOrders.number - 1}, size=${completeOrders.size})}" class="page-link">&laquo;</a>
-                            </span>
+              <span th:if="${completeOrders.hasPrevious()}">
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${completeOrders.number - 1}, size=${completeOrders.size})}" class="page-link">&laquo;</a>
+              </span>
               <span th:each="i : ${#numbers.sequence(0, completeOrders.totalPages - 1)}">
-                                <a th:classappend="${i} == ${completeOrders.number} ? 'active' : ''"
-                                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${completeOrders.size})}" class="page-link">
-                                    <span th:text="${i + 1}">1</span>
-                                </a>
-                            </span>
+                <a th:classappend="${i} == ${completeOrders.number} ? 'active' : ''"
+                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${completeOrders.size})}" class="page-link">
+                  <span th:text="${i + 1}">1</span>
+                </a>
+              </span>
               <span th:if="${completeOrders.hasNext()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${completeOrders.number + 1}, size=${completeOrders.size})}" class="page-link">&raquo;</a>
-                            </span>
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${completeOrders.number + 1}, size=${completeOrders.size})}" class="page-link">&raquo;</a>
+              </span>
             </div>
           </div>
         </div>
@@ -259,29 +262,29 @@
             <table class="w-full min-w-[540px]">
               <thead>
               <tr>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order ID</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Customer Name</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Date</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Total Price</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Address</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Note</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Order Type</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Payment Method</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Actions</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tổng giá</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Địa chỉ giao hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ghi chú</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Loại đơn hàng</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Phương thức thanh toán</th>
+                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
               </tr>
               </thead>
               <tbody>
               <tr th:each="order : ${cancelOrders.content}">
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Order ID</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Customer Name</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Order Date</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Status</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.totalOrderPrice}">Total Price</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Order Address</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Note</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Order Type</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Payment Method</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Tên khách hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderDate}">Ngày đặt hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Trạng thái</td>
+                <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Địa chỉ giao hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Ghi chú</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Loại đơn hàng</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Phương thức thanh toán</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
                     <i class="ri-eye-line"></i>
@@ -291,18 +294,18 @@
               </tbody>
             </table>
             <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                            <span th:if="${cancelOrders.hasPrevious()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${cancelOrders.number - 1}, size=${cancelOrders.size})}" class="page-link">&laquo;</a>
-                            </span>
+              <span th:if="${cancelOrders.hasPrevious()}">
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${cancelOrders.number - 1}, size=${cancelOrders.size})}" class="page-link">&laquo;</a>
+              </span>
               <span th:each="i : ${#numbers.sequence(0, cancelOrders.totalPages - 1)}">
-                                <a th:classappend="${i} == ${cancelOrders.number} ? 'active' : ''"
-                                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${cancelOrders.size})}" class="page-link">
-                                    <span th:text="${i + 1}">1</span>
-                                </a>
-                            </span>
+                <a th:classappend="${i} == ${cancelOrders.number} ? 'active' : ''"
+                   th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${i}, size=${cancelOrders.size})}" class="page-link">
+                  <span th:text="${i + 1}">1</span>
+                </a>
+              </span>
               <span th:if="${cancelOrders.hasNext()}">
-                                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${cancelOrders.number + 1}, size=${cancelOrders.size})}" class="page-link">&raquo;</a>
-                            </span>
+                <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, page=${cancelOrders.number + 1}, size=${cancelOrders.size})}" class="page-link">&raquo;</a>
+              </span>
             </div>
           </div>
         </div>
@@ -320,28 +323,22 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+        <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <ul>
-          <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
-          <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
-          <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
-          <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
-          <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
-          <li><strong>Note:</strong> <span th:text="${order.note}">Note</span></li>
           <li th:each="detail : ${order.orderDetails}" class="mb-2">
-            <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
-            <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
-            <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+            <strong>Tên món ăn:</strong> <span th:text="${detail.food.foodName}">Tên món ăn</span><br>
+            <strong>Số lượng:</strong> <span th:text="${detail.quantity}">Số lượng</span><br>
+            <strong>Giá:</strong> <span class="formatted-price" th:text="${detail.price}">Giá</span>
           </li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
       </div>
     </div>
   </div>
@@ -352,28 +349,22 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+        <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <ul>
-          <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
-          <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
-          <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
-          <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
-          <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
-          <li><strong>Note:</strong> <span th:text="${order.note}">Note</span></li>
           <li th:each="detail : ${order.orderDetails}" class="mb-2">
-            <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
-            <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
-            <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+            <strong>Tên món ăn:</strong> <span th:text="${detail.food.foodName}">Tên món ăn</span><br>
+            <strong>Số lượng:</strong> <span th:text="${detail.quantity}">Số lượng</span><br>
+            <strong>Giá:</strong> <span class="formatted-price" th:text="${detail.price}">Giá</span>
           </li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
       </div>
     </div>
   </div>
@@ -384,28 +375,22 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+        <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <ul>
-          <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
-          <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
-          <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
-          <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
-          <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
-          <li><strong>Note:</strong> <span th:text="${order.note}">Note</span></li>
           <li th:each="detail : ${order.orderDetails}" class="mb-2">
-            <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
-            <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
-            <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+            <strong>Tên món ăn:</strong> <span th:text="${detail.food.foodName}">Tên món ăn</span><br>
+            <strong>Số lượng:</strong> <span th:text="${detail.quantity}">Số lượng</span><br>
+            <strong>Giá:</strong> <span class="formatted-price" th:text="${detail.price}">Giá</span>
           </li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
       </div>
     </div>
   </div>
@@ -416,32 +401,43 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+        <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <ul>
-          <li><strong>Order Type:</strong> <span th:text="${order.orderType}">Order Type</span></li>
-          <li><strong>Payment Method:</strong> <span th:text="${order.paymentMethod}">Payment Method</span></li>
-          <li><strong>Order Status:</strong> <span th:text="${order.orderStatus}">Order Status</span></li>
-          <li><strong>Total Price:</strong> <span th:text="${order.totalOrderPrice}">Total Price</span></li>
-          <li><strong>Order Address:</strong> <span th:text="${order.orderAddress}">Order Address</span></li>
-          <li><strong>Note:</strong> <span th:text="${order.note}">Note</span></li>
           <li th:each="detail : ${order.orderDetails}" class="mb-2">
-            <strong>Food Name:</strong> <span th:text="${detail.food.foodName}">Food Name</span><br>
-            <strong>Quantity:</strong> <span th:text="${detail.quantity}">Quantity</span><br>
-            <strong>Price:</strong> <span th:text="${detail.price}">Price</span>
+            <strong>Tên món ăn:</strong> <span th:text="${detail.food.foodName}">Tên món ăn</span><br>
+            <strong>Số lượng:</strong> <span th:text="${detail.quantity}">Số lượng</span><br>
+            <strong>Giá:</strong> <span class="formatted-price" th:text="${detail.price}">Giá</span>
           </li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
       </div>
     </div>
   </div>
 </div>
 
+<script>
+  // Function to format currency in VND
+  function formatCurrencyVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Format all prices on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.formatted-price').forEach(function (element) {
+      let price = element.innerText;
+      element.innerText = formatCurrencyVND(price);
+    });
+  });
+</script>
 </body>
 </html>
