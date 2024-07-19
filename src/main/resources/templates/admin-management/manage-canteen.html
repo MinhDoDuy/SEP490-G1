@@ -28,7 +28,13 @@
       <li class="text-gray-600 mr-2 font-medium">View All Canteen</li>
     </ul>
   </div>
-
+  <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+    <span th:text="${successMessage}"></span>
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+  </div>
+  <div th:if="${errorMessage}" class="alert alert-danger">
+    <span th:text="${errorMessage}"></span>
+  </div>
   <div class="p-6">
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
@@ -122,5 +128,18 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+  function hideAlert() {
+    var alert = document.getElementById('successAlert');
+    if (alert) {
+      setTimeout(function () {
+        alert.style.display = 'none';
+      }, 3000);
+    }
+  }
+
+  // Call the function to hide the alert
+  hideAlert();
+</script>
 </body>
 </html>
