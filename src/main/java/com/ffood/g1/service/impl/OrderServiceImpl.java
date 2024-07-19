@@ -8,6 +8,8 @@ import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -103,13 +105,13 @@ import java.util.*;
     }
 
     @Override
-    public List<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses) {
-        return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses);
+    public Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable) {
+        return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses, pageable);
     }
 
     @Override
-    public List<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType) {
-        return orderRepository.findOrdersByCanteenIdAndStatusesAndOrderTypePendingOnline(canteenId, statuses, orderType);
+    public Page<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType, Pageable pageable) {
+        return orderRepository.findOrdersByCanteenIdAndStatusesAndOrderTypePendingOnline(canteenId, statuses, orderType, pageable);
     }
 
 

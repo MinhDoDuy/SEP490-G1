@@ -6,6 +6,9 @@ import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,21 +28,25 @@ public class OrderManagementController {
 
 
     @GetMapping("/order-list/{canteenId}")
-    public String getOrdersByCanteen(@PathVariable Integer canteenId, Model model) {
+    public String manageOrders(@PathVariable Integer canteenId,
+                               @RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "size", defaultValue = "10") int size,
+                               Model model) {
+        Pageable pageable = PageRequest.of(page, size);
         List<OrderStatus> pendingStatus = Arrays.asList(OrderStatus.PENDING);
         List<OrderStatus> progressStatus = Arrays.asList(OrderStatus.PROGRESS);
         List<OrderStatus> completeStatus = Arrays.asList(OrderStatus.COMPLETE);
         List<OrderStatus> cancelStatus = Arrays.asList(OrderStatus.REJECT);
 
-        List<Order> pendingOrders = orderService.getOrdersByCanteenAndType(canteenId, pendingStatus, OrderType.ONLINE_ORDER);
-        List<Order> progressOrder = orderService.getOrdersByCanteen(canteenId, progressStatus);
-        List<Order> completeOrders = orderService.getOrdersByCanteen(canteenId, completeStatus);
-        List<Order> cancelOrders = orderService.getOrdersByCanteen(canteenId, cancelStatus);
+        Page<Order> pendingOrders = orderService.getOrdersByCanteenAndType(canteenId, pendingStatus, OrderType.ONLINE_ORDER, pageable);
+        Page<Order> progressOrders = orderService.getOrdersByCanteen(canteenId, progressStatus, pageable);
+        Page<Order> completeOrders = orderService.getOrdersByCanteen(canteenId, completeStatus, pageable);
+        Page<Order> cancelOrders = orderService.getOrdersByCanteen(canteenId, cancelStatus, pageable);
 
         List<User> staffList = userService.getStaffByCanteenToShip(canteenId);
 
         model.addAttribute("pendingOrders", pendingOrders);
-        model.addAttribute("progressOrder", progressOrder);
+        model.addAttribute("progressOrders", progressOrders);
         model.addAttribute("completeOrders", completeOrders);
         model.addAttribute("cancelOrders", cancelOrders);
         model.addAttribute("staffList", staffList);
@@ -47,6 +54,7 @@ public class OrderManagementController {
 
         return "staff-management/order-list";
     }
+
 
     @PostMapping("/update-order-status/{orderId}")
     public String assignShipperAndUpdateStatus(@PathVariable Integer orderId, @RequestParam Integer deliveryRoleId, @RequestParam OrderStatus newStatus, @RequestParam Integer canteenId,
