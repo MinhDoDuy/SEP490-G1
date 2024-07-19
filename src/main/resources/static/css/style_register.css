@@ -1,301 +1,154 @@
-@font-face {
-    font-family: "Karla", sans-serif;
-    src: url('../fonts/muli/Muli-Regular.ttf');
-}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
-@font-face {
-    font-family: "Karla", sans-serif;
-    src: url('../fonts/muli/Muli-SemiBold.ttf');
-}
-
-@font-face {
-    font-family: "Karla", sans-serif;
-    src: url('../fonts/muli/Muli-Bold.ttf');
-}
-
-@font-face {
-    font-family: "Karla", sans-serif;
-    src: url('../fonts/Abril_Fatface/AbrilFatface-Regular.ttf');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    font-family: "Karla", sans-serif;
-    color: #666;
-    font-size: 13px;
-    margin: 0;
     height: 100vh;
     display: flex;
-    align-items: center;
     justify-content: center;
-    overflow: hidden;
-}
-
-.form-holder-pass {
-    position: relative;
-}
-.toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
-
-input, textarea, select, button {
-    font-family: "Karla", sans-serif;
-    color: #333;
-    font-size: 13px;
-}
-
-p, h1, h2, h3, h4, h5, h6, ul {
-    margin: 0;
-}
-
-img {
-    max-width: 100%;
-}
-
-ul {
-    padding-left: 0;
-    margin-bottom: 0;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
-:focus {
-    outline: none;
+    align-items: center;
+    padding: 10px;
+    background: linear-gradient(135deg, #71b7e6, #FF914D);
 }
 
 .wrapper {
-    height: 100vh;
+    max-width: 700px;
     width: 100%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 
-.inner {
-    width: 100%;
-    max-width: 900px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: center;
-    height: 90vh;
-    box-sizing: content-box;
+.wrapper .inner {
+    position: relative;
 }
 
-form {
-    border: 1px solid #d3cccc;
-    padding: 20px;
-    border-radius: 10px;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-h3 {
-    text-transform: uppercase;
-    font-size: 20px;
-    font-family: "Karla", sans-serif;
+.wrapper .title {
+    font-size: 25px;
+    font-weight: 500;
+    position: relative;
     text-align: center;
-    margin-bottom: 20px;
-    color: #6d5555;
-    letter-spacing: 3px;
+    margin-bottom: 25px;
+}
+
+.wrapper .title::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    height: 3px;
+    width: 30px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #71b7e6, #FF914D);
+}
+
+.wrapper .back-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    background: #5a6268;
+    color: #FF914D;
+    padding: 8px 12px;
+    border-radius: 5px;
 }
 
 .form-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    justify-content: space-between;
+    margin: 20px 0 12px 0;
 }
 
 .form-wrapper {
-    flex: 1 1 45%;
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 15px;
+    width: calc(100% / 2 - 20px);
 }
 
-.form-wrapper.half {
-    width: 48%;
-}
-
-label {
-    margin-bottom: 10px;
+.form-wrapper label {
+    font-weight: 500;
     display: block;
-    text-transform: uppercase;
-    font-family: "Karla", sans-serif
+    margin-bottom: 5px;
 }
 
 .form-holder {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
 }
 
-.form-holder input,
-.form-holder small {
-    width: 70%; /* Đảm bảo tất cả các input có cùng chiều rộng */
-}
-
-.form-holder-pass {
-    width: 34%;
-}
-
-.form-control {
-    border: 1px solid #e6e6e6;
-    display: block;
+.form-holder input {
+    height: 45px;
     width: 100%;
-    height: 42px;
-    padding: 0 20px;
-    color: #999;
-    font-size: 15px;
+    outline: none;
+    font-size: 16px;
     border-radius: 5px;
-}
-
-button {
-    border: none;
-    width: 100%;
-    height: 42px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    background: #FF914D;
-    font-size: 13px;
-    color: #fff;
-    text-transform: uppercase;
-    font-family: "Karla", sans-serif;
-    border-radius: 5px;
-    transition: background 0.3s ease;
-    margin-top: 1.5rem; /* Thêm khoảng cách giữa các dòng */
-}
-
-button:hover {
-    background: #ff7a33;
-}
-
-.checkbox {
-    display: flex;
-    align-items: center;
-    position: relative;
-    padding-left: 22px;
-    width: 100%;
-    margin-top: 1.5rem; /* Thêm khoảng cách giữa các dòng */
-}
-
-.checkbox label {
-    cursor: pointer;
-    color: #999;
-    font-family: "Karla", sans-serif
-}
-
-.checkbox input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.checkbox input:checked ~ .checkmark:after {
-    display: block;
-}
-
-.checkmark {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    height: 12px;
-    width: 13px;
-    border-radius: 2px;
-    background-color: #ebebeb;
+    padding-left: 15px;
     border: 1px solid #ccc;
-    font-family: "Karla", sans-serif;
-    color: #000;
-    font-size: 10px;
-    font-weight: bolder;
+    border-bottom-width: 2px;
+    transition: all 0.3s ease;
 }
 
-.checkmark:after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: none;
-    content: '\f26b';
+.form-holder input:focus,
+.form-holder input:valid {
+    border-color: #9b59b6;
 }
 
-@media (max-width: 991px) {
-    .form-wrapper.half {
-        width: 100%;
-    }
+.form-text {
+    font-size: 12px;
+    margin-bottom: 5px;
 }
 
-@media (max-width: 767px) {
+.help-block {
+    font-size: small;
+    color: rgb(234, 77, 77);
+    margin-top: 5px;
+}
+
+.form-end {
+    margin-top: 35px;
+    width: 100%;
+}
+
+.button-holder {
+    text-align: center;
+    width: 100%;
+}
+
+.button-holder .btn {
+    height: 45px;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #71b7e6, #FF914D);
+}
+
+.button-holder .btn:hover {
+    background: linear-gradient(-135deg, #71b7e6, #FF914D);
+}
+
+@media (max-width: 584px) {
     .wrapper {
-        display: block;
+        max-width: 100%;
+    }
+
+    .form-wrapper {
+        width: 100%;
     }
 
     .form-group {
-        display: block;
-    }
-
-    .form-wrapper.half {
-        width: 100%;
-        margin-right: 0;
-    }
-
-    .form-end {
-        display: block;
-    }
-
-    .checkbox, .button-holder {
-        width: 100%;
-    }
-
-    .inner {
-        padding: 30px 15px;
-    }
-
-    button {
-        float: none;
-        margin-top: 30px;
-    }
-
-    h3 {
-        font-size: 30px;
-        margin-bottom: 40px;
+        flex-direction: column;
     }
 }
-
-/* Additional CSS for Back to Login Button */
-.back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: #6d5555;
-    color: #fff;
-    text-transform: uppercase;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 13px;
-    transition: background 0.3s ease;
-}
-
-.back-btn:hover {
-    background: #5a4848;
-}
-

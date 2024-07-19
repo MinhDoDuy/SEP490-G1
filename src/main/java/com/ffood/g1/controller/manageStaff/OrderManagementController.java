@@ -70,6 +70,22 @@ public class OrderManagementController {
         return "redirect:/order-list/" + canteenId;
     }
 
+    @PostMapping("/bulk-assign-orders")
+    public String bulkAssignOrders(@RequestParam(value = "selectedOrders", required = false) List<Integer> selectedOrders,
+                                   @RequestParam("bulkDeliveryRoleId") Integer deliveryRoleId,
+                                   @RequestParam("canteenId") Integer canteenId,
+                                   RedirectAttributes redirectAttributes) {
+        if (selectedOrders == null || selectedOrders.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "No orders selected");
+            return "redirect:/order-list/" + canteenId;
+        }
+        for (Integer orderId : selectedOrders) {
+            orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, OrderStatus.PROGRESS, userService.getUserById(deliveryRoleId).getFullName());
+        }
+        redirectAttributes.addFlashAttribute("message", "Shipper assigned and order status updated successfully for selected orders");
+        return "redirect:/order-list/" + canteenId;
+    }
+
     @PostMapping("/reject-order/{orderId}")
     public String cancelOrder(@PathVariable Integer orderId, @RequestParam Integer canteenId, RedirectAttributes redirectAttributes) {
         orderService.rejectOrder(orderId);
