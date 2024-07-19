@@ -103,6 +103,9 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <tr th:if="${#lists.isEmpty(userPage.content)}">
+                        <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">No User members found</td>
+                    </tr>
                     <tr th:each="user, iterStat : ${userPage.content}">
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${userPage.number * userPage.size + iterStat.index + 1}">STT</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.fullName}">Họ và Tên</td>

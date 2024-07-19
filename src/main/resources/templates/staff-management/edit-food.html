@@ -138,13 +138,23 @@
                 <div class="form-group">
                     <label for="imageFood" class="form-label">Ảnh Đồ Ăn</label>
                     <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
-                    <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image">
+                    <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image" class="mt-2" style="max-width: 100px;">
                 </div>
+
+                <div class="form-group">
+                    <label for="foodStatusActive" class="form-label">Trạng Thái</label>
+                    <select id="foodStatusActive" name="foodStatusActive" class="form-control">
+                        <option th:value="true" th:text="'Active'" th:selected="${food.foodStatusActive} == true"></option>
+                        <option th:value="false" th:text="'Inactive'" th:selected="${food.foodStatusActive} == false"></option>
+                    </select>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
             </form>
             <a th:href="@{/manage-food(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
         </div>
     </div>
+
 </main>
 
 <!-- end: Main -->

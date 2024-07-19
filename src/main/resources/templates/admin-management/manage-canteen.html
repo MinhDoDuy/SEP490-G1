@@ -79,6 +79,9 @@
           </tr>
           </thead>
           <tbody>
+          <tr th:if="${#lists.isEmpty(canteenPage.content)}">
+            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">No canteen found</td>
+          </tr>
           <tr th:each="canteen , iterStat  : ${canteenPage.content}">
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteenPage.number * canteenPage.size + iterStat.index + 1}">STT</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenName}">Name</td>

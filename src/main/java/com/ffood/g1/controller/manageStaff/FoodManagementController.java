@@ -165,7 +165,7 @@ public class FoodManagementController {
     @PostMapping("/edit-food")
     public String editFood(@ModelAttribute("food") Food food, BindingResult result, Model model,
                            @RequestParam("canteenId") Integer canteenId,
-                           @RequestParam("imageFood") MultipartFile imageFood) {
+                           @RequestParam("imageFood") MultipartFile imageFood, RedirectAttributes redirectAttributes) {
         Optional<Food> existingFood = foodService.getFoodById(food.getFoodId());
         if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
             result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
@@ -197,10 +197,11 @@ public class FoodManagementController {
             }
 
             foodService.save(food);
+            redirectAttributes.addFlashAttribute("successMessage", "Food đã được cập nhật thành công!");
         } catch (SpringBootFileUploadException | IOException e) {
             return "redirect:/edit-food-form?canteenId=" + canteenId + "&error=" + e.getMessage();
         }
-        return "redirect:/manage-food?canteenId=" + canteenId + "&success=edit";
+        return "redirect:/manage-food?canteenId=" + canteenId ;
     }
 
 
