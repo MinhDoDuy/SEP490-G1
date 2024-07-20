@@ -56,7 +56,7 @@ spring:
             enable: true
 aws:
   bucket:
-    name: duyminh
+    name: croak-order-g1
   region: ap-southeast-1
   accessKey: AKIA6ODUZ3XO5IBZU5ZW
   secretKey: 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
