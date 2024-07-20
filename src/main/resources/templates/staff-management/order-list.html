@@ -45,6 +45,19 @@
     .tab-pane .table {
       margin-bottom: 0;
     }
+    .bulk-assign-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+    .bulk-assign-container label {
+      margin-right: 10px;
+    }
+    .bulk-assign-container select {
+      width: auto;
+      margin-right: 10px;
+    }
   </style>
 </head>
 
@@ -87,12 +100,26 @@
         </li>
       </ul>
 
+      <!-- Bulk assign form moved here -->
+      <form th:if="${orderStatus.name() == 'PENDING'}" th:action="@{/bulk-assign-orders}" method="post" id="bulk-assign-form" class="bulk-assign-container">
+        <label for="bulkDeliveryRoleId"></label>
+        <select class="form-control" id="bulkDeliveryRoleId" name="bulkDeliveryRoleId">
+          <option value="">Chọn nhân viên</option>
+          <option th:each="staff : ${staffList}" th:value="${staff.userId}" th:text="${staff.fullName}"></option>
+        </select>
+        <button type="submit" class="btn btn-primary">Gán đơn hàng đã chọn</button>
+        <input type="hidden" name="canteenId" th:value="${canteenId}">
+      </form>
+
       <div class="tab-content" id="orderTabsContent">
         <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
           <div class="overflow-x-auto">
             <table class="w-full min-w-[540px]">
               <thead>
               <tr>
+                <th th:if="${orderStatus.name() == 'PENDING'}" class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+                  <input type="checkbox" id="selectAll" onclick="selectAllOrders(this)">
+                </th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
@@ -111,6 +138,9 @@
                 <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="11">Không có đơn nào</td>
               </tr>
               <tr th:each="order : ${orders.content}">
+                <td th:if="${orderStatus.name() == 'PENDING'}" class="py-2 px-4 border-b border-b-gray-50">
+                  <input type="checkbox" name="selectedOrders" th:value="${order.orderId}" form="bulk-assign-form">
+                </td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Tên khách hàng</td>
                 <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">Ngày đặt hàng</td>
@@ -249,6 +279,14 @@
   setInterval(function() {
     location.reload();
   }, 300000);
+
+  // Function to select/deselect all orders
+  function selectAllOrders(source) {
+    var checkboxes = document.getElementsByName('selectedOrders');
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+      checkboxes[i].checked = source.checked;
+    }
+  }
 </script>
 </body>
 </html>
