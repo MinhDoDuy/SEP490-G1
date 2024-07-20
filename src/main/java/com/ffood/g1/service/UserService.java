@@ -59,4 +59,5 @@ public interface UserService extends UserDetailsService {
 
     Integer countStaffByCanteenId(Integer canteenId);
 
+    List<User> getStaffByCanteenToShip(Integer canteenId);
 }

@@ -103,7 +103,7 @@ public class CanteenManageController {
         canteenService.saveCanteen(canteen);
         redirectAttributes.addFlashAttribute("successMessage", "Canteen added successfully");
 
-        return "redirect:/add-canteen";
+        return "redirect:/manage-canteen";
     }
 
     @GetMapping("/edit-canteen/{canteenId}")
@@ -114,7 +114,7 @@ public class CanteenManageController {
     }
 
     @PostMapping("/edit-canteen")
-    public String updateCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result, Model model,
+    public String updateCanteen(@RequestParam("userId") Canteen canteen, BindingResult result, Model model,
                                 @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput,
                                 RedirectAttributes redirectAttributes) throws IOException, SpringBootFileUploadException {
         boolean hasErrors = false;
@@ -152,6 +152,6 @@ public class CanteenManageController {
         canteenService.updateCanteen(canteen);
         redirectAttributes.addFlashAttribute("successMessage", "Canteen updated successfully");
 
-        return "redirect:/edit-canteen/" + canteen.getCanteenId();
+        return "redirect:/manage-canteen/";
     }
 }

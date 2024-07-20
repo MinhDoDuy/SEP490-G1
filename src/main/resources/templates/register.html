@@ -6,28 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- MATERIAL DESIGN ICONIC FONT -->
-    <link rel="stylesheet"
-          href="colorlib-regform-19/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="colorlib-regform-19/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
 
     <!-- STYLE CSS -->
     <link th:href="@{/css/style_register.css}" rel="stylesheet">
 </head>
-
 <body>
-
-<div class="wrapper" style="background-image: url('/img/bgregister.jpg');">
+<!--style="background-image: url('/img/bgregister.jpg');"-->
+<div class="wrapper" >
+    <a href="/login" class="btn btn-secondary btn-sm back-btn">Quay lại Đăng Nhập</a>
     <div class="inner">
         <!-- Back to Login Button -->
-        <a href="/login" class="btn btn-secondary btn-sm back-btn">Quay lại Đăng Nhập</a>
 
         <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return validateForm()">
             <h3>Đăng ký thành viên</h3>
             <div class="form-group">
                 <div class="form-wrapper">
-                    <label for="fullName">Họ Tên:<span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <label for="fullName">Họ Tên:<span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <small class="form-text text-muted">Mẫu: Nguyen Van A</small>
-                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" th:value="${fullName}" autofocus="autofocus">
+                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" autofocus="autofocus" title="Nguyen Van A">
                         <p class="help-block text-danger" id="fullNameError" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" style="font-size: small; color: rgb(234, 77, 77);">
                             Họ Tên không thể bắt đầu hoặc kết thúc bằng khoảng trắng.
                         </p>
@@ -36,10 +33,9 @@
 
                 <!--CodeName-->
                 <div class="form-wrapper">
-                    <label for="codeName">MSSV: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <label for="codeName">MSSV: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <small class="form-text text-muted">Mẫu: ví dụ minhddhe161286</small>
-                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}" th:value="${user.codeName}">
+                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}" title="ví dụ minhddhe161286">
                         <p class="help-block text-danger" id="codeNameError" style="display: none; font-size: small"></p>
                         <p class="help-block text-danger" th:if="${codeNameExistsError != null}" th:text="${codeNameExistsError}" style="font-size: small"></p>
                     </div>
@@ -47,10 +43,9 @@
 
                 <!--Phone-->
                 <div class="form-wrapper">
-                    <label for="phone">Số Điện Thoại: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <label for="phone">Số Điện Thoại: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <small class="form-text text-muted">Mẫu: 0123456789</small>
-                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" th:value="${user.phone}" pattern="^\+?[0-9\s\-]{9,11}$">
+                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" pattern="^\+?[0-9\s\-]{9,11}$" title="0123456789">
                         <p class="help-block text-danger" id="phoneError" style="display: none; font-size: small"></p>
                         <p class="help-block text-danger" th:if="${phoneExistsError != null}" th:text="${phoneExistsError}" style="font-size: small"></p>
                     </div>
@@ -58,10 +53,9 @@
 
                 <!--Email-->
                 <div class="form-wrapper">
-                    <label for="email">Email: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <label for="email">Email: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <small class="form-text text-muted">Mẫu: abc@gmail.com or abc@fpt.com.vn</small>
-                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}" th:value="${user.email}"/>
+                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}" title="abc@gmail.com hoặc abc@fpt.com.vn"/>
                         <p class="help-block text-danger" id="emailEmptyError" style="display: none; font-size: small">Phải điền Email.</p>
                         <p class="help-block text-danger" id="emailFormatError" style="display: none; font-size: small">Định dạng Email không hợp lệ.</p>
                         <p class="help-block text-danger" id="emailSpaceError" style="display: none; font-size: small">Email không thể bắt đầu hoặc kết thúc bằng dấu cách.</p>
@@ -72,10 +66,10 @@
 
                 <!--Password-->
                 <div class="form-wrapper">
-                    <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> *</span></label>
+                    <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
                         <small class="form-text text-muted">Mật Khẩu phải có độ dài ít nhất 6 ký tự</small>
-                        <input type="password" class="form-control" placeholder="********" id="password" name="password" th:field="*{password}" th:value="${user.password}" minlength="6">
+                        <input type="password" class="form-control" placeholder="******" id="password" name="password" th:field="*{password}" minlength="6">
                         <p class="help-block text-danger" id="passwordEmptyError" style="display: none; font-size: small">Phải điền Mật Khẩu.</p>
                         <p class="help-block text-danger" id="passwordLengthError" style="display: none; font-size: small">Mật Khẩu phải dài ít nhất 6 ký tự.</p>
                         <p class="help-block text-danger" id="passwordSpaceError" style="display: none; font-size: small">Mật Khẩu không thể bắt đầu hoặc kết thúc bằng dấu Cách.</p>
@@ -86,6 +80,7 @@
             <div class="form-end">
                 <div class="button-holder">
                     <button type="submit" class="btn btn-primary">Đăng Ký</button>
+
                 </div>
             </div>
 
@@ -254,6 +249,5 @@
         validateFullName();
     });
 </script>
-
 </body>
 </html>

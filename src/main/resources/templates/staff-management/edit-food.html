@@ -14,8 +14,6 @@
 
         .form-group {
             margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
         }
 
         .form-group label {
@@ -28,18 +26,16 @@
             border: 2px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+            width: 100%;
         }
 
-        .form-group textarea {
-            height: 150px; /* Increase the height for more visible area */
-            width: auto;
+        .form-row {
+            display: flex;
+            justify-content: space-between;
         }
 
-        .form-group img {
-            margin-top: 10px;
-            width: 100px;
-            height: auto;
-            border-radius: 4px;
+        .form-row .form-group {
+            width: 48%;
         }
 
         .error-message {
@@ -71,6 +67,13 @@
 
         .back-link:hover {
             text-decoration: underline;
+        }
+
+        .form-group img {
+            margin-top: 10px;
+            width: 100px;
+            height: auto;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -106,17 +109,18 @@
                 <input type="hidden" th:field="*{foodId}">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
 
-                <div class="form-group">
-                    <label for="categoryId" class="form-label">Tên Sản Phẩm</label>
-                    <select id="categoryId" th:field="*{category.categoryId}" class="form-control">
-                        <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="foodName" class="form-label">Tên Đồ Ăn</label>
-                    <input type="text" id="foodName" th:field="*{foodName}" class="form-control">
-                    <div th:if="${#fields.hasErrors('foodName')}" th:errors="*{foodName}" class="error-message"></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="foodName" class="form-label">Tên Đồ Ăn</label>
+                        <input type="text" id="foodName" th:field="*{foodName}" class="form-control">
+                        <div th:if="${#fields.hasErrors('foodName')}" th:errors="*{foodName}" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryId" class="form-label">Danh Mục Đồ Ăn</label>
+                        <select id="categoryId" th:field="*{category.categoryId}" class="form-control">
+                            <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -125,26 +129,38 @@
                     <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message"></div>
                 </div>
 
-                <div class="form-group">
-                    <label for="price" class="form-label">Giá</label>
-                    <input type="number" id="price" th:field="*{price}" class="form-control">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price" class="form-label">Giá</label>
+                        <input type="number" id="price" th:field="*{price}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="foodQuantity" class="form-label">Số Lượng</label>
+                        <input type="number" id="foodQuantity" th:field="*{foodQuantity}" class="form-control">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="foodQuantity" class="form-label">Số Lượng</label>
-                    <input type="number" id="foodQuantity" th:field="*{foodQuantity}" class="form-control">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="imageFood" class="form-label">Ảnh Đồ Ăn</label>
+                        <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
+                        <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image" class="mt-2" style="max-width: 100px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="foodStatusActive" class="form-label">Trạng Thái</label>
+                        <select id="foodStatusActive" name="foodStatusActive" class="form-control">
+                            <option th:value="true" th:text="'Active'" th:selected="${food.foodStatusActive} == true"></option>
+                            <option th:value="false" th:text="'Inactive'" th:selected="${food.foodStatusActive} == false"></option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="imageFood" class="form-label">Ảnh Đồ Ăn</label>
-                    <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
-                    <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image">
-                </div>
                 <button type="submit" class="btn btn-primary">Cập Nhật</button>
             </form>
             <a th:href="@{/manage-food(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
         </div>
     </div>
+
 </main>
 
 <!-- end: Main -->

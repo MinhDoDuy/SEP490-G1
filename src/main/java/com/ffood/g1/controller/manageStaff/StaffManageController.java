@@ -104,7 +104,7 @@ public class StaffManageController {
         user.setIsActive(isActive);  // Cập nhật trạng thái hoạt động của người dùng
         userService.saveUser(user);  // Lưu thay đổi
 
-        redirectAttributes.addFlashAttribute("success", "edit");
+        redirectAttributes.addFlashAttribute("successMessage", "Nhân viên  đã được cập nhật thành công!");
         return "redirect:/manage-staff?canteenId=" + canteenId;
     }
 

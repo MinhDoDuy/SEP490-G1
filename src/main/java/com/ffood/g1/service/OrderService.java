@@ -8,6 +8,8 @@ import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,18 +34,20 @@ public interface OrderService {
     Double calculateTotalOrder();
     List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus status);
 
-    List<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses);
+    Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable);
 
     List<Object[]> findRevenueDataCanteenByMonth(Integer canteenId);
     List<Object[]> findRevenueDataCanteenByYear(Integer canteenId);
 
     Integer countCompletedOrdersByCanteenId(Integer canteenId);
 
-
+    Page<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType, Pageable pageable);
     //đặt order
     void updateOrderStatus(Integer orderId, OrderStatus newStatus);
 
-    void cancelOrder(Integer orderId);
+    void assignShipperAndUpdateStatus(Integer orderId, Integer shipperId, OrderStatus newStatus, String staffName);
+
+    void rejectOrder(Integer orderId);
 
     List<Object[]> getOrderStatsByCanteenAndMonth(Integer canteenId);
     List<Object[]> getBestSellingItemsByCanteen(Integer canteenId);

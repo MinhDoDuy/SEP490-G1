@@ -2,9 +2,12 @@ package com.ffood.g1.repository;
 
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.enum_pay.OrderStatus;
+import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentStatus;
 import io.swagger.models.auth.In;
 import com.ffood.g1.enum_pay.PaymentStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -56,8 +59,22 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "WHERE f.canteen.canteenId = :canteenId " +
             "AND o.orderStatus IN :statuses " +
             "ORDER BY o.orderDate DESC")
-    List<Order> findOrdersByCanteenIdAndStatuses(@Param("canteenId") Integer canteenId, @Param("statuses") List<OrderStatus> statuses);
+    Page<Order> findOrdersByCanteenIdAndStatuses(@Param("canteenId") Integer canteenId, @Param("statuses") List<OrderStatus> statuses, Pageable pageable);
 
+    @Query("SELECT DISTINCT o FROM Order o " +
+            "JOIN o.user u " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.food f " +
+            "WHERE f.canteen.canteenId = :canteenId " +
+            "AND o.orderStatus IN :statuses " +
+            "AND o.orderType = :orderType " +
+            "ORDER BY o.orderDate DESC")
+    Page<Order> findOrdersByCanteenIdAndStatusesAndOrderTypePendingOnline(
+            @Param("canteenId") Integer canteenId,
+            @Param("statuses") List<OrderStatus> statuses,
+            @Param("orderType") OrderType orderType,
+            Pageable pageable
+    );
 
     //doanh thu theo tháng của canteen cụ thể
     @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM'), SUM(CAST(od.price * od.quantity AS double)) " +

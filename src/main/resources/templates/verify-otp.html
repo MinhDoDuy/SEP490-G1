@@ -7,110 +7,131 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- Libraries Stylesheet -->
-    <link rel="stylesheet" th:href="@{/css/otp-input.css}"/>
+    <link rel="stylesheet" th:href="@{/css/style_register.css}"/>
+
+    <style>
+        .otp-input-container {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+            max-width: 480px;
+        }
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 2em;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .inner {
+            padding: 40px;
+            background: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        .back-btn {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-wrapper {
+            width: 100%;
+        }
+        /* Updated styles for alert messages */
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #fff;
+        }
+        .alert-danger {
+            background-color: #f8d7da; /* Light red for error messages */
+            color: #721c24; /* Darker red text for contrast */
+        }
+        .alert-success {
+            background-color: #d4edda; /* Light green for success messages */
+            color: #155724; /* Darker green text for contrast */
+        }
+    </style>
 </head>
 <body>
-
-<div class="main-content-container" style="background-image: url('/img/food-background-otp.jpg');">
-    <div class="text-container">
-        <div class="font-h2-strong">Enter OTP</div>
-    </div>
-    <div class="vh-100">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card">
-                        <div class="card-body text-black">
-                            <h5 class="large-heading">Xác nhận OTP</h5>
-                            <form th:action="@{/register/verify}" method="post">
-                                <div th:if="${error}" class="alert-danger" role="alert">
-                                    <p th:text="${error}"></p>
-                                </div>
-                                <div th:if="${successMessage}" class="alert alert-success">
-                                    <span th:text="${successMessage}"></span>
-                                </div>
-
-                                <div id="otp-input" class="font-h3-strong">
-                                    <input class="font-h3-strong otp-input" placeholder="_" type="text" maxlength="1"
-                                           autocomplete="no" pattern="\d*" oninput="moveToNext(this)"/>
-                                    <input class="font-h3-strong otp-input" placeholder="_" type="text" maxlength="1"
-                                           autocomplete="no" pattern="\d*" oninput="moveToNext(this)"/>
-                                    <input class="font-h3-strong otp-input" placeholder="_" type="text" maxlength="1"
-                                           autocomplete="no" pattern="\d*" oninput="moveToNext(this)"/>
-                                    <input class="font-h3-strong otp-input" placeholder="_" type="text" maxlength="1"
-                                           autocomplete="no" pattern="\d*" oninput="moveToNext(this)"/>
-                                    <input class="font-h3-strong otp-input" placeholder="_" type="text" maxlength="1"
-                                           autocomplete="no" pattern="\d*" oninput="moveToNext(this)"/>
-                                    <input class="font-h3-strong otp-input" placeholder="_" type="text" maxlength="1"
-                                           autocomplete="no" pattern="\d*" oninput="moveToNext(this)"/>
-                                    <input id="otp-value" placeholder="_" type="hidden" name="otp"/>
-                                </div>
-                                <div class="d-flex justify-content-center">
-                                    <button type="submit" class="button"
-                                            style="width: 100%; max-width: 220px; margin-top: 16px;" tabindex="4">Gửi
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+<div class="inner">
+    <form th:action="@{/register/verify}" method="post">
+        <h3>Xác nhận OTP</h3>
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+        </div>
+        <div th:if="${successMessage}" class="alert alert-success">
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div class="form-group">
+            <div class="form-wrapper">
+                <label>Nhập OTP:<span style="color: rgb(234, 77, 77);"> (*)</span></label>
+                <div class="otp-input-container">
+                    <input class="otp-input" type="text" maxlength="1" pattern="\d*" oninput="moveToNext(this)" onkeydown="handleBackspace(event, this)"/>
+                    <input class="otp-input" type="text" maxlength="1" pattern="\d*" oninput="moveToNext(this)" onkeydown="handleBackspace(event, this)"/>
+                    <input class="otp-input" type="text" maxlength="1" pattern="\d*" oninput="moveToNext(this)" onkeydown="handleBackspace(event, this)"/>
+                    <input class="otp-input" type="text" maxlength="1" pattern="\d*" oninput="moveToNext(this)" onkeydown="handleBackspace(event, this)"/>
+                    <input class="otp-input" type="text" maxlength="1" pattern="\d*" oninput="moveToNext(this)" onkeydown="handleBackspace(event, this)"/>
+                    <input class="otp-input" type="text" maxlength="1" pattern="\d*" oninput="moveToNext(this)" onkeydown="handleBackspace(event, this)"/>
+                    <input id="otp-value" type="hidden" name="otp"/>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="form-end">
+            <div class="button-holder">
+                <button type="submit" class="btn btn-primary">Gửi</button>
+                <a th:href="@{/login}" class="btn-sm back-btn">Quay lại Đăng Nhập</a>
+            </div>
+        </div>
+    </form>
 </div>
-<script th:src="@{/js/toast.js}"></script>
-<script th:src="@{/js/otp-input.js}"></script>
-<script type="text/javascript" th:inline="javascript">
-    var message1 = [[${message}]];
-    var messageError = [[${messageError}]];
-    if (message1 != null) {
-        toast({
-            title: "Success",
-            message: message1,
-            type: "success",
-            duration: 10000
-        });
-    }
-    if (messageError != null) {
-        toast({
-            title: "Error",
-            message: messageError,
-            type: "error",
-            duration: 10000
-        });
-    }
-    //loading screen
-    document.querySelector('form').addEventListener('submit', function (event) {
-        document.getElementById('loadingOverlay').style.display = 'block';
-    });
-
-    function moveToNext(element) {
-        if (element.value.length >= 1) {
-            var next = element.nextElementSibling;
+<script>
+    function moveToNext(elem) {
+        if (elem.value.length === 1) {
+            var next = elem.nextElementSibling;
             if (next && next.classList.contains('otp-input')) {
                 next.focus();
             }
         }
     }
 
-    function handlePaste(event) {
-        var paste = (event.clipboardData || window.clipboardData).getData('text');
-        paste = paste.trim();
-
-        if (paste.length === 6) {
-            var inputs = document.querySelectorAll('.otp-input');
-            for (var i = 0; i < inputs.length; i++) {
-                inputs[i].value = paste[i];
+    function handleBackspace(event, elem) {
+        if (event.key === 'Backspace') {
+            if (elem.value === '') {
+                var prev = elem.previousElementSibling;
+                if (prev && prev.classList.contains('otp-input')) {
+                    prev.focus();
+                }
             }
-            event.preventDefault();
         }
     }
 
-    // Add paste event listener to the first input field
-    document.querySelector('.otp-input').addEventListener('paste', handlePaste);
+    // Combine OTP inputs into a single hidden input
+    document.querySelectorAll('.otp-input').forEach(input => {
+        input.addEventListener('input', () => {
+            const otpValue = Array.from(document.querySelectorAll('.otp-input')).map(input => input.value).join('');
+            document.getElementById('otp-value').value = otpValue;
+        });
+    });
 </script>
 </body>
 </html>

@@ -63,7 +63,8 @@ public class Order {
     @Column(name = "delivery_role_id")
     private Integer deliveryRoleId;
 
-
+    @Column(name = "delivery_role_name")
+    private String deliveryRoleName;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

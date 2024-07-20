@@ -36,25 +36,7 @@
       width: auto;
     }
 
-    .error-message {
-      color: red;
-      font-size: 12px;
-    }
 
-    .alert {
-      padding: 15px;
-      margin-bottom: 20px;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      position: relative;
-      animation: fadeIn 0.5s;
-    }
-
-    .alert-success {
-      color: #3c763d;
-      background-color: #dff0d8;
-      border-color: #d6e9c6;
-    }
 
     @keyframes fadeIn {
       from {
@@ -228,14 +210,6 @@
     generateTimeOptions();
   });
 
-  document.addEventListener('DOMContentLoaded', function () {
-    const successMessage = document.getElementById('successMessage');
-    if (successMessage) {
-      setTimeout(function () {
-        window.location.href = '/manage-canteen';
-      }, 1000); // 1 giây
-    }
-  });
 </script>
 </body>
 

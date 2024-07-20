@@ -8,6 +8,8 @@ import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -103,9 +105,15 @@ import java.util.*;
     }
 
     @Override
-    public List<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses) {
-        return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses);
+    public Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable) {
+        return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses, pageable);
     }
+
+    @Override
+    public Page<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType, Pageable pageable) {
+        return orderRepository.findOrdersByCanteenIdAndStatusesAndOrderTypePendingOnline(canteenId, statuses, orderType, pageable);
+    }
+
 
 
     @Override
@@ -156,7 +164,7 @@ import java.util.*;
         String orderDetails = getOrderDetails(order);
 
         // Gửi email thông cho người dùng
-        if (newStatus == OrderStatus.PREPARE) {
+        if (newStatus == OrderStatus.PROGRESS) {
             String subject = "Đơn hàng của bạn đã được chuẩn bị";
             String text = "Đơn hàng của bạn với mã số " + orderId + " đã được chuẩn bị và sẵn sàng để lấy. Mời bạn xuống lấy hàng.\n\n" + orderDetails;
             sendEmail(order.getUser().getEmail(), subject, text);
@@ -166,11 +174,21 @@ import java.util.*;
             sendEmail(order.getUser().getEmail(), subject, text);
         }
     }
+
     @Override
-    public void cancelOrder(Integer orderId) {
+    public void assignShipperAndUpdateStatus(Integer orderId, Integer deliveryRoleId, OrderStatus newStatus, String staffName) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("Order not found"));
+        order.setDeliveryRoleId(deliveryRoleId);
+        order.setOrderStatus(newStatus);
+        order.setDeliveryRoleName(staffName);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void rejectOrder(Integer orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
-        order.setOrderStatus(OrderStatus.CANCEL);
+        order.setOrderStatus(OrderStatus.REJECT);
         orderRepository.save(order);
 
         // Lấy thông tin chi tiết đơn hàng
