@@ -63,7 +63,10 @@ public class OrderManagementController {
     }
 
     @PostMapping("/update-order-status/{orderId}")
-    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId, @RequestParam Integer deliveryRoleId, @RequestParam OrderStatus newStatus, @RequestParam Integer canteenId,
+    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId
+                                            , @RequestParam Integer deliveryRoleId
+                                            , @RequestParam OrderStatus newStatus
+                                            , @RequestParam Integer canteenId,
                                                RedirectAttributes redirectAttributes) {
 
         try {
@@ -82,14 +85,21 @@ public class OrderManagementController {
                                    @RequestParam("canteenId") Integer canteenId,
                                    RedirectAttributes redirectAttributes) {
         if (selectedOrders == null || selectedOrders.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "No orders selected");
-            return "redirect:/order-list/" + canteenId;
+            redirectAttributes.addFlashAttribute("error", "Không có đơn hàng nào được chọn");
+            return "redirect:/order-list/" + canteenId + "?orderStatus=PENDING";
         }
-        for (Integer orderId : selectedOrders) {
-            orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, OrderStatus.PROGRESS, userService.getUserById(deliveryRoleId).getFullName());
+
+        try {
+            User staffShip = userService.getUserById(deliveryRoleId);
+            for (Integer orderId : selectedOrders) {
+                orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, OrderStatus.PROGRESS, staffShip.getFullName());
+            }
+            redirectAttributes.addFlashAttribute("message", "Đã gán nhân viên giao hàng và cập nhật trạng thái cho các đơn hàng đã chọn");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
         }
-        redirectAttributes.addFlashAttribute("message", "Shipper assigned and order status updated successfully for selected orders");
-        return "redirect:/order-list/" + canteenId;
+
+        return "redirect:/order-list/" + canteenId + "?orderStatus=PENDING";
     }
 
     @PostMapping("/reject-order/{orderId}")
