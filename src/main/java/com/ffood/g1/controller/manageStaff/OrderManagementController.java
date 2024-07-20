@@ -1,4 +1,5 @@
 package com.ffood.g1.controller.manageStaff;
+
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.OrderStatus;
@@ -14,9 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
 @Controller
 public class OrderManagementController {
 
@@ -26,39 +26,45 @@ public class OrderManagementController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/order-list/{canteenId}")
     public String manageOrders(@PathVariable Integer canteenId,
+                               @RequestParam(value = "orderStatus", defaultValue = "PENDING") OrderStatus orderStatus,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        List<OrderStatus> pendingStatus = Arrays.asList(OrderStatus.PENDING);
-        List<OrderStatus> progressStatus = Arrays.asList(OrderStatus.PROGRESS);
-        List<OrderStatus> completeStatus = Arrays.asList(OrderStatus.COMPLETE);
-        List<OrderStatus> cancelStatus = Arrays.asList(OrderStatus.REJECT);
+        Page<Order> orders;
 
-        Page<Order> pendingOrders = orderService.getOrdersByCanteenAndType(canteenId, pendingStatus, OrderType.ONLINE_ORDER, pageable);
-        Page<Order> progressOrders = orderService.getOrdersByCanteen(canteenId, progressStatus, pageable);
-        Page<Order> completeOrders = orderService.getOrdersByCanteen(canteenId, completeStatus, pageable);
-        Page<Order> cancelOrders = orderService.getOrdersByCanteen(canteenId, cancelStatus, pageable);
+        switch (orderStatus) {
+            case PENDING:
+                orders = orderService.getOrdersByCanteenAndType(canteenId, List.of(OrderStatus.PENDING), OrderType.ONLINE_ORDER, pageable);
+                break;
+            case PROGRESS:
+                orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.PROGRESS), pageable);
+                break;
+            case COMPLETE:
+                orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.COMPLETE), pageable);
+                break;
+            case REJECT:
+                orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
+                break;
+            default:
+                orders = Page.empty();
+        }
 
         List<User> staffList = userService.getStaffByCanteenToShip(canteenId);
 
-        model.addAttribute("pendingOrders", pendingOrders);
-        model.addAttribute("progressOrders", progressOrders);
-        model.addAttribute("completeOrders", completeOrders);
-        model.addAttribute("cancelOrders", cancelOrders);
+        model.addAttribute("orders", orders);
         model.addAttribute("staffList", staffList);
         model.addAttribute("canteenId", canteenId);
+        model.addAttribute("orderStatus", orderStatus);
 
         return "staff-management/order-list";
     }
 
-
     @PostMapping("/update-order-status/{orderId}")
     public String assignShipperAndUpdateStatus(@PathVariable Integer orderId, @RequestParam Integer deliveryRoleId, @RequestParam OrderStatus newStatus, @RequestParam Integer canteenId,
-            RedirectAttributes redirectAttributes) {
+                                               RedirectAttributes redirectAttributes) {
 
         try {
             User staffShip = userService.getUserById(deliveryRoleId);
@@ -67,7 +73,7 @@ public class OrderManagementController {
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        return "redirect:/order-list/" + canteenId;
+        return "redirect:/order-list/" + canteenId + "?orderStatus=" + newStatus;
     }
 
     @PostMapping("/bulk-assign-orders")
@@ -93,4 +99,3 @@ public class OrderManagementController {
         return "redirect:/order-list/" + canteenId;
     }
 }
-
