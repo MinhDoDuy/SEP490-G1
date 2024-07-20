@@ -25,6 +25,33 @@
 
 <div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
 
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <title>Quản lý đơn hàng</title>
+  <style>
+    .nav-tabs {
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tab-content {
+      padding-top: 20px;
+    }
+    .tab-pane .table {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+
+<body class="text-gray-800 font-inter">
+
+<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
+
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
   <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
     <button type="button" class="text-lg text-gray-600 sidebar-toggle">
@@ -56,8 +83,7 @@
           <a class="nav-link" th:classappend="${orderStatus.name() == 'COMPLETE'} ? 'active'" id="complete-orders-tab" th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus='COMPLETE')}" role="tab" aria-controls="complete-orders" aria-selected="false">Đơn hàng hoàn thành</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:classappend="${orderStatus.name() == 'REJECT'} ? 'active'" id="reject
-          -orders-tab" th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus='REJECT')}" role="tab" aria-controls="reject-orders" aria-selected="false">Đơn hàng bị hủy</a>
+          <a class="nav-link" th:classappend="${orderStatus.name() == 'REJECT'} ? 'active'" id="reject-orders-tab" th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus='REJECT')}" role="tab" aria-controls="reject-orders" aria-selected="false">Đơn hàng bị hủy</a>
         </li>
       </ul>
 
@@ -82,7 +108,7 @@
               </thead>
               <tbody>
               <tr th:if="${#lists.isEmpty(orders.content)}">
-                <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không có đơn nào</td>
+                <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="11">Không có đơn nào</td>
               </tr>
               <tr th:each="order : ${orders.content}">
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
@@ -95,27 +121,39 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Loại đơn hàng</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Phương thức thanh toán</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
-                  <select class="form-control" name="deliveryRoleId" form="form-update-status-${order.orderId}">
-                    <option th:each="staff : ${staffList}" th:value="${staff.userId}" th:text="${staff.fullName}"></option>
-                  </select>
+                  <!-- Chỉ hiển thị select cho đơn hàng PENDING -->
+                  <th:block th:if="${orderStatus.name() == 'PENDING'}">
+                    <select class="form-control" name="deliveryRoleId" form="form-update-status-${order.orderId}">
+                      <option th:each="staff : ${staffList}" th:value="${staff.userId}" th:text="${staff.fullName}"></option>
+                    </select>
+                  </th:block>
+
+                  <!-- Hiển thị tên người giao hàng cho các trạng thái khác -->
+                  <th:block th:unless="${orderStatus.name() == 'PENDING'}">
+                    <span th:text="${order.deliveryRoleName}">Tên người giao hàng</span>
+                  </th:block>
                 </td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
                     <i class="ri-eye-line"></i>
                   </button>
-                  <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" id="form-update-status-${order.orderId}" style="display: inline;">
-                    <input type="hidden" name="newStatus" value="PROGRESS"/>
-                    <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
-                    <button class="btn btn-success" type="submit">
-                      <i class="ri-check-line"></i>
-                    </button>
-                  </form>
-                  <form th:action="@{'/reject-order/' + ${order.orderId}}" method="post" style="display: inline;">
-                    <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
-                    <button class="btn btn-danger" type="submit">
-                      <i class="ri-close-line"></i>
-                    </button>
-                  </form>
+
+                  <!-- Chỉ hiển thị nút xác nhận và từ chối cho đơn hàng PENDING -->
+                  <th:block th:if="${orderStatus.name() == 'PENDING'}">
+                    <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post" id="form-update-status-${order.orderId}" style="display: inline;">
+                      <input type="hidden" name="newStatus" value="PROGRESS"/>
+                      <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
+                      <button class="btn btn-success" type="submit">
+                        <i class="ri-check-line"></i>
+                      </button>
+                    </form>
+                    <form th:action="@{'/reject-order/' + ${order.orderId}}" method="post" style="display: inline;">
+                      <input type="hidden" name="canteenId" th:value="${order.orderDetails[0].food.canteen.canteenId}"/>
+                      <button class="btn btn-danger" type="submit">
+                        <i class="ri-close-line"></i>
+                      </button>
+                    </form>
+                  </th:block>
                 </td>
               </tr>
               </tbody>
