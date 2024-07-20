@@ -70,7 +70,7 @@
                             </div>
 
                             <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}"
-                               class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}">Fruites</a>
+                               class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}"></a>
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
@@ -138,21 +138,19 @@
                                                      style="top: 10px; left: 10px;">
                                                     <span th:text="${food.category.categoryName}"></span>
                                                 </div>
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom"  >
 
                                                         <h4><a th:href="@{/food_details(id=${food.foodId})} "
-                                                               th:text="${food.foodName}"></a></h4>
-                                                        <p><span th:text="${food.canteen.canteenName}"></span></p>
+                                                               th:text="${food.foodName}" style="display: flex ; justify-content: left;margin-bottom: 1px"></a></h4>
+                                                        <p><span th:text="${food.canteen.canteenName}" style="display: flex ; justify-content: left"></span></p>
+                                                    <p><span th:text="'Số lượng hiện có: '+${food.foodQuantity}" style="display: flex ; justify-content: left"></span></p>
                                                         <div class="d-flex justify-content-between flex-lg-wrap">
-
-                                                            <p class="text-dark fs-5 fw-bold mb-0"><span
-                                                                    th:text="${food.price} + ' đ'"></span></p>
+                                                            <span class=" text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:text="${food.price}"></span></span>
                                                                 <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
                                                                    class="btn border border-secondary rounded-pill px-3 text-primary">
                                                                     <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
                                                                 </a>
                                                         </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -240,8 +238,9 @@
                 <div class="p-4 rounded-bottom">
                     <h4><a th:href="@{/food_details(id=${food.foodId})} " th:text="${food.foodName}">Parsely</a></h4>
                     <p><span th:text="${food.canteen.canteenName}"></span></p>
+                    <p><span th:text="'Số lượng hiện có: '+${food.foodQuantity}" style="display: flex ; justify-content: left"></span></p>
                     <div class="d-flex justify-content-between flex-lg-wrap">
-                        <p class="text-dark fs-5 fw-bold mb-0"><span th:text="${food.price} + ' đ'">$4.99 / kg</span>
+                        <p class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:text="${food.price}" ></span>
                         </p>
                         <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
                            class="btn border border-secondary rounded-pill px-3 text-primary">
@@ -311,13 +310,22 @@
     </div>
 </div>
     <div th:replace="footer :: footer"></div>
-
-
     <script th:src="@{/js/owl.carousel.min.js}"></script>
     <script th:src="@{/js/main.js}"></script>
 
     <script>
+        // Function to format currency in VND
+        function formatCurrencyVND(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(amount);
+        }
         document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.formatted-price').forEach(function (element) {
+                let price = element.innerText;
+                element.innerText = formatCurrencyVND(price);
+            });
             document.querySelectorAll('.nav-item1 a').forEach(item => {
                 item.addEventListener('click', function (event) {
                     event.preventDefault();
@@ -350,9 +358,10 @@
                                     </div>
                                     <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                         <h4><a href="/food_details?id=${food.foodId}" class="text-dark">${food.foodName}</a></h4>
-                                        <p><span>${food.canteen.canteenName}</span></p>
+                                        <p><span style="display: flex ; justify-content: left">${food.canteen.canteenName}</span></p>
+                                         <p><span  style="display: flex ; justify-content: left"> Số lượng hiện có: ${food.foodQuantity}</span></p>
                                         <div class="d-flex justify-content-between flex-lg-wrap">
-                                            <p class="text-dark fs-5 fw-bold mb-0">${food.price} đ</p>
+                                            <p class="formatted-price text-dark fs-5 fw-bold mb-0">${food.price}</p>
                                             <a href="/add_to_cart_home?foodId=${food.foodId}&price=${food.price}" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i> Add
                                             </a>
@@ -369,26 +378,27 @@
                 });
             });
         });
-    </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            if ([[${isBanned}]] == true) {
-                var banModal = new bootstrap.Modal(document.getElementById('banModal'), {
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                banModal.show();
-                document.getElementById('okButton').addEventListener('click', function () {
-                    window.location.href = "/logout";
-                });
-                setTimeout(function () {
-                    window.location.href = "/logout";
-                }, 3000);
-            }
-        });
 
     </script>
+
+<!--    <script>-->
+<!--        document.addEventListener("DOMContentLoaded", function () {-->
+<!--            if ([[${isBanned}]] == true) {-->
+<!--                var banModal = new bootstrap.Modal(document.getElementById('banModal'), {-->
+<!--                    backdrop: 'static',-->
+<!--                    keyboard: false-->
+<!--                });-->
+<!--                banModal.show();-->
+<!--                document.getElementById('okButton').addEventListener('click', function () {-->
+<!--                    window.location.href = "/logout";-->
+<!--                });-->
+<!--                setTimeout(function () {-->
+<!--                    window.location.href = "/logout";-->
+<!--                }, 3000);-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
 
     <!-- JavaScript Libraries -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>-->

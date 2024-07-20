@@ -45,6 +45,7 @@ public class CartController {
     public String addToCart(@RequestParam("foodId") Integer foodId,
                             @RequestParam("quantity") int quantity,
                             @RequestParam("price") Integer price,
+                            HttpSession session,
                             RedirectAttributes redirectAttributes,
                             Model model) {
 
@@ -52,7 +53,6 @@ public class CartController {
 
         // Check if the user is authenticated
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            // Redirect to the login page if the user is not authenticated
             redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
             return "redirect:/login";
         }
@@ -66,7 +66,8 @@ public class CartController {
         // Get the canteen of the food item to be added
         Optional<Food> newFoodOpt = foodService.getFoodById(foodId);
         if (!newFoodOpt.isPresent()) {
-            redirectAttributes.addFlashAttribute("message", "The food item does not exist.");
+
+            session.setAttribute("message", "The food item does not exist.");
             return "redirect:/food_details?id=" + foodId;
         }
         Food newFood = newFoodOpt.get();
@@ -78,17 +79,19 @@ public class CartController {
             for (CartItem cartItem : cartItems) {
                 Food existingFood = cartItem.getFood();
                 if (!existingFood.getCanteen().getCanteenId().equals(newFoodCanteenId)) {
-                    model.addAttribute("message", "You can only add items from the same canteen.");
+                    session.setAttribute("message", "You can only add items from the same canteen.");
                     return "redirect:/food_details?id=" + foodId;
                 }
             }
         }
 
         cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-        model.addAttribute("message", "Add susscess");
+        session.setAttribute("message", "Added to cart successfully.");
+
         // Redirect to the food details page after adding to the cart
         return "redirect:/food_details?id=" + foodId;
     }
+
 
 
 

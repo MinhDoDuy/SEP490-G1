@@ -49,9 +49,11 @@ public class CanteenController {
             , Model model, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = null;
+
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
             String email = authentication.getName();
             user = userService.findByEmail(email);
+
             if (Objects.nonNull(user)) {
                 if (!user.getIsActive()) {
                     model.addAttribute("isBanned", true);
@@ -64,6 +66,8 @@ public class CanteenController {
             }
 
         }
+
+
         List<Food> listFoodByCanteenId = foodService.getFoodsByCanteenId(canteenId);
         model.addAttribute("listFoodByCanteenId", listFoodByCanteenId);
 
@@ -76,6 +80,7 @@ public class CanteenController {
 
         List<Feedback> feedbacksCanteen = feedbackService.getFeedbacksByCanteenIdAndStatus(canteenId, FeedbackStatus.COMPLETE);
         model.addAttribute("feedbacksCanteen", feedbacksCanteen);
+
 
 
         return "canteen/canteen-info";

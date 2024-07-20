@@ -1,89 +1,51 @@
 <!DOCTYPE html>
 <html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="description"
-          content="Croak Order - Your go-to solution for ordering delicious meals from the canteens at FPT University. Enjoy a variety of food options with the convenience of online ordering.">
-    <meta name="keywords"
-          content="Croak Order, food delivery, canteen, FPT University, online ordering, student meals, convenient dining">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta property="og:image"
-          content="https://croakorder.s3.amazonaws.com/1720542839497-Screenshot_2024-07-09_233317.png">
-    <title>Croak Order</title>
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <!-- Css Styles -->
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
-    <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
+    <meta charset="utf-8">
+    <title>Fruitables - Vegetable Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
           rel="stylesheet">
+
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Libraries Stylesheet -->
     <link th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
     <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <!-- Template Stylesheet -->
-    <link href="/css/style_test.css" th:href="@{/css/style_test.css}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link th:href="@{/css/style_test.css}" rel="stylesheet">
 
     <style>
-        /*.owl-prev, .owl-next {*/
-        /*    position: absolute;*/
-        /*    top: 50%;*/
-        /*    transform: translateY(-50%);*/
-        /*    background: #fff;*/
-        /*    border-radius: 50%;*/
-        /*    border: 1px solid #ccc;*/
-        /*    width: 40px;*/
-        /*    height: 40px;*/
-        /*    display: flex;*/
-        /*    justify-content: center;*/
-        /*    align-items: center;*/
-        /*    cursor: pointer;*/
-        /*    z-index: 1000;*/
-        /*}*/
-
-        /*.owl-prev {*/
-        /*    left: -20px;*/
-        /*}*/
-
-        /*.owl-next {*/
-        /*    right: -20px;*/
-        /*}*/
-
-        /*.owl-prev i, .owl-next i {*/
-        /*    font-size: 20px;*/
-        /*}*/
-
-        .section-divider {
-            border: none;
-            height: 5px;
-            background-color: #120101; /* Màu cam nhạt */
-            /*margin: 40px 0; !* Khoảng cách trên và dưới của đường ngang *!*/
+        .quantity-input {
+            width: 120px; /* Tăng kích thước chiều rộng */
+            height: 50px; /* Tăng kích thước chiều cao */
+            font-size: 1.5rem; /* Tăng kích thước font chữ */
+            text-align: center; /* Canh giữa chữ */
+        }
+        .quantity-input::-webkit-inner-spin-button,
+        .quantity-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .quantity-input {
+            -moz-appearance: textfield;
         }
     </style>
 </head>
+
 <body>
 <!-- Page Preloder -->
 <div id="preloder">
@@ -92,392 +54,225 @@
 
 <div th:replace="header :: header"></div>
 
-<!-- Hero Start -->
-<div class="container-fluid py-5 mb-5 hero-header">
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop Detail</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Shop Detail</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<!-- Single Product Start -->
+<div class="container-fluid py-5 mt-5">
+
     <div class="container py-5">
-        <div class="row g-5 align-items-center">
-            <div class="col-md-12 col-lg-7">
-                <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
-                <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
-                <form id="categoryForm" action="/canteen_details" method="get">
-                    <div class="position-relative mx-auto">
-                        <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
-                               name="name" th:value="${name}" placeholder="Search for food..."
-                               onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
-                        <button type="submit"
-                                class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
-                                style="top: 0; right: 25%;">Submit Now
-                        </button>
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8 col-xl-9">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="border rounded">
+                            <a href="">
+                                <img th:src="${food.imageFood}" class="img-fluid rounded" alt="Image">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <!--                        id="add-to-cart-form-${food.foodId}"-->
+                        <form id="addToCartForm" th:action="@{/add_to_cart}" method="post"
+                              class="mb-3">
+
+                            <h4 class="fw-bold mb-3"><span th:text="${food.foodName}"></span></h4>
+                            <p class="mb-3">Category: <span th:text="${food.category.categoryName}"></span></p>
+                            <h5 class="fw-bold mb-3" class="formatted-price" th:text="${food.price}"></h5>
+                            <input type="hidden" name="price" th:value="${food.price}"/>
+
+                            <p class="mb-4"><span th:text="${food.description}" ></span></p>
+
+                            <input type="hidden" name="foodId" th:value="${food.foodId}"/>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="decreaseQuantity('${food.foodId}')">-
+                                    </button>
+                                </div>
+                                <input type="number" id="quantity-${food.foodId}" name="quantity"
+                                       class="form-control text-center quantity-input" value="1" min="1"/>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="increaseQuantity('${food.foodId}')">+
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-shopping-bag me-2"></i> Add to cart
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+
+                <h4>Đánh giá về Cửa Hàng</h4>
+                <div class="col-lg-12">
+                    <nav>
+                        <div class="nav nav-tabs mb-3">
+                            <button class="nav-link border-white border-bottom-0" type="button" role="tab"
+                                    id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
+                                    aria-controls="nav-mission" aria-selected="false">Reviews
+                            </button>
+                        </div>
+                    </nav>
+                    <div class="tab-content mb-5">
+                        <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+                            <div class="d-flex" th:each="feedback : ${feedbacksFood}">
+                                <img src="/img/chococ.png" class="img-fluid rounded-circle p-3"
+                                     style="width: 100px; height: 100px;" alt="">
+                                <div class="">
+                                    <p class="mb-2" style="font-size: 14px;"><span th:text="${feedback.timeCreated}">April 12, 2024</span>
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <h5 th:text="${user.userName}">Sam Peters</h5>
+                                    </div>
+                                    <p class="text-dark" th:text="${feedback.comment}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <hr class="section-divider">
+                <form th:action="@{/create_new_feedback_food}" method="post">
+                    <h4 class="mb-5 fw-bold">Leave a Reply</h4>
+                    <input type="hidden" name="canteenId" th:value="${food.canteen.canteenId}" readonly>
+                    <input type="hidden" name="foodId" th:value="${food.foodId}" readonly>
+                    <div class="row g-4">
+                        <div class="col-lg-12" >
+                            <div class="border-bottom rounded my-4">
+                                <textarea name="comment" id="comment" class="form-control border-2" cols="30" rows="8"
+                                          placeholder="Ý kiến của bạn về cửa hàng *" spellcheck="false"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="d-flex justify-content-between py-3 mb-5">
+                                <button type="submit"
+                                        class="btn border border-secondary text-primary rounded-pill px-4 py-3"
+                                >Post Comment
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="col-md-12 col-lg-5">
-                <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
-                    <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active rounded" th:each="canteen, stat : ${canteens}"
-                             th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide"
-                                 style="height: 100px;width: 100px">
-                            <div class="carousel-caption d-none d-md-block ">
-                                <h5 th:text="${canteen.canteenPhone}"></h5>
-                                <p th:text="${canteen.openingHours}"></p>
+            <div class="col-lg-4 col-xl-3">
+                <div class="row g-4 fruite">
+                    <div class="col-lg-12">
+                        <form id="categoryForm" action="/canteen_details" method="get">
+                            <div class="input-group w-100 mx-auto d-flex mb-4">
+                                <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
+                                       name="name" th:value="${name}" placeholder="Search for food..."
+                                       onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
                             </div>
-                            <a href="#" class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}">Fruites</a>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
-                            data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselId"
-                            data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Hero End -->
-
-
-<!-- Featurs Section End -->
-
-<!-- Categories Section Begin -->
-<hr class="section-divider">
-<div class="categories">
-    <div class="container">
-        <div class="container-fluid fruite py-3">
-            <div class="container py-3">
-                <div class="tab-class text-center">
-                    <div class="row g-3">
-                        <div class="col-lg-4 text-start">
-                            <h1>Món Ăn</h1>
-                        </div>
-
-                        <div class="col-lg-8 text-end">
-                            <ul class="nav nav-pills d-inline-flex text-center mb-5">
-                                <li class="nav-item">
-                                    <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill"
-                                       href="#tab-1">
-                                        <span class="text-dark" style="width: 130px;">Bán chạy</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" th:each="category : ${categories}">
-                                    <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2"
-                                       th:data-category-id="${category.categoryId}">
-                                        <span class="text-dark" style="width: 130px;"
-                                              th:text="${category.categoryName}"></span>
-                                    </a>
+                        </form>
+                        <div class="mb-4">
+                            <h4>Categories</h4>
+                            <ul class="list-unstyled fruite-categorie">
+                                <li th:each="category : ${categories}">
+                                    <div class="d-flex justify-content-lg-start fruite-name">
+                                        <input class="pixel-checkbox"  type="checkbox" style="margin-right: 30px;margin-left: 20px"
+                                               name="checkedCategories " th:value="${category.categoryId}"
+                                               id="${'category_' + category.categoryId}"
+                                               onchange="document.getElementById('categoryForm').submit()"
+                                               th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
+                                        <label for="${'category_' + category.categoryId}"
+                                               th:text="${category.categoryName}" style="color: #0b0b0b"></label>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
                     </div>
-
-                    <div class="tab-content">
-                        <div id="tab-1" class="tab-pane fade show p-0 active">
-                            <div class="row g-4">
-                                <div class="col-lg-12">
-                                    <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3" th:each="food : ${items_home}">
-                                            <div class="rounded position-relative fruite-item">
-                                                <div class="fruite-img">
-                                                    <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top"
-                                                         style="height: 220px" alt="">
-                                                </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                                     style="top: 10px; left: 10px;">
-                                                    <span th:text="${food.category.categoryName}"></span>
-                                                </div>
-
-                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4><a th:href="@{/food_details(id=${food.foodId})} "
-                                                           th:text="${food.foodName}"></a></h4>
-                                                    <p><span th:text="${food.canteen.canteenName}"></span></p>
-                                                    <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <p class="text-dark fs-5 fw-bold mb-0"><span
-                                                                th:text="${food.price} + ' đ'"></span></p>
-                                                        <a th:href="@{/food_details(id=${food.foodId})} "
-                                                           class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Thêm
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="col-lg-12">
+                        <h4 class="mb-4">Featured products</h4>
+                        <div class="d-flex align-items-center justify-content-start" th:each="food : ${items_home}">
+                            <div class="rounded" style="width: 100px; height: 100px;">
+                                <img th:src="${food.imageFood}" class="img-fluid rounded"
+                                     style="width: 80px;height: 80px" alt="Image">
                             </div>
-                        </div>
-                        <div id="tab-2" class="tab-pane fade show p-0">
-                            <div class="row g-4" id="food-container">
-                                <!-- Danh sách món ăn sẽ được cập nhật ở đây -->
+                            <div>
+                                <h6 class="mb-2"><a  th:href="@{/food_details(id=${food.foodId})}"><span
+                                        th:text="${food.foodName}"></span></a></h6>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2" th:text="${food.price} "></h5>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-        </div>
-        <hr class="section-divider">
-        <!-- Banner giảm giá-->
-        <div class="container-fluid service py-5">
-            <div class="container py-5">
-                <div class="row g-4 justify-content-center">
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-secondary rounded border border-secondary">
-                                <img src="/img/chococ.png" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-primary text-center p-4 rounded">
-                                        <h5 class="text-white">Fresh Apples</h5>
-                                        <h3 class="mb-0">20% OFF</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-dark rounded border border-dark">
-                                <img src="/img/chococ.png" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-light text-center p-4 rounded">
-                                        <h5 class="text-primary">Tasty Fruits</h5>
-                                        <h3 class="mb-0">Free delivery</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="#">
-                            <div class="service-item bg-primary rounded border border-primary">
-                                <img src="/img/chococ.png" class="img-fluid rounded-top w-100" alt="">
-                                <div class="px-4 rounded-bottom">
-                                    <div class="service-content bg-secondary text-center p-4 rounded">
-                                        <h5 class="text-white">Exotic Vegitable</h5>
-                                        <h3 class="mb-0">Discount 30$</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Featurs Section End -->
-        <hr class="section-divider">
-        <!-- Nội dung trang web của bạn -->
-    </div>
-
-    <div class="container-fluid vesitable py-5">
-        <div class="container py-5">
-            <h1 class="mb-0">Món ăn bạn có thể thích</h1>
-            <div style="margin-top: 10px"></div>
-            <div  class="owl-carousel vegetable-carousel justify-content-center">
-                <div class="border border-primary rounded position-relative vesitable-item"
-                     th:each="food : ${items_home}" style="margin-left: 10px">
-                    <div class="vesitable-img">
-                        <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt=""
-                             style="height: 220px">
-                    </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
-                         style="top: 10px; right: 10px;">
-                        <span th:text="${food.category.categoryName}">Vegetable</span>
-                    </div>
-                    <div class="p-4 rounded-bottom">
-                        <h4><a th:href="@{/food_details(id=${food.foodId})} " th:text="${food.foodName}">Parsely</a>
-                        </h4>
-                        <p><span th:text="${food.canteen.canteenName}"></span></p>
-                        <div class="d-flex justify-content-between flex-lg-wrap">
-                            <p class="text-dark fs-5 fw-bold mb-0"><span
-                                    th:text="${food.price} + ' đ'">$4.99 / kg</span></p>
-                            <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})} "
-                               class="btn border border-secondary rounded-pill px-3 text-primary">
-                                <i class="fa fa-shopping-bag me-2 text-primary"></i>Thêm
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Repeat similar structure for other items -->
-            </div>
-        </div>
-    </div>
-    <hr class="section-divider">
-    <!-- Các service -->
-    <div class="container-fluid featurs py-5" style="background-color: #cccccc">
-        <div class="container py-5">
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="featurs-item text-center rounded bg-light p-4">
-                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                            <i class="fas fa-car-side fa-3x text-white"></i>
-                        </div>
-                        <div class="featurs-content text-center">
-                            <h5>Free Shipping</h5>
-                            <p class="mb-0">Free on order over $300</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="featurs-item text-center rounded bg-light p-4">
-                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                            <i class="fas fa-user-shield fa-3x text-white"></i>
-                        </div>
-                        <div class="featurs-content text-center">
-                            <h5>Security Payment</h5>
-                            <p class="mb-0">100% security payment</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="featurs-item text-center rounded bg-light p-4">
-                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                            <i class="fas fa-exchange-alt fa-3x text-white"></i>
-                        </div>
-                        <div class="featurs-content text-center">
-                            <h5>30 Day Return</h5>
-                            <p class="mb-0">30 day money guarantee</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="featurs-item text-center rounded bg-light p-4">
-                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                            <i class="fa fa-phone-alt fa-3x text-white"></i>
-                        </div>
-                        <div class="featurs-content text-center">
-                            <h5>24/7 Support</h5>
-                            <p class="mb-0">Support every time fast</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
-<!-- Testimonial End -->
+<!-- Single Product End -->
 
-<!-- Footer -->
+<!-- Footer Start -->
 <div th:replace="footer :: footer"></div>
-<!-- Js Plugins -->
-<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/jquery.nice-select.min.js}"></script>
-<script th:src="@{/js/jquery.barfiller.js}"></script>
-<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
-<script th:src="@{/js/jquery.slicknav.js}"></script>
-<script th:src="@{/js/owl.carousel.min.js}"></script>
-<script th:src="@{/js/jquery.nicescroll.min.js}"></script>
-<script th:src="@{/js/main.js}"></script>
-
+<!-- Footer End -->
 
 <!-- Back to Top -->
-<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top">
-    <i class="fa fa-arrow-up"></i>
-</a>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.nav-item a').forEach(item => {
-            item.addEventListener('click', function (event) {
-                event.preventDefault();
-                let categoryId = this.getAttribute('data-category-id');
-                console.log("Category ID: " + categoryId); // Ghi lại giá trị của categoryId
-
-                fetch(`/foodByCategory/${categoryId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Data received: ", data); // Ghi lại dữ liệu nhận được từ API
-
-                        let foodContainer = document.getElementById('food-container');
-                        foodContainer.innerHTML = '';
-
-                        data.forEach(food => {
-                            let foodElement = document.createElement('div');
-                            foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
-                            foodElement.innerHTML = `
-                                 <div class="rounded position-relative fruite-item">
-                                    <div class="fruite-img">
-                                        <img src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="${food.foodName}">
-                                    </div>
-                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                        <span>${food.category.categoryName}</span>
-                                    </div>
-                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                        <h4><a href="#">${food.foodName}</a></h4>
-                                        <p><span>${food.canteen.canteenName}</span></p>
-                                        <div class="d-flex justify-content-between flex-lg-wrap">
-                                            <p class="text-dark fs-5 fw-bold mb-0">${food.price} đ</p>
-                                           <a th:href="@{/food_details(id=${food.foodId})} " class="btn border border-secondary rounded-pill px-3 text-primary">
-                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> View
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            foodContainer.appendChild(foodElement);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $(".owl-carousel").owlCarousel({
-            items: 4, // Số lượng item hiển thị cùng lúc
-            loop: true,
-            margin: 10,
-            nav: true,
-            dots: true,
-            autoplay: true,
-            autoplayTimeout: 1000, // Chuyển slide sau mỗi 5 giây
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                1000: {
-                    items: 4
-                }
-            },
-            navText: ["<i class='fa fa-arrow-left'></i>", "<i class='fa fa-arrow-right'></i>"]
-        });
-    });
-</script>
-
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+        class="fa fa-arrow-up"></i></a>
 
 <!-- JavaScript Libraries -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
-<script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
-<script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
-<script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script th:src="@{/lib/easing/easing.min.js}"></script>
+<script th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+<script th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
 <!-- Template Javascript -->
-<script src="/js/main_test.js" th:src="@{/js/main_test.js}"></script>
+<script th:src="@{/js/main_test.js}"></script>
 
-<!-- JavaScript Libraries -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function decreaseQuantity(foodId) {
+        const quantityInput = document.getElementById(`quantity-${foodId}`);
+        let quantity = parseInt(quantityInput.value);
+        if (quantity > 1) {
+            quantity--;
+            quantityInput.value = quantity;
+        }
+    }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+    function increaseQuantity(foodId) {
+        const quantityInput = document.getElementById(`quantity-${foodId}`);
+        let quantity = parseInt(quantityInput.value);
+        quantity++;
+        quantityInput.value = quantity;
+    }
+
+    // Function to format currency in VND
+    function formatCurrencyVND(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
+
+    // Format all prices on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.formatted-price').forEach(function (element) {
+            let price = element.innerText;
+            element.innerText = formatCurrencyVND(price);
+        });
+    });
+
+</script>
+
 
 </body>
+
 </html>

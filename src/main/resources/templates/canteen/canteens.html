@@ -61,8 +61,9 @@
 
                         </div>
                     </div>
-                    <div class="col-6"></div>
+                    <div class="col-6"> </div>
                     <div class="col-xl-3">
+
                         <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
                             <label for="fruits">Default Sorting:</label>
                             <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3">
@@ -74,6 +75,7 @@
                         </div>
                     </div>
                 </div>
+                <hr class="section-divider">
                 <div class="row g-4">
                     <div class="col-lg-3">
                         <form id="categoryForm" action="/canteen_details" method="get">
@@ -133,10 +135,13 @@
 
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-center">
+                            <h4 style="justify-content: center; display: flex" >Sản phẩm</h4>
                             <div th:if="${items_home.size() == 0}">
-                                <h4>Không có kết quả phù hợp</h4>
+                                <h6 style="justify-content: center; display: flex" >Không có kết quả phù hợp với lựa chọn của bạn</h6>
                             </div>
+
                             <div class="col-md-6 col-lg-6 col-xl-4" th:each="food : ${items_home}">
+
                                 <div th:if="${food.canteen.isActive}" class="rounded position-relative fruite-item">
                                     <div class="fruite-img">
                                         <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt=""
@@ -152,10 +157,10 @@
                                         <p><span th:text="${food.canteen.canteenName}"></span></p>
                                         <div class="d-flex justify-content-between flex-lg-wrap">
 
-                                            <p class="text-dark fs-5 fw-bold mb-0"><span
-                                                    th:text="${food.price} + ' đ'"></span></p>
+                                            <p class=" text-dark fs-5 fw-bold mb-0"><span class="formatted-price"
+                                                    th:text="${food.price}"></span></p>
                                             <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
-                                               class="btn border border-secondary rounded-pill px-3 text-primary">
+                                               class=" btn border border-secondary rounded-pill px-3 text-primary">
                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
                                             </a>
                                         </div>
@@ -163,7 +168,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-12">
+                            <div class="col-12" th:if="${items_home.size() != 0}" >
                                 <ul class="pagination justify-content-center d-flex mt-5">
                                     <li class="page-item rounded" th:classappend="${currentPage == 0} ? 'disabled'">
                                         <a class="page-link rounded"
@@ -250,7 +255,24 @@
         // Thực hiện submit form
         form.submit();
     }
+
+    // Function to format currency in VND
+    function formatCurrencyVND(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
+
+    // Format all prices on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.formatted-price').forEach(function (element) {
+            let price = element.innerText;
+            element.innerText = formatCurrencyVND(price);
+        });
+    });
 </script>
+
 
 <!-- Template Javascript -->
 <script src="/js/main_test.js"></script>

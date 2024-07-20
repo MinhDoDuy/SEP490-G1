@@ -14,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,7 +62,7 @@ public class FoodController {
         return foodService.getFoodsByCategoryId(categoryId);
     }
     @GetMapping("/food_details")
-    public String viewFoodDetails(@RequestParam("id") Integer foodId, Model model) {
+    public String viewFoodDetails(@RequestParam("id") Integer foodId, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         Optional<Food> foodOptional = foodService.getFoodByIdFoodDetails(foodId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
@@ -92,7 +94,13 @@ public class FoodController {
             List<Feedback> feedbacksFood = feedbackService.getFeedbacksByFoodIdAndStatus(foodId, FeedbackStatus.COMPLETE);
             model.addAttribute("feedbacksFood", feedbacksFood);
 
-            model.addAttribute("message","Okess" );
+            String message = (String) session.getAttribute("message");
+            System.out.println("truoc : "+ message);
+            if (message != null) {
+                model.addAttribute("message", message);
+                session.removeAttribute("message");
+            }
+            System.out.println(model.getAttribute("message"));
             return "canteen/food-details";
         } else {
             // Handle case when food is not found, e.g., redirect to an error page or show a message
