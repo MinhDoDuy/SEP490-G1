@@ -35,11 +35,13 @@
             font-size: 1.5rem; /* Tăng kích thước font chữ */
             text-align: center; /* Canh giữa chữ */
         }
+
         .quantity-input::-webkit-inner-spin-button,
         .quantity-input::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
+
         .quantity-input {
             -moz-appearance: textfield;
         }
@@ -69,13 +71,25 @@
         }
 
         @keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
         }
 
         @keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -90,7 +104,7 @@
 
 
 <!-- Single Page Header start -->
-<div class="container-fluid page-header py-5" >
+<div class="container-fluid page-header py-5">
     <h1 class="text-center text-white display-6">Shop Detail</h1>
     <ol class="breadcrumb justify-content-center mb-0">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -120,13 +134,15 @@
                               class="mb-3">
 
                             <h4 class="fw-bold mb-3"><span th:text="${food.foodName}"> </span></h4>
-                            <span  th:if="${food.salesCount == null}" th:text="'Đã bán : 0 sản phẩm'" ></span>
-                            <span  th:if="${food.salesCount != null }" th:text="'Đã bán : '+${food.salesCount}  +' sản phẩm'" ></span>
+                            <span th:if="${food.salesCount == null}" th:text="'Đã bán : 0 sản phẩm'"></span>
+                            <span th:if="${food.salesCount != null }"
+                                  th:text="'Đã bán : '+${food.salesCount}  +' sản phẩm'"></span>
                             <p class="mb-3">Category: <span th:text="${food.category.categoryName}"></span></p>
-                            <span class="fw-bold mb-3" >Giá: <span class="formatted-price" th:text="${food.price}"  ></span> </span>
-                            <input type="hidden"  class="formatted-price" th:value="${food.price}"/>
+                            <span class="fw-bold mb-3">Giá: <span class="formatted-price"
+                                                                  th:text="${food.price}"></span> </span>
+                            <input type="hidden" class="formatted-price" name="price" th:value="${food.price}"/>
 
-                            <p class="mb-4">Mô tả về món ăn : <span th:text="${food.description}" ></span></p>
+                            <p class="mb-4">Mô tả về món ăn : <span th:text="${food.description}"></span></p>
 
                             <input type="hidden" name="foodId" th:value="${food.foodId}"/>
                             <div class="input-group mb-3">
@@ -151,14 +167,10 @@
                     </div>
                 </div>
 
-                <h4>Đánh giá về Cửa Hàng</h4>
+                <h4 style="margin-top: 30px">Đánh giá về Cửa Hàng</h4>
                 <div class="col-lg-12">
                     <nav>
                         <div class="nav nav-tabs mb-3">
-                            <!--                            <button class="nav-link active border-white border-bottom-0" type="button" role="tab"-->
-                            <!--                                    id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"-->
-                            <!--                                    aria-controls="nav-about" aria-selected="true">Description-->
-                            <!--                            </button>-->
                             <button class="nav-link border-white border-bottom-0" type="button" role="tab"
                                     id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
                                     aria-controls="nav-mission" aria-selected="false">Reviews
@@ -168,11 +180,11 @@
                     <div class="tab-content mb-5">
                         <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
                             <div class="d-flex" th:if="${feedbacksFood.size() == 0}">
-                               <h6> Hiện tại chưa có nhận xét nào về sản phẩm này</h6>
+                                <h6> Hiện tại chưa có nhận xét nào về sản phẩm này</h6>
 
                             </div>
-                            <div class="d-flex" th:if="${feedbacksFood.size() != 0}" th:each="feedback : ${feedbacksFood}" >
-                                <!--                                <img th:src="${user.userImage}" class="img-fluid rounded-circle p-3"-->
+                            <div class="d-flex" th:if="${feedbacksFood.size() != 0}"
+                                 th:each="feedback : ${feedbacksFood}">
                                 <img src="/img/chococ.png" class="img-fluid rounded-circle p-3"
                                      style="width: 100px; height: 100px;" alt="">
                                 <div class="">
@@ -185,7 +197,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <hr class="section-divider">
@@ -196,7 +207,7 @@
                     <input type="hidden" name="canteenId" th:value="${food.canteen.canteenId}" readonly>
                     <input type="hidden" name="foodId" th:value="${food.foodId}" readonly>
                     <div class="row g-4">
-                        <div class="col-lg-12" >
+                        <div class="col-lg-12">
                             <div class="border-bottom rounded my-4">
         <textarea name="comment" id="comment" class="form-control border-2" cols="30" rows="8"
                   placeholder="Ý kiến của bạn về cửa hàng *" spellcheck="false"></textarea>
@@ -207,9 +218,7 @@
                             <div class="d-flex justify-content-between py-3 mb-5">
                                 <button type="submit"
                                         class="btn border border-secondary text-primary rounded-pill px-4 py-3"
-                                >Post
-                                    Comment
-                                </button>
+                                >Post Comment </button>
                             </div>
                         </div>
                     </div>
@@ -230,7 +239,8 @@
                             <ul class="list-unstyled fruite-categorie">
                                 <li th:each="category : ${categories}">
                                     <div class="d-flex justify-content-lg-start fruite-name">
-                                        <input class="pixel-checkbox"  type="checkbox" style="margin-right: 30px;margin-left: 20px"
+                                        <input class="pixel-checkbox" type="checkbox"
+                                               style="margin-right: 30px;margin-left: 20px"
                                                name="checkedCategories " th:value="${category.categoryId}"
                                                id="${'category_' + category.categoryId}"
                                                onchange="document.getElementById('categoryForm').submit()"
@@ -243,23 +253,23 @@
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <h4 class="mb-4">Featured products</h4>
+                        <h4 class="mb-4">Sản phẩm bán chạy</h4>
                         <div class="d-flex align-items-center justify-content-start" th:each="food : ${items_home}">
                             <div class="rounded" style="width: 100px; height: 100px;">
                                 <img th:src="${food.imageFood}" class="img-fluid rounded"
                                      style="width: 80px;height: 80px" alt="Image">
                             </div>
                             <div>
-                                <h6 class="mb-2"><a  th:href="@{/food_details(id=${food.foodId})}"><span
+                                <h6 class="mb-2"><a th:href="@{/food_details(id=${food.foodId})}"><span
                                         th:text="${food.foodName}"></span></a></h6>
-<!--                                <div class="d-flex mb-2">-->
-<!--                                    &lt;!&ndash;/*@thymesVar id="formatCurrency" type=""*/&ndash;&gt;-->
-<!--                                    <h5 class="fw-bold me-2"   th:value="${food.price}" ></h5>-->
-<!--                                </div>-->
+                                <!--                                <div class="d-flex mb-2">-->
+                                <!--                                    &lt;!&ndash;/*@thymesVar id="formatCurrency" type=""*/&ndash;&gt;-->
+                                <!--                                    <h5 class="fw-bold me-2"   th:value="${food.price}" ></h5>-->
+                                <!--                                </div>-->
                                 <div class="d-flex mb-2">
                                     <!--/*@thymesVar id="formatCurrency" type=""*/-->
-<!--                                    <h5 class="formatted-price fw-bold me-2"   th:value="${food.price}" ></h5>-->
-                                    <span class=" fw-bold me-2"   th:value="${food.price}" ></span>
+                                    <!--                                    <h5 class="formatted-price fw-bold me-2"   th:value="${food.price}" ></h5>-->
+                                    <span class=" fw-bold me-2" th:value="${food.price}"></span>
                                 </div>
                             </div>
                         </div>
@@ -326,6 +336,7 @@
             }, 3000);
         }
     });
+
     // Function to format currency in VND
     function formatCurrencyVND(amount) {
         return new Intl.NumberFormat('vi-VN', {
@@ -344,7 +355,7 @@
 
 </script>
 
-<input type="hidden" id="toast-message" th:value="${message}" />
+<input type="hidden" id="toast-message" th:value="${message}"/>
 </body>
 
 </html>

@@ -5,8 +5,10 @@ import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
+import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
+import com.google.api.client.util.store.AbstractMemoryDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,6 +26,9 @@ import java.util.*;
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private FoodRepository foodRepository;;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -66,6 +72,7 @@ import java.util.*;
         order.setOrderStatus(OrderStatus.PENDING);
 
 
+
 //        // Lưu Order trước để lấy ID
 //        order = orderRepository.save(order);
 
@@ -88,10 +95,11 @@ import java.util.*;
             orderDetails.add(orderDetail);
         }
         order.setOrderDetails(orderDetails);
+
+
         // Debug: In ra số lượng OrderDetails trước khi lưu
         System.out.println("Total OrderDetails: " + orderDetails.size());
         // Lưu lại Order cùng với OrderDetail
-
         // Debug: In ra ID của Order sau khi lưu
         System.out.println("Order ID: " + order.getOrderId());
         return order;

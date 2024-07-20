@@ -1,12 +1,10 @@
 package com.ffood.g1.controller;
 
-import com.ffood.g1.entity.Cart;
-import com.ffood.g1.entity.CartItem;
-import com.ffood.g1.entity.Order;
-import com.ffood.g1.entity.User;
+import com.ffood.g1.entity.*;
 import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
+import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.*;
@@ -40,6 +38,8 @@ public class OrderController {
     private CartService cartService;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private FoodRepository foodRepository;;
 
     @Autowired
     private VNPayService vnpayService;
@@ -102,6 +102,20 @@ public class OrderController {
                     PaymentStatus paymentStatus = PaymentStatus.PAYMENT_COMPLETE;
                     String orderCode=RandomOrderCodeGenerator.generateOrderCode();
                     Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, paymentStatus,orderCode);
+
+
+                    for (OrderDetail orderItem : order.getOrderDetails()) {
+                        Food food = orderItem.getFood();
+                        int orderedQuantity = orderItem.getQuantity();
+                        System.out.println(food.getFoodQuantity());
+                        // Giảm số lượng tồn kho
+                        food.setFoodQuantity(food.getFoodQuantity() - orderedQuantity);
+                        System.out.println(food.getFoodQuantity());
+                        // Tăng số lượng đã bán
+                        food.setSalesCount(food.getSalesCount() + orderedQuantity);
+
+                        foodRepository.save(food);
+                    }
                     session.setAttribute("order", order);
                     model.addAttribute("order", order);
                     return "order/create-order";
@@ -121,9 +135,7 @@ public class OrderController {
 
 
     @GetMapping("/order-history")
-    public String viewOrderHistory(
-
-            Model model) {
+    public String viewOrderHistory(Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -132,7 +144,7 @@ public class OrderController {
             User user = userService.findByEmail(email);
 
             Integer userId = user.getUserId();
-            PaymentStatus status= PaymentStatus.PENDING_PAYMENT;
+            PaymentStatus status= PaymentStatus.PAYMENT_COMPLETE;
 //            OrderStatus orderStatus = OrderStatus.valueOf(status);
             List<Order> orders = orderService.getOrdersByUserIdAndStatus(userId, status);
             model.addAttribute("orders", orders);

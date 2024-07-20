@@ -79,43 +79,43 @@
 <div class="bg-light">
     <div class="container">
         <div class="py-5 text-center">
-            <h2>Checkout form</h2>
+            <h2>Thông tin đơn hàng</h2>
         </div>
 
         <div class="row">
             <div class="col-md-4 order-md-2 mb-4">
 
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">Your cart</span>
-                    <span class="badge badge-secondary badge-pill" th:text="${totalQuantity}">0</span>
+                    <span class="text-muted">Thanh toán</span>
+                    <span class="badge badge-secondary badge-pill formatted-price" th:text="${totalQuantity}">0</span>
                 </h4>
                 <ul class="list-group mb-3">
                     <!-- Example item, loop through actual items -->
-                    <li class="list-group-item d-flex align-items-center" th:each="cartItem : ${cartItems}">
+                    <li class="list-group-item d-flex align-items-center justify-content-between" th:each="cartItem : ${cartItems}">
                         <div class="product-details flex-grow-1">
                             <h6 class="my-0"><span th:text="${cartItem.food.foodName}"></span></h6>
-                            <small class="text-muted">Price: $<span th:text="${cartItem.food.price}"></span></small>
+                            <small class="text-muted">Giá : <span class="formatted-price" th:text="${cartItem.food.price}"></span></small>
                         </div>
                         <div class="quantity mx-3">
                             <span class="text-muted" th:text="${cartItem.quantity}"></span>
                         </div>
                         <div class="total-price">
-                            <span class="text-muted">$<span th:text="${cartItem.totalFoodPrice}"></span></span>
+                            <span class="text-muted"><span class="formatted-price" th:text="${cartItem.totalFoodPrice}"></span></span>
                         </div>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>Total (USD)</span>
-                        <strong th:text="${totalOrderPrice}">$20</strong>
+                        <span>Tổng tiền </span>
+                        <strong class="formatted-price" th:text="${totalOrderPrice}"></strong>
                     </li>
                 </ul>
 
 
             </div>
             <div class="col-md-8 order-md-1">
-                <h4 class="mb-3">Billing address</h4>
-                <form class="needs-validation" th:action="@{/checkout}" method="post" novalidate>
+                <h4 class="mb-3">Thông tin khách hàng</h4>
+                <form class="needs-validation" th:action="@{/checkout}" method="post" >
                     <div class="mb-3">
-                        <label for="email">Name <span class="text-muted">(Optional)</span></label>
+                        <label for="email">Tên khách hàng <span class="text-muted"></span></label>
                         <input type="email" class="form-control" id="" placeholder="you@example.com" th:value="${user.fullName}" readonly >
                         <div class="invalid-feedback">
                             Please enter a valid email address for shipping updates.
@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                        <label for="email">Email <span class="text-muted"></span></label>
                         <input type="email" class="form-control" id="email" placeholder="you@example.com" th:value="${user.email}" readonly>
                         <div class="invalid-feedback">
                             Please enter a valid email address for shipping updates.
@@ -140,22 +140,22 @@
 
                     <div class="mb-3">
                         <label for="address">Địa chỉ nhận hàng <span class="text-muted">(Optional)</span></label>
-                        <input type="text" class="form-control" id="address" placeholder="Địa chỉ nhận hàng" name="address">
+                        <input type="text" class="form-control" id="address" placeholder="Địa chỉ nhận hàng" name="address" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="address">Note <span class="text-muted">(Optional)</span></label>
-                        <input type="text" class="form-control" id="note" placeholder="Điều cần lưu ý về đơn hàng" name="note">
+                        <label for="address">Ghi chứ <span class="text-muted"></span></label>
+                        <input type="text" class="form-control" id="note" placeholder="Thời gian mong muốn nhận hàng, lưu ý về đơn hàng" name="note">
                     </div>
                     <hr class="mb-4">
 
-                    <h4 class="mb-3">Payment</h4>
+                    <h4 class="mb-3">Phương thức thanh toán</h4>
 
-                    <div class="d-block my-3">
+                    <div class="d-block my-3 mb-3" >
                         <label for="orderType">Chọn loại đặt hàng:</label>
                         <select id="orderType" name="orderType" class="form-control" onchange="showPaymentOptions()">
                             <option value="ONLINE_ORDER" selected>Đặt hàng online</option>
-                            <option value="AT_COUNTER">Nhận tại quầy</option>
+<!--                            <option value="AT_COUNTER">Nhận tại quầy</option>-->
                         </select>
 
                         <div id="paymentOptions" class="mt-3">
@@ -168,19 +168,12 @@
                     </div>
 
                     <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Hoàn tất thanh toán</button>
                 </form>
             </div>
         </div>
 
-        <footer class="my-5 pt-5 text-muted text-center text-small">
-            <p class="mb-1">&copy; 2017-2021 Company Name</p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#">Privacy</a></li>
-                <li class="list-inline-item"><a href="#">Terms</a></li>
-                <li class="list-inline-item"><a href="#">Support</a></li>
-            </ul>
-        </footer>
+
     </div>
 </div>
 <script>
@@ -214,6 +207,21 @@
         // Show payment options div
         document.getElementById('paymentOptions').style.display = 'block';
     }
+    // Function to format currency in VND
+    function formatCurrencyVND(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
+
+    // Format all prices on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.formatted-price').forEach(function (element) {
+            let price = element.innerText;
+            element.innerText = formatCurrencyVND(price);
+        });
+    });
 </script>
 
 

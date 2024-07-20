@@ -9,6 +9,8 @@ import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -138,8 +141,6 @@ public class CartController {
                 model.addAttribute("user", user);
                 Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
                 int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
-
-
                 model.addAttribute("totalQuantity", totalQuantity);
             }
         }
@@ -159,7 +160,6 @@ public class CartController {
         // Lấy các sản phẩm trong giỏ hàng của người dùng
         List<CartItem> cartItems = cartItemService.getCartItemsByUserId(userId);
 
-        System.out.println(cartItems);
         // Đưa dữ liệu giỏ hàng vào model
         model.addAttribute("cartItems", cartItems);
 
@@ -175,5 +175,15 @@ public class CartController {
     }
 
 
+    @GetMapping("/update_cart_quantity")
+    public ResponseEntity<String> updateCartQuantity(@RequestParam("cartItemId") Integer cartItemId,
+                                                     @RequestParam("quantity") int quantity) {
+        try {
+            cartItemService.updateCartItemQuantity(cartItemId, quantity);
+            return  ResponseEntity.ok("Quantity updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating quantity");
+        }
+    }
 }
 

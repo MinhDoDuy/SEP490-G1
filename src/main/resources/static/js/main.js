@@ -224,6 +224,7 @@
         $button.parent().find('input').val(newVal);
     });
 
+
     
 
     $(".product__details__thumb").niceScroll({
@@ -259,6 +260,57 @@ toggle.onclick = function () {
     navigation.classList.toggle("active");
     main.classList.toggle("active");
 };
+
+function decreaseQuantity(foodId) {
+    const quantityInput = document.getElementById(`quantity-${foodId}`);
+    let quantity = parseInt(quantityInput.value);
+    if (quantity > 1) {
+        quantity--;
+        quantityInput.value = quantity;
+    }
+}
+
+function increaseQuantity(foodId) {
+    const quantityInput = document.getElementById(`quantity-${foodId}`);
+    let quantity = parseInt(quantityInput.value);
+    quantity++;
+    quantityInput.value = quantity;
+}
+
+// Hiển thị thông báo từ server nếu có
+document.addEventListener('DOMContentLoaded', function () {
+    const messageElement = document.getElementById('toast-message');
+    const message = messageElement ? messageElement.value : null;
+
+    if (message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast show';
+        toast.innerText = message;
+        document.body.appendChild(toast);
+
+        setTimeout(function () {
+            toast.classList.remove('show');
+            document.body.removeChild(toast);
+        }, 3000);
+    }
+});
+// Function to format currency in VND
+function formatCurrencyVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(amount);
+}
+
+// Format all prices on page load
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.formatted-price').forEach(function (element) {
+        let price = element.innerText;
+        element.innerText = formatCurrencyVND(price);
+    });
+});
+
+
 
 
 
