@@ -73,7 +73,7 @@ public class OrderManagementController {
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        return "redirect:/order-list/" + canteenId + "?orderStatus=" + newStatus;
+        return "redirect:/order-list/" + canteenId;
     }
 
     @PostMapping("/bulk-assign-orders")
