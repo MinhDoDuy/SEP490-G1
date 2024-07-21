@@ -133,4 +133,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
+
+
+    @Query("SELECT DISTINCT o FROM Order o " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.food f " +
+            "WHERE f.canteen.canteenId = :canteenId " +
+            "AND o.deliveryRoleId = :deliveryRoleId " +
+            "AND o.orderStatus = 'PROGRESS'")
+    Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusProgress(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
 }

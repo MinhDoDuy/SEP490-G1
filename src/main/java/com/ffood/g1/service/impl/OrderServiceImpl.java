@@ -224,4 +224,17 @@ import java.util.*;
         return orderRepository.findCompletedOrdersByCanteenAndDateRange(canteenId, startDate, endDate, pageable);
     }
 
+    @Override
+    public Page<Order> getOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable) {
+        return orderRepository.findByCanteenIdAndDeliveryRoleIdAndStatusProgress(canteenId, deliveryRoleId, pageable);
+    }
+
+    @Override
+    public void completeOrder(Integer orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        order.setOrderStatus(OrderStatus.COMPLETE);
+        orderRepository.save(order);
+    }
+
+
 }

@@ -90,8 +90,7 @@
                                 </div>
 
                                 <div th:if="${user != null and user.role != null and user.role.roleName == 'ROLE_STAFF'}">
-                                    <a th:href="@{/order-list/{canteenId}(canteenId=${user.canteen.canteenId})}"
-                                       class="dropdown-item">Order List</a>
+                                    <a th:href="@{/order-list-ship/{canteenId}(canteenId=${user.canteen.canteenId} , deliveryRoleId=${user.userId})}" class="dropdown-item">Order List</a>
                                 </div>
 
                                 <a th:href="@{/logout}" class="dropdown-item">Đăng Xuất</a>

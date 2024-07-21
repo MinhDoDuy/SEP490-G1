@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 public class OrderManagementController {
@@ -123,4 +124,36 @@ public class OrderManagementController {
         redirectAttributes.addFlashAttribute("message", "Order cancelled successfully");
         return "redirect:/order-list/" + canteenId;
     }
+
+
+    @GetMapping("/order-list-ship/{canteenId}")
+    public String getOrdersForShipper(@PathVariable Integer canteenId,
+                                      @RequestParam(value = "deliveryRoleId", required = false) Integer deliveryRoleId,
+                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "size", defaultValue = "10") int size,
+                                      Model model, RedirectAttributes redirectAttributes) {
+
+        if (deliveryRoleId == null) {
+            redirectAttributes.addFlashAttribute("error", "Delivery Role ID is required.");
+            return "redirect:/error-page"; // Replace with your actual error page
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orders = orderService.getOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable);
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("deliveryRoleId", deliveryRoleId);
+        return "shipper/order-list";
+    }
+    @PostMapping("/complete-order/{orderId}")
+    public String completeOrder(@PathVariable Integer orderId,
+                                @RequestParam Integer canteenId,
+                                @RequestParam Integer userId,
+                                RedirectAttributes redirectAttributes) {
+        orderService.completeOrder(orderId);
+        redirectAttributes.addFlashAttribute("message", "Order completed successfully");
+        return "redirect:/order-list-ship/" + canteenId + "?userId=" + userId;
+    }
+
 }

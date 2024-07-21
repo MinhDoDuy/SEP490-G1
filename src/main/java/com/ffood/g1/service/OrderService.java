@@ -56,4 +56,8 @@ public interface OrderService {
 
 
     Page<Order> getCompletedOrdersByCanteenAndDateRange(Integer canteenId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    Page<Order> getOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable);
+
+    void completeOrder(Integer orderId);
 }
