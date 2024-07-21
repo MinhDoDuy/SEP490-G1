@@ -80,5 +80,5 @@ public class DashboardManagerController {
         model.addAttribute("canteenId", canteenId);
 
         return "staff-management/dashboard-manager";
+        }
     }
-}

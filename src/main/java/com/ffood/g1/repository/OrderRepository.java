@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -94,7 +95,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "ORDER BY TO_CHAR(o.orderDate, 'YYYY')")
     List<Object[]> findRevenueDataCanteenByYear(@Param("canteenId") Integer canteenId);
 
-
+    //tính lượt order thành công của từng canteen
     @Query("SELECT COUNT(o) FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
             "JOIN Food f ON od.food.foodId = f.foodId " +
             "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId")
@@ -116,4 +117,20 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "GROUP BY f.foodName " +
             "ORDER BY SUM(od.quantity) DESC")
     List<Object[]> findBestSellingItemsByCanteen(@Param("canteenId") Integer canteenId);
+
+
+    //filter order có trạng thái complete trong khoảng ngày
+    @Query("SELECT o FROM Order o " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.food f " +
+            "WHERE f.canteen.canteenId = :canteenId " +
+            "AND o.orderStatus = 'COMPLETE' " +
+            "AND o.orderDate BETWEEN :startDate AND :endDate " +
+            "ORDER BY o.orderDate DESC")
+    Page<Order> findCompletedOrdersByCanteenAndDateRange(
+            @Param("canteenId") Integer canteenId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable
+    );
 }
