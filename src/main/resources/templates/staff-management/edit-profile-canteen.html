@@ -7,25 +7,8 @@
     <meta name="author" content="colorlib.com">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/style-profile.css}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="text-gray-800 font-inter">
 <!-- start: Sidebar -->
@@ -48,8 +31,8 @@
     </div>
 
     <div class="p-6">
-        <div th:if="${successMessage}" class="hidden" th:text="${successMessage}" id="successMessage"></div>
-        <div th:if="${errorMessage}" class="hidden" th:text="${errorMessage}" id="errorMessage"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Cài Đặt Canteen</div>
@@ -126,7 +109,7 @@
         if (input && input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                $('#displayImage').attr('src', e.target.result).attr('alt', input.files.item(0).name);
+                document.getElementById('displayImage').src = e.target.result;
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -166,7 +149,7 @@
 
         if (!validateTime(start, end)) {
             event.preventDefault();
-            errorMessage.textContent = 'Opening Hours End must be after Opening Hours Start.';
+            errorMessage.textContent = 'Giờ kết thúc phải sau giờ bắt đầu.';
             return;
         }
 
@@ -176,16 +159,16 @@
     });
 
     // Call generateTimeOptions on page load
-    document.addEventListener('DOMContentLoaded', generateTimeOptions);
-
-    function myFunction(message) {
-        var x = document.getElementById("snackbar");
-        x.textContent = message;
-        x.className = "show";
-        setTimeout(function () {
-            x.className = x.className.replace("show", "");
-        }, 3000);
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        generateTimeOptions();
+        // Set the start and end times if they are already set
+        const openingHours = document.getElementById('openingHours').value;
+        if (openingHours) {
+            const [start, end] = openingHours.split(' - ');
+            document.getElementById('openingHoursStart').value = start;
+            document.getElementById('openingHoursEnd').value = end;
+        }
+    });
 
     window.onload = function () {
         var successMessageElement = document.getElementById("successMessage");
@@ -202,9 +185,5 @@
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/manage.js}"></script>
-
-
-
-
 </body>
 </html>
