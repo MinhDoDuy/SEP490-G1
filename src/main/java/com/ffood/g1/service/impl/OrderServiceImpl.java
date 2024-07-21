@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -216,6 +217,11 @@ import java.util.*;
     @Override
     public List<Object[]> getBestSellingItemsByCanteen(Integer canteenId) {
         return orderRepository.findBestSellingItemsByCanteen(canteenId);
+    }
+
+    @Override
+    public Page<Order> getCompletedOrdersByCanteenAndDateRange(Integer canteenId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        return orderRepository.findCompletedOrdersByCanteenAndDateRange(canteenId, startDate, endDate, pageable);
     }
 
 }

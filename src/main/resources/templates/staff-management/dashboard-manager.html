@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,13 +11,21 @@
     .chart-container {
       height: 400px; /* Adjust as needed */
     }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
     }
+
+    .grid-2-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
   </style>
 </head>
+
 <body class="text-gray-800 font-inter">
 
 <!-- start: Sidebar -->
@@ -67,7 +76,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 mb-6">
+    <div class="grid-2-col mb-6">
       <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
         <h4>Biểu Đồ Doanh Thu</h4>
         <select id="revenue-chart-type" class="form-control mb-3">
@@ -76,9 +85,6 @@
         </select>
         <canvas id="revenueChart"></canvas>
       </div>
-    </div>
-
-    <div class="grid grid-cols-1 gap-6 mb-6">
       <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
         <h4>Biểu Đồ Đơn</h4>
         <canvas id="orderStatsChart"></canvas>
@@ -106,7 +112,7 @@
   const revenueLabelsByYear = /*[[${revenueLabelsByYear}]]*/ [];
   const revenueDataByYear = /*[[${revenueDataByYear}]]*/ [];
 
-  document.getElementById('revenue-chart-type').addEventListener('change', function () {
+  document.getElementById('revenue-chart-type').addEventListener('change', function() {
     const value = this.value;
     let labels, data;
     if (value === 'month') {
@@ -158,14 +164,18 @@
   const bestSellingLabels = /*[[${bestSellingLabels}]]*/ [];
   const bestSellingData = /*[[${bestSellingData}]]*/ [];
 
+  // Giới hạn dữ liệu các món ăn bán chạy nhất chỉ 5 dữ liệu
+  const limitedBestSellingLabels = bestSellingLabels.slice(0, 5);
+  const limitedBestSellingData = bestSellingData.slice(0, 5);
+
   const ctxBestSellingItems = document.getElementById('bestSellingItemsChart').getContext('2d');
   let bestSellingItemsChart = new Chart(ctxBestSellingItems, {
     type: 'bar',
     data: {
-      labels: bestSellingLabels,
+      labels: limitedBestSellingLabels,
       datasets: [{
         label: 'Số Lượng Bán',
-        data: bestSellingData,
+        data: limitedBestSellingData,
         backgroundColor: 'rgba(153, 102, 255, 0.2)',
         borderColor: 'rgba(153, 102, 255, 1)',
         borderWidth: 1
@@ -181,4 +191,5 @@
   });
 </script>
 </body>
+
 </html>

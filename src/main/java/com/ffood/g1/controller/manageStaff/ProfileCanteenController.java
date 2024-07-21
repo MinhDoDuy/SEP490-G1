@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("canteen")
+@RequestMapping("/canteen")
 public class ProfileCanteenController {
 
     @Autowired
@@ -23,18 +23,6 @@ public class ProfileCanteenController {
     @Autowired
     private FileS3Service fileS3Service;
 
-    @GetMapping("/view-profile/{canteenId}")
-    public String viewProfileCanteen(@PathVariable Integer canteenId, Model model) {
-        Canteen canteen = canteenService.loadCanteenId(canteenId);
-        if (canteen != null) {
-            model.addAttribute("canteen", canteen);
-            return "staff-management/edit-profile-canteen"; // Thymeleaf template name
-        } else {
-            model.addAttribute("error", "Canteen not found");
-            return "error"; // Error page template
-        }
-    }
-
     @GetMapping("/edit-profile-canteen/{canteenId}")
     public String editProfileCanteen(@PathVariable Integer canteenId, Model model,
                                      @RequestParam(value = "success", required = false) String success,
@@ -42,12 +30,8 @@ public class ProfileCanteenController {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
-            if (success != null) {
-                model.addAttribute("successMessage", success);
-            }
-            if (error != null) {
-                model.addAttribute("errorMessage", error);
-            }
+            model.addAttribute("success", success);
+            model.addAttribute("error", error);
             return "staff-management/edit-profile-canteen"; // Thymeleaf template name
         } else {
             model.addAttribute("error", "Canteen not found");

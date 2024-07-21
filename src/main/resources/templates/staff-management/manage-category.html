@@ -6,58 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manage-category.css}" rel="stylesheet" type="text/css">
-    <style>
-        #snackbar {
-            visibility: hidden;
-            min-width: 250px;
-            margin-left: -125px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 2px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
-        }
 
-        #snackbar.show {
-            visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        }
-
-        @-webkit-keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
-        }
-
-        @keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
-        }
-
-        @-webkit-keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
-        }
-
-        @keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
-        }
-
-        /* Custom striped rows */
-        .custom-striped tbody tr:nth-of-type(odd) {
-            background-color: #f2f2f2;
-        }
-
-        .custom-striped tbody tr:nth-of-type(even) {
-            background-color: #ffffff;
-        }
-    </style>
 </head>
 <body class="text-gray-800 font-inter">
 
@@ -82,15 +31,20 @@
     </div>
 
     <div class="p-6">
-        <div th:if="${successMessage}" class="hidden" th:text="${successMessage}" id="successMessage"></div>
-        <div th:if="${errorMessage}" class="hidden" th:text="${errorMessage}" id="errorMessage"></div>
+
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Quản Lý Sản Phẩm của: <span th:text="${canteenName}"></span></div>
                 <a th:href="@{/add-category-form(canteenId=${canteenId})}" class="btn btn-primary"
                    style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Thêm Danh mục đồ ăn</a>
             </div>
-
+            <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+                <span th:text="${successMessage}"></span>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger">
+                <span th:text="${errorMessage}"></span>
+            </div>
             <div class="overflow-x-auto">
                 <table class="custom-striped w-full min-w-[540px]">
                     <thead>
@@ -120,8 +74,6 @@
         </div>
     </div>
 
-    <!-- Snackbar / Toast -->
-    <div id="snackbar">Some text some message..</div>
 </main>
 <!-- end: Main -->
 
@@ -146,6 +98,18 @@
             myFunction(errorMessageElement.textContent);
         }
     }
+
+    function hideAlert() {
+        var alert = document.getElementById('successAlert');
+        if (alert) {
+            setTimeout(function () {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // Call the function to hide the alert
+    hideAlert();
 </script>
 </body>
 </html>
