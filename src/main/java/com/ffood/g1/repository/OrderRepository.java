@@ -120,7 +120,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
 
     //filter order có trạng thái complete trong khoảng ngày
-    @Query("SELECT o FROM Order o " +
+    @Query("SELECT DISTINCT o FROM Order o " +
             "JOIN o.orderDetails od " +
             "JOIN od.food f " +
             "WHERE f.canteen.canteenId = :canteenId " +
