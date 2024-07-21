@@ -92,8 +92,9 @@
                     <tbody>
                     <tr th:each="cartItem : ${cartItems}">
                         <td>
-                            <span type="text" id="myInput" class="cart-item-id" th:text="${cartItem.cartItemId}"
-                                  th:value="${cartItem.cartItemId}"></span>
+                            <span type="text" th:id="'ID' + ${cartItem.cartItemId}" class="cart-item-id"
+                                  th:text="${cartItem.cartItemId}"
+                                  th:value="${cartItem.cartItemId}" th:data="${cartItem.cartItemId}"></span>
                         </td>
                         <th scope="row">
                             <div class="d-flex align-items-center">
@@ -105,34 +106,42 @@
                             <p class="mb-0 mt-4"><span th:text="${cartItem.food.foodName}"></span></p>
                         </td>
                         <td>
-                            <p class="mb-0 mt-4"><span class="formatted-price" th:value="${cartItem.food.price}"
+                            <p class="mb-0 mt-4"><span th:id="'perPrice' + ${cartItem.cartItemId}"
+                                                       class="formatted-price" th:value="${cartItem.food.price}"
                                                        th:text="${cartItem.food.price}"></span></p>
                         </td>
                         <td>
                             <div class="input-group quantity mt-4" style="width: 150px;">
                                 <div class="input-group-btn">
                                     <button class="btn btn-sm btn-minus rounded-circle bg-light border custom-btn"
-                                            onclick="updateQuantity(this, 'minus')">
-                                        <i class="fa fa-minus"></i>
+                                            id="cart-add"
+                                            th:value="${cartItem.cartItemId}"
+                                            onclick="updateQuantity(this, 'minus', getId())">
+                                        <i th:id="${cartItem.cartItemId}" class=" fa fa-minus"
+                                        th:value="${cartItem.cartItemId}"></i>
                                     </button>
                                 </div>
                                 <label for="quantity-[[${cartItem.food.id}]]" class="sr-only">Quantity</label>
                                 <input type="number"
                                        class="form-control form-control-sm text-center border-0 custom-input"
                                        id="quantity-[[${cartItem.food.id}]]" name="cart-item-id"
+                                       th:id="${cartItem.cartItemId}"
                                        th:value="${cartItem.quantity}" min="1">
                                 <div class="input-group-btn">
                                     <button class="btn btn-sm btn-plus rounded-circle bg-light border custom-btn"
                                             data-cart-item-id="[[${cartItem.cartItemId}]]"
-                                            onclick="updateQuantity(this, 'plus')">
-                                        <i class="fa fa-plus"></i>
+                                            th:value="${cartItem.cartItemId}"
+                                            onclick="updateQuantity(this, 'plus', getId())">
+                                        <i th:id="${cartItem.cartItemId}" class=" fa fa-plus"
+                                        th:value="${cartItem.cartItemId}"></i>
                                     </button>
                                 </div>
                             </div>
 
                         </td>
                         <td>
-                            <p class="mb-0 mt-4"><span class="formatted-price" th:value="${cartItem.totalFoodPrice}"
+                            <p class="mb-0 mt-4"><span th:id="'totalPrice' + ${cartItem.cartItemId}"
+                                                       class="formatted-price" th:value="${cartItem.totalFoodPrice}"
                                                        th:text="${cartItem.totalFoodPrice}"></span></p>
                         </td>
                         <td>
@@ -210,6 +219,12 @@
             style: 'currency',
             currency: 'VND'
         }).format(amount);
+    }
+
+    function getId() {
+        const element = document.getElementById('cart-add')?.getAttribute('value');
+        console.log(element)
+        return element;
     }
 
     // Format all prices on page load

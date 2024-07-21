@@ -53,10 +53,10 @@
     /*------------------
 		Navigation
 	--------------------*/
-    $(".mobile-menu").slicknav({
-        prependTo: '#mobile-menu-wrap',
-        allowParentLinks: true
-    });
+    // $(".mobile-menu").slicknav({
+    //     prependTo: '#mobile-menu-wrap',
+    //     allowParentLinks: true
+    // });
 
     /*-----------------------
         Hero Slider
@@ -161,14 +161,14 @@
     /*--------------------------
         Select
     ----------------------------*/
-    $("select").niceSelect();
+    // $("select").niceSelect();
 
     /*------------------
 		Magnific
 	--------------------*/
-    $('.video-popup').magnificPopup({
-        type: 'iframe'
-    });
+    // $('.video-popup').magnificPopup({
+    //     type: 'iframe'
+    // });
 
     /*------------------
         Barfiller
