@@ -79,10 +79,11 @@ public class OrderManagementController {
 
 
     @PostMapping("/update-order-status/{orderId}")
-    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId
-                                            , @RequestParam Integer deliveryRoleId
-                                            , @RequestParam OrderStatus newStatus
-                                            , @RequestParam Integer canteenId,
+    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId ,
+                                               @RequestParam Integer deliveryRoleId ,
+                                               @RequestParam OrderStatus newStatus ,
+                                               @RequestParam Integer canteenId,
+                                               @RequestParam Integer userId,
                                                RedirectAttributes redirectAttributes) {
 
         try {
@@ -153,7 +154,7 @@ public class OrderManagementController {
                                 RedirectAttributes redirectAttributes) {
         orderService.completeOrder(orderId);
         redirectAttributes.addFlashAttribute("message", "Order completed successfully");
-        return "redirect:/order-list-ship/" + canteenId + "?userId=" + userId;
+        return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
     }
 
 }
