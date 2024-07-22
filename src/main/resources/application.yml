@@ -9,9 +9,9 @@ spring:
         enabled: false
 
   datasource:
-    url: jdbc:postgresql://croakorder.c5ois6mg04qk.ap-southeast-1.rds.amazonaws.com:5432/croakorder
+    url: jdbc:postgresql://sep490-co.cpaq8iy8010w.ap-southeast-1.rds.amazonaws.com:5432/sep490-co
     username: postgres
-    password: croakorder
+    password: sep490-co
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
@@ -56,10 +56,10 @@ spring:
             enable: true
 aws:
   bucket:
-    name: croak-order-g1-sep490
+    name: croak-order-2024
   region: ap-southeast-1
-  accessKey: AKIA47CR3W7WTLBHUJXW
-  secretKey: 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
+  accessKey: AKIAQEFWAHL2N262OVLQ
+  secretKey: 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
 
 logging:
   level:
