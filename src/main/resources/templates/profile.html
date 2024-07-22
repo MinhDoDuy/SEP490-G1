@@ -10,22 +10,8 @@
 </head>
 
 <body>
-<header>
-  <div class="header-container">
-    <div class="logo">
-      <a href="#"><i class="ri-home-4-line"></i> FPT Shop</a>
-    </div>
-    <div class="search-bar">
-      <input type="text" placeholder="Nhập tên điện thoại, máy tính, phụ kiện...">
-    </div>
-    <div class="profile-icon">
-      <a href="#"><i class="ri-user-line"></i> Tài khoản</a>
-    </div>
-    <div class="cart-icon">
-      <a href="#"><i class="ri-shopping-cart-line"></i> Giỏ hàng</a>
-    </div>
-  </div>
-</header>
+
+
 <main>
   <div class="container">
     <aside>
@@ -42,6 +28,7 @@
       <div class="nav-section">
         <nav>
           <ul>
+            <li><a th:href="@{/homepage}"><i class="ri-home-2-line mr-3 text-lg"></i>Trang Chủ</a></li>
             <li><a href="#"><i class="ri-file-list-3-line"></i> Đơn hàng của tôi</a></li>
             <li><a th:href="@{/cart_items}"><i class="ri-shopping-cart-line"></i> Giỏ hàng của tôi</a></li>
             <li><a th:href="@{/change-password}"><i class="ri-lock-password-line"></i> Đổi mật khẩu</a></li>
