@@ -3,6 +3,8 @@ package com.ffood.g1.service;
 import com.ffood.g1.entity.Feedback;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.FeedbackStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,4 +14,8 @@ public interface FeedbackService {
     List<Feedback> getFeedbacksByCanteenIdAndStatus(Integer canteenId, FeedbackStatus feedbackStatus);
 
     List<Feedback> getFeedbacksByFoodIdAndStatus(Integer foodId, FeedbackStatus feedbackStatus);
+
+    Page<Feedback> getFeedbacksByCanteen(Integer canteenId, FeedbackStatus status, Pageable pageable);
+
+    void updateFeedbackStatus(Integer feedbackId, FeedbackStatus status);
 }

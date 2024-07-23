@@ -62,7 +62,7 @@ public class ProfileController {
             String avatarURL = fileS3Service.uploadFile(imageProfileInput);
             user.setUserImage(avatarURL);
         } else {
-            // Retrieve the existing canteen image URL if a new image is not uploaded
+            // Retrieve the existing user image URL if a new image is not uploaded
             User existingUser = userService.getUserById(user.getUserId());
             user.setUserImage(existingUser.getUserImage());
         }

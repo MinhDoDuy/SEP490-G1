@@ -1,119 +1,91 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="utf-8">
-  <title>Profile</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="colorlib.com">
-  <title>CodingDung | Profile Template</title>
-  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/style-profile.css}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Chỉnh sửa hồ sơ</title>
+  <link  th:href="@{/css/style-profile.css}" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 </head>
+
 <body>
 
-<!-- Header Section -->
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-      <img src="https://croak-order.s3.ap-southeast-1.amazonaws.com/1719252971925-chococ.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
-      Croak Order
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" th:href="@{/homepage}">Home </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/canteen_details}" >Shop</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">FAQs</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-</header>
 
-<div class="container light-style flex-grow-1 container-p-y">
-  <h4 class="font-weight-bold py-3 mb-4">Account settings</h4>
-
-  <!-- Hiển thị thông báo thành công -->
-  <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-
-  <div class="card overflow-hidden">
-    <div class="row no-gutters row-bordered row-border-light">
-      <div class="col-md-3 pt-0">
-        <div class="list-group list-group-flush account-settings-links">
-          <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account-general">General</a>
-          <a class="list-group-item list-group-item-action active" th:href="@{/change-password}">Change password</a>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="tab-content">
-          <div class="tab-pane fade active show" id="account-general">
-            <hr class="border-light m-0">
-            <div class="card-body">
-              <form id="profileForm" th:action="@{/update-profile}" method="post" th:object="${user}" enctype="multipart/form-data">
-                <input type="hidden" th:field="*{userId}"/>
-                <input type="hidden" id="currentImageUrl" th:field="*{userImage}" />
-                <div class="card-body media align-items-center">
-                  <img id="displayImage" alt="" th:src="${user?.userImage != null ? user.userImage : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
-                  <div class="media-body ml-4">
-                    <label class="btn btn-outline-primary">
-                      Upload new photo
-                      <input type="file" id="image-upload" class="account-settings-fileinput" accept="image/*, .png, .jpg, .jpeg" name="imageProfileInput" onchange="onChangeFileTrigger()">
-                    </label> &nbsp;
-                    <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
-                    <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Code Name</label>
-                  <input type="text" class="form-control mb-1" th:field="*{codeName}" readonly>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Name</label>
-                  <input type="text" class="form-control" th:field="*{fullName}" readonly>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">E-mail</label>
-                  <input type="text" class="form-control mb-1" th:field="*{email}" readonly>
-                </div>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label class="form-label">Phone</label>
-                    <input type="text" class="form-control" th:field="*{phone}">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label class="form-label">Gender</label>
-                    <select class="form-control" th:field="*{gender}">
-                      <option value="true" th:selected="${user.gender == true}">Male</option>
-                      <option value="false" th:selected="${user.gender == false}">Female</option>
-                    </select>
-                  </div>
-                  <div class="text-right mt-3">
-                    <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
-                    <button type="button" class="btn btn-default">Cancel</button>
-                  </div>
-                </div>
-              </form>
-            </div>
+<main>
+  <div class="container">
+    <aside>
+      <div class="profile-section">
+        <div class="profile-card">
+          <img th:src="${user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png'}"
+               style="object-fit: cover;" alt="Avatar">
+          <div class="profile-info">
+            <h2 th:text="${user.fullName}"></h2>
+            <p th:text="${user.phone}"></p>
           </div>
         </div>
+      </div>  
+      <div class="nav-section">
+        <nav>
+          <ul>
+            <li><a th:href="@{/homepage}"><i class="ri-home-2-line mr-3 text-lg"></i>Trang Chủ</a></li>
+            <li><a href="#"><i class="ri-file-list-3-line"></i> Đơn hàng của tôi</a></li>
+            <li><a th:href="@{/cart_items}"><i class="ri-shopping-cart-line"></i> Giỏ hàng của tôi</a></li>
+            <li><a th:href="@{/change-password}"><i class="ri-lock-password-line"></i> Đổi mật khẩu</a></li>
+            <li><a href="#"><i class="ri-logout-box-r-line"></i> Đăng xuất</a></li>
+          </ul>
+        </nav>
       </div>
-    </div>
+    </aside>
+    <section class="profile-edit">
+      <h2>Thông tin cá nhân</h2>
+
+      <form th:action="@{/update-profile}" method="post" th:object="${user}" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{userId}" />
+        <div class="profile-avatar">
+          <img id="displayImage"
+               th:src="${user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png'}"
+               style="object-fit: cover;" alt="Avatar">
+          <label class="btn-upload">
+            Thay Đổi Ảnh
+            <input type="file" id="image-upload" class="account-settings-fileinput"
+                   accept="image/*, .png, .jpg, .jpeg" name="imageProfileInput"
+                   onchange="onChangeFileTrigger()">
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="name">Họ và tên</label>
+          <input type="text" id="name" th:field="*{fullName}" >
+        </div>
+        <div class="inline-group">
+          <div class="form-group">
+            <label for="codeName">Mã Sinh Viên</label>
+            <input type="text" id="codeName" th:field="*{codeName}"
+                   class="readonly-input" required readonly>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" th:field="*{email}" >
+          </div>
+        </div>
+        <div class="inline-group">
+          <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="text" id="phone" th:field="*{phone}">
+          </div>
+          <div class="form-group">
+            <label for="gender">Giới tính</label>
+            <select id="gender" th:field="*{gender}">
+              <option value="true" th:selected="${user.gender == true}">Nam</option>
+              <option value="false" th:selected="${user.gender == false}">Nữ</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn">Cập nhật thông tin</button>
+      </form>
+    </section>
   </div>
-</div>
+</main>
 
 <script>
   function onChangeFileTrigger() {
@@ -129,8 +101,6 @@
   }
 </script>
 
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
+
 </html>
