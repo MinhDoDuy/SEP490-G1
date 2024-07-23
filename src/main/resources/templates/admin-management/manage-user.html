@@ -68,7 +68,13 @@
                     Thêm quản lý mới
                 </a>
             </div>
-
+            <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+                <span th:text="${successMessage}"></span>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger">
+                <span th:text="${errorMessage}"></span>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full min-w-[540px]">
                     <thead>
@@ -152,6 +158,19 @@
 
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+    function hideAlert() {
+        var alert = document.getElementById('successAlert');
+        if (alert) {
+            setTimeout(function () {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // Call the function to hide the alert
+    hideAlert();
+</script>
 </body>
 
 </html>
