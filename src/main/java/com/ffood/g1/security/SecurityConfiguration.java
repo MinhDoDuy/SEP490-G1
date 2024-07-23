@@ -67,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/canteen/edit-profile-canteen/**","/manage-food/**","/manage-food","/canteen/**",
                         "/add-food-form", "/add-food-form/**",
                         "/add-food", "/add-food/**",
-                        "/manage-category/**", "/add-category-form", "/add-category", "/edit-category/**")
+                        "/manage-category/**", "/add-category-form", "/add-category", "/edit-category/**","/create-order-at-couter")
                .hasRole("MANAGER")
                 .antMatchers()
                 .hasRole("STAFF")

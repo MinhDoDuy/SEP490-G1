@@ -118,7 +118,7 @@
                                             th:value="${cartItem.cartItemId}"
                                             onclick="updateQuantity(this, 'minus', getId())">
                                         <i th:id="${cartItem.cartItemId}" class=" fa fa-minus"
-                                        th:value="${cartItem.cartItemId}"></i>
+                                           th:value="${cartItem.cartItemId}"></i>
                                     </button>
                                 </div>
                                 <label for="quantity-[[${cartItem.food.id}]]" class="sr-only">Quantity</label>
@@ -133,7 +133,7 @@
                                             th:value="${cartItem.cartItemId}"
                                             onclick="updateQuantity(this, 'plus', getId())">
                                         <i th:id="${cartItem.cartItemId}" class=" fa fa-plus"
-                                        th:value="${cartItem.cartItemId}"></i>
+                                           th:value="${cartItem.cartItemId}"></i>
                                     </button>
                                 </div>
                             </div>

@@ -13,7 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -79,9 +82,9 @@ public class OrderManagementController {
 
     @PostMapping("/update-order-status/{orderId}")
     public String assignShipperAndUpdateStatus(@PathVariable Integer orderId
-                                            , @RequestParam Integer deliveryRoleId
-                                            , @RequestParam OrderStatus newStatus
-                                            , @RequestParam Integer canteenId,
+            , @RequestParam Integer deliveryRoleId
+            , @RequestParam OrderStatus newStatus
+            , @RequestParam Integer canteenId,
                                                RedirectAttributes redirectAttributes) {
 
         try {
@@ -123,4 +126,13 @@ public class OrderManagementController {
         redirectAttributes.addFlashAttribute("message", "Order cancelled successfully");
         return "redirect:/order-list/" + canteenId;
     }
+
+    @GetMapping("/create-order-at-couter")
+    public String createOrderAtCouter(@RequestParam("canteenId") Integer canteenId,
+                                      Model model) {
+        System.out.println("createOrderAtCouter");
+        model.addAttribute("canteenId", canteenId);
+        return "staff-management/create-order-at-couter";
+    }
+
 }

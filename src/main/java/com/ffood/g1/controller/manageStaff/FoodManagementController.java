@@ -134,6 +134,7 @@ public class FoodManagementController {
                 String foodImageUrl = fileS3Service.uploadFile(imageFood);
                 food.setImageFood(foodImageUrl);
             }
+            food.setSalesCount(0);
             foodService.save(food);
             model.addAttribute("message", "Food added successfully!");
             model.addAttribute("messageType", "success");

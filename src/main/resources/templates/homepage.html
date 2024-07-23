@@ -61,8 +61,8 @@
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active rounded" th:each="canteen, stat : ${canteens}"
                              th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-<!--                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide"-->
-                            <img src="/img/chococ.png" class="img-fluid w-100 h-100 rounded" alt="First slide"
+                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide">
+<!--                            <img src="/img/chococ.png" class="img-fluid w-100 h-100 rounded" alt="First slide"-->
                                  style="height: 100px;width: 100px">
                             <div class="carousel-caption d-none d-md-block ">
                                 <h5 th:text="${canteen.canteenPhone}"></h5>

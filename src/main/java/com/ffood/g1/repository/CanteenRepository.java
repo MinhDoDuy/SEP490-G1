@@ -19,3 +19,4 @@ public interface CanteenRepository extends JpaRepository<Canteen, Integer> {
     String canteenName, String location, String canteenPhone, Pageable pageable);
 
 }
+
