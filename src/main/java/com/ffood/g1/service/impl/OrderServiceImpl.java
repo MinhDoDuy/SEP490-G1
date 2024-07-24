@@ -111,10 +111,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    public List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus paymentStatus) {
-        return orderRepository.findByUserUserIdAndPaymentStatus(userId, paymentStatus);
-    }
-
     @Override
     public Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable) {
         return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses, pageable);
@@ -170,7 +166,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(newStatus);
         order.setDeliveryRoleName(staffName);
         orderRepository.save(order);
-
 
         // Lấy thông tin chi tiết đơn hàng
         String orderDetails = getOrderDetails(order);
