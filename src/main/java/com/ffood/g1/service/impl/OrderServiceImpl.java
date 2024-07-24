@@ -8,6 +8,7 @@ import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.repository.OrderDetailRepository;
 import com.ffood.g1.repository.OrderRepository;
+import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Object[]> getBestSellingItems() {
         return orderRepository.findBestSellingItems();
@@ -255,6 +258,8 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.COMPLETE);
         order.setTotalOrderPrice(totalOrderPrice);
+        User userAnonymous  = userRepository.findByEmail("anonymous@gmail.com");
+        order.setUser(userAnonymous);
         orderRepository.save(order);
 
         // Create and save order details

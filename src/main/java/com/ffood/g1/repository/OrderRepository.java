@@ -55,10 +55,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findByUserUserIdAndPaymentStatus(Integer userId, PaymentStatus paymentStatus);
 
     @Query("SELECT DISTINCT o FROM Order o " +
-            "JOIN o.user u " +
             "JOIN o.orderDetails od " +
-            "JOIN od.food f " +
-            "WHERE f.canteen.canteenId = :canteenId " +
+            "WHERE o.canteenId = :canteenId " +
             "AND o.orderStatus IN :statuses " +
             "ORDER BY o.orderDate DESC")
     Page<Order> findOrdersByCanteenIdAndStatuses(@Param("canteenId") Integer canteenId, @Param("statuses") List<OrderStatus> statuses, Pageable pageable);
@@ -67,7 +65,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "JOIN o.user u " +
             "JOIN o.orderDetails od " +
             "JOIN od.food f " +
-            "WHERE f.canteen.canteenId = :canteenId " +
+            "WHERE o.canteenId = :canteenId " +
             "AND o.orderStatus IN :statuses " +
             "AND o.orderType = :orderType " +
             "ORDER BY o.orderDate DESC")
