@@ -224,52 +224,30 @@
         <hr class="section-divider">
         <h1 class="mb-0">Có thể bạn sẽ thích</h1>
         <div style="margin-top: 10px"></div>
-<!--        <div class="owl-carousel vegetable-carousel justify-content-center">-->
-<!--            <div class="border border-primary rounded position-relative" th:each="food : ${items_home}">-->
-<!--                <div class="vesitable-img">-->
-<!--                    <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt="" style="height: 220px">-->
-<!--                </div>-->
-<!--                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">-->
-<!--                    <span th:text="${food.category.categoryName}">Vegetable</span>-->
-<!--                </div>-->
-<!--                <div class="p-4 rounded-bottom">-->
-<!--                    <h4><a th:href="@{/food_details(id=${food.foodId})}" th:text="${food.foodName}" ></a></h4>-->
-<!--                    <p><span th:text="${food.canteen.canteenName}"></span></p>-->
-<!--                    <p><span th:text="'Số lượng hiện có: ' + ${food.foodQuantity}"-->
-<!--                             style="display: flex; justify-content: left"></span></p>-->
-<!--                    <div class="d-flex justify-content-between flex-lg-wrap">-->
-<!--                        <p class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:value="${food.price}"-->
-<!--                                                                     th:text="${food.price}"></span></p>-->
-<!--                        <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"-->
-<!--                           class="btn border border-secondary rounded-pill px-3 text-primary">-->
-<!--                            <i class="fa fa-shopping-bag me-2 text-primary"></i>Add-->
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="owl-carousel vegetable-carousel justify-content-center">
-            <div class="d-flex flex-column border border-primary rounded position-relative" th:each="food : ${items_home}">
+            <div class="border border-primary rounded position-relative" th:each="food : ${items_home}">
                 <div class="vesitable-img">
                     <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt="" style="height: 220px">
                 </div>
                 <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">
                     <span th:text="${food.category.categoryName}">Vegetable</span>
                 </div>
-                <div class="p-4 rounded-bottom d-flex flex-column flex-grow-1">
-                    <h4 class="flex-grow-1"><a th:href="@{/food_details(id=${food.foodId})}" th:text="${food.foodName}"></a></h4>
-                    <p class="flex-grow-1"><span th:text="${food.canteen.canteenName}"></span></p>
-                    <p class="flex-grow-1"><span th:text="'Số lượng hiện có: ' + ${food.foodQuantity}" style="display: flex; justify-content: left"></span></p>
-                    <div class="d-flex justify-content-between flex-lg-wrap mt-auto">
-                        <p class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:value="${food.price}" th:text="${food.price}"></span></p>
-                        <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}" class="btn border border-secondary rounded-pill px-3 text-primary">
+                <div class="p-4 rounded-bottom">
+                    <h4><a th:href="@{/food_details(id=${food.foodId})}" th:text="${food.foodName}">Parsely</a></h4>
+                    <p><span th:text="${food.canteen.canteenName}"></span></p>
+                    <p><span th:text="'Số lượng hiện có: ' + ${food.foodQuantity}"
+                             style="display: flex; justify-content: left"></span></p>
+                    <div class="d-flex justify-content-between flex-lg-wrap">
+                        <p class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price"
+                                                                     th:text="${food.price}"></span></p>
+                        <a th:href="@{/add_to_cart_home(foodId=${food.foodId},price=${food.price})}"
+                           class="btn border border-secondary rounded-pill px-3 text-primary">
                             <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Vesitable Shop Start -->
@@ -340,7 +318,6 @@
         }).format(amount);
     }
 
-
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.formatted-price').forEach(function (element) {
             let price = element.innerText;
@@ -364,6 +341,7 @@
 
                         let foodContainer = document.getElementById('food-container');
                         foodContainer.innerHTML = '';
+
                         data.forEach(food => {
                             let foodElement = document.createElement('div');
                             foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
@@ -390,14 +368,12 @@
                             `;
                             foodContainer.appendChild(foodElement);
                         });
-                        document.querySelectorAll('p.formatted-price').forEach(function (element) {
-                            debugger;
+                        document.querySelectorAll('.formatted-price').forEach(function (element) {
                             let price = element.innerText;
-                            console.log(price)
                             element.innerText = formatCurrencyVND(price);
                         });
                     })
-
+                    // Reapply formatted price
 
                     .catch(error => {
                         console.error('There was a problem with the fetch operation:', error);
