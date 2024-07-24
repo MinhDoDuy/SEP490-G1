@@ -39,7 +39,7 @@ public class Food {
     private Integer price;
 
     @Column(name = "sales_count")
-    private Integer salesCount;
+    private Integer salesCount =0;
 
     @Column(name = "image_food")
     private String imageFood;
@@ -48,7 +48,7 @@ public class Food {
     private Integer foodQuantity;
 
     @Column(name = "food_status_active")
-    private Boolean foodStatusActive;
+    private Boolean foodStatusActive = true;
 
     public Food(Integer foodId) {
         this.foodId = foodId;

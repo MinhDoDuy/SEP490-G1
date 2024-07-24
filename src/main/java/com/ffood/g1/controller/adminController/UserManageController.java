@@ -83,7 +83,7 @@ public class UserManageController {
         userService.updateUserStatus(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
         redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
 
-        return "redirect:/edit-user/" + userId;
+        return "redirect:/manage-user";
     }
 
 
@@ -146,7 +146,7 @@ public class UserManageController {
 
         redirectAttributes.addFlashAttribute("successMessage", "User added successfully");
 
-        return "redirect:/add-user";
+        return "redirect:/manage-user";
     }
 
 

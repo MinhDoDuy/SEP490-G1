@@ -93,9 +93,7 @@ public class OrderManagementController {
                                                @RequestParam Integer deliveryRoleId,
                                                @RequestParam OrderStatus newStatus,
                                                @RequestParam Integer canteenId,
-                                               @RequestParam Integer userId,
                                                RedirectAttributes redirectAttributes) {
-
         try {
             User staffShip = userService.getUserById(deliveryRoleId);
             orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, newStatus, staffShip.getFullName());
