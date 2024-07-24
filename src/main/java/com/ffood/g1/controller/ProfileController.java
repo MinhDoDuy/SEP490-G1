@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
@@ -49,29 +50,79 @@ public class ProfileController {
     }
 
     @PostMapping("/update-profile")
-    public String updateProfile(@ModelAttribute User user, BindingResult result,
+    public String updateProfile(@ModelAttribute @Valid User user, BindingResult result,
                                 @RequestParam("imageProfileInput") MultipartFile imageProfileInput,
-                                RedirectAttributes redirectAttributes)
+                                Model model)
             throws SpringBootFileUploadException, IOException {
-        if (result.hasErrors()) {
-            return "profile"; // Return to profile page if there are validation errors
+
+        // Lấy thông tin user hiện tại từ database
+        User existingUser = userService.getUserById(user.getUserId());
+
+        // Kiểm tra nếu số điện thoại thay đổi và đã tồn tại trong database
+        if (!existingUser.getPhone().equals(user.getPhone()) && userService.isPhoneExist(user.getPhone())) {
+            model.addAttribute("phoneError", "Số điện thoại đã tồn tại.");
+            model.addAttribute("existingImage", existingUser.getUserImage());
+            return "profile";
         }
 
-        // Upload file nếu có
+        // Xác thực số điện thoại
+        String phoneValidationResult = validatePhoneNumber(user.getPhone());
+        if (phoneValidationResult != null) {
+            model.addAttribute("phoneError", phoneValidationResult);
+            model.addAttribute("existingImage", existingUser.getUserImage());
+            return "profile";
+        }
+
+        // Xử lý upload ảnh nếu có
         if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
-            String avatarURL = fileS3Service.uploadFile(imageProfileInput);
-            user.setUserImage(avatarURL);
+            String userImageUrl = fileS3Service.uploadFile(imageProfileInput);
+            user.setUserImage(userImageUrl);
         } else {
-            // Retrieve the existing user image URL if a new image is not uploaded
-            User existingUser = userService.getUserById(user.getUserId());
             user.setUserImage(existingUser.getUserImage());
         }
 
+        // Cập nhật thông tin user
         userService.updateUser(user);
-        redirectAttributes.addFlashAttribute("successMessage", "Update successful");
-        return "redirect:/view-profile/" + user.getUserId();
+        model.addAttribute("successMessage", "Cập nhật thành công!");
+
+        return "redirect:/view-profile/" + user.getUserId();// Trả về trang profile
     }
 
+    private String validatePhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            return "Số điện thoại không được để trống.";
+        }
+
+        // Remove all white spaces
+        phoneNumber = phoneNumber.replaceAll("\\s+", "");
+
+        // Check if all characters are digits
+        if (!phoneNumber.matches("\\d+")) {
+            return "Số điện thoại chỉ được chứa chữ số.";
+        }
+
+        // Check length for mobile and landline numbers
+        if (phoneNumber.length() != 10 && phoneNumber.length() != 11) {
+            return "Số điện thoại phải có độ dài 10 hoặc 11 chữ số.";
+        }
+
+        // Check valid format for mobile phone numbers
+        if (phoneNumber.matches("^(0(3[2-9]|5[2689]|7[06-9]|8[1-689]|9[0-9])[0-9]{7})$")) {
+            return null;
+        }
+
+        // Check valid format for landline numbers with 10 digits
+        if (phoneNumber.matches("^(02[0-9]{9})$")) {
+            return null;
+        }
+
+        // Check valid format for landline numbers with 9 digits
+        if (phoneNumber.matches("^(02[0-9]{8})$")) {
+            return null;
+        }
+
+        return "Số điện thoại không hợp lệ.";
+    }
 
     @GetMapping("/change-password")
     public String showChangePasswordForm() {
