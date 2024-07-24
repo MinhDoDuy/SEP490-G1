@@ -4,113 +4,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa hồ sơ</title>
-    <link th:href="@{/css/style-profile.css}" rel="stylesheet" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+    <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
+    <title>Croak Order</title>
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <!-- Template Stylesheet -->
+    <link href="/css/style_test.css" th:href="@{/css/style_test.css}" rel="stylesheet">
 
-        .alert {
-            padding: 20px;
-            margin-bottom: 15px;
+    <style>
+        .profile-avatar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
         }
 
-        .alert-success {
+        .btn-upload input {
+            display: none;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-details {
+            flex-grow: 1;
+        }
+
+        .btn-upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-color: #4CAF50;
             color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .alert-danger {
-            background-color: #f44336;
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .form-group-inline {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-group-inline .form-group {
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            border: none;
             color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .readonly-input {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            color: #666;
+            pointer-events: none;
+        }
+
+        select.form-control {
+            background-color: #fff; /* Màu nền trắng */
+            border: 1px solid #ccc; /* Viền màu xám */
+            color: #333; /* Màu chữ */
+            padding: 8px;
+            border-radius: 5px; /* Bo góc */
+            appearance: none; /* Loại bỏ mũi tên mặc định */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        select.form-control option {
+            background-color: #fff; /* Màu nền trắng cho các tùy chọn */
+            color: #333; /* Màu chữ cho các tùy chọn */
+        }
+
+        select.form-control:focus {
+            outline: none; /* Loại bỏ viền mặc định khi focus */
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Hiệu ứng đổ bóng khi focus */
         }
     </style>
 </head>
 
 <body>
-
+<div th:replace="header :: header"></div>
 <main>
-    <div class="container">
-        <aside>
-            <div class="profile-section">
-                <div class="profile-card">
-                    <img th:src="${existingImage != null ? existingImage : (user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png')}"
-                         style="object-fit: cover;" alt="Avatar">
-                    <div class="profile-info">
-                        <h2 th:text="${user.fullName}"></h2>
-                        <p th:text="${user.phone}"></p>
+    <div class="container-fluid contact py-5">
+        <div class="container py-5">
+            <div class="p-5 bg-light rounded">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="text-center mx-auto" style="max-width: 700px;">
+                            <h1 class="text-primary">Thông tin cá nhân</h1>
+                            <p class="mb-4">Cập nhật thông tin cá nhân của bạn tại đây.</p>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="col-lg-7 mx-auto">
+                        <form th:action="@{/update-profile}" method="post" th:object="${user}"
+                              enctype="multipart/form-data">
+                            <div class="profile-info p-4 rounded mb-4 bg-white">
+                                <div class="profile-avatar">
+                                    <img id="displayImage"
+                                         th:src="${user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png'}"
+                                         alt="Avatar">
+                                </div>
+                                <div class="profile-details">
+                                    <h4 th:text="${user.fullName}"></h4>
+                                    <p th:text="${user.email}"></p>
+                                </div>
+                                <label class="btn-upload">
+                                    Thay Đổi Ảnh
+                                    <input type="file" id="image-upload" accept="image/*, .png, .jpg, .jpeg"
+                                           name="imageProfileInput"
+                                           onchange="onChangeFileTrigger()">
+                                </label>
+                            </div>
+                            <div class="p-4 rounded mb-4 bg-white">
 
-            <div class="nav-section">
-                <nav>
-                    <ul>
-                        <li><a th:href="@{/homepage}"><i class="ri-home-2-line mr-3 text-lg"></i>Trang Chủ</a></li>
-                        <li><a href="#"><i class="ri-file-list-3-line"></i> Đơn hàng của tôi</a></li>
-                        <li><a th:href="@{/cart_items}"><i class="ri-shopping-cart-line"></i> Giỏ hàng của tôi</a></li>
-                        <li><a th:href="@{/change-password}"><i class="ri-lock-password-line"></i> Đổi mật khẩu</a></li>
-                        <li><a th:href="@{/logout}"><i class="ri-logout-box-r-line"></i> Đăng xuất</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </aside>
-        <section class="profile-edit">
-            <h2>Thông tin cá nhân</h2>
+                                <input type="hidden" th:field="*{userId}"/>
+                                <div class="form-group-inline">
+                                    <div class="form-group">
+                                        <label for="codeName">Mã Sinh Viên:</label>
+                                        <input type="text" id="codeName" th:field="*{codeName}" required readonly
+                                               class="form-control readonly-input"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email:</label>
+                                        <input type="email" id="email" th:field="*{email}" required readonly
+                                               class="form-control readonly-input"/>
+                                    </div>
+                                </div>
+                                <div class="form-group-inline">
+                                    <div class="form-group">
+                                        <label for="phone">Số điện thoại:</label>
+                                        <input type="text" id="phone" th:field="*{phone}" required
+                                               class="form-control"/>
+                                        <div th:if="${phoneError != null}" class="error-message"
+                                             th:text="${phoneError}"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender">Giới tính:</label>
+                                        <select id="gender" th:field="*{gender}" class="form-control">
+                                            <option value="true" th:selected="${user.gender == true}">Nam</option>
+                                            <option value="false" th:selected="${user.gender == false}">Nữ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Cập nhật thông tin</button>
+                                <a th:href="@{/change-password}">Đổi mật khẩu</a>
 
-            <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
-                <span th:text="${successMessage}"></span>
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div th:if="${error != null}" class="alert alert-danger">
-                <span th:text="${error}"></span>
-            </div>
-
-            <form th:action="@{/update-profile}" method="post" th:object="${user}" enctype="multipart/form-data">
-                <input type="hidden" th:field="*{userId}"/>
-                <div class="profile-avatar">
-                    <img id="displayImage"
-                         th:src="${existingImage != null ? existingImage : (user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png')}"
-                         style="object-fit: cover;" alt="Avatar">
-                    <label class="btn-upload">
-                        Thay Đổi Ảnh
-                        <input type="file" id="image-upload" class="account-settings-fileinput"
-                               accept="image/*, .png, .jpg, .jpeg" name="imageProfileInput"
-                               onchange="onChangeFileTrigger()">
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label for="name">Họ và tên</label>
-                    <input type="text" id="name" th:field="*{fullName}" class="readonly-input" required readonly>
-                </div>
-                <div class="inline-group">
-                    <div class="form-group">
-                        <label for="codeName">Mã Sinh Viên</label>
-                        <input type="text" id="codeName" th:field="*{codeName}"
-                               class="readonly-input" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" th:field="*{email}" class="readonly-input" required readonly>
-                    </div>
-                </div>
-                <div class="inline-group">
-                    <div class="form-group">
-                        <label for="canteenPhone">Phone:</label>
-                        <input type="text" id="canteenPhone" th:field="*{phone}" required class="form-control"/>
-                        <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Giới tính</label>
-                        <select id="gender" th:field="*{gender}">
-                            <option value="true" th:selected="${user.gender == true}">Nam</option>
-                            <option value="false" th:selected="${user.gender == false}">Nữ</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn">Cập nhật thông tin</button>
-            </form>
-        </section>
+        </div>
     </div>
 </main>
 
