@@ -31,7 +31,7 @@ public interface OrderService {
     List<Object[]> getRevenueDataByYear();
 
     Double calculateTotalOrder();
-    List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus status);
+
 
     Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable);
 
@@ -41,8 +41,7 @@ public interface OrderService {
     Integer countCompletedOrdersByCanteenId(Integer canteenId);
 
     Page<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType, Pageable pageable);
-    //đặt order
-    void updateOrderStatus(Integer orderId, OrderStatus newStatus);
+
 
     void assignShipperAndUpdateStatus(Integer orderId, Integer shipperId, OrderStatus newStatus, String staffName);
 

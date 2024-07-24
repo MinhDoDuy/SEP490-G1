@@ -5,6 +5,7 @@ import com.ffood.g1.entity.User;
 import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.FileS3Service;
 import com.ffood.g1.service.UserService;
+import com.ffood.g1.utils.PhoneUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -58,17 +59,17 @@ public class ProfileController {
         // Lấy thông tin user hiện tại từ database
         User existingUser = userService.getUserById(user.getUserId());
 
-        // Kiểm tra nếu số điện thoại thay đổi và đã tồn tại trong database
-        if (!existingUser.getPhone().equals(user.getPhone()) && userService.isPhoneExist(user.getPhone())) {
-            model.addAttribute("phoneError", "Số điện thoại đã tồn tại.");
+        // Xác thực số điện thoại
+        String phoneValidationResult = PhoneUtils.validatePhoneNumber(user.getPhone());
+        if (phoneValidationResult != null) {
+            model.addAttribute("phoneError", phoneValidationResult);
             model.addAttribute("existingImage", existingUser.getUserImage());
             return "profile";
         }
 
-        // Xác thực số điện thoại
-        String phoneValidationResult = validatePhoneNumber(user.getPhone());
-        if (phoneValidationResult != null) {
-            model.addAttribute("phoneError", phoneValidationResult);
+        // Kiểm tra nếu số điện thoại thay đổi và đã tồn tại trong database
+        if (!existingUser.getPhone().equals(user.getPhone()) && userService.isPhoneExist(user.getPhone())) {
+            model.addAttribute("phoneError", "Số điện thoại đã tồn tại.");
             model.addAttribute("existingImage", existingUser.getUserImage());
             return "profile";
         }
@@ -84,44 +85,7 @@ public class ProfileController {
         // Cập nhật thông tin user
         userService.updateUser(user);
         model.addAttribute("successMessage", "Cập nhật thành công!");
-
-        return "redirect:/view-profile/" + user.getUserId();// Trả về trang profile
-    }
-
-    private String validatePhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-            return "Số điện thoại không được để trống.";
-        }
-
-        // Remove all white spaces
-        phoneNumber = phoneNumber.replaceAll("\\s+", "");
-
-        // Check if all characters are digits
-        if (!phoneNumber.matches("\\d+")) {
-            return "Số điện thoại chỉ được chứa chữ số.";
-        }
-
-        // Check length for mobile and landline numbers
-        if (phoneNumber.length() != 10 && phoneNumber.length() != 11) {
-            return "Số điện thoại phải có độ dài 10 hoặc 11 chữ số.";
-        }
-
-        // Check valid format for mobile phone numbers
-        if (phoneNumber.matches("^(0(3[2-9]|5[2689]|7[06-9]|8[1-689]|9[0-9])[0-9]{7})$")) {
-            return null;
-        }
-
-        // Check valid format for landline numbers with 10 digits
-        if (phoneNumber.matches("^(02[0-9]{9})$")) {
-            return null;
-        }
-
-        // Check valid format for landline numbers with 9 digits
-        if (phoneNumber.matches("^(02[0-9]{8})$")) {
-            return null;
-        }
-
-        return "Số điện thoại không hợp lệ.";
+        return "redirect:/view-profile/" + user.getUserId(); // Trả về trang profile
     }
 
     @GetMapping("/change-password")

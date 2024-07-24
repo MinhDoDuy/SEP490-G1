@@ -164,11 +164,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrderStatus(Integer orderId, OrderStatus newStatus) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+    public void assignShipperAndUpdateStatus(Integer orderId, Integer deliveryRoleId, OrderStatus newStatus, String staffName) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("Order not found"));
+        order.setDeliveryRoleId(deliveryRoleId);
         order.setOrderStatus(newStatus);
+        order.setDeliveryRoleName(staffName);
         orderRepository.save(order);
+
 
         // Lấy thông tin chi tiết đơn hàng
         String orderDetails = getOrderDetails(order);
@@ -183,15 +185,6 @@ public class OrderServiceImpl implements OrderService {
             String text = "Đơn hàng của bạn với mã số " + orderId + " đã được giao thành công.\n\n" + orderDetails;
             sendEmail(order.getUser().getEmail(), subject, text);
         }
-    }
-
-    @Override
-    public void assignShipperAndUpdateStatus(Integer orderId, Integer deliveryRoleId, OrderStatus newStatus, String staffName) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("Order not found"));
-        order.setDeliveryRoleId(deliveryRoleId);
-        order.setOrderStatus(newStatus);
-        order.setDeliveryRoleName(staffName);
-        orderRepository.save(order);
     }
 
     @Override

@@ -1,38 +1,36 @@
+
+
 body {
-    font-family: Arial, sans-serif;
+
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
 }
 
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #d8232a;
-    padding: 10px 20px;
-}
 
-.header-container .logo a,
-.header-container .profile-icon a,
-.header-container .cart-icon a {
-    color: #fff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
 }
-
-.header-container .logo a i,
-.header-container .profile-icon a i,
-.header-container .cart-icon a i {
-    margin-right: 5px;
+.closebtn:hover {
+    color: black;
 }
-
-.search-bar input {
-    padding: 5px;
-    width: 300px;
+.readonly-input {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    padding: .375rem .75rem;
+    pointer-events: none;
 }
-
+.error-message {
+    color: red;
+    font-size: 12px;
+}
 .container {
     display: flex;
     padding: 20px;
@@ -114,7 +112,7 @@ nav ul li a:hover {
 }
 
 .profile-edit {
-    width: 40%; /* Adjust the width as needed */
+    width: 30%; /* Adjust the width as needed */
     background-color: #fff;
     padding: 40px; /* Increase padding for more vertical space */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
