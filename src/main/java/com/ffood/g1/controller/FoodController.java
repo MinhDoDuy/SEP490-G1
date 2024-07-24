@@ -50,12 +50,6 @@ public class FoodController {
         }
     }
 
-//    @GetMapping("/foodByCategory/{categoryId}")
-//    public List<Food> getFoodsByCategoryId(@PathVariable Integer categoryId ,Model model) {
-//        List<Food> foods = foodService.getFoodsByCategoryId(categoryId);
-//        model.addAttribute("foods", foods);
-//        return foods;
-//    }
 
     @GetMapping("/foodByCategory/{categoryId}")
     public @ResponseBody List<Food> getFoodsByCategoryId(@PathVariable Integer categoryId) {
@@ -64,18 +58,7 @@ public class FoodController {
     @GetMapping("/food_details")
     public String viewFoodDetails(@RequestParam("id") Integer foodId, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         Optional<Food> foodOptional = foodService.getFoodByIdFoodDetails(foodId);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
-            String email = authentication.getName();
 
-            User user = userService.findByEmail(email);
-            if (Objects.nonNull(user)) {
-                model.addAttribute("user", user);
-                Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
-                int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
-                model.addAttribute("totalQuantity", totalQuantity);
-            }
-        }
         if (foodOptional.isPresent()) {
             Food food = foodOptional.get();
             model.addAttribute("food", food);
@@ -103,7 +86,6 @@ public class FoodController {
             System.out.println(model.getAttribute("message"));
             return "canteen/food-details";
         } else {
-            // Handle case when food is not found, e.g., redirect to an error page or show a message
             return "error";
         }
     }

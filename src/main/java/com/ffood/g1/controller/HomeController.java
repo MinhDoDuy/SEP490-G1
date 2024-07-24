@@ -51,7 +51,7 @@ public class HomeController {
                 model.addAttribute("user", user);
                 Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
                 int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
-                model.addAttribute("totalQuantity", totalQuantity);
+                session.setAttribute("totalQuantity", totalQuantity);
             }
 
         }

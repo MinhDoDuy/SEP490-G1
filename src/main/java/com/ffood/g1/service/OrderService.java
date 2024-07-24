@@ -19,13 +19,10 @@ import java.util.Optional;
 
 @Service
 public interface OrderService {
-
-
+    
     List<Object[]> getBestSellingItems();
 
     List<Object[]> getOrderStats();
-
-
 
     List<Object[]> getRevenueDataByMonth();
 
@@ -60,4 +57,9 @@ public interface OrderService {
     Page<Order> getOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable);
 
     void completeOrder(Integer orderId);
+
+
+    List<Order> getOrdersByUserId(Integer userId);
+
+    void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod,Integer totalOrderPrice);
 }

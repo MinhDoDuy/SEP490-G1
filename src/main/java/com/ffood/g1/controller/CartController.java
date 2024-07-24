@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,7 +60,6 @@ public class CartController {
             redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
             return "redirect:/login";
         }
-
         String email = authentication.getName();
         User user = userService.findByEmail(email);
 
@@ -131,29 +131,17 @@ public class CartController {
     }
 
     @GetMapping("/cart_items")
-    public String getCartItems(Model model) {
+    public String getCartItems(Model model, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            User user = userService.findByEmail(email);
-            if (Objects.nonNull(user)) {
-                model.addAttribute("user", user);
-                Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
-                int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
-                model.addAttribute("totalQuantity", totalQuantity);
-            }
-        }
-
         String email = authentication.getName();
         User user = userService.findByEmail(email);
         Integer userId = user.getUserId();
 
         Integer cartId = cartService.findCartIdByUserId(user.getUserId());
 
+
         Integer totalOrderPricefinal = cartService.getTotalFoodPriceByCartId(cartId);
         int totalOrderPrice = (totalOrderPricefinal != null) ? totalOrderPricefinal : 0;
-
 
         model.addAttribute("totalOrderPrice", totalOrderPrice);
 

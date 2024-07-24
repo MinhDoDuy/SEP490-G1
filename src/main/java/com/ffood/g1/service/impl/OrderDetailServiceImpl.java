@@ -1,5 +1,6 @@
 package com.ffood.g1.service.impl;
 
+import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.OrderDetail;
 import com.ffood.g1.repository.OrderDetailRepository;
 import com.ffood.g1.service.OrderDetailService;
@@ -17,4 +18,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         return orderDetailRepository.findByOrderOrderId(orderId);
     }
 
+    public List<OrderDetail> getOrderDetailsByOrder(Order order) {
+        return orderDetailRepository.findByOrder(order);
+    }
 }

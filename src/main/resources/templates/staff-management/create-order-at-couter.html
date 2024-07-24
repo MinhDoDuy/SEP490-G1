@@ -12,36 +12,72 @@
             justify-content: center;
             margin-bottom: 20px;
         }
-
         .tab-content {
             padding-top: 20px;
         }
-
         .tab-pane .table {
             margin-bottom: 0;
         }
-
         .bulk-assign-container {
             display: flex;
             align-items: center;
             justify-content: flex-end;
             margin-bottom: 20px;
         }
-
         .bulk-assign-container label {
             margin-right: 10px;
         }
-
         .bulk-assign-container select {
             width: auto;
             margin-right: 10px;
         }
+        .custom-input::-webkit-outer-spin-button,
+        .custom-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .custom-input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        .custom-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .total-price {
+            font-weight: bold;
+        }
+        .payment-method {
+            margin-left: 20px;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+        .quantity-buttons {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-buttons button {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-buttons button:hover {
+            background-color: #e2e6ea;
+        }
     </style>
 </head>
-
 <body class="text-gray-800 font-inter">
 
-<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
+<div th:replace="sidebar-manage :: sidebar-manage(${canteens.canteenId})"></div>
 
 <h4>Tạo đơn hàng</h4>
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
@@ -63,50 +99,67 @@
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Quản lý đơn hàng</div>
             </div>
-
+            <div th:if="${successOrder}" class="alert alert-success" th:text="${successOrder}" id="successMessage">
+                <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="tab-content" id="orderTabsContent">
                 <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                     <div class="overflow-x-auto">
-                        <table class="w-full min-w-[540px]">
-                            <thead>
-                            <tr>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Mã đơn hàng
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Tên khách hàng
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Ngày đặt hàng
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Trạng thái
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Tổng giá
-                                </th>
-
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Ghi chú
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Phương thức thanh toán
-                                </th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-<!--                            <tr th:if="${#lists.isEmpty(orders.content)}">-->
-<!--                                <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="11">Không có đơn-->
-<!--                                    nào-->
-<!--                                </td>-->
-<!--                            </tr>-->
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-
-                        </div>
+                        <form action="/create-order-at-couter1" method="get" id="orderForm">
+                            <!-- Include hidden canteenId field -->
+                            <input type="hidden" name="canteenId" th:value="${canteens.canteenId}">
+                            <!-- Hidden field for total order price -->
+                            <input type="hidden" name="totalOrderPrice" id="totalOrderPrice">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Món ăn</th>
+                                    <th>Giá tiền</th>
+                                    <th>Số lượng đang còn</th>
+                                    <th>Số lượng muốn mua</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Xóa</th>
+                                </tr>
+                                </thead>
+                                <tbody id="orderItems">
+                                <tr class="order-item">
+                                    <td>
+                                        <select name="foodId" class="form-control food-select" required>
+                                            <option value="">Chọn món ăn...</option>
+                                            <option th:each="food : ${foods}" th:if="${food.foodQuantity > 0}" th:value="${food.foodId}" th:data-price="${food.price}" th:data-available-quantity="${food.foodQuantity}" th:data-max-quantity="${food.foodQuantity}" th:text="${food.foodName}"></option>
+                                        </select>
+                                    </td>
+                                    <td><span class="food-price">0 đ</span></td>
+                                    <td><span class="available-quantity">0</span></td>
+                                    <td>
+                                        <div class="quantity-buttons">
+                                            <button type="button" class="btn btn-light btn-decrease">-</button>
+                                            <input type="number" name="quantity" class="quantity-input" value="1" min="1" readonly>
+                                            <button type="button" class="btn btn-light btn-increase">+</button>
+                                        </div>
+                                    </td>
+                                    <td><span class="total-price">0 VND</span></td>
+                                    <td><button type="button" class="btn btn-danger btn-remove">X</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-link" id="addMoreItems">+ Thêm lựa chọn</button>
+                            <div class="mt-3 d-flex justify-content-between align-items-center">
+                                <h4>Tổng tiền đơn hàng: <span id="grandTotal">0 VND</span></h4>
+                                <label>
+                                    <select style="width: 80%" name="paymentMethod" class="form-control payment-method" required>
+                                        <option value="">Chọn phương thức thanh toán...</option>
+                                        <option value="CASH">Tiền mặt</option>
+                                        <option value="VNPAY">VNPay</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="error-message" id="error-message" style="display:none;">Phải có ít nhất một món ăn và chọn phương thức thanh toán.</div>
+                            <div class="error-message" id="duplicate-error-message" style="display:none;">Không được chọn trùng món ăn.</div>
+                            <button type="submit" class="btn btn-success mt-3">Tạo Order</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -114,30 +167,131 @@
     </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/manage.js}"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Function to format currency in VND
-    function formatCurrencyVND(amount) {
-        return new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        }).format(amount);
-    }
+    $(document).ready(function() {
+        function formatCurrencyVND(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(amount);
+        }
 
-    // Format all prices on page load
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.formatted-price').forEach(function (element) {
-            let price = element.innerText;
-            element.innerText = formatCurrencyVND(price);
+        function updateTotalPrice(row) {
+            const price = parseFloat(row.find('.food-select option:selected').data('price')) || 0;
+            const quantity = parseInt(row.find('.quantity-input').val());
+            const totalPrice = price * quantity;
+            row.find('.food-price').text(formatCurrencyVND(price));
+            row.find('.total-price').text(formatCurrencyVND(totalPrice));
+            updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            $('#orderItems .order-item').each(function() {
+                const totalPrice = parseFloat($(this).find('.total-price').text().replace(/[^\d]/g, '')) || 0;
+                grandTotal += totalPrice;
+            });
+            $('#grandTotal').text(formatCurrencyVND(grandTotal));
+            $('#totalOrderPrice').val(grandTotal); // Update hidden field
+        }
+
+        function checkDuplicateFoods() {
+            const selectedFoods = [];
+            let isDuplicate = false;
+            $('#orderItems .order-item').each(function() {
+                const selectedFood = $(this).find('.food-select').val();
+                if (selectedFoods.includes(selectedFood)) {
+                    isDuplicate = true;
+                    return false; // Exit loop
+                }
+                selectedFoods.push(selectedFood);
+            });
+            return isDuplicate;
+        }
+
+        $('#orderItems').on('change', '.food-select', function() {
+            const row = $(this).closest('.order-item');
+            row.find('.quantity-input').val(1); // Reset quantity to 1 when changing food item
+            const availableQuantity = row.find('.food-select option:selected').data('available-quantity') || 0;
+            row.find('.available-quantity').text(availableQuantity);
+            updateTotalPrice(row);
         });
+
+        $('#orderItems').on('click', '.btn-increase', function() {
+            const row = $(this).closest('.order-item');
+            const input = row.find('.quantity-input');
+            const maxQuantity = parseInt(row.find('.food-select option:selected').data('max-quantity'));
+            const currentValue = parseInt(input.val());
+            if (currentValue < maxQuantity) {
+                input.val(currentValue + 1);
+                updateTotalPrice(row);
+            }
+        });
+
+        $('#orderItems').on('click', '.btn-decrease', function() {
+            const row = $(this).closest('.order-item');
+            const input = row.find('.quantity-input');
+            const currentValue = parseInt(input.val());
+            if (currentValue > 1) {
+                input.val(currentValue - 1);
+                updateTotalPrice(row);
+            }
+        });
+
+        $('#orderItems').on('click', '.btn-remove', function() {
+            if ($('#orderItems .order-item').length > 1) {
+                $(this).closest('.order-item').remove();
+                updateGrandTotal();
+            } else {
+                $('#error-message').text('Phải có ít nhất một món ăn trong đơn hàng.').show();
+            }
+        });
+
+        $('#addMoreItems').on('click', function() {
+            if (!$('#orderItems .order-item:first select').val()) {
+                $('#error-message').text('Vui lòng chọn món ăn trước khi thêm món mới.').show();
+                return;
+            }
+            const newItem = $('#orderItems .order-item:first').clone();
+            newItem.find('select').val('');
+            newItem.find('.food-price').text('0 đ');
+            newItem.find('.available-quantity').text('0');
+            newItem.find('.quantity-input').val('1');
+            newItem.find('.total-price').text('0 VND');
+            $('#orderItems').append(newItem);
+            $('#error-message').hide();
+        });
+
+        $('#orderForm').on('submit', function(event) {
+            const paymentMethod = $('select[name="paymentMethod"]').val();
+            if (!paymentMethod) {
+                $('#error-message').text('Vui lòng chọn phương thức thanh toán.').show();
+                event.preventDefault();
+            }
+            const totalOrderPrice = $('#totalOrderPrice').val();
+            if (!totalOrderPrice || totalOrderPrice == 0) {
+                $('#error-message').text('Tổng tiền đơn hàng không được để trống.').show();
+                event.preventDefault();
+            }
+            if (checkDuplicateFoods()) {
+                $('#duplicate-error-message').text('Không được chọn trùng món ăn.').show();
+                event.preventDefault();
+            }
+        });
+
+        $('#orderItems').on('change', '.food-select', function() {
+            $('#duplicate-error-message').hide(); // Hide duplicate error message on change
+            $('#error-message').hide(); // Hide general error message on change
+            const row = $(this).closest('.order-item');
+            row.find('.quantity-input').val(1); // Reset quantity to 1 when changing food item
+            const availableQuantity = row.find('.food-select option:selected').data('available-quantity') || 0;
+            row.find('.available-quantity').text(availableQuantity);
+            updateTotalPrice(row);
+        });
+
     });
-
-
-
 </script>
 </body>
 </html>
-

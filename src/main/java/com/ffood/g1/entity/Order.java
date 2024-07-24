@@ -66,9 +66,14 @@ public class Order {
     @Column(name = "delivery_role_name")
     private String deliveryRoleName;
 
+    @Column(name = "canteen_id")
+    private Integer canteenId;
+
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<OrderDetail> orderDetails = new ArrayList<>();
+
 
     @Override
     public boolean equals(Object o) {

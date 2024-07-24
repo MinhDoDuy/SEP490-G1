@@ -1,6 +1,7 @@
 package com.ffood.g1.repository;
 
 import com.ffood.g1.entity.Order;
+import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentStatus;
@@ -142,4 +143,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "AND o.deliveryRoleId = :deliveryRoleId " +
             "AND o.orderStatus = 'PROGRESS'")
     Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusProgress(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
+
+
+    @Query("SELECT o FROM Order o WHERE o.user.userId = :userId")
+    List<Order> findByUserId(@Param("userId") Integer userId);
 }

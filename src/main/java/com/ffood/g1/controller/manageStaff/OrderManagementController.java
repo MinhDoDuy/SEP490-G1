@@ -1,11 +1,12 @@
 package com.ffood.g1.controller.manageStaff;
 
+import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.OrderType;
-import com.ffood.g1.service.OrderService;
-import com.ffood.g1.service.UserService;
+import com.ffood.g1.repository.FoodRepository;
+import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,11 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Controller
 public class OrderManagementController {
@@ -33,6 +34,12 @@ public class OrderManagementController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private FoodService foodService;
+    @Autowired
+    private CanteenService canteenService;
+    @Autowired
+    private FoodRepository foodRepository;
 
     @GetMapping("/order-list/{canteenId}")
     public String manageOrders(@PathVariable Integer canteenId,
@@ -82,9 +89,9 @@ public class OrderManagementController {
 
 
     @PostMapping("/update-order-status/{orderId}")
-    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId ,
-                                               @RequestParam Integer deliveryRoleId ,
-                                               @RequestParam OrderStatus newStatus ,
+    public String assignShipperAndUpdateStatus(@PathVariable Integer orderId,
+                                               @RequestParam Integer deliveryRoleId,
+                                               @RequestParam OrderStatus newStatus,
                                                @RequestParam Integer canteenId,
                                                @RequestParam Integer userId,
                                                RedirectAttributes redirectAttributes) {
@@ -150,6 +157,7 @@ public class OrderManagementController {
         model.addAttribute("deliveryRoleId", deliveryRoleId);
         return "shipper/order-list";
     }
+
     @PostMapping("/complete-order/{orderId}")
     public String completeOrder(@PathVariable Integer orderId,
                                 @RequestParam Integer canteenId,
@@ -159,11 +167,36 @@ public class OrderManagementController {
         redirectAttributes.addFlashAttribute("message", "Order completed successfully");
         return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
     }
+
     @GetMapping("/create-order-at-couter")
-    public String createOrderAtCouter(@RequestParam("canteenId") Integer canteenId,
-                                      Model model) {
-        System.out.println("createOrderAtCouter");
-        model.addAttribute("canteenId", canteenId);
+    public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId, HttpSession session) {
+        model.addAttribute("canteens",
+                canteenService.getCanteenById(canteenId));
+        model.addAttribute("foods", foodRepository.findByCanteenId(canteenId));
+        if (session.getAttribute("successOrder") != null) {
+            model.addAttribute("successOrder", session.getAttribute("successOrder"));
+            session.removeAttribute("successOrder");
+        }
         return "staff-management/create-order-at-couter";
     }
+
+
+    @GetMapping("/create-order-at-couter1")
+    public String createOrder(@RequestParam("canteenId") Integer canteenId, @RequestParam("foodId") List<Integer> foodIds,
+                              @RequestParam("quantity") List<Integer> quantities, @RequestParam("paymentMethod") String paymentMethod,
+                              @RequestParam("totalOrderPrice") Integer totalOrderPrice,
+                              Model model,RedirectAttributes redirectAttributes,HttpSession session) {
+        try {
+            orderService.createOrderAtCouter(canteenId, foodIds, quantities, paymentMethod,totalOrderPrice);
+            session.setAttribute("successOrder", "Tạo order thành công !!!");
+            System.out.println("Oke rồi");
+            return "redirect:/create-order-at-couter?canteenId="+canteenId;
+        } catch (Exception e) {
+            session.setAttribute("successOrder", "Có lỗi xảy ra trong quá trình tạo đơn hàng.");
+            System.out.println("Toang rồi");
+            return "redirect:/create-order-at-couter?canteenId="+canteenId;
+        }
+    }
+
+
 }

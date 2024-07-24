@@ -2,13 +2,13 @@ package com.ffood.g1.service.impl;
 
 import com.ffood.g1.entity.*;
 import com.ffood.g1.enum_pay.OrderStatus;
-import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
+import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.repository.FoodRepository;
+import com.ffood.g1.repository.OrderDetailRepository;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
-import com.google.api.client.util.store.AbstractMemoryDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,21 +16,22 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-    public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
 
     @Autowired
-    private FoodRepository foodRepository;;
-
+    private FoodRepository foodRepository;
+    ;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
     @Autowired
     private JavaMailSender mailSender;
 
@@ -73,7 +74,6 @@ import java.util.*;
         order.setOrderStatus(OrderStatus.PENDING);
 
 
-
 //        // Lưu Order trước để lấy ID
 //        order = orderRepository.save(order);
 
@@ -107,8 +107,6 @@ import java.util.*;
     }
 
 
-
-
     public List<Order> getOrdersByUserIdAndStatus(Integer userId, PaymentStatus paymentStatus) {
         return orderRepository.findByUserUserIdAndPaymentStatus(userId, paymentStatus);
     }
@@ -122,7 +120,6 @@ import java.util.*;
     public Page<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType, Pageable pageable) {
         return orderRepository.findOrdersByCanteenIdAndStatusesAndOrderTypePendingOnline(canteenId, statuses, orderType, pageable);
     }
-
 
 
     @Override
@@ -234,6 +231,51 @@ import java.util.*;
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
         order.setOrderStatus(OrderStatus.COMPLETE);
         orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> getOrdersByUserId(Integer userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
+    @Transactional
+    public void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod,Integer totalOrderPrice) {
+        // Create and save order
+        Order order = new Order();
+        order.setCanteenId(canteenId);
+        if (paymentMethod.equalsIgnoreCase("CASH")) {
+            order.setPaymentMethod(PaymentMethod.CASH);
+        }
+        if (paymentMethod.equalsIgnoreCase("VNPAY")) {
+            order.setPaymentMethod(PaymentMethod.VNPAY);
+        }
+        order.setOrderType(OrderType.AT_COUNTER);
+        order.setOrderDate(LocalDateTime.now());
+        order.setOrderStatus(OrderStatus.COMPLETE);
+        order.setTotalOrderPrice(totalOrderPrice);
+        orderRepository.save(order);
+
+        // Create and save order details
+        for (int i = 0; i < foodIds.size(); i++) {
+            Integer foodId = foodIds.get(i);
+            Integer quantity = quantities.get(i);
+
+            // Update food quantity
+            Food food = foodRepository.findById(foodId).orElseThrow(() -> new IllegalArgumentException("Invalid food ID: " + foodId));
+            if (food.getFoodQuantity() < quantity) {
+                throw new IllegalArgumentException("Insufficient quantity for food: " + food.getFoodName());
+            }
+            food.setFoodQuantity(food.getFoodQuantity() - quantity);
+            foodRepository.save(food);
+
+            // Create order detail
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setFood(food);
+            orderDetail.setQuantity(quantity);
+            orderDetail.setPrice(food.getPrice() * quantity);
+            orderDetailRepository.save(orderDetail);
+        }
     }
 
 

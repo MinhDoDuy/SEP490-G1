@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -126,31 +128,17 @@ public class OrderController {
         return "redirect:/homepage";
     }
 
-//    @GetMapping("/vnpay_return")
-//    public String vnPayReturn(@RequestParam Map<String, String> params, Model model) {
-//        // Xử lý phản hồi từ VNPay và cập nhật trạng thái đơn hàng
-//        // ...
-//        return "payment-result";
-//    }
-
 
     @GetMapping("/order-history")
-    public String viewOrderHistory(Model model) {
+    public String getOrderHistory(Model model, Principal principal) {
+        String username = principal.getName();
+        User user = userService.findByEmail(username);
+        List<Order> orders = orderService.getOrdersByUserId(user.getUserId());
+        model.addAttribute("orders", orders);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
-            String email = authentication.getName();
-            User user = userService.findByEmail(email);
-
-            Integer userId = user.getUserId();
-            PaymentStatus status= PaymentStatus.PAYMENT_COMPLETE;
-//            OrderStatus orderStatus = OrderStatus.valueOf(status);
-            List<Order> orders = orderService.getOrdersByUserIdAndStatus(userId, status);
-            model.addAttribute("orders", orders);
-            model.addAttribute("status", status);
-        }
+        List<Food> foods=foodService.getRandomFood();
+        model.addAttribute("foods", foods);
+//        return "order/order-history";
         return "order/order-history";
     }
-
 }
