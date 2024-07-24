@@ -9,6 +9,7 @@ import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.repository.OrderDetailRepository;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.service.OrderService;
+import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,8 +73,8 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentMethod(paymentMethod);
         order.setOrderCode(orderCode);
         order.setOrderStatus(OrderStatus.PENDING);
-
-
+       Integer canteenId= cart.getCartItems().get(0).getFood().getCanteen().getCanteenId();
+        order.setCanteenId(canteenId);
 //        // Lưu Order trước để lấy ID
 //        order = orderRepository.save(order);
 
@@ -249,6 +250,7 @@ public class OrderServiceImpl implements OrderService {
         if (paymentMethod.equalsIgnoreCase("VNPAY")) {
             order.setPaymentMethod(PaymentMethod.VNPAY);
         }
+        order.setOrderCode(RandomOrderCodeGenerator.generateOrderCode());
         order.setOrderType(OrderType.AT_COUNTER);
         order.setOrderDate(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.COMPLETE);

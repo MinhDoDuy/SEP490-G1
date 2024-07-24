@@ -126,6 +126,7 @@ public class CartController {
         // Add success message to redirect attributes
         redirectAttributes.addFlashAttribute("successMessage", "Item added to cart successfully!");
 
+
         // Redirect to the food details page after adding to the cart
         return "redirect:/homepage";
     }

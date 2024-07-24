@@ -12,78 +12,54 @@
     <link th:href="@{/css/style_register.css}" rel="stylesheet">
 </head>
 <body>
-<!--style="background-image: url('/img/bgregister.jpg');"-->
-<div class="wrapper" >
+<div class="wrapper">
     <a href="/login" class="btn btn-secondary btn-sm back-btn">Quay lại Đăng Nhập</a>
     <div class="inner">
-        <!-- Back to Login Button -->
-
         <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return validateForm()">
             <h3>Đăng ký thành viên</h3>
             <div class="form-group">
                 <div class="form-wrapper">
                     <label for="fullName">Họ Tên:<span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" autofocus="autofocus" title="Nguyen Van A">
-                        <p class="help-block text-danger" id="fullNameError" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" style="font-size: small; color: rgb(234, 77, 77);">
-                            Họ Tên không thể bắt đầu hoặc kết thúc bằng khoảng trắng.
-                        </p>
+                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" autofocus="autofocus" oninput="hideError('fullNameError')">
+                        <p class="help-block text-danger" id="fullNameError" th:text="${fullNameError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
-
-                <!--CodeName-->
                 <div class="form-wrapper">
                     <label for="codeName">MSSV: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}" title="ví dụ minhddhe161286">
-                        <p class="help-block text-danger" id="codeNameError" style="display: none; font-size: small"></p>
-                        <p class="help-block text-danger" th:if="${codeNameExistsError != null}" th:text="${codeNameExistsError}" style="font-size: small"></p>
+                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}" oninput="hideError('codeNameError')">
+                        <p class="help-block text-danger" id="codeNameError" th:text="${codeNameExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
-
-                <!--Phone-->
-                <div class="form-wrapper">
-                    <label for="phone">Số Điện Thoại: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
-                    <div class="form-holder">
-                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" pattern="^\+?[0-9\s\-]{9,11}$" title="0123456789">
-                        <p class="help-block text-danger" id="phoneError" style="display: none; font-size: small"></p>
-                        <p class="help-block text-danger" th:if="${phoneExistsError != null}" th:text="${phoneExistsError}" style="font-size: small"></p>
-                    </div>
-                </div>
-
-                <!--Email-->
                 <div class="form-wrapper">
                     <label for="email">Email: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}" title="abc@gmail.com hoặc abc@fpt.com.vn"/>
-                        <p class="help-block text-danger" id="emailEmptyError" style="display: none; font-size: small">Phải điền Email.</p>
-                        <p class="help-block text-danger" id="emailFormatError" style="display: none; font-size: small">Định dạng Email không hợp lệ.</p>
-                        <p class="help-block text-danger" id="emailSpaceError" style="display: none; font-size: small">Email không thể bắt đầu hoặc kết thúc bằng dấu cách.</p>
-                        <p class="help-block text-danger" id="emailContainsSpaceError" style="display: none; font-size: small">Email không thể chứa dấu cách.</p>
-                        <p class="help-block text-danger" id="emailExistsError" th:if="${emailExistsError != null}" th:text="${emailExistsError}" style="font-size: small"></p>
+                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}" oninput="hideError('emailError')">
+                        <p class="help-block text-danger" id="emailError" th:text="${emailExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
-
-                <!--Password-->
+                <div class="form-wrapper">
+                    <label for="phone">Số Điện Thoại: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
+                    <div class="form-holder">
+                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" oninput="hideError('phoneError')" >
+                        <p class="help-block text-danger" id="phoneError" th:text="${phoneExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
+                    </div>
+                </div>
                 <div class="form-wrapper">
                     <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
                         <small class="form-text text-muted">Mật Khẩu phải có độ dài ít nhất 6 ký tự</small>
-                        <input type="password" class="form-control" placeholder="******" id="password" name="password" th:field="*{password}" minlength="6">
-                        <p class="help-block text-danger" id="passwordEmptyError" style="display: none; font-size: small">Phải điền Mật Khẩu.</p>
-                        <p class="help-block text-danger" id="passwordLengthError" style="display: none; font-size: small">Mật Khẩu phải dài ít nhất 6 ký tự.</p>
-                        <p class="help-block text-danger" id="passwordSpaceError" style="display: none; font-size: small">Mật Khẩu không thể bắt đầu hoặc kết thúc bằng dấu Cách.</p>
+                        <input type="password" class="form-control" id="password" name="password" th:field="*{password}" oninput="hideError('passwordError')">
+                        <p class="help-block text-danger" id="passwordError" style="display: none; font-size: small"></p>
                     </div>
                 </div>
             </div>
-
             <div class="form-end">
                 <div class="button-holder">
                     <button type="submit" class="btn btn-primary">Đăng Ký</button>
-
                 </div>
             </div>
-
             <p class="help-block text-danger" id="generalError" style="display: none; font-size: medium">Vui lòng sửa các lỗi trên và thử lại.</p>
         </form>
     </div>
@@ -97,21 +73,27 @@
         const isEmailValid = validateEmail();
         const isPasswordValid = validatePassword();
 
-        if (isFullNameValid && isCodeNameValid && isPhoneValid && isEmailValid && isPasswordValid) {
-            return true;
-        } else {
-            document.getElementById('generalError').style.display = 'block';
+        const generalError = document.getElementById('generalError');
+        if (!isFullNameValid || !isCodeNameValid || !isPhoneValid || !isEmailValid || !isPasswordValid) {
+            generalError.style.display = 'block';
             return false;
+        } else {
+            generalError.style.display = 'none';
+            return true;
         }
     }
 
-    // Validate full name
+    function hideError(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
     function validateFullName() {
         const fullNameInput = document.getElementById('fullName');
-        const fullNameValue = fullNameInput.value;
+        const fullNameValue = fullNameInput.value.trim();
         const fullNameError = document.getElementById('fullNameError');
 
-        if (fullNameValue.trim() === '' || fullNameValue !== fullNameValue.trim()) {
+        if (fullNameValue === '') {
+            fullNameError.innerText = 'Họ tên không được để trống.';
             fullNameError.style.display = 'block';
             return false;
         } else {
@@ -120,15 +102,18 @@
         }
     }
 
-    // Validate codename
     function validateCodeName() {
         const codeNameInput = document.getElementById('codeName');
-        const codeNameValue = codeNameInput.value;
-        const codeNamePattern = /^[a-zA-Z0-9]{6,20}$/; // Định dạng cho codeName bao gồm chữ cái và số, độ dài từ 6-20 ký tự
+        const codeNameValue = codeNameInput.value.trim();
+        const codeNamePattern = /^[a-zA-Z0-9]{6,20}$/;
         const codeNameError = document.getElementById('codeNameError');
 
-        if (!codeNamePattern.test(codeNameValue)) {
-            codeNameError.textContent = 'Invalid code name. Please enter letters and numbers between 6-20 characters.';
+        if (codeNameValue === '') {
+            codeNameError.innerText = 'MSSV không được để trống.';
+            codeNameError.style.display = 'block';
+            return false;
+        } else if (!codeNamePattern.test(codeNameValue)) {
+            codeNameError.innerText = 'MSSV không hợp lệ. Vui lòng nhập các chữ cái và số trong khoảng 6-20 ký tự.';
             codeNameError.style.display = 'block';
             return false;
         } else {
@@ -137,15 +122,18 @@
         }
     }
 
-    // Validate phone
     function validatePhone() {
         const phoneInput = document.getElementById('phone');
-        const phoneValue = phoneInput.value;
+        const phoneValue = phoneInput.value.trim();
         const phonePattern = /^\+?[0-9\s\-]{9,11}$/;
         const phoneError = document.getElementById('phoneError');
 
-        if (!phonePattern.test(phoneValue)) {
-            phoneError.textContent = 'Invalid phone number format. Please use +123456789 or 123-456-7890.';
+        if (phoneValue === '') {
+            phoneError.innerText = 'Số điện thoại không được để trống.';
+            phoneError.style.display = 'block';
+            return false;
+        } else if (!phonePattern.test(phoneValue)) {
+            phoneError.innerText = 'Định dạng số điện thoại không hợp lệ. Vui lòng sử dụng +012345678';
             phoneError.style.display = 'block';
             return false;
         } else {
@@ -154,100 +142,50 @@
         }
     }
 
-    // Validate email
     function validateEmail() {
         const emailInput = document.getElementById('email');
-        const emailValue = emailInput.value.trim(); // Trim để loại bỏ khoảng trắng ở đầu và cuối
+        const emailValue = emailInput.value.trim();
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const emailEmptyError = document.getElementById('emailEmptyError');
-        const emailFormatError = document.getElementById('emailFormatError');
-        const emailSpaceError = document.getElementById('emailSpaceError');
-        const emailContainsSpaceError = document.getElementById('emailContainsSpaceError');
-        const emailExistsError = document.getElementById('emailExistsError');
-
-        // Reset error messages
-        emailEmptyError.style.display = 'none';
-        emailFormatError.style.display = 'none';
-        emailSpaceError.style.display = 'none';
-        emailContainsSpaceError.style.display = 'none';
-        emailExistsError.style.display = 'none';
+        const emailError = document.getElementById('emailError');
 
         if (emailValue === '') {
-            emailEmptyError.style.display = 'block';
-            return false;
-        } else if (emailValue !== emailInput.value) {
-            emailSpaceError.style.display = 'block';
-            return false;
-        } else if (/\s/.test(emailValue)) { // Kiểm tra dấu cách trong email
-            emailContainsSpaceError.style.display = 'block';
+            emailError.innerText = 'Email không được để trống.';
+            emailError.style.display = 'block';
             return false;
         } else if (!emailPattern.test(emailValue)) {
-            emailFormatError.style.display = 'block';
-            return false;
-        } else if (emailExists(emailValue)) { // Mock function to simulate email existence check
-            emailExistsError.style.display = 'block';
-            return false;
-        }
-
-        return true;
-    }
-
-    // Validate password
-    function validatePassword() {
-        const passwordInput = document.getElementById('password');
-        const passwordValue = passwordInput.value;
-        const passwordEmptyError = document.getElementById('passwordEmptyError');
-        const passwordLengthError = document.getElementById('passwordLengthError');
-        const passwordSpaceError = document.getElementById('passwordSpaceError');
-
-        if (passwordValue.trim() === '' || passwordValue !== passwordValue.trim()) {
-            passwordSpaceError.style.display = 'block';
-            passwordEmptyError.style.display = 'none';
-            return false;
-        } else if (passwordValue.trim() === '') {
-            passwordEmptyError.style.display = 'block';
-            passwordLengthError.style.display = 'none';
+            emailError.innerText = 'Định dạng Email không hợp lệ.';
+            emailError.style.display = 'block';
             return false;
         } else {
-            passwordEmptyError.style.display = 'none';
-            if (passwordValue.length < 6) {
-                passwordLengthError.style.display = 'block';
-                return false;
-            } else {
-                passwordLengthError.style.display = 'none';
-                passwordSpaceError.style.display = 'none';
-                return true;
-            }
+            emailError.style.display = 'none';
+            return true;
         }
     }
 
-    function emailExists(email) {
-        // Đây là một hàm giả để kiểm tra email đã tồn tại.
-        // Bạn có thể thay thế nó bằng một cuộc gọi API thực tế.
-        const existingEmails = ['test@example.com', 'hello@world.com'];
-        return existingEmails.includes(email);
+    function validatePassword() {
+        const passwordInput = document.getElementById('password');
+        const passwordValue = passwordInput.value.trim();
+        const passwordError = document.getElementById('passwordError');
+
+        if (passwordValue === '') {
+            passwordError.innerText = 'Mật khẩu không được để trống.';
+            passwordError.style.display = 'block';
+            return false;
+        } else if (passwordValue.length < 6) {
+            passwordError.innerText = 'Mật khẩu phải có ít nhất 6 ký tự.';
+            passwordError.style.display = 'block';
+            return false;
+        } else {
+            passwordError.style.display = 'none';
+            return true;
+        }
     }
 
-    // Add event listeners for real-time validation
-    document.getElementById('password').addEventListener('input', function () {
-        validatePassword();
-    });
-
-    document.getElementById('email').addEventListener('input', function () {
-        validateEmail();
-    });
-
-    document.getElementById('phone').addEventListener('input', function () {
-        validatePhone();
-    });
-
-    document.getElementById('codeName').addEventListener('input', function () {
-        validateCodeName();
-    });
-
-    document.getElementById('fullName').addEventListener('input', function () {
-        validateFullName();
-    });
+    document.getElementById('fullName').addEventListener('input', validateFullName);
+    document.getElementById('codeName').addEventListener('input', validateCodeName);
+    document.getElementById('email').addEventListener('input', validateEmail);
+    document.getElementById('phone').addEventListener('input', validatePhone);
+    document.getElementById('password').addEventListener('input', validatePassword);
 </script>
 </body>
 </html>
