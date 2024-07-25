@@ -137,6 +137,10 @@
                         </div>
                     </div>
                     <div class="col-lg-7 mx-auto">
+                        <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+                            <span th:text="${successMessage}"></span>
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        </div>
                         <form th:action="@{/update-profile}" method="post" th:object="${user}"
                               enctype="multipart/form-data">
                             <div class="profile-info p-4 rounded mb-4 bg-white">
