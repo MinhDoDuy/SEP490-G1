@@ -82,8 +82,10 @@
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.codeName}">Code Name</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.phone}">Phone</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.role.roleName}">Role</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.isActive ? 'Active' : 'Inactive'}">Status</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50">
+                            <span th:if="${staff.role.roleName == 'ROLE_STAFF'}">Nhân viên</span>
+                        </td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.isActive ? 'Hoạt động' : 'Không hoạt động'}">Status</td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <a th:href="@{/edit-staff/{userId}(userId=${staff.userId}, canteenId=${canteenId})}" class="btn btn-primary"
                                style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Sửa</a>
@@ -91,6 +93,7 @@
                     </tr>
                     </tbody>
                 </table>
+
                 <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
                     <span th:if="${staffPage.hasPrevious()}">
                         <a th:href="@{/manage-staff(page=${staffPage.number - 1}, size=${staffPage.size}, canteenId=${canteenId})}" class="page-link">&laquo;</a>

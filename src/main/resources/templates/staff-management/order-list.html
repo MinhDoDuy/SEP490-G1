@@ -183,15 +183,14 @@
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng
                                 </td>
-                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Tên
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.fullName}">Tên
                                     khách hàng
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">
                                     Ngày đặt hàng
                                 </td>
-                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Trạng
-                                    thái
-                                </td>
+                                <!-- Sử dụng phương thức getDisplayName() của enum -->
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus.displayName}">Trạng thái</td>
                                 <td class="py-2 px-4 border-b border-b-gray-50 formatted-price"
                                     th:text="${order.totalOrderPrice}">Tổng giá
                                 </td>
@@ -199,12 +198,11 @@
                                     giao hàng
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Ghi chú</td>
-                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType}">Loại đơn
-                                    hàng
-                                </td>
-                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Phương
-                                    thức thanh toán
-                                </td>
+                                <!-- Sử dụng phương thức getDisplayName() của enum -->
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType.displayName}">Loại đơn hàng</td>
+                                <!-- Sử dụng phương thức getDisplayName() của enum cho phương thức thanh toán -->
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod.displayName}">Phương thức thanh toán</td>
+
                                 <td class="py-2 px-4 border-b border-b-gray-50">
                                     <!-- Chỉ hiển thị select cho đơn hàng PENDING -->
                                     <th:block th:if="${orderStatus.name() == 'PENDING'}">

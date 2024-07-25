@@ -109,6 +109,14 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM')")
     List<Object[]> findOrderStatsByCanteenAndMonth(@Param("canteenId") Integer canteenId);
 
+    //đơn thành công theo năm của canteen
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY'), COUNT(o.orderId) " +
+            "FROM Order o JOIN o.orderDetails od JOIN od.food f JOIN f.canteen c " +
+            "WHERE o.orderStatus = 'COMPLETE' AND c.canteenId = :canteenId " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY')")
+    List<Object[]> findOrderStatsByCanteenAndYear(@Param("canteenId") Integer canteenId);
+
     //các đồ ăn bán chạy của canteen đó
     @Query("SELECT f.foodName, SUM(od.quantity) " +
             "FROM Order o JOIN o.orderDetails od JOIN od.food f " +

@@ -97,7 +97,7 @@ public class OrderManagementController {
         try {
             User staffShip = userService.getUserById(deliveryRoleId);
             orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, newStatus, staffShip.getFullName());
-            redirectAttributes.addFlashAttribute("message", "Shipper assigned and order status updated successfully");
+            redirectAttributes.addFlashAttribute("message", "Chuyển Đơn hàng cho Shipper thành công");
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -119,7 +119,7 @@ public class OrderManagementController {
             for (Integer orderId : selectedOrders) {
                 orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, OrderStatus.PROGRESS, staffShip.getFullName());
             }
-            redirectAttributes.addFlashAttribute("message", "Đã gán nhân viên giao hàng và cập nhật trạng thái cho các đơn hàng đã chọn");
+            redirectAttributes.addFlashAttribute("message", "Chuyển Đơn hàng cho Shipper thành công cho các đơn hàng đã chọn");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
         }

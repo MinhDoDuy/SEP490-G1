@@ -2,6 +2,16 @@ package com.ffood.g1.enum_pay;
 
 
 public enum OrderType {
-    ONLINE_ORDER,
-    AT_COUNTER
+    AT_COUNTER("Tại quầy"),
+    ONLINE_ORDER("Trực tuyến");
+
+    private final String displayName;
+
+    OrderType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

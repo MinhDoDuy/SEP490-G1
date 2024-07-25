@@ -1,10 +1,18 @@
 package com.ffood.g1.enum_pay;
 
 public enum OrderStatus {
-    PENDING,
-    PROGRESS,
-    COMPLETE,
-    REJECT,
+    PENDING("Chờ xử lý"),
+    PROGRESS("Đang giao"),
+    COMPLETE("Hoàn thành"),
+    REJECT("Từ chối");
 
-    //PENDING , PREPAIR , Ready(làm xong đồ ăn đến lấy + gửi mail) , Complete ( nhận hàng thành công  + gửi mail )  , Cancel(hủy = gửi mail đơn hàng đã bị hủy)
+    private final String displayName;
+
+    OrderStatus(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

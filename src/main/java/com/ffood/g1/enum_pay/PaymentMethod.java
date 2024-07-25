@@ -1,17 +1,23 @@
 package com.ffood.g1.enum_pay;
 
 public enum PaymentMethod {
-    VNPAY(1),
-    CASH(2);
+    VNPAY(1, "VNPay"),
+    CASH(2, "Tiền mặt");
 
-    private  final int value ;
+    private final int value;
+    private final String displayName;
 
-    PaymentMethod(int value) {
+    PaymentMethod(int value, String displayName) {
         this.value = value;
+        this.displayName = displayName;
     }
 
     public int getValue() {
         return value;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public static PaymentMethod fromValue(int value) {
@@ -22,7 +28,4 @@ public enum PaymentMethod {
         }
         throw new IllegalArgumentException("Unknown value: " + value);
     }
-
-
-
 }

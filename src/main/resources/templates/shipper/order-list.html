@@ -36,7 +36,7 @@
           </tr>
           <tr th:each="order : ${orders.content}">
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.userName}">Tên khách hàng</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.fullName}">Tên khách hàng</td>
             <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">Ngày đặt hàng</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus}">Trạng thái</td>
             <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</td>

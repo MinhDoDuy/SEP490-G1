@@ -120,7 +120,7 @@
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.phone}">Số Điện Thoại</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen != null}" th:text="${user.canteen.canteenName}">Căn Tin</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen == null}"></td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.isActive ? 'Active' : 'Inactive'}">Trạng Thái</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.isActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng Thái</td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <span th:if="${user.role.roleId == 1}">Người dùng</span>
                             <span th:if="${user.role.roleId == 2}">Nhân viên</span>

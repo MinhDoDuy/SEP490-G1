@@ -38,7 +38,7 @@ public class FeedbackManagementController {
                                   @RequestParam Integer canteenId,
                                   RedirectAttributes redirectAttributes) {
         feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.COMPLETE);
-        redirectAttributes.addFlashAttribute("message", "Feedback approved successfully.");
+        redirectAttributes.addFlashAttribute("message", "Phản hồi phê duyệt thành công .");
         return "redirect:/manage-feedback?canteenId=" + canteenId;
     }
 
@@ -47,7 +47,7 @@ public class FeedbackManagementController {
                                  @RequestParam Integer canteenId,
                                  RedirectAttributes redirectAttributes) {
         feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.REJECT);
-        redirectAttributes.addFlashAttribute("message", "Feedback rejected successfully.");
+        redirectAttributes.addFlashAttribute("message", "Phản hồi bị từ chối.");
         return "redirect:/manage-feedback?canteenId=" + canteenId;
     }
 }

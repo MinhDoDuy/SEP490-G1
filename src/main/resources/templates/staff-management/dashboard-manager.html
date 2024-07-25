@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +24,6 @@
     }
   </style>
 </head>
-
 <body class="text-gray-800 font-inter">
 
 <!-- start: Sidebar -->
@@ -87,6 +85,10 @@
       </div>
       <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
         <h4>Biểu Đồ Đơn</h4>
+        <select id="order-chart-type" class="form-control mb-3">
+          <option value="month">Theo Tháng</option>
+          <option value="year">Theo Năm</option>
+        </select>
         <canvas id="orderStatsChart"></canvas>
       </div>
     </div>
@@ -142,18 +144,36 @@
     }
   });
 
-  // Data for Order Stats by Month
-  const orderLabels = /*[[${orderLabels}]]*/ [];
-  const orderData = /*[[${orderData}]]*/ [];
+  // Data for Order Stats
+  const orderLabelsByMonth = /*[[${orderLabelsByMonth}]]*/ [];
+  const orderDataByMonth = /*[[${orderDataByMonth}]]*/ [];
+
+  const orderLabelsByYear = /*[[${orderLabelsByYear}]]*/ [];
+  const orderDataByYear = /*[[${orderDataByYear}]]*/ [];
+
+  document.getElementById('order-chart-type').addEventListener('change', function() {
+    const value = this.value;
+    let labels, data;
+    if (value === 'month') {
+      labels = orderLabelsByMonth;
+      data = orderDataByMonth;
+    } else if (value === 'year') {
+      labels = orderLabelsByYear;
+      data = orderDataByYear;
+    }
+    orderStatsChart.data.labels = labels;
+    orderStatsChart.data.datasets[0].data = data;
+    orderStatsChart.update();
+  });
 
   const ctxOrderStats = document.getElementById('orderStatsChart').getContext('2d');
   let orderStatsChart = new Chart(ctxOrderStats, {
     type: 'line',
     data: {
-      labels: orderLabels,
+      labels: orderLabelsByMonth,
       datasets: [{
         label: 'Số Đơn Hàng Hoàn Thành',
-        data: orderData,
+        data: orderDataByMonth,
         borderColor: 'rgba(75, 192, 192, 1)',
         fill: false
       }]
@@ -191,5 +211,4 @@
   });
 </script>
 </body>
-
 </html>
