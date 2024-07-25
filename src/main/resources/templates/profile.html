@@ -137,13 +137,17 @@
                         </div>
                     </div>
                     <div class="col-lg-7 mx-auto">
+                        <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+                            <span th:text="${successMessage}"></span>
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        </div>
                         <form th:action="@{/update-profile}" method="post" th:object="${user}"
                               enctype="multipart/form-data">
                             <div class="profile-info p-4 rounded mb-4 bg-white">
                                 <div class="profile-avatar">
                                     <img id="displayImage"
                                          th:src="${user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png'}"
-                                         alt="Avatar">
+                                         alt="Avatar" style="object-fit: cover;">
                                 </div>
                                 <div class="profile-details">
                                     <h4 th:text="${user.fullName}"></h4>
