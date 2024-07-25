@@ -3,6 +3,7 @@ package com.ffood.g1.service;
 
 
 import com.ffood.g1.entity.Cart;
+import com.ffood.g1.entity.CartItem;
 import com.ffood.g1.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,4 +26,6 @@ public interface CartService {
 
     @Transactional
     void clearCart(Cart cart);
+
+
 }

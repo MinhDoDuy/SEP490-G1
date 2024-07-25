@@ -43,7 +43,7 @@
 <div class="container-fluid page-header py-5">
     <h1 class="text-center text-white " style="font-size: 2rem">Cửa hàng</h1>
     <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a th:href="@{/homepage}">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/homepage}">Trang Chủ</a></li>
         <li class="breadcrumb-item active text-white">Cửa hàng</li>
     </ol>
 </div>
@@ -63,18 +63,7 @@
                         </div>
                     </div>
                     <div class="col-6"></div>
-                    <div class="col-xl-3">
 
-                        <!--                        <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">-->
-                        <!--                            <label for="fruits">Default Sorting:</label>-->
-                        <!--                            <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3">-->
-                        <!--                                <option value="volvo">Nothing</option>-->
-                        <!--                                <option value="saab">Popularity</option>-->
-                        <!--                                <option value="opel">Organic</option>-->
-                        <!--                                <option value="audi">Fantastic</option>-->
-                        <!--                            </select>-->
-                        <!--                        </div>-->
-                    </div>
                 </div>
                 <hr class="section-divider">
                 <div class="row g-4">
@@ -83,7 +72,7 @@
                             <div class="row g-4">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
-                                        <h4>Search</h4>
+                                        <h4>Tìm Kiếm</h4>
                                         <input type="text" class="form-control" name="name" th:value="${name}"
                                                placeholder="Search for food..."
                                                onkeypress="if(event.keyCode == 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
@@ -170,7 +159,7 @@
                                             </p>
                                             <a th:href="@{/add_to_cart(foodId=${food.foodId},price=${food.price},quantity=1,url=2)}"
                                                class=" btn border border-secondary rounded-pill px-3 text-primary">
-                                                <i class="fa fa-shopping-bag me-2 text-primary"></i>Add
+                                                <i class="fa fa-shopping-bag me-2 text-primary"></i>Đặt Món
                                             </a>
                                         </div>
                                     </div>

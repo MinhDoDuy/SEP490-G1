@@ -50,6 +50,9 @@ public class CanteenController {
         model.addAttribute("countFoodsByCanteenId", countFoodsByCanteenId);
 
 
+        Integer saleCountByCanteenId = foodService.getSaleCountByCanteenId(canteenId); // Add this line
+        model.addAttribute("saleCountByCanteenId", saleCountByCanteenId); // Add this line
+
         List<Feedback> feedbacksCanteen = feedbackService.getFeedbacksByCanteenIdAndStatus(canteenId, FeedbackStatus.COMPLETE);
         model.addAttribute("feedbacksCanteen", feedbacksCanteen);
 

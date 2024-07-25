@@ -4,6 +4,7 @@ import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
+import com.ffood.g1.repository.CartItemRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.CartService;
@@ -40,6 +41,8 @@ public class CartController {
     CartItemService cartItemService;
     @Autowired
     FoodService foodService;
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
 
     @GetMapping("/add_to_cart")
@@ -91,7 +94,7 @@ public class CartController {
             for (CartItem cartItem : cartItems) {
                 Food existingFood = cartItem.getFood();
                 if (!existingFood.getCanteen().getCanteenId().equals(newFoodCanteenId)) {
-                    session.setAttribute("messageAddFood", "Bạn đã có sản phẩm của cửa hàng "+ existingFood.getCanteen().getCanteenName()+"!! Hãy vui lòng chọn sản phẩm cùng cửa hàng!!!");
+                    session.setAttribute("messageAddFood", "Bạn đã có sản phẩm của cửa hàng " + existingFood.getCanteen().getCanteenName() + "!! Hãy vui lòng chọn sản phẩm cùng cửa hàng!!!");
                     if (url == 1) {
                         return "redirect:/homepage";
                     } else if (url == 2) {
@@ -153,13 +156,23 @@ public class CartController {
 
     @GetMapping("/update_cart_quantity")
     public ResponseEntity<String> updateCartQuantity(@RequestParam("cartItemId") Integer cartItemId,
-                                                     @RequestParam("quantity") int quantity) {
+                                                     @RequestParam("quantity") int quantity
+                                                     ) {
+
+       CartItem cart= cartItemRepository.getCartItemByCartItemId(cartItemId);
+        int foodQuantity =cart.getFood().getFoodQuantity();
         try {
-            cartItemService.updateCartItemQuantity(cartItemId, quantity);
-            return ResponseEntity.ok("Quantity updated successfully");
+            if (quantity<foodQuantity) {
+                cartItemService.updateCartItemQuantity(cartItemId, quantity);
+                return ResponseEntity.ok("Quantity updated successfully");
+            }else
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating quantity");
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating quantity");
         }
+
+
     }
 }
 

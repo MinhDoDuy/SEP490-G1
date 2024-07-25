@@ -89,4 +89,9 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Integer
                            @Param("categoryId") Integer categoryId,
                            @Param("canteenId") Integer canteenId,
                            Pageable pageable);
+
+
+    @Query("SELECT SUM(f.salesCount) FROM Food f WHERE f.canteen.canteenId = :canteenId")
+    Integer getSaleCountByCanteenId(@Param("canteenId") Integer canteenId); // Add this method
+
 }

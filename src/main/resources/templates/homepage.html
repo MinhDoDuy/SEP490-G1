@@ -43,20 +43,24 @@
     <div class="container py-5">
         <div class="row g-5 align-items-center">
             <div class="col-md-12 col-lg-7">
+                <br>
                 <h4 class="mb-3 text-secondary">100% Nguyên liệu sạch</h4>
-                <h1 class="mb-5  text-primary" style="font-size: 4.5rem;">Bữa ăn tiện lợi, trọn vị yêu thương!</h1>
+                <h1 class="mb-5 text-primary" style="font-size: 4.5rem;">Bữa ăn tiện lợi Trọn vẹn yêu thương!</h1>
                 <form id="categoryForm" action="/canteen_details" method="get">
-                    <div class="position-relative mx-auto">
-                        <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
-                               name="name" th:value="${name}" placeholder="Search for food..."
-                               onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
+                    <div class="position-relative mx-auto" style="display: flex; justify-content: center; align-items: center;">
+                        <input class="form-control border-2 border-secondary py-3 px-4 rounded-pill"
+                               name="name" th:value="${name}" placeholder="Nhập từ khóa tìm kiếm..."
+                               onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }"
+                               style="flex-grow: 1; margin-right: 10px;">
                         <button type="submit"
-                                class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
-                                style="top: 0; right: 25%;">Submit Now
+                                class="btn btn-primary border-2 border-secondary py-3 px-4 rounded-pill text-white"
+                                style="height: 52px; width: 52px; display: flex; justify-content: center; align-items: center;">
+                            <i class="fas fa-search"></i> <!-- Nếu muốn có biểu tượng tìm kiếm -->
                         </button>
                     </div>
                 </form>
             </div>
+
             <div class="col-md-12 col-lg-5">
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
@@ -236,7 +240,7 @@
                     <h4 class="flex-grow-1" style="height: 55.41px"><a th:href="@{/food_details(id=${food.foodId})}" th:text="${food.foodName}" ></a></h4>
                     <p class="flex-grow-1"><span th:text="${food.canteen.canteenName}"></span></p>
                     <p th:if="${food.foodQuantity}>0" class="flex-grow-1"><span th:text="'Số lượng hiện có: ' + ${food.foodQuantity}" style="display: flex; justify-content: left"></span></p>
-                    <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Sản phẩm này tạm thời đã hết hàng</span></p>
+                    <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Số lượng hiện có : HẾT HÀNG</span></p>
                     <div  class="d-flex justify-content-between flex-lg-wrap mt-auto">
                         <p class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:value="${food.price}" th:text="${food.price}"></span></p>
                         <a th:if="${food.foodQuantity}>0" th:href="@{/add_to_cart(foodId=${food.foodId},price=${food.price},quantity=1,url=1)}" class="btn border border-secondary rounded-pill px-3 text-primary">
@@ -262,8 +266,8 @@
                             <i class="fas fa-car-side fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>Free Shipping</h5>
-                            <p class="mb-0">Free on order over $300</p>
+                            <h5>Croak Order</h5>
+                            <p class="mb-0">Miễn Phí Giao Hàng</p>
                         </div>
                     </div>
                 </div>
@@ -273,8 +277,8 @@
                             <i class="fas fa-user-shield fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>Security Payment</h5>
-                            <p class="mb-0">100% security payment</p>
+                            <h5>Thanh Toán Bảo Mật</h5>
+                            <p class="mb-0">100% Bảo Mật Thông Tin</p>
                         </div>
                     </div>
                 </div>
@@ -284,8 +288,8 @@
                             <i class="fas fa-exchange-alt fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>30 Day Return</h5>
-                            <p class="mb-0">30 day money guarantee</p>
+                            <h5>Đặt Hàng</h5>
+                            <p class="mb-0">Đặt Hàng Nhanh Chóng</p>
                         </div>
                     </div>
                 </div>
@@ -295,8 +299,8 @@
                             <i class="fa fa-phone-alt fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>24/7 Support</h5>
-                            <p class="mb-0">Support every time fast</p>
+                            <h5>Hỗ Trợ</h5>
+                            <p class="mb-0">Hỗ Trợ Nhiệt Tình</p>
                         </div>
                     </div>
                 </div>
@@ -357,7 +361,7 @@
                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> Add
                                         </a>`;
                             } else {
-                                quantityInfo = `<p class="flex-grow-1"><span style="display: flex; justify-content: left; color: red"> Sản phẩm này tạm thời đã hết hàng</span></p>`;
+                                quantityInfo = `<p class="flex-grow-1"><span style="display: flex; justify-content: left; color: red">Số lượng hiện có : HẾT HÀNG</span></p>`;
                             }
 
                             foodElement.innerHTML = `
@@ -394,74 +398,6 @@
         });
     });
 
-
-    // document.addEventListener('DOMContentLoaded', function () {
-    //
-    //     document.querySelectorAll('.formatted-price').forEach(function (element) {
-    //         let price = element.innerText;
-    //         element.innerText = formatCurrencyVND(price);
-    //     });
-    //     document.querySelectorAll('.nav-item1 a').forEach(item => {
-    //         item.addEventListener('click', function (event) {
-    //             event.preventDefault();
-    //             let categoryId = this.getAttribute('data-category-id');
-    //             console.log("Category ID: " + categoryId); // Ghi lại giá trị của categoryId
-    //
-    //             fetch(`/foodByCategory/${categoryId}`)
-    //                 .then(response => {
-    //                     if (!response.ok) {
-    //                         throw new Error('Network response was not ok ' + response.statusText);
-    //                     }
-    //                     return response.json();
-    //                 })
-    //                 .then(data => {
-    //                     console.log("Data received: ", data); // Ghi lại dữ liệu nhận được từ API
-    //
-    //                     let foodContainer = document.getElementById('food-container');
-    //                     foodContainer.innerHTML = '';
-    //                     data.forEach(food => {
-    //                         let foodElement = document.createElement('div');
-    //                         foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
-    //                         foodElement.innerHTML = `
-    //                             <div class="rounded position-relative fruite-item">
-    //                                 <div class="fruite-img">
-    //                                     <img src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="${food.foodName}">
-    //                                 </div>
-    //                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-    //                                     <span>${food.category.categoryName}</span>
-    //                                 </div>
-    //                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-    //                                     <h4 style="height: 55.41px"><a href="/food_details?id=${food.foodId}" class="text-dark">${food.foodName}</a></h4>
-    //                                     <p><span style="display: flex ; justify-content: left>${food.canteen.canteenName}</span></p>
-    //                                     <p><span style="display: flex ; justify-content: left>${food.canteen.canteenName}</span></p>
-    //                                      <p th:if="${food.foodQuantity}>0"><span  style="display: flex ; justify-content: left"> Số lượng hiện có: ${food.foodQuantity}</span></p>
-    //                                     <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Sản phẩm này tạm thời đã hết hàng</span></p>
-    //                                     <div class="d-flex justify-content-between flex-lg-wrap">
-    //                                         <p class="formatted-price text-dark fs-5 fw-bold mb-0">${food.price}</p>
-    //                                         <a th:if="${food.foodQuantity}>0" href="/add_to_cart?foodId=${food.foodId}&price=${food.price}&quantity=1&url=1" class="btn border border-secondary rounded-pill px-3 text-primary">
-    //                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> Add
-    //                                         </a>
-    //                                     </div>
-    //                                 </div>
-    //                             </div>
-    //                         `;
-    //                         foodContainer.appendChild(foodElement);
-    //                     });
-    //                     document.querySelectorAll('p.formatted-price').forEach(function (element) {
-    //                         debugger;
-    //                         let price = element.innerText;
-    //                         console.log(price)
-    //                         element.innerText = formatCurrencyVND(price);
-    //                     });
-    //                 })
-    //
-    //
-    //                 .catch(error => {
-    //                     console.error('There was a problem with the fetch operation:', error);
-    //                 });
-    //         });
-    //     });
-    // });
     document.addEventListener('DOMContentLoaded', function () {
         const messageElement = document.getElementById('toast-message');
         const message = messageElement ? messageElement.value : null;

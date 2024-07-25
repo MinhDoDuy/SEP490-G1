@@ -43,4 +43,5 @@ public interface FoodService {
 
  Page<Food> searchFoods(String keyword, Integer categoryId, Integer canteenId, Pageable pageable);
 
+ Integer getSaleCountByCanteenId(Integer canteenId);
 }

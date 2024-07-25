@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8">
-    <title>Bữa ăn tiện lợi, trọn vị yêu thương!</title>
+    <title>Chợ Cóc</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -11,8 +11,7 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
@@ -20,8 +19,7 @@
 
     <!-- Libraries Stylesheet -->
     <link href="/lib/lightbox/css/lightbox.min.css" th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
-    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}"
-          rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -32,6 +30,7 @@
 </head>
 <body>
 <footer>
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
         <div class="container py-5">
@@ -40,6 +39,7 @@
                     <div class="col-lg-3">
                         <a href="#">
                             <h1 class="text-primary mb-0">Chợ Cóc</h1>
+                            <p class="text-secondary mb-0">Trường Đại Học FPT Hà Nội</p>
                         </a>
                     </div>
                 </div>
@@ -47,45 +47,36 @@
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-item">
-                        <h4 class="text-light mb-3">Tại sao mọi người chọn chúng tôi!</h4>
-                        <p class="mb-4">Chúng tôi muốn bạn có thể thuận tiện đặt hàng các món ăn để không phải chờ
-                            xếp hàng lâu, và giúp bạn có thể quản lý được thời gian tốt hơn</p>
+                        <h4 class="text-primary mb-0">Tại sao mọi người chọn chúng tôi!</h4>
+                        <p class="mb-4 text-white">"Đặt món dễ dàng, nhận ngay tiện lợi - Trang web đặt hàng đồ ăn online của chúng tôi giúp bạn thưởng thức bữa ăn ngon mà không cần chờ đợi."</p>
                     </div>
                 </div>
-
                 <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-3">Thông tin cửa hàng</h4>
+                    <h4 class="text-primary mb-0">Thông tin Cửa Hàng</h4>
+                    <br>
                     <div class="d-flex flex-column text-start footer-item" th:each="canteen : ${session.canteens}">
                         <a class="btn-link" th:href="@{/canteen_info(canteenId=${canteen.canteenId})}" th:text="${canteen.canteenName}">My Account</a>
 
                     </div>
                 </div>
-
-                <!--                    <div class="col-lg-3 col-md-6">-->
-                <!--                        <div class="d-flex flex-column text-start footer-item">-->
-                <!--                            <h4 class="text-light mb-3">Thông tin cửa hàng</h4>-->
-                <!--                            <a class="btn-link" href="">Mango Food</a>-->
-                <!--                            <a class="btn-link" href="">Hà Nội Phố</a>-->
-                <!--                            <a class="btn-link" href="">Món Ngon Mỗi Ngày</a>-->
-                <!--                            <a class="btn-link" href="">Simdo</a>-->
-                <!--                            <a class="btn-link" href="">3 Râu House</a>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
                 <div class="col-lg-3 col-md-6">
                     <div class="d-flex flex-column text-start footer-item">
-                        <h4 class="text-light mb-3">Tài Khoản</h4>
-                        <a class="btn-link" href="view-profile/">Tài khoản của tôi</a>
-                        <a class="btn-link" href="">Giỏ hàng</a>
-                        <a class="btn-link" href="">Lịch sử đặt hàng</a>
+                        <h4 class="text-primary mb-0">Tài Khoản</h4>
+                        <br>
+                        <a class="btn-link" th:href="@{/view-profile/{userId}(userId=${user.userId})}" th:if="${user != null}">Tài khoản của tôi</a>
+                        <a class="btn-link" th:href="@{/cart_items}" th:if="${user != null}">Giỏ hàng</a>
+                        <a class="btn-link" th:href="@{/order-history}" th:if="${user != null}">Lịch sử đặt hàng</a>
+                        <a class="btn-link" th:href="@{/login}" th:if="${user == null}">Đăng nhập</a>
+                        <a class="btn-link" th:href="@{/register}" th:if="${user == null}">Đăng ký</a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="footer-item">
-                        <h4 class="text-light mb-3">Liên Hệ</h4>
-                        <p>Địa chỉ: Trường Đại Học FPT, Thạch Hoà, Thạch Thất, Hà Nội</p>
-                        <p>Email: dichvusinhvien@fe.edu.vn</p>
-                        <p>Điện Thoaại: (024)7308.13.13</p>
-                        <img src="img/payment.png" class="img-fluid" alt="">
+                    <div class="footer-item move-left">
+                        <h4 class="text-primary mb-0">Liên Hệ</h4>
+                        <br>
+                        <p class="mb-4 text-white">Địa Chỉ: Trường Đại Học FPT Hà Nội</p>
+                        <p class="mb-4 text-white">Email: dichvusinhvien@fe.edu.vn</p>
+                        <p class="mb-4 text-white">Điện thoại: (024)7308.13.13</p>
                     </div>
                 </div>
             </div>
@@ -95,8 +86,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
-            class="fa fa-arrow-up"></i></a>
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
 
 
     <!-- JavaScript Libraries -->
