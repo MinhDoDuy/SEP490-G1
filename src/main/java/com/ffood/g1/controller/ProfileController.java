@@ -85,7 +85,7 @@ public class ProfileController {
         // Cập nhật thông tin user
         userService.updateUser(user);
         model.addAttribute("successMessage", "Cập nhật thành công!");
-        return "redirect:/view-profile/" + user.getUserId(); // Trả về trang profile
+        return "profile"; // Trả về trang profile
     }
 
     @GetMapping("/change-password")
