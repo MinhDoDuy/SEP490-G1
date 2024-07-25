@@ -77,13 +77,11 @@ public class FoodController {
             List<Feedback> feedbacksFood = feedbackService.getFeedbacksByFoodIdAndStatus(foodId, FeedbackStatus.COMPLETE);
             model.addAttribute("feedbacksFood", feedbacksFood);
 
-            String message = (String) session.getAttribute("message");
-            System.out.println("truoc : "+ message);
-            if (message != null) {
-                model.addAttribute("message", message);
-                session.removeAttribute("message");
+            String messageAddFood = (String) session.getAttribute("messageAddFood");
+            if (messageAddFood != null) {
+                model.addAttribute("messageAddFood", messageAddFood);
+                session.removeAttribute("messageAddFood");
             }
-            System.out.println(model.getAttribute("message"));
             return "canteen/food-details";
         } else {
             return "error";

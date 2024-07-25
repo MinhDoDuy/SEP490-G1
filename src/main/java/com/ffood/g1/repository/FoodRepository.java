@@ -30,7 +30,8 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Integer
 
 
     // @Query("SELECT i FROM Food i ORDER BY RAND()")
-    @Query("SELECT f FROM Food f ORDER BY f.salesCount DESC")
+//    @Query("SELECT f FROM Food f ORDER BY f.salesCount DESC")
+    @Query("SELECT f FROM Food f WHERE f.foodStatusActive = true ORDER BY f.salesCount DESC")
     List<Food> findRandomItems(Pageable pageable);
 
     List<Food> findByCategory(Category category);

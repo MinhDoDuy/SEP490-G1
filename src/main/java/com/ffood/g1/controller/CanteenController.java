@@ -66,7 +66,8 @@ public class CanteenController {
                                @RequestParam(value = "checkedCategories", required = false) List<Integer> checkedCategories,
                                @RequestParam(value = "checkedCanteens", required = false) List<Integer> checkedCanteens,
                                @RequestParam(value = "sort", required = false) String sort,
-                               Model model) {
+                               Model model,
+                               HttpSession session) {
 
         Pageable pageable = PageRequest.of(page, 9, getSortDirection(sort));
         Page<Food> foods;
@@ -94,6 +95,11 @@ public class CanteenController {
         // Get all canteens
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
+        String messageAddFood = (String) session.getAttribute("messageAddFood");
+        if (messageAddFood != null) {
+            model.addAttribute("messageAddFood", messageAddFood);
+            session.removeAttribute("messageAddFood");
+        }
 
         return "canteen/canteens";
     }

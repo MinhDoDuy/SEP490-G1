@@ -57,6 +57,7 @@ public class HomeController {
         }
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
+        session.setAttribute("canteens", canteens);
 
         List<Food> items_home = foodService.getRandomFood();
         model.addAttribute("items_home", items_home);
@@ -65,6 +66,11 @@ public class HomeController {
         model.addAttribute("categories", categories);
 
         session.setAttribute("user",user);
+        String messageAddFood = (String) session.getAttribute("messageAddFood");
+        if (messageAddFood != null) {
+            model.addAttribute("messageAddFood", messageAddFood);
+            session.removeAttribute("messageAddFood");
+        }
         return "homepage";
     }
 

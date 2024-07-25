@@ -19,14 +19,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -45,10 +42,11 @@ public class CartController {
     FoodService foodService;
 
 
-    @PostMapping("/add_to_cart")
+    @GetMapping("/add_to_cart")
     public String addToCart(@RequestParam("foodId") Integer foodId,
                             @RequestParam("quantity") int quantity,
                             @RequestParam("price") Integer price,
+                            @RequestParam("url") Integer url,
                             HttpSession session,
                             RedirectAttributes redirectAttributes,
                             Model model) {
@@ -66,12 +64,23 @@ public class CartController {
         Cart cart = cartService.getOrCreateCart(user);
         List<CartItem> cartItems = cartItemService.getCartItemsByUserId(user.getUserId());
 
+        model.addAttribute("user", user);
+        Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
+        int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
+        session.setAttribute("totalQuantity", totalQuantity);
+
         // Get the canteen of the food item to be added
         Optional<Food> newFoodOpt = foodService.getFoodById(foodId);
         if (!newFoodOpt.isPresent()) {
 
-            session.setAttribute("message", "The food item does not exist.");
-            return "redirect:/food_details?id=" + foodId;
+            session.setAttribute("messageAddFood", "The food item does not exist.");
+            if (url == 1) {
+                return "redirect:/homepage";
+            } else if (url == 2) {
+                return "redirect:/canteen_details";
+            } else if (url == 3) {
+                return "redirect:/food_details?id=" + foodId;
+            }
         }
         Food newFood = newFoodOpt.get();
         Integer newFoodCanteenId = newFood.getCanteen().getCanteenId();
@@ -82,53 +91,31 @@ public class CartController {
             for (CartItem cartItem : cartItems) {
                 Food existingFood = cartItem.getFood();
                 if (!existingFood.getCanteen().getCanteenId().equals(newFoodCanteenId)) {
-                    session.setAttribute("message", "You can only add items from the same canteen.");
-                    return "redirect:/food_details?id=" + foodId;
+                    session.setAttribute("messageAddFood", "Bạn đã có sản phẩm của cửa hàng "+ existingFood.getCanteen().getCanteenName()+"!! Hãy vui lòng chọn sản phẩm cùng cửa hàng!!!");
+                    if (url == 1) {
+                        return "redirect:/homepage";
+                    } else if (url == 2) {
+                        return "redirect:/canteen_details";
+                    } else if (url == 3) {
+                        return "redirect:/food_details?id=" + foodId;
+                    }
                 }
             }
         }
 
         cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-        session.setAttribute("message", "Added to cart successfully.");
+        session.setAttribute("messageAddFood", "Sản phẩm đã được thêm vào giỏ hàng thành công!!!");
 
-        // Redirect to the food details page after adding to the cart
-        return "redirect:/food_details?id=" + foodId;
-    }
-
-
-
-
-
-
-    @GetMapping("/add_to_cart_home")
-    public String addToCartHome(@RequestParam("foodId") Integer foodId,
-                                @RequestParam("price") Integer price,
-                                RedirectAttributes redirectAttributes,
-                                Model model) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Check if the user is authenticated
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            // Redirect to the login page if the user is not authenticated
-            redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
-            return "redirect:/login";
+        if (url == 1) {
+            System.out.println("Vẫn oke mà!!!");
+            return "redirect:/homepage";
+        } else if (url == 2) {
+            return "redirect:/canteen_details";
+        } else if (url == 3) {
+            return "redirect:/food_details?id=" + foodId;
         }
-
-        int quantity = 1;
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
-
-        Cart cart = cartService.getOrCreateCart(user);
-
-        cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-
-        // Add success message to redirect attributes
-        redirectAttributes.addFlashAttribute("successMessage", "Item added to cart successfully!");
-
-
         // Redirect to the food details page after adding to the cart
-        return "redirect:/homepage";
+        return null;
     }
 
     @GetMapping("/cart_items")
@@ -169,7 +156,7 @@ public class CartController {
                                                      @RequestParam("quantity") int quantity) {
         try {
             cartItemService.updateCartItemQuantity(cartItemId, quantity);
-            return  ResponseEntity.ok("Quantity updated successfully");
+            return ResponseEntity.ok("Quantity updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating quantity");
         }

@@ -261,6 +261,7 @@ public class OrderServiceImpl implements OrderService {
                 throw new IllegalArgumentException("Insufficient quantity for food: " + food.getFoodName());
             }
             food.setFoodQuantity(food.getFoodQuantity() - quantity);
+            food.setSalesCount(food.getSalesCount() + quantity);
             foodRepository.save(food);
 
             // Create order detail

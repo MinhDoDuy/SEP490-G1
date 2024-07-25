@@ -21,28 +21,28 @@
                 <div class="form-wrapper">
                     <label for="fullName">Họ Tên:<span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" autofocus="autofocus" oninput="hideError('fullNameError')">
+                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" autofocus="autofocus" oninput="hideError('fullNameError'); validateFullName();">
                         <p class="help-block text-danger" id="fullNameError" th:text="${fullNameError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
                 <div class="form-wrapper">
                     <label for="codeName">MSSV: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}" oninput="hideError('codeNameError')">
+                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}" oninput="hideError('codeNameError'); validateCodeName();">
                         <p class="help-block text-danger" id="codeNameError" th:text="${codeNameExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
                 <div class="form-wrapper">
                     <label for="email">Email: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}" oninput="hideError('emailError')">
+                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}" oninput="hideError('emailError'); validateEmail();">
                         <p class="help-block text-danger" id="emailError" th:text="${emailExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
                 <div class="form-wrapper">
                     <label for="phone">Số Điện Thoại: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" oninput="hideError('phoneError')" >
+                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" oninput="hideError('phoneError'); validatePhone();">
                         <p class="help-block text-danger" id="phoneError" th:text="${phoneExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
                         <small class="form-text text-muted">Mật Khẩu phải có độ dài ít nhất 6 ký tự</small>
-                        <input type="password" class="form-control" id="password" name="password" th:field="*{password}" oninput="hideError('passwordError')">
+                        <input type="password" class="form-control" id="password" name="password" th:field="*{password}" oninput="hideError('passwordError'); validatePassword();">
                         <p class="help-block text-danger" id="passwordError" style="display: none; font-size: small"></p>
                     </div>
                 </div>
@@ -92,8 +92,15 @@
         const fullNameValue = fullNameInput.value.trim();
         const fullNameError = document.getElementById('fullNameError');
 
+        // Biểu thức chính quy để kiểm tra ký tự đặc biệt
+        const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
+
         if (fullNameValue === '') {
             fullNameError.innerText = 'Họ tên không được để trống.';
+            fullNameError.style.display = 'block';
+            return false;
+        } else if (specialCharPattern.test(fullNameValue)) {
+            fullNameError.innerText = 'Họ tên không được chứa ký tự đặc biệt.';
             fullNameError.style.display = 'block';
             return false;
         } else {
@@ -133,7 +140,7 @@
             phoneError.style.display = 'block';
             return false;
         } else if (!phonePattern.test(phoneValue)) {
-            phoneError.innerText = 'Định dạng số điện thoại không hợp lệ. Vui lòng sử dụng +012345678';
+            phoneError.innerText = 'Định dạng số điện thoại không hợp lệ. Vui lòng sử dụng định dạng 0123456789.';
             phoneError.style.display = 'block';
             return false;
         } else {
@@ -180,12 +187,6 @@
             return true;
         }
     }
-
-    document.getElementById('fullName').addEventListener('input', validateFullName);
-    document.getElementById('codeName').addEventListener('input', validateCodeName);
-    document.getElementById('email').addEventListener('input', validateEmail);
-    document.getElementById('phone').addEventListener('input', validatePhone);
-    document.getElementById('password').addEventListener('input', validatePassword);
 </script>
 </body>
 </html>

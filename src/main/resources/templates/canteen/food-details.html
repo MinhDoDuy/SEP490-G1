@@ -130,7 +130,7 @@
                     </div>
                     <div class="col-lg-6">
                         <!--                        id="add-to-cart-form-${food.foodId}"-->
-                        <form id="addToCartForm" th:action="@{/add_to_cart}" method="post"
+                        <form id="addToCartForm" th:action="@{/add_to_cart}" method="GET"
                               class="mb-3">
 
                             <h4 class="fw-bold mb-3"><span th:text="${food.foodName}"> </span></h4>
@@ -145,7 +145,7 @@
                             <p class="mb-4">Mô tả về món ăn : <span th:text="${food.description}"></span></p>
 
                             <input type="hidden" name="foodId" th:value="${food.foodId}"/>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3" th:if="${food.foodQuantity}>0">
                                 <div class="input-group-prepend">
                                     <button type="button" class="btn btn-outline-secondary"
                                             onclick="decreaseQuantity('${food.foodId}')">-
@@ -154,7 +154,7 @@
                                 <label for="quantity-${food.foodId}">
                                     <input type="number" id="quantity-${food.foodId}" name="quantity"
                                            class="form-control text-center quantity-input" value="1" min="1"
-                                           th:max="${food.foodQuantity}">
+                                           th:max="${food.foodQuantity}" required>
                                 </label>
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-outline-secondary"
@@ -163,8 +163,10 @@
                                 </div>
 
                             </div>
-                            <p class="mb-4">Số lượng sản phẩm còn lại : <span th:text="${food.foodQuantity}"></span></p>
-                            <button type="submit" class="btn btn-primary">
+                            <p class="mb-4" th:if="${food.foodQuantity}>0">Số lượng sản phẩm còn lại : <span th:text="${food.foodQuantity}"></span></p>
+                            <p class="mb-4" th:if="${food.foodQuantity}==0" style="color: #cc3030">Sản phẩm tạm thời hết hàng !!! </p>
+                            <input name="url" value="3" type="hidden">
+                            <button type="submit" class="btn btn-primary" th:if="${food.foodQuantity}>0">
                                 <i class="fa fa-shopping-bag me-2"></i> Add to cart
                             </button>
                         </form>
@@ -358,7 +360,7 @@
 
 </script>
 
-<input type="hidden" id="toast-message" th:value="${message}"/>
+<input type="hidden" id="toast-message" th:value="${messageAddFood}"/>
 </body>
 
 </html>

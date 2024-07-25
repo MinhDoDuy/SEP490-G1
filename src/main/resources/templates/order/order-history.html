@@ -122,12 +122,11 @@
         <div th:each="order : ${orders}" class="order-card">
             <div class="order-header">
                 <div>
-                    <h6><i class="fa fa-store"></i>
-                        <button class="btn btn-primary btn-sm">Xem cửa hàng</button>
+                    <h6><i class="fa fa-store" th:text="${order.orderDetails.get(0).food.canteen.canteenName}"></i>
+                        <button class="btn btn-primary btn-sm" ><a th:href="@{/canteen_info(canteenId=${order.canteenId})}"><h6>Xem cửa hàng</h6></a></button>
                     </h6>
                 </div>
                 <div class="order-status">
-<!--                    <span th:if="${order.orderStatus == 'PENDING'}">Đang chờ cửa hàng xác nhận</span>-->
                     <span th:text="${order.orderStatus}"></span>
                 </div>
             </div>
