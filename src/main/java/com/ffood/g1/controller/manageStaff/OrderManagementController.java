@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class OrderManagementController {
@@ -46,18 +47,24 @@ public class OrderManagementController {
                                @RequestParam(value = "orderStatus", defaultValue = "PENDING") OrderStatus orderStatus,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
-                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                               @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
+                               @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endDate,
                                Model model) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Order> orders;
 
         List<User> staffList = userService.getStaffByCanteenToShip(canteenId);
 
-        if (orderStatus == OrderStatus.COMPLETE && startDate != null && endDate != null) {
-            LocalDateTime start = startDate.atStartOfDay();
-            LocalDateTime end = endDate.atTime(LocalTime.MAX);
-            orders = orderService.getCompletedOrdersByCanteenAndDateRange(canteenId, start, end, pageable);
+        LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
+        LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
+
+        if (orderStatus == OrderStatus.COMPLETE && (startDate.isPresent() || endDate.isPresent())) {
+            if (start.isAfter(end)) {
+                model.addAttribute("error", "Ngày bắt đầu không thể sau ngày kết thúc");
+                orders = Page.empty();
+            } else {
+                orders = orderService.getCompletedOrdersByCanteenAndDateRange(canteenId, start, end, pageable);
+            }
         } else {
             switch (orderStatus) {
                 case PENDING:
@@ -81,11 +88,12 @@ public class OrderManagementController {
         model.addAttribute("staffList", staffList);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("orderStatus", orderStatus);
-        model.addAttribute("startDate", startDate);
-        model.addAttribute("endDate", endDate);
+        model.addAttribute("startDate", startDate.orElse(null));
+        model.addAttribute("endDate", endDate.orElse(null));
 
         return "staff-management/order-list";
     }
+
 
 
     @PostMapping("/update-order-status/{orderId}")
