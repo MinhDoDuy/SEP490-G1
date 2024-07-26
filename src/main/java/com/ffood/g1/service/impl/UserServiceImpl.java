@@ -8,6 +8,8 @@ import com.ffood.g1.repository.CanteenRepository;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.repository.RoleRepository;
 import com.ffood.g1.repository.UserRepository;
+import com.ffood.g1.service.CanteenService;
+import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
 import com.ffood.g1.utils.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CanteenRepository canteenRepository;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private CanteenService canteenService;
 
     @Override
     public User findByEmail(String email) {
@@ -258,6 +265,51 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getStaffByCanteenToShip(Integer canteenId) {
         return userRepository.findAllStaffByCanteenIdToShip(canteenId);
+    }
+
+    @Override
+    public void sendAssignStaffEmail(String email, HttpServletRequest request, Integer canteenId) {
+        User user = userRepository.findByEmail(email);
+        if (user == null || user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
+            throw new IllegalArgumentException("No valid user found with email: " + email);
+        }
+
+        String token = UUID.randomUUID().toString();
+        ResetToken resetToken = new ResetToken(token, user);
+        resetTokenRepository.save(resetToken);
+
+        String baseUrl = UrlUtil.getBaseUrl(request);
+        String assignUrl = baseUrl + "/assign-confirm?token=" + token + "&canteenId=" + canteenId;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Assign Staff Request");
+        message.setText("To confirm assignment as staff, click the link below:\n" + assignUrl);
+
+        mailSender.send(message);
+    }
+
+
+    @Override
+    public boolean isAssignTokenValid(String token) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        return resetToken != null && !resetToken.isExpired();
+    }
+
+    @Override
+    public void confirmAssignStaff(String token, Integer canteenId) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        if (resetToken == null || resetToken.isExpired()) {
+            throw new IllegalArgumentException("Invalid or expired token.");
+        }
+
+        User user = resetToken.getUser();
+        Role staffRole = roleService.findRoleById(2); // ROLE_STAFF
+        user.setRole(staffRole);
+        user.setCanteen(canteenService.getCanteenById(canteenId)); // Cập nhật canteenId dựa trên thông tin người assign
+        userRepository.save(user);
+
+        resetTokenRepository.delete(resetToken);
     }
 
 }

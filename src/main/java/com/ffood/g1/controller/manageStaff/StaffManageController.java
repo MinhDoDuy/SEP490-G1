@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Console;
 import java.util.List;
 
@@ -132,4 +133,41 @@ public class StaffManageController {
         userService.saveUser(user);
         return "redirect:/manage-staff?canteenId=" + canteenId + "&success=add";
     }
+
+    @GetMapping("/assign-staff-form")
+    public String showAssignStaffForm(@RequestParam("canteenId") Integer canteenId, Model model) {
+        model.addAttribute("canteenId", canteenId);
+        return "staff-management/assign-staff";
+    }
+
+    @PostMapping("/check-email")
+    public String checkEmail(@RequestParam("email") String email,
+                             @RequestParam("canteenId") Integer canteenId,
+                             HttpServletRequest request,
+                             RedirectAttributes redirectAttributes) {
+        try {
+            userService.sendAssignStaffEmail(email, request, canteenId);
+            redirectAttributes.addFlashAttribute("successMessage", "Token đã được gửi tới email!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/assign-staff-form?canteenId=" + canteenId;
+    }
+
+    @GetMapping("/assign-confirm")
+    public String confirmAssign(@RequestParam("token") String token,
+                                @RequestParam("canteenId") Integer canteenId,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            userService.confirmAssignStaff(token, canteenId);
+            Canteen canteen = canteenService.getCanteenById(canteenId);
+            model.addAttribute("canteenName", canteen.getCanteenName());
+            return "staff-management/assign-success";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/manage-staff?canteenId=" + canteenId;
+        }
+    }
+
 }

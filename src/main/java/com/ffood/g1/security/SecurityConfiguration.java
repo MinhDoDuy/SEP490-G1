@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_info", "/food_details","/update_cart_quantity").permitAll()
-                .antMatchers("/add_to_cart","/foodByCategory/{categoryId}").permitAll()
+                .antMatchers("/add_to_cart","/foodByCategory/{categoryId}","/assign-confirm","/assign-confirm/**").permitAll()
                 .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 .antMatchers("/search-staff", "/dashboard/", "/manage-user/**",
@@ -61,12 +61,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/manage-canteen/**", "/add-canteen", "/search-canteen",
                         "/edit-canteen/**", "/delete-canteen", "/dashboard-admin")
                 .hasAnyRole("ADMIN", "MANAGER")
-
                 .antMatchers("/manage-staff/**", "/search-staff", "/add-staff/**",
                         "/edit-staff/**", "/canteen-details/**", "/canteen/update-profile-canteen/**",
                         "/canteen/edit-profile-canteen/**","/manage-food/**","/manage-food","/canteen/**",
                         "/add-food-form", "/add-food-form/**",
-                        "/add-food", "/add-food/**",
+                        "/add-food", "/add-food/**","/check-email/**","/assign-staff-form/**","/assign-confirm/**",
                         "/manage-category/**", "/add-category-form", "/add-category", "/edit-category/**","/create-order-at-couter","/create-order-at-couter1")
                .hasRole("MANAGER")
                 .antMatchers()

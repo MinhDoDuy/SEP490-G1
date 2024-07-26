@@ -60,4 +60,11 @@ public interface UserService extends UserDetailsService {
     Integer countStaffByCanteenId(Integer canteenId);
 
     List<User> getStaffByCanteenToShip(Integer canteenId);
+
+
+    void sendAssignStaffEmail(String email, HttpServletRequest request , Integer canteenId);
+
+    boolean isAssignTokenValid(String token);
+
+    void confirmAssignStaff(String token, Integer canteenId);
 }
