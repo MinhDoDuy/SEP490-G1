@@ -112,12 +112,7 @@ public class ProfileController {
         }
 
         if (passwordEncoder.matches(oldPassword, user.getPassword()) == passwordEncoder.matches(newPassword, user.getPassword())) {
-            model.addAttribute("error", "Current password and new password can't the same");
-            return "change-password" ;
-        }
-
-        if(passwordEncoder.matches(oldPassword ,user.getPassword()) == passwordEncoder.matches(newPassword ,user.getPassword())){
-            model.addAttribute("error", " new password can't same with old password");
+            model.addAttribute("error", "Current password and new password can't be the same");
             return "change-password";
         }
 
@@ -128,9 +123,8 @@ public class ProfileController {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.updatePassword(user, newPassword);
-        model.addAttribute("message", "Password changed successfully");
+        model.addAttribute("successMessage", "Password changed successfully");
 
-        return "redirect:/logout";
-
+        return "change-password";
     }
 }
