@@ -73,11 +73,6 @@
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_ADMIN'}">
 
-                                    <a th:href="@{/manage-canteen}" class="dropdown-item">Quản Lý Căn Tin</a>
-                                </div>
-                                <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_ADMIN'}">
-
-                                    <a th:href="@{/manage-user}" class="dropdown-item">Quản Lý Người Dùng</a>
                                     <a th:href="@{/dashboard-admin}" class="dropdown-item">Phân Tích</a>
 
                                 </div>

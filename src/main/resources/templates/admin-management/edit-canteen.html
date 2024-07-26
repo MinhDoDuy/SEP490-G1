@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-  <title>Edit Canteen</title>
+  <title>Chỉnh Sửa Căng Tin</title>
   <style>
     .form-container {
       width: 50%;
@@ -15,8 +15,6 @@
 
     .form-group {
       margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
     }
 
     .form-group label {
@@ -30,10 +28,7 @@
       border: 2px solid #ccc;
       border-radius: 4px;
       font-size: 14px;
-    }
-
-    .form-group select {
-      width: auto;
+      width: 100%;
     }
 
     .error-message {
@@ -97,6 +92,22 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    .inline-group {
+      display: flex;
+      gap: 20px;
+    }
+
+    .inline-group .form-group {
+      flex: 1;
+    }
+
+    .inline-group .form-group img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
   </style>
 </head>
 
@@ -114,10 +125,10 @@
     </button>
     <ul class="flex items-center text-sm ml-4">
       <li class="mr-2">
-        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Trang Chủ</a>
       </li>
       <li class="text-gray-600 mr-2 font-medium">/</li>
-      <li class="text-gray-600 mr-2 font-medium">Edit Canteen</li>
+      <li class="text-gray-600 mr-2 font-medium">Chỉnh Sửa Căng Tin</li>
     </ul>
   </div>
 
@@ -125,55 +136,66 @@
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
 
       <div class="flex justify-between mb-4 items-start">
-        <div class="font-medium">Edit Canteen</div>
+        <div class="font-medium">Chỉnh Sửa Căng Tin</div>
       </div>
       <div class="overflow-x-auto">
         <form th:action="@{/edit-canteen}" th:object="${canteen}" method="post" enctype="multipart/form-data" id="canteenForm">
           <input type="hidden" th:field="*{canteenId}" />
-          <div class="form-group">
-            <label for="canteenName">Canteen Name:</label>
-            <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control" />
-            <div th:if="${canteenNameError != null}" class="error-message" th:text="${canteenNameError}"></div>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="canteenName">Tên Căng Tin:</label>
+              <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control" />
+              <div th:if="${canteenNameError != null}" class="error-message" th:text="${canteenNameError}"></div>
+            </div>
+            <div class="form-group">
+              <label for="location">Địa Điểm:</label>
+              <input type="text" id="location" th:field="*{location}" required class="form-control"/>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="location">Location:</label>
-            <input type="text" id="location" th:field="*{location}" required class="form-control"/>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="canteenPhone">Số Điện Thoại:</label>
+              <input type="text" id="canteenPhone" th:field="*{canteenPhone}" required class="form-control"/>
+              <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
+            </div>
+            <div class="form-group">
+              <label for="isActive">Trạng Thái:</label>
+              <select id="isActive" name="isActive" class="form-control">
+                <option th:value="true" th:text="'Hoạt động'" th:selected="${canteen.isActive} == true"></option>
+                <option th:value="false" th:text="'Không hoạt động'" th:selected="${canteen.isActive} == false"></option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="canteenPhone">Phone:</label>
-            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" required class="form-control"/>
-            <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="openingHoursStart">Giờ Mở Cửa Bắt Đầu:</label>
+              <select id="openingHoursStart" class="form-input"></select>
+            </div>
+            <div class="form-group">
+              <label for="openingHoursEnd">Giờ Mở Cửa Kết Thúc:</label>
+              <select id="openingHoursEnd" class="form-input"></select>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="openingHoursStart">Opening Hours Start:</label>
-            <select id="openingHoursStart" class="form-input"></select>
+          <input type="hidden" id="openingHours" th:field="*{openingHours}">
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="imageCanteenInput">Hình Ảnh Căng Tin:</label>
+              <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*" onchange="onChangeFileTrigger()" />
+              <input type="hidden" id="currentImageUrl" th:field="*{canteenImg}" />
+            </div>
+            <div class="form-group">
+              <img id="displayImage" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" alt="Hình Ảnh Căng Tin">
+            </div>
           </div>
-          <div class="form-group">
-            <label for="openingHoursEnd">Opening Hours End:</label>
-            <select id="openingHoursEnd" class="form-input"></select>
-          </div>
-          <div class="form-group">
-            <input type="hidden" id="openingHours" th:field="*{openingHours}">
-          </div>
-          <div class="form-group">
-            <label for="imageCanteenInput">Canteen Image:</label>
-            <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*" onchange="onChangeFileTrigger()" />
-            <input type="hidden" id="currentImageUrl" th:field="*{canteenImg}" />
-          </div>
-          <div class="form-group">
-            <img id="displayImage" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
-          </div>
-          <div class="form-group">
-            <label for="isActive">Status:</label>
-            <select id="isActive" name="isActive" class="form-control">
-              <option th:value="true" th:text="'Active'" th:selected="${canteen.isActive} == true"></option>
-              <option th:value="false" th:text="'Inactive'" th:selected="${canteen.isActive} == false"></option>
-            </select>
-          </div>
+
           <div class="error-message" id="error-message"></div>
-          <button type="submit" class="btn btn-primary">Save changes</button>
+          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
         </form>
-        <a th:href="@{/manage-canteen}" class="back-link">Back to list</a>
+        <a th:href="@{/manage-canteen}" class="back-link">Quay lại danh sách</a>
       </div>
     </div>
   </div>
@@ -216,7 +238,7 @@
 
     if (!validateTime(start, end)) {
       event.preventDefault();
-      errorMessage.textContent = 'Opening Hours End must be after Opening Hours Start.';
+      errorMessage.textContent = 'Giờ Mở Cửa Kết Thúc phải sau Giờ Mở Cửa Bắt Đầu.';
       return;
     }
 
@@ -228,9 +250,12 @@
   document.addEventListener('DOMContentLoaded', function() {
     generateTimeOptions();
     // Điền sẵn giá trị cho giờ bắt đầu và giờ kết thúc khi chỉnh sửa
-    const canteenOpeningHours = document.getElementById('openingHours').value.split(' - ');
-    document.getElementById('openingHoursStart').value = canteenOpeningHours[0];
-    document.getElementById('openingHoursEnd').value = canteenOpeningHours[1];
+    const canteenOpeningHours = document.getElementById('openingHours').value;
+    if (canteenOpeningHours) {
+      const [start, end] = canteenOpeningHours.split(' - ');
+      document.getElementById('openingHoursStart').value = start;
+      document.getElementById('openingHoursEnd').value = end;
+    }
   });
 
   function onChangeFileTrigger() {
@@ -247,5 +272,4 @@
 
 </script>
 </body>
-
 </html>

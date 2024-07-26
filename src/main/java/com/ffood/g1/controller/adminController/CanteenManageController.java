@@ -114,44 +114,54 @@ public class CanteenManageController {
     }
 
     @PostMapping("/edit-canteen")
-    public String updateCanteen(@RequestParam("userId") Canteen canteen, BindingResult result, Model model,
+    public String updateCanteen(@RequestParam("canteenId") Integer canteenId,
+                                @ModelAttribute("canteen") Canteen updatedCanteen,
+                                BindingResult result,
+                                Model model,
                                 @RequestParam("imageCanteenInput") MultipartFile imageCanteenInput,
                                 RedirectAttributes redirectAttributes) throws IOException, SpringBootFileUploadException {
         boolean hasErrors = false;
 
         // Lấy thông tin canteen hiện tại từ database
-        Canteen existingCanteen = canteenService.getCanteenById(canteen.getCanteenId());
+        Canteen existingCanteen = canteenService.getCanteenById(canteenId);
 
         // Kiểm tra nếu số điện thoại thay đổi và đã tồn tại trong database
-        if (!existingCanteen.getCanteenPhone().equals(canteen.getCanteenPhone()) && canteenService.isPhoneExist(canteen.getCanteenPhone())) {
-            model.addAttribute("phoneError", "Phone number already exists.");
+        if (!existingCanteen.getCanteenPhone().equals(updatedCanteen.getCanteenPhone()) && canteenService.isPhoneExist(updatedCanteen.getCanteenPhone())) {
+            model.addAttribute("phoneError", "Số điện thoại đã tồn tại.");
             hasErrors = true;
         }
 
         // Kiểm tra nếu tên canteen thay đổi và đã tồn tại trong database
-        if (!existingCanteen.getCanteenName().equals(canteen.getCanteenName()) && canteenService.isCanteenNameExist(canteen.getCanteenName())) {
-            model.addAttribute("canteenNameError", "Canteen name already exists.");
+        if (!existingCanteen.getCanteenName().equals(updatedCanteen.getCanteenName()) && canteenService.isCanteenNameExist(updatedCanteen.getCanteenName())) {
+            model.addAttribute("canteenNameError", "Tên căng tin đã tồn tại.");
             hasErrors = true;
         }
 
         // Nếu có lỗi, trả về form chỉnh sửa với các thông báo lỗi
         if (hasErrors) {
-            model.addAttribute("canteen", canteen);
+            model.addAttribute("canteen", updatedCanteen);
             return "admin-management/edit-canteen";
         }
+
+        // Cập nhật thông tin từ updatedCanteen sang existingCanteen
+        existingCanteen.setCanteenName(updatedCanteen.getCanteenName());
+        existingCanteen.setLocation(updatedCanteen.getLocation());
+        existingCanteen.setCanteenPhone(updatedCanteen.getCanteenPhone());
+        existingCanteen.setOpeningHours(updatedCanteen.getOpeningHours());
+        existingCanteen.setIsActive(updatedCanteen.getIsActive());
 
         // Xử lý upload ảnh nếu có
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
             String canteenImageUrl = fileS3Service.uploadFile(imageCanteenInput);
-            canteen.setCanteenImg(canteenImageUrl);
+            existingCanteen.setCanteenImg(canteenImageUrl);
         } else {
-            canteen.setCanteenImg(existingCanteen.getCanteenImg());
+            existingCanteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
         // Cập nhật thông tin canteen
-        canteenService.updateCanteen(canteen);
-        redirectAttributes.addFlashAttribute("successMessage", "Canteen updated successfully");
+        canteenService.updateCanteen(existingCanteen);
+        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật căng tin thành công");
 
-        return "redirect:/manage-canteen/";
+        return "redirect:/manage-canteen";
     }
 }
