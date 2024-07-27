@@ -67,4 +67,8 @@ public interface UserService extends UserDetailsService {
     boolean isAssignTokenValid(String token);
 
     void confirmAssignStaff(String token, Integer canteenId);
+
+    void sendAssignManagerEmail(String email, HttpServletRequest request, Integer canteenId);
+
+    void confirmAssignManager(String token, Integer canteenId);
 }

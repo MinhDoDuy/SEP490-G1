@@ -4,6 +4,7 @@ import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FileS3Service;
+import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
@@ -23,6 +25,9 @@ public class CanteenManageController {
 
     @Autowired
     private FileS3Service fileS3Service;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/manage-canteen")
     public String listCanteens(Model model,
@@ -164,4 +169,41 @@ public class CanteenManageController {
 
         return "redirect:/manage-canteen";
     }
+
+    @GetMapping("/assign-manager-form")
+    public String showAssignManagerForm(@RequestParam("canteenId") Integer canteenId, Model model) {
+        model.addAttribute("canteenId", canteenId);
+        return "admin-management/assign-manager-form";
+    }
+
+    @PostMapping("/check-email-manager")
+    public String checkEmailManager(@RequestParam("email") String email,
+                                    @RequestParam("canteenId") Integer canteenId,
+                                    HttpServletRequest request,
+                                    RedirectAttributes redirectAttributes) {
+        try {
+            userService.sendAssignManagerEmail(email, request, canteenId);
+            redirectAttributes.addFlashAttribute("successMessage", "Token đã được gửi tới email!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/assign-manager-form?canteenId=" + canteenId;
+    }
+
+    @GetMapping("/assign-manager-confirm")
+    public String confirmAssignManager(@RequestParam("token") String token,
+                                       @RequestParam("canteenId") Integer canteenId,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            userService.confirmAssignManager(token, canteenId);
+            Canteen canteen = canteenService.getCanteenById(canteenId);
+            model.addAttribute("canteenName", canteen.getCanteenName());
+            return "admin-management/assign-success";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/manage-canteen?canteenId=" + canteenId;
+        }
+    }
+
 }

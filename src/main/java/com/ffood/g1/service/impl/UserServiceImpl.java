@@ -341,6 +341,58 @@ public class UserServiceImpl implements UserService {
         resetTokenRepository.delete(resetToken);
     }
 
+    @Override
+    public void sendAssignManagerEmail(String email, HttpServletRequest request, Integer canteenId) {
+        User user = userRepository.findByEmail(email);
+        if (user == null || user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
+            throw new IllegalArgumentException("No valid user found with email: " + email);
+        }
+
+        String token = UUID.randomUUID().toString();
+        ResetToken resetToken = new ResetToken(token, user);
+        resetTokenRepository.save(resetToken);
+
+        String baseUrl = UrlUtil.getBaseUrl(request);
+        String assignUrl = baseUrl + "/assign-manager-confirm?token=" + token + "&canteenId=" + canteenId;
+
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject("Assign Manager Request");
+
+            String htmlMsg = "<html>" +
+                    "<body>" +
+                    "<p>Xác Nhận Làm Quản Lý Căn Tin, Bấm nút dưới đây:</p>" +
+                    "<a href=\"" + assignUrl + "\" style=\"display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px;\">Xác Nhận Quản Lý</a>" +
+                    "</body>" +
+                    "</html>";
+            helper.setText(htmlMsg, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
+    }
+
+    @Override
+    public void confirmAssignManager(String token, Integer canteenId) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        if (resetToken == null || resetToken.isExpired()) {
+            throw new IllegalArgumentException("Invalid or expired token.");
+        }
+
+        User user = resetToken.getUser();
+        Role managerRole = roleService.findRoleById(3); // ROLE_MANAGER
+        user.setRole(managerRole);
+        user.setCanteen(canteenService.getCanteenById(canteenId)); // Cập nhật canteenId dựa trên thông tin người assign
+        userRepository.save(user);
+
+        resetTokenRepository.delete(resetToken);
+    }
+
+
 }
 
 

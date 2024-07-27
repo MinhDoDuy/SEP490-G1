@@ -100,6 +100,7 @@
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.isActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng thái</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
               <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Chỉnh sửa</a>
+              <a th:href="@{/assign-manager-form(canteenId=${canteen.canteenId})}" class="btn btn-secondary" style="padding: 5px 10px; background-color: #28a745; color: white; text-decoration: none; border-radius: 2px;">Assign Manager</a>
             </td>
           </tr>
           </tbody>

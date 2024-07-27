@@ -61,6 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/manage-canteen/**", "/add-canteen", "/search-canteen",
                         "/edit-canteen/**", "/delete-canteen", "/dashboard-admin")
                 .hasAnyRole("ADMIN", "MANAGER")
+                .antMatchers("/assign-manager-form/**","/check-email-manager/**","/assign-manager-confirm/**").hasRole("ADMIN")
                 .antMatchers("/manage-staff/**", "/search-staff", "/add-staff/**",
                         "/edit-staff/**", "/canteen-details/**", "/canteen/update-profile-canteen/**",
                         "/canteen/edit-profile-canteen/**","/manage-food/**","/manage-food","/canteen/**",
