@@ -286,8 +286,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendAssignStaffEmail(String email, HttpServletRequest request, Integer canteenId) {
         User user = userRepository.findByEmail(email);
-        if (user == null || user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
-            throw new IllegalArgumentException("No valid user found with email: " + email);
+        if (user == null) {
+            throw new IllegalArgumentException("Email này không tồn tại.");
+        } else if (user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
+            throw new IllegalArgumentException("Nhân viên này đang thuộc canteen khác hoặc không có quyền thích hợp.");
         }
 
         String token = UUID.randomUUID().toString();
@@ -344,8 +346,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendAssignManagerEmail(String email, HttpServletRequest request, Integer canteenId) {
         User user = userRepository.findByEmail(email);
-        if (user == null || user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
-            throw new IllegalArgumentException("No valid user found with email: " + email);
+        if (user == null) {
+            throw new IllegalArgumentException("Email này không tồn tại.");
+        } else if (user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
+            throw new IllegalArgumentException("Nhân viên này đang thuộc canteen khác hoặc không có quyền thích hợp.");
         }
 
         String token = UUID.randomUUID().toString();
