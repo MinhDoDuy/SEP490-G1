@@ -8,6 +8,8 @@ import com.ffood.g1.repository.CanteenRepository;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.repository.RoleRepository;
 import com.ffood.g1.repository.UserRepository;
+import com.ffood.g1.service.CanteenService;
+import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
 import com.ffood.g1.utils.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +27,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -51,6 +56,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CanteenRepository canteenRepository;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private CanteenService canteenService;
 
     @Override
     public User findByEmail(String email) {
@@ -85,12 +95,25 @@ public class UserServiceImpl implements UserService {
         // Tạo URL đặt lại mật khẩu
         String resetUrl = baseUrl + "/reset-password?token=" + token;
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Password Reset Request");
-        message.setText("To reset your password, click the link below:\n" + resetUrl);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        mailSender.send(message);
+            helper.setTo(email);
+            helper.setSubject("Đặt lại mật khẩu");
+
+            String htmlMsg = "<html>" +
+                    "<body>" +
+                    "<p>Xác Nhận Đặt Lại Mật Khẩu, Nhấn vào nút bên dưới:</p>" +
+                    "<a href=\"" + resetUrl + "\" style=\"display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px;\">Xác Nhận Đổi Mật Khẩu</a>" +
+                    "</body>" +
+                    "</html>";
+            helper.setText(htmlMsg, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
     }
 
     //check token xem đã hết hạn hoặc là check token có tồn tại không
@@ -259,6 +282,120 @@ public class UserServiceImpl implements UserService {
     public List<User> getStaffByCanteenToShip(Integer canteenId) {
         return userRepository.findAllStaffByCanteenIdToShip(canteenId);
     }
+
+    @Override
+    public void sendAssignStaffEmail(String email, HttpServletRequest request, Integer canteenId) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("Email này không tồn tại.");
+        } else if (user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
+            throw new IllegalArgumentException("Nhân viên này đang thuộc canteen khác hoặc không có quyền thích hợp.");
+        }
+
+        String token = UUID.randomUUID().toString();
+        ResetToken resetToken = new ResetToken(token, user);
+        resetTokenRepository.save(resetToken);
+
+        String baseUrl = UrlUtil.getBaseUrl(request);
+        String assignUrl = baseUrl + "/assign-confirm?token=" + token + "&canteenId=" + canteenId;
+
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject("Assign Staff Request");
+
+            String htmlMsg = "<html>" +
+                    "<body>" +
+                    "<p>Xác Nhận Làm Nhân Viên Căn Tin, Bấm nút dưới đây:</p>" +
+                    "<a href=\"" + assignUrl + "\" style=\"display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px;\">Xác Nhận Nhân Viên</a>" +
+                    "</body>" +
+                    "</html>";
+            helper.setText(htmlMsg, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
+    }
+
+
+    @Override
+    public boolean isAssignTokenValid(String token) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        return resetToken != null && !resetToken.isExpired();
+    }
+
+    @Override
+    public void confirmAssignStaff(String token, Integer canteenId) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        if (resetToken == null || resetToken.isExpired()) {
+            throw new IllegalArgumentException("Invalid or expired token.");
+        }
+
+        User user = resetToken.getUser();
+        Role staffRole = roleService.findRoleById(2); // ROLE_STAFF
+        user.setRole(staffRole);
+        user.setCanteen(canteenService.getCanteenById(canteenId)); // Cập nhật canteenId dựa trên thông tin người assign
+        userRepository.save(user);
+
+        resetTokenRepository.delete(resetToken);
+    }
+
+    @Override
+    public void sendAssignManagerEmail(String email, HttpServletRequest request, Integer canteenId) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("Email này không tồn tại.");
+        } else if (user.getRole().getRoleId() != 1 || user.getCanteen() != null) {
+            throw new IllegalArgumentException("Nhân viên này đang thuộc canteen khác hoặc không có quyền thích hợp.");
+        }
+
+        String token = UUID.randomUUID().toString();
+        ResetToken resetToken = new ResetToken(token, user);
+        resetTokenRepository.save(resetToken);
+
+        String baseUrl = UrlUtil.getBaseUrl(request);
+        String assignUrl = baseUrl + "/assign-manager-confirm?token=" + token + "&canteenId=" + canteenId;
+
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject("Assign Manager Request");
+
+            String htmlMsg = "<html>" +
+                    "<body>" +
+                    "<p>Xác Nhận Làm Quản Lý Căn Tin, Bấm nút dưới đây:</p>" +
+                    "<a href=\"" + assignUrl + "\" style=\"display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px;\">Xác Nhận Quản Lý</a>" +
+                    "</body>" +
+                    "</html>";
+            helper.setText(htmlMsg, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
+    }
+
+    @Override
+    public void confirmAssignManager(String token, Integer canteenId) {
+        ResetToken resetToken = resetTokenRepository.findByToken(token);
+        if (resetToken == null || resetToken.isExpired()) {
+            throw new IllegalArgumentException("Invalid or expired token.");
+        }
+
+        User user = resetToken.getUser();
+        Role managerRole = roleService.findRoleById(3); // ROLE_MANAGER
+        user.setRole(managerRole);
+        user.setCanteen(canteenService.getCanteenById(canteenId)); // Cập nhật canteenId dựa trên thông tin người assign
+        userRepository.save(user);
+
+        resetTokenRepository.delete(resetToken);
+    }
+
 
 }
 

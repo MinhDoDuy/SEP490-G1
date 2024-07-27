@@ -15,13 +15,13 @@ import java.util.List;
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
 
-    @Query("SELECT f FROM Feedback f  WHERE f.canteenId = :canteenId AND f.feedbackStatus = :status")
+    @Query("SELECT f FROM Feedback f  WHERE f.canteenId = :canteenId AND f.feedbackStatus = :status ORDER BY f.timeCreated DESC")
     List<Feedback> findFeedbackByCanteenIdAndStatus(@Param("canteenId") Integer canteenId, @Param("status") FeedbackStatus status);
 
-    @Query("SELECT f FROM Feedback f  WHERE f.foodId = :foodId AND f.feedbackStatus = :feedbackStatus")
+    @Query("SELECT f FROM Feedback f  WHERE f.foodId = :foodId AND f.feedbackStatus = :feedbackStatus ORDER BY f.timeCreated DESC")
     List<Feedback> findFeedbackByFoodIdAndStatus(@Param("foodId") Integer canteenId, @Param("feedbackStatus") FeedbackStatus feedbackStatus);
 
-    @Query("SELECT f FROM Feedback f WHERE f.canteenId = :canteenId AND f.feedbackStatus = :status")
+    @Query("SELECT f FROM Feedback f WHERE f.canteenId = :canteenId AND f.feedbackStatus = :status ORDER BY f.timeCreated DESC" )
     Page<Feedback> findByCanteenIdAndStatus(@Param("canteenId") Integer canteenId, @Param("status") FeedbackStatus status, Pageable pageable);
 
 

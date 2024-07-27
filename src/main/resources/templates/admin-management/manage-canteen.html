@@ -28,13 +28,7 @@
       <li class="text-gray-600 mr-2 font-medium">View All Canteen</li>
     </ul>
   </div>
-  <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
-    <span th:text="${successMessage}"></span>
-    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-  </div>
-  <div th:if="${errorMessage}" class="alert alert-danger">
-    <span th:text="${errorMessage}"></span>
-  </div>
+
   <div class="p-6">
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
@@ -51,59 +45,71 @@
             <i class="ri-search-line absolute top-1/2 left-4 -translate-y-1/2 text-gray-400"></i>
           </div>
         </form>
-        <a th:href="@{/add-canteen}" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Add New Canteen</a>
-      </div>
+        <div class="flex items-center">
+          <a th:href="@{/add-canteen}" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Thêm căn tin mới</a>
+        </div>
 
+      </div>
+      <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+        <span th:text="${successMessage}"></span>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      </div>
+      <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}"></span>
+      </div>
       <div class="overflow-x-auto">
         <table class="w-full min-w-[540px]">
           <thead>
           <tr>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              ID
+              Mã số
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              Name
+              Tên
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              Location
+              Địa điểm
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              Canteen Image
+              Hình ảnh Căng tin
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              Phone
+              Số điện thoại
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              Opening Hours
+              Giờ mở cửa
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-              Status
+              Trạng thái
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">
-              Action
+              Hành động
             </th>
           </tr>
           </thead>
           <tbody>
           <tr th:if="${#lists.isEmpty(canteenPage.content)}">
-            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">No canteen found</td>
+            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không tìm thấy căng tin nào</td>
           </tr>
           <tr th:each="canteen , iterStat  : ${canteenPage.content}">
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteenPage.number * canteenPage.size + iterStat.index + 1}">STT</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenName}">Name</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.location}">Location</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenName}">Tên</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.location}">Địa điểm</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
-              <img th:src="${canteen.canteenImg}" alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+              <img th:src="${canteen.canteenImg}" alt="Hình ảnh Căng tin" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
             </td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenPhone}">Phone</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingHours}">Opening Hours</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.isActive ? 'Active' : 'Inactive'}">Status</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenPhone}">Số điện thoại</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingHours}">Giờ mở cửa</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.isActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng thái</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
-              <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Edit</a>
+              <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Chỉnh sửa</a>
+              <a th:href="@{/assign-manager-form(canteenId=${canteen.canteenId})}" class="btn btn-secondary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Assign Manager</a>
             </td>
           </tr>
           </tbody>
         </table>
+
+
         <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
                     <span th:if="${canteenPage.hasPrevious()}">
                         <a th:href="@{/manage-canteen(page=${canteenPage.number - 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&laquo;</a>

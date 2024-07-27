@@ -204,6 +204,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Object[]> getOrderStatsByCanteenAndYear(Integer canteenId) {
+        return orderRepository.findOrderStatsByCanteenAndYear(canteenId);
+    }
+
+    @Override
     public List<Object[]> getBestSellingItemsByCanteen(Integer canteenId) {
         return orderRepository.findBestSellingItemsByCanteen(canteenId);
     }

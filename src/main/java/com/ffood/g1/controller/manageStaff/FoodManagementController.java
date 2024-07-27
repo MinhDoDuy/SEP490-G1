@@ -110,14 +110,14 @@ public class FoodManagementController {
                           @RequestParam("imageFood") MultipartFile imageFood) {
         try {
             if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
-                result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
+                result.rejectValue("foodName", "error.food", "Tên Đồ Ăn không được để chống hoặc không được bắt đầu ô trống");
                 model.addAttribute("message", "Tên món ăn không được để trống hoặc bắt đầu bằng khoảng cách.");
                 model.addAttribute("messageType", "error");
                 return "staff-management/add-food";
             }
 
             if (food.getDescription().trim().startsWith(" ")) {
-                result.rejectValue("description", "error.food", "Description cannot start with a space.");
+                result.rejectValue("description", "error.food", "mô tả không được bắt đầu bằng trống");
                 model.addAttribute("message", "Mô tả không được bắt đầu bằng dấu cách.");
                 model.addAttribute("messageType", "error");
                 return "staff-management/add-food";
@@ -136,7 +136,7 @@ public class FoodManagementController {
             }
             food.setSalesCount(0);
             foodService.save(food);
-            model.addAttribute("message", "Food added successfully!");
+            model.addAttribute("message", "Đồ Ăn thêm thành công vào căn tin");
             model.addAttribute("messageType", "success");
         } catch (SpringBootFileUploadException | IOException e) {
             model.addAttribute("message", "Error: " + e.getMessage());

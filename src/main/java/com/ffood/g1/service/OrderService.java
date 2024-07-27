@@ -47,7 +47,11 @@ public interface OrderService {
 
     void rejectOrder(Integer orderId);
 
+    //đơn thành công theo Tháng của canteen màn hình dashboard
     List<Object[]> getOrderStatsByCanteenAndMonth(Integer canteenId);
+    //đơn thành công theo Năm của canteen màn hình dashboard
+    List<Object[]> getOrderStatsByCanteenAndYear(Integer canteenId);
+
     List<Object[]> getBestSellingItemsByCanteen(Integer canteenId);
 
 

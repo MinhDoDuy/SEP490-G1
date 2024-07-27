@@ -67,7 +67,7 @@
               <tr th:each="feedback, iterStat : ${feedbacks.content}">
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedbacks.number * feedbacks.size + iterStat.index + 1}">STT</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.comment}">Bình luận</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackStatus}">Trạng thái</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackStatus.displayName}">Trạng thái</td>
                 <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <form th:action="@{'/approve-feedback/' + ${feedback.feedbackId}}" method="post" style="display: inline;">
