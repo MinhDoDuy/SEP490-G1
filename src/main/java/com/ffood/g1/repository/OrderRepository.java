@@ -151,6 +151,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusProgress(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
 
 
-    @Query("SELECT o FROM Order o WHERE o.user.userId = :userId")
+    @Query("SELECT o FROM Order o WHERE o.user.userId = :userId ORDER BY o.orderDate DESC")
     List<Order> findByUserId(@Param("userId") Integer userId);
 }
