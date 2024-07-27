@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +27,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -92,12 +95,25 @@ public class UserServiceImpl implements UserService {
         // Tạo URL đặt lại mật khẩu
         String resetUrl = baseUrl + "/reset-password?token=" + token;
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Password Reset Request");
-        message.setText("To reset your password, click the link below:\n" + resetUrl);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        mailSender.send(message);
+            helper.setTo(email);
+            helper.setSubject("Đặt lại mật khẩu");
+
+            String htmlMsg = "<html>" +
+                    "<body>" +
+                    "<p>Xác Nhận Đặt Lại Mật Khẩu, Nhấn vào nút bên dưới:</p>" +
+                    "<a href=\"" + resetUrl + "\" style=\"display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px;\">Xác Nhận Đổi Mật Khẩu</a>" +
+                    "</body>" +
+                    "</html>";
+            helper.setText(htmlMsg, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
     }
 
     //check token xem đã hết hạn hoặc là check token có tồn tại không
@@ -281,12 +297,25 @@ public class UserServiceImpl implements UserService {
         String baseUrl = UrlUtil.getBaseUrl(request);
         String assignUrl = baseUrl + "/assign-confirm?token=" + token + "&canteenId=" + canteenId;
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Assign Staff Request");
-        message.setText("To confirm assignment as staff, click the link below:\n" + assignUrl);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        mailSender.send(message);
+            helper.setTo(email);
+            helper.setSubject("Assign Staff Request");
+
+            String htmlMsg = "<html>" +
+                    "<body>" +
+                    "<p>Xác Nhận Làm Nhân Viên Căn Tin, Bấm nút dưới đây:</p>" +
+                    "<a href=\"" + assignUrl + "\" style=\"display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; text-decoration: none; border-radius: 4px;\">Xác Nhận Nhân Viên</a>" +
+                    "</body>" +
+                    "</html>";
+            helper.setText(htmlMsg, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
     }
 
 
