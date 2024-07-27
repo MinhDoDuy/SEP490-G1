@@ -89,10 +89,7 @@
     </style>
 </head>
 <body>
-<!-- Page Preloder -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
+
 
 <div th:replace="header :: header"></div>
 
@@ -113,7 +110,7 @@
     <!-- New Information Section -->
     <div class="container canteen-info" style="margin-top: 30px;background-color: #fff3cd" >
         <div>
-            <img src="/img/chococ.png" alt="Canteen Image" width="80" height="80">
+            <img th:src="${canteenInformation.canteenImg}" alt="Canteen Image" width="80" height="80">
             <div>
                 <span th:text="${canteenInformation.canteenName}">Canteen Name</span>
                 <span>Sản Phẩm: <span th:text="${countFoodsByCanteenId}"></span></span>
@@ -121,10 +118,6 @@
                 <span>Tổng số sản phẩm đã bán : <span th:text="${saleCountByCanteenId}">0</span></span>
             </div>
         </div>
-        <!--        <div>-->
-        <!--            <button class="btn btn-primary">Theo Dõi</button>-->
-        <!--            <button class="btn btn-secondary">Chat</button>-->
-        <!--        </div>-->
     </div>
     <hr class="section-divider">
     <div class="container">
@@ -177,8 +170,10 @@
                                                     </h4>
                                                     <p><span th:text="${food.canteen.canteenName}"
                                                              style="display: flex ; justify-content: left"></span></p>
-                                                    <p><span th:text="'Số lượng hiện có: '+${food.foodQuantity}"
+                                                    <p th:if="${food.foodQuantity}>0"><span th:text="'Số lượng hiện có: '+${food.foodQuantity}"
                                                              style="display: flex ; justify-content: left"></span></p>
+                                                    <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Tạm thời hết hàng</span></p>
+
                                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                                         <span class=" text-dark fs-5 fw-bold mb-0"><span
                                                                 class="formatted-price" th:text="${food.price}"></span></span>
@@ -228,13 +223,13 @@
                         <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
                             <div class="d-flex" th:each="feedback : ${feedbacksCanteen}">
                                 <!--                                <img th:src="${user.userImage}" class="img-fluid rounded-circle p-3"-->
-                                <img src="/img/chococ.png" class="img-fluid rounded-circle p-3"
+                                <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3"
                                      style="width: 100px; height: 100px;" alt="">
                                 <div class="">
-                                    <p class="mb-2" style="font-size: 14px;"><span th:text="${feedback.timeCreated}">April 12, 2024</span>
+                                    <p class="mb-2" style="font-size: 14px;"><span class="order-date" th:text="${feedback.timeCreated}">April 12, 2024</span>
                                     </p>
                                     <div class="d-flex justify-content-between">
-                                        <h5 th:text="${user.userName}">Sam Peters</h5>
+                                        <h5 th:text="${feedback.user.userName}">Sam Peters</h5>
                                     </div>
                                     <p class="text-dark" th:text="${feedback.comment}"></p>
                                 </div>
@@ -300,58 +295,6 @@
 </a>
 
 <script>
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     document.querySelectorAll('.nav-item a').forEach(item => {
-    //         item.addEventListener('click', function (event) {
-    //             event.preventDefault();
-    //             let categoryId = this.getAttribute('data-category-id');
-    //             console.log("Category ID: " + categoryId); // Ghi lại giá trị của categoryId
-    //
-    //             fetch(`/foodByCategory/${categoryId}`)
-    //                 .then(response => {
-    //                     if (!response.ok) {
-    //                         throw new Error('Network response was not ok ' + response.statusText);
-    //                     }
-    //                     return response.json();
-    //                 })
-    //                 .then(data => {
-    //                     console.log("Data received: ", data); // Ghi lại dữ liệu nhận được từ API
-    //
-    //                     let foodContainer = document.getElementById('food-container');
-    //                     foodContainer.innerHTML = '';
-    //
-    //                     data.forEach(food => {
-    //                         let foodElement = document.createElement('div');
-    //                         foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
-    //                         foodElement.innerHTML = `
-    //                              <div class="rounded position-relative fruite-item">
-    //                                 <div class="fruite-img">
-    //                                     <img src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="${food.foodName}">
-    //                                 </div>
-    //                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-    //                                     <span>${food.category.categoryName}</span>
-    //                                 </div>
-    //                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-    //                                     <h4><a href="#">${food.foodName}</a></h4>
-    //                                     <p><span>${food.canteen.canteenName}</span></p>
-    //                                     <div class="d-flex justify-content-between flex-lg-wrap">
-    //                                         <p class="text-dark fs-5 fw-bold mb-0">${food.price} đ</p>
-    //                                        <a th:href="@{/food_details(id=${food.foodId})} " class="btn border border-secondary rounded-pill px-3 text-primary">
-    //                                             <i class="fa fa-shopping-bag me-2 text-primary"></i> View
-    //                                         </a>
-    //                                     </div>
-    //                                 </div>
-    //                             </div>
-    //                         `;
-    //                         foodContainer.appendChild(foodElement);
-    //                     });
-    //                 })
-    //                 .catch(error => {
-    //                     console.error('There was a problem with the fetch operation:', error);
-    //                 });
-    //         });
-    //     });
-    // });
     // Function to format currency in VND
     function formatCurrencyVND(amount) {
         return new Intl.NumberFormat('vi-VN', {
@@ -365,6 +308,27 @@
         document.querySelectorAll('.formatted-price').forEach(function (element) {
             let price = element.innerText;
             element.innerText = formatCurrencyVND(price);
+        });
+    });
+
+    // Function to format date to a more readable format
+    function formatDate(dateString) {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        return new Date(dateString).toLocaleDateString('vi-VN', options);
+    }
+
+    // Format all order dates on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.order-date').forEach(function (element) {
+            let dateText = element.innerText;
+            element.innerText = formatDate(dateText);
         });
     });
 </script>

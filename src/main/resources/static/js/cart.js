@@ -17,7 +17,7 @@ $(document).ready(function () {
         }
         input.val(newVal);
         const cartItemId = event.target.getAttribute('id');
-        updateCartItemQuantity(cartItemId, newVal, false);
+        updateCartItemQuantity(cartItemId, newVal, input);
     });
     $('.custom-input').on('change', function (event) {
         const input = $(this);
@@ -27,14 +27,54 @@ $(document).ready(function () {
             input.val(1);
             newVal = 1;
         }
-        updateCartItemQuantity(cartItemId, newVal, true);
+        updateCartItemQuantity(cartItemId, newVal, input, true);
     });
 
-    function updateCartItemQuantity(cartItemId, quantity, manualChange) {
-        const element = document.getElementById('perPrice' + cartItemId);
-        const price = element.getAttribute('value') ?? 0;
-        const priceUpdate = price * quantity;
-        document.getElementById("totalPrice" + cartItemId).innerHTML = formatCurrencyVND(priceUpdate.toString());
+    function updateCartItemQuantity(cartItemId, quantity, input, changeByHand = false) {
+        const newCartItemId = changeByHand ? cartItemId.replace('quantity', '') : cartItemId;
+        const element = document.getElementById('totalPrice' + newCartItemId);
+        const perPrice = document.getElementById('perPrice' + newCartItemId)?.getAttribute('value') ?? 0;
+        const maxQuantity = element.getAttribute('max-order') ?? 0;
+        let priceUpdate;
+        if (parseInt(quantity) > parseInt(maxQuantity)) {
+            input.val(maxQuantity)
+            priceUpdate = perPrice * maxQuantity;
+            document.getElementById("totalPrice" + newCartItemId).innerHTML = formatCurrencyVND(priceUpdate.toString());
+            if (changeByHand) {
+                // Set a new debounce timeout
+                debounceTimeout = setTimeout(function () {
+                    // Make a new AJAX request
+                    currentRequest = $.ajax({
+                        url: '/update_cart_quantity',
+                        type: 'Get',
+                        data: {
+                            cartItemId: newCartItemId,
+                            quantity: quantity
+                        },
+                        success: function (response) {
+                            // Do nothing
+                            console.log(response);
+                        },
+                        error: function (error) {
+                            if (error.statusText !== 'abort') {
+                                console.error("Error updating quantity:", error);
+                            }
+                        }
+                    });
+                }, 100);
+            }
+            const err = document.getElementById('errorMessage')
+            err.style.visibility = "visible";
+            err.innerHTML = "Không được mua quá số lượng!";
+            setTimeout(function () {
+                err.style.visibility = "hidden";
+            },3000);
+            return;
+        }
+
+        priceUpdate = perPrice * quantity;
+
+        document.getElementById("totalPrice" + newCartItemId).innerHTML = formatCurrencyVND(priceUpdate.toString());
 
         // Abort the previous request if it exists
         if (currentRequest) {
@@ -52,7 +92,7 @@ $(document).ready(function () {
                 url: '/update_cart_quantity',
                 type: 'Get',
                 data: {
-                    cartItemId: cartItemId,
+                    cartItemId: newCartItemId,
                     quantity: quantity
                 },
                 success: function (response) {
@@ -78,4 +118,8 @@ function formatCurrencyVND(amount) {
 
 function updateQuantity(param1, param2, id) {
     // Do not implement at here !!!
+}
+
+function callAPI(currentRequest, newCartItemId, quantity) {
+
 }
