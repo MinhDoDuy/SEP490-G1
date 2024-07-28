@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -127,7 +128,6 @@ public class CartController {
         String email = authentication.getName();
         User user = userService.findByEmail(email);
         Integer userId = user.getUserId();
-
         Integer cartId = cartService.findCartIdByUserId(user.getUserId());
 
 
@@ -142,6 +142,9 @@ public class CartController {
         // Đưa dữ liệu giỏ hàng vào model
         model.addAttribute("cartItems", cartItems);
 
+        Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
+        int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
+        session.setAttribute("totalQuantity", totalQuantity);
         // Trả về trang HTML
         return "cart/cart";
     }
@@ -156,20 +159,21 @@ public class CartController {
 
     @GetMapping("/update_cart_quantity")
     public ResponseEntity<String> updateCartQuantity(@RequestParam("cartItemId") Integer cartItemId,
-                                                     @RequestParam("quantity") int quantity
-                                                     ) {
+                                                     @RequestParam("quantity") int quantity,
+                                                     Model model,
+                                                     HttpSession session
+    ) {
 
-       CartItem cart= cartItemRepository.getCartItemByCartItemId(cartItemId);
-        int foodQuantity =cart.getFood().getFoodQuantity();
+        CartItem cart = cartItemRepository.getCartItemByCartItemId(cartItemId);
+        int foodQuantity = cart.getFood().getFoodQuantity();
         try {
-            if (quantity<foodQuantity) {
+            if (quantity <= foodQuantity) {
                 cartItemService.updateCartItemQuantity(cartItemId, quantity);
                 return ResponseEntity.ok("Quantity updated successfully");
-            }else
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating quantity");
-
+            } else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error updating quantity");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating quantity");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error updating quantity");
         }
 
 

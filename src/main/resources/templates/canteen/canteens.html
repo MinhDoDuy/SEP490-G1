@@ -151,7 +151,9 @@
                                         <h4 style="height: 55.41px"><a th:href="@{/food_details(id=${food.foodId})} "
                                                                        th:text="${food.foodName}"></a></h4>
                                         <p><span th:text="${food.canteen.canteenName}"></span></p>
-                                        <p>Số lượng còn lại :<span th:text="${food.foodQuantity}"></span></p>
+                                        <p th:if="${food.foodQuantity}>0">Số lượng còn lại :<span th:text="${food.foodQuantity}"></span></p>
+                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Số lượng hiện có : HẾT HÀNG</span></p>
+
                                         <div class="d-flex justify-content-between flex-lg-wrap">
 
                                             <p class=" text-dark fs-5 fw-bold mb-0"><span class="formatted-price"

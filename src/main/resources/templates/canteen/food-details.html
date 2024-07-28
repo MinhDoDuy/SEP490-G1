@@ -187,17 +187,16 @@
                         <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
                             <div class="d-flex" th:if="${feedbacksFood.size() == 0}">
                                 <h6> Hiện tại chưa có nhận xét nào về sản phẩm này</h6>
-
                             </div>
                             <div class="d-flex" th:if="${feedbacksFood.size() != 0}"
                                  th:each="feedback : ${feedbacksFood}">
-                                <img src="/img/chococ.png" class="img-fluid rounded-circle p-3"
+                                <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3"
                                      style="width: 100px; height: 100px;" alt="">
                                 <div class="">
                                     <p class="mb-2" style="font-size: 14px;"><span th:text="${feedback.timeCreated}">April 12, 2024</span>
                                     </p>
                                     <div class="d-flex justify-content-between">
-                                        <h5 th:text="${user.userName}">Sam Peters</h5>
+                                        <h5 th:text="${feedback.user.userName}">Sam Peters</h5>
                                     </div>
                                     <p class="text-dark" th:text="${feedback.comment}"></p>
                                 </div>
