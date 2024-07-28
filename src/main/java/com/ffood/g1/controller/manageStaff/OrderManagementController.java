@@ -1,5 +1,6 @@
 package com.ffood.g1.controller.manageStaff;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.User;
@@ -54,6 +55,8 @@ public class OrderManagementController {
         Page<Order> orders;
 
         List<User> staffList = userService.getStaffByCanteenToShip(canteenId);
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+
 
         LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
         LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
@@ -90,6 +93,7 @@ public class OrderManagementController {
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("startDate", startDate.orElse(null));
         model.addAttribute("endDate", endDate.orElse(null));
+        model.addAttribute("canteenName", canteen.getCanteenName());
 
         return "staff-management/order-list";
     }
@@ -179,6 +183,8 @@ public class OrderManagementController {
         model.addAttribute("canteens",
                 canteenService.getCanteenById(canteenId));
         model.addAttribute("foods", foodRepository.findByCanteenId(canteenId));
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        model.addAttribute("canteenName", canteen.getCanteenName());
         if (session.getAttribute("successOrder") != null) {
             model.addAttribute("successOrder", session.getAttribute("successOrder"));
             session.removeAttribute("successOrder");

@@ -321,11 +321,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public boolean isAssignTokenValid(String token) {
-        ResetToken resetToken = resetTokenRepository.findByToken(token);
-        return resetToken != null && !resetToken.isExpired();
-    }
 
     @Override
     public void confirmAssignStaff(String token, Integer canteenId) {

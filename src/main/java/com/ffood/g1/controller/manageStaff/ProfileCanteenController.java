@@ -60,6 +60,6 @@ public class ProfileCanteenController {
         }
 
         canteenService.updateCanteen(canteen);
-        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?success=Profile updated successfully";
+        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?success=Cập nhật thông tin thành công";
     }
 }
