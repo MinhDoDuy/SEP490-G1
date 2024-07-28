@@ -160,20 +160,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable);
     }
 
-
     @Override
     public Page<User> getAllStaff(int page, int size, Integer canteenId) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAllStaffByCanteenId(canteenId, pageable);
     }
 
-
     @Override
     public User getUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
-
-
 
     @Override
     public void updateUserStatus(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
@@ -196,7 +192,6 @@ public class UserServiceImpl implements UserService {
         user.setCreatedDate(LocalDate.now());
         userRepository.save(user);
     }
-
 
 
     @Override
@@ -256,11 +251,6 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
         }
         userRepository.save(user);
-    }
-
-    @Override
-    public void saveUserWithDefaultRole(User user) {
-
     }
 
 

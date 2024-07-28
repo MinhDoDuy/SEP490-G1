@@ -18,7 +18,4 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         return orderDetailRepository.findByOrderOrderId(orderId);
     }
 
-    public List<OrderDetail> getOrderDetailsByOrder(Order order) {
-        return orderDetailRepository.findByOrder(order);
-    }
 }

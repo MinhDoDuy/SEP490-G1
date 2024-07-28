@@ -23,8 +23,6 @@ public interface UserService extends UserDetailsService {
 
     void registerNewUser(User user);
 
-    void saveUserWithDefaultRole(User user);
-
     boolean isCodeNameExist(String codeName);
 
     //forgot pass
