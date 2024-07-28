@@ -102,26 +102,6 @@
         }
     }
 
-    function validateCodeName() {
-        const codeNameInput = document.getElementById('codeName');
-        const codeNameValue = codeNameInput.value.trim();
-        const codeNamePattern = /^[a-zA-Z0-9]{6,20}$/;
-        const codeNameError = document.getElementById('codeNameError');
-
-        if (codeNameValue === '') {
-            codeNameError.innerText = 'MSSV không được để trống.';
-            codeNameError.style.display = 'block';
-            return false;
-        } else if (!codeNamePattern.test(codeNameValue)) {
-            codeNameError.innerText = 'MSSV không hợp lệ. Vui lòng nhập các chữ cái và số trong khoảng 6-20 ký tự.';
-            codeNameError.style.display = 'block';
-            return false;
-        } else {
-            codeNameError.style.display = 'none';
-            return true;
-        }
-    }
-
     function validatePhone() {
         const phoneInput = document.getElementById('phone');
         const phoneValue = phoneInput.value.trim();
@@ -146,6 +126,11 @@
         const emailInput = document.getElementById('email');
         const emailValue = emailInput.value.trim();
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const validDomains = ['gmail.com', 'fpt.edu.vn', 'outlook.com', 'fpt.com'];
+        const disposableDomains = [
+            'temp-mail.org', '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+            'yopmail.com', 'trashmail.com', 'dispostable.com', 'maildrop.cc', 'fakeinbox.com'
+        ];
         const emailError = document.getElementById('emailError');
 
         if (emailValue === '') {
@@ -157,10 +142,23 @@
             emailError.style.display = 'block';
             return false;
         } else {
-            emailError.style.display = 'none';
-            return true;
+            const emailDomain = emailValue.substring(emailValue.lastIndexOf('@') + 1);
+
+            if (disposableDomains.includes(emailDomain)) {
+                emailError.innerText = 'Email tạm thời không được chấp nhận.';
+                emailError.style.display = 'block';
+                return false;
+            } else if (!validDomains.includes(emailDomain)) {
+                emailError.innerText = 'Email phải có đuôi @gmail.com hoặc @fpt.edu.vn.';
+                emailError.style.display = 'block';
+                return false;
+            } else {
+                emailError.style.display = 'none';
+                return true;
+            }
         }
     }
+
 
     function validatePassword() {
         const passwordInput = document.getElementById('password');
