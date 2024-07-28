@@ -46,6 +46,10 @@
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Phản hổi người dùng của quán  <span th:text="${canteenName}"></span></div>
       </div>
+      <div th:if="${message}" class="alert alert-success" id="successAlert">
+        <span th:text="${message}"></span>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      </div>
 
       <div class="tab-content" id="feedbackTabsContent">
         <div class="tab-pane fade show active" id="feedbacks" role="tabpanel" aria-labelledby="feedbacks-tab">
@@ -131,6 +135,18 @@
       element.innerText = formatDate(dateText);
     });
   });
+
+  function hideAlert() {
+    var alert = document.getElementById('successAlert');
+    if (alert) {
+      setTimeout(function () {
+        alert.style.display = 'none';
+      }, 3000);
+    }
+  }
+
+  // Call the function to hide the alert
+  hideAlert();
 </script>
 </body>
 </html>

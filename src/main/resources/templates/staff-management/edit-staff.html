@@ -35,6 +35,15 @@
             width: auto;
         }
 
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
         .error-message {
             color: red;
             font-size: 12px;
@@ -96,33 +105,44 @@
                 <input type="hidden" th:field="*{userId}"/>
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}"/>
 
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="text" id="email" th:field="*{email}" readonly="readonly" class="form-control"/>
+                <!-- Row 1: Email and Full Name -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" id="email" th:field="*{email}" readonly="readonly" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">Họ Tên</label>
+                        <input type="text" id="fullName" th:field="*{fullName}" readonly="readonly"
+                               class="form-control"/>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="fullName" class="form-label">Họ Tên</label>
-                    <input type="text" id="fullName" th:field="*{fullName}" readonly="readonly" class="form-control"/>
+                <!-- Row 2: Gender and Role -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender" class="form-label">Giới Tính</label>
+                        <input type="text" id="gender" th:value="${user.gender ? 'Male' : 'Female'}" readonly="readonly"
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="role" class="form-label">Vị Trí</label>
+                        <input type="text" id="role" value="NHÂN VIÊN" disabled class="form-control"/>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="gender" class="form-label">Giới Tính</label>
-                    <input type="text" id="gender" th:value="${user.gender ? 'Male' : 'Female'}" readonly="readonly"
-                           class="form-control"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="role" class="form-label">Vị Trí</label>
-                    <input type="text" id="role" value="ROLE_STAFF" disabled class="form-control"/>
-                </div>
-
-                <div class="form-group">
-                    <label for="isActive" class="form-label">Trạng Thái</label>
-                    <select id="isActive" th:field="*{isActive}" class="form-control">
-                        <option th:value="true" th:text="'Active'" th:selected="${user.isActive == true}"></option>
-                        <option th:value="false" th:text="'Inactive'" th:selected="${user.isActive == false}"></option>
-                    </select>
+                <!-- Row 3: Status -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="isActive" class="form-label">Trạng Thái</label>
+                        <select id="isActive" th:field="*{isActive}" class="form-control">
+                            <option th:value="true" th:text="'Hoạt Động'" th:selected="${user.isActive == true}"></option>
+                            <option th:value="false" th:text="'Không Hoạt Động'"
+                                    th:selected="${user.isActive == false}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Lưu</button>
