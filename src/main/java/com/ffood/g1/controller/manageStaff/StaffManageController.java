@@ -147,7 +147,7 @@ public class StaffManageController {
                              RedirectAttributes redirectAttributes) {
         try {
             userService.sendAssignStaffEmail(email, request, canteenId);
-            redirectAttributes.addFlashAttribute("successMessage", "Token đã được gửi tới email!");
+            redirectAttributes.addFlashAttribute("successMessage", "Lời mời đã được gửi tới email!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

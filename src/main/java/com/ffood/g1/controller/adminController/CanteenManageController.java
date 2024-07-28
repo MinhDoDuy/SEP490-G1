@@ -183,7 +183,7 @@ public class CanteenManageController {
                                     RedirectAttributes redirectAttributes) {
         try {
             userService.sendAssignManagerEmail(email, request, canteenId);
-            redirectAttributes.addFlashAttribute("successMessage", "Token đã được gửi tới email!");
+            redirectAttributes.addFlashAttribute("successMessage", "Lời mời đã được gửi tới email!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

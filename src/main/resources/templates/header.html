@@ -80,7 +80,7 @@
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_MANAGER'}">
 
                                     <a th:href="@{/dashboard-manager(canteenId=${session.user.canteen.canteenId})}"
-                                       class="dropdown-item">Dashboard</a>
+                                       class="dropdown-item">Phân Tích</a>
                                 </div>
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_STAFF'}">
