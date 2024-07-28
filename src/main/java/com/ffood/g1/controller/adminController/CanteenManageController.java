@@ -151,6 +151,7 @@ public class CanteenManageController {
         // Cập nhật thông tin từ updatedCanteen sang existingCanteen
         existingCanteen.setCanteenName(updatedCanteen.getCanteenName());
         existingCanteen.setLocation(updatedCanteen.getLocation());
+        existingCanteen.setOpeningDay(updatedCanteen.getOpeningDay());
         existingCanteen.setCanteenPhone(updatedCanteen.getCanteenPhone());
         existingCanteen.setOpeningHours(updatedCanteen.getOpeningHours());
         existingCanteen.setIsActive(updatedCanteen.getIsActive());

@@ -186,6 +186,34 @@
                         </div>
                     </div>
                     <input type="hidden" id="openingHours" name="openingHours" th:field="*{openingHours}">
+
+                    <div class="inline-group">
+                        <div class="form-group mb-4">
+                            <label class="form-label">Ngày Mở</label>
+                            <select id="openingDayStart" class="form-control">
+                                <option value="Thứ 2">Thứ 2</option>
+                                <option value="Thứ 3">Thứ 3</option>
+                                <option value="Thứ 4">Thứ 4</option>
+                                <option value="Thứ 5">Thứ 5</option>
+                                <option value="Thứ 6">Thứ 6</option>
+                                <option value="Thứ 7">Thứ 7</option>
+                                <option value="Chủ Nhật">Chủ Nhật</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="form-label">Ngày Đóng</label>
+                            <select id="openingDayEnd" class="form-control">
+                                <option value="Thứ 2">Thứ 2</option>
+                                <option value="Thứ 3">Thứ 3</option>
+                                <option value="Thứ 4">Thứ 4</option>
+                                <option value="Thứ 5">Thứ 5</option>
+                                <option value="Thứ 6">Thứ 6</option>
+                                <option value="Thứ 7">Thứ 7</option>
+                                <option value="Chủ Nhật">Chủ Nhật</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" id="openingDay" name="openingDay" th:field="*{openingDay}">
                     <div id="error-message" class="text-danger mt-2"></div>
                     <div class="text-right mt-3">
                         <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>&nbsp;
@@ -235,9 +263,17 @@
         return (endHour > startHour) || (endHour === startHour && endMinute > startMinute);
     }
 
+    // Validate day selection
+    function validateDay(startDay, endDay) {
+        const daysOfWeek = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
+        return daysOfWeek.indexOf(startDay) <= daysOfWeek.indexOf(endDay);
+    }
+
     document.getElementById('canteenForm').addEventListener('submit', function (event) {
         const start = document.getElementById('openingHoursStart').value;
         const end = document.getElementById('openingHoursEnd').value;
+        const openingDayStart = document.getElementById('openingDayStart').value;
+        const openingDayEnd = document.getElementById('openingDayEnd').value;
         const errorMessage = document.getElementById('error-message');
 
         if (!validateTime(start, end)) {
@@ -246,8 +282,16 @@
             return;
         }
 
+        if (!validateDay(openingDayStart, openingDayEnd)) {
+            event.preventDefault();
+            errorMessage.textContent = 'Ngày đóng phải sau hoặc cùng ngày với ngày mở.';
+            return;
+        }
+
         const openingHours = `${start} - ${end}`;
+        const openingDay = `${openingDayStart} - ${openingDayEnd}`;
         document.getElementById('openingHours').value = openingHours;
+        document.getElementById('openingDay').value = openingDay;
         errorMessage.textContent = '';
     });
 
@@ -260,6 +304,14 @@
             const [start, end] = openingHours.split(' - ');
             document.getElementById('openingHoursStart').value = start;
             document.getElementById('openingHoursEnd').value = end;
+        }
+
+        // Set the start and end days if they are already set
+        const openingDay = document.getElementById('openingDay').value;
+        if (openingDay) {
+            const [openingDayStart, openingDayEnd] = openingDay.split(' - ');
+            document.getElementById('openingDayStart').value = openingDayStart;
+            document.getElementById('openingDayEnd').value = openingDayEnd;
         }
     });
 

@@ -80,6 +80,9 @@
               Giờ mở cửa
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+              Ngày mở cửa
+            </th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
               Trạng thái
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">
@@ -100,6 +103,7 @@
             </td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenPhone}">Số điện thoại</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingHours}">Giờ mở cửa</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingDay}">Ngày mở cửa</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.isActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng thái</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
               <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Chỉnh sửa</a>
