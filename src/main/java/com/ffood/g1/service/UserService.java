@@ -23,8 +23,6 @@ public interface UserService extends UserDetailsService {
 
     void registerNewUser(User user);
 
-    boolean isCodeNameExist(String codeName);
-
     //forgot pass
     void sendResetPasswordEmail(String email, HttpServletRequest request);
     boolean isResetTokenValid(String token);

@@ -72,10 +72,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElse(null);
     }
 
-    @Override
-    public boolean isCodeNameExist(String codeName) {
-        return userRepository.findByCodeName(codeName) != null;
-    }
+
 
 
     @Override
@@ -207,7 +204,7 @@ public class UserServiceImpl implements UserService {
 
     public Page<User> searchStaff(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
+        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable);
     }
 
 

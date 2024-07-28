@@ -87,18 +87,7 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).findById(userId);
     }
 
-    @Test
-    void isCodeNameExist() {
-        String codeName = "testCode";
-        User user = User.builder().codeName(codeName).build();
 
-        when(userRepository.findByCodeName(codeName)).thenReturn(user);
-
-        boolean result = service.isCodeNameExist(codeName);
-
-        assertTrue(result);
-        verify(userRepository, times(1)).findByCodeName(codeName);
-    }
 
     @Test
     void sendResetPasswordEmail() {
@@ -294,12 +283,12 @@ public class UserServiceImplTest {
         User user2 = User.builder().userId(2).build();
         Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
 
-        when(userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable)).thenReturn(userPage);
+        when(userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable)).thenReturn(userPage);
 
         Page<User> result = service.searchStaff(keyword, page, size);
 
         assertEquals(2, result.getTotalElements());
-        verify(userRepository, times(1)).findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
+        verify(userRepository, times(1)).findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable);
     }
 
     @Test

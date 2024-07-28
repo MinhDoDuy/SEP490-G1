@@ -26,13 +26,6 @@
                     </div>
                 </div>
                 <div class="form-wrapper">
-                    <label for="codeName">MSSV: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
-                    <div class="form-holder">
-                        <input type="text" class="form-control" id="codeName" name="codeName" th:field="*{codeName}" oninput="hideError('codeNameError'); validateCodeName();">
-                        <p class="help-block text-danger" id="codeNameError" th:text="${codeNameExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
-                    </div>
-                </div>
-                <div class="form-wrapper">
                     <label for="email">Email: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
                         <input type="text" class="form-control" id="email" name="email" th:field="*{email}" oninput="hideError('emailError'); validateEmail();">

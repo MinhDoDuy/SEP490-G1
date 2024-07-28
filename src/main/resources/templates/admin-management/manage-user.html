@@ -111,7 +111,6 @@
                     <tr th:each="user, iterStat : ${userPage.content}">
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${userPage.number * userPage.size + iterStat.index + 1}">STT</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.fullName}">Họ và Tên</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.codeName}">Tên Mã</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.phone}">Số Điện Thoại</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen != null}" th:text="${user.canteen.canteenName}">Căn Tin</td>

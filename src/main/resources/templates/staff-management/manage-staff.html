@@ -81,7 +81,6 @@
                     <tr th:each="staff, iterStat : ${staffPage.content}">
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staffPage.number * staffPage.size + iterStat.index + 1}">STT</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.fullName}">Full Name</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.codeName}">Code Name</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.phone}">Phone</td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
