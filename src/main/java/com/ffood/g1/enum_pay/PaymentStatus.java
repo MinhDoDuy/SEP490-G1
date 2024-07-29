@@ -2,15 +2,22 @@ package com.ffood.g1.enum_pay;
 
 
 public enum PaymentStatus {
-    PENDING_PAYMENT(1, "PENDING_PAYMENT"),
-    PAYMENT_COMPLETE(2, "PAYMENT_COMPLETE");
+    PENDING_PAYMENT(1, "PENDING_PAYMENT","Đang chờ thanh toán"),
+    PAYMENT_COMPLETE(2, "PAYMENT_COMPLETE","Thanh toán hoàn tất");
 
     private final int value;
     private final String code;
+    private final String displayName;
 
-    PaymentStatus(int value, String code) {
+    public String getDisplayName() {
+        return displayName;
+    }
+
+
+    PaymentStatus(int value, String code, String displayName) {
         this.value = value;
         this.code = code;
+        this.displayName = displayName;
     }
 
     public int getValue() {
@@ -38,4 +45,7 @@ public enum PaymentStatus {
         }
         throw new IllegalArgumentException("Unknown code: " + code);
     }
+
+
+    
 }

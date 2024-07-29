@@ -64,15 +64,14 @@
             <div class="col-md-12 col-lg-5">
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active rounded" th:each="canteen, stat : ${canteens}"
+                        <div class="carousel-item active rounded" th:each="food, stat : ${items_home}"
                              th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                            <img th:src="${canteen.canteenImg}" class="img-fluid w-100 h-100 rounded" alt="First slide">
+                            <img th:src="${food.imageFood}" class="img-fluid w-100 h-100 rounded" alt="First slide">
                             <div class="carousel-caption d-none d-md-block ">
-                                <h5 th:text="${canteen.canteenPhone}"></h5>
-                                <p th:text="${canteen.openingHours}"></p>
+                                <a th:href="@{/food_details(id=${food.foodId})}"><h5 th:text="${food.foodName}"></h5></a>
+<!--                                <p class="formatted-price" th:text="${food.price}"></p>-->
                             </div>
-                            <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}"
-                               class="btn px-4 py-2 text-white rounded" th:text="${canteen.canteenName}"></a>
+
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
@@ -421,9 +420,6 @@
 <!-- JavaScript Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/lib/easing/easing.min.js" th:src="@{/lib/easing/easing.min.js}"></script>
-<script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
-<script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
-<script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 <script src="/lib/waypoints/waypoints.min.js" th:src="@{/lib/waypoints/waypoints.min.js}"></script>
 <script src="/lib/lightbox/js/lightbox.min.js" th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
 <script src="/lib/owlcarousel/owl.carousel.min.js" th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>

@@ -65,7 +65,7 @@ $(document).ready(function () {
             }
             const err = document.getElementById('errorMessage')
             err.style.visibility = "visible";
-            err.innerHTML = "Không được mua quá số lượng!";
+            err.innerHTML = "Không được mua quá số lượng hiện có!";
             setTimeout(function () {
                 err.style.visibility = "hidden";
             },3000);

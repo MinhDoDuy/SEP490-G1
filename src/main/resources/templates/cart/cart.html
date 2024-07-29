@@ -41,9 +41,9 @@
         }
 
         .custom-btn {
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
+            width: 25px;
+            height: 25px;
+            font-size: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -54,20 +54,16 @@
 
 <body>
 
-<!-- Page Preloader -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
-
 <div th:replace="header :: header"></div>
 
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Cart</h1>
+</div>
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Giỏ hàng</h1>
     <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="#">Trang Chủ</a></li>
-        <li class="breadcrumb-item"><a href="#">Trang</a></li>
-        <li class="breadcrumb-item active text-white">Cart</li>
+        <li class="breadcrumb-item"><a href="/homepage">Trang Chủ</a></li>
+        <li class="breadcrumb-item active text-white">Giỏ hàng</li>
     </ol>
 </div>
 <!-- Single Page Header End -->
@@ -120,7 +116,7 @@
                         <td>
                             <div class="input-group quantity mt-4" style="width: 150px;">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-minus rounded-circle bg-light border custom-btn"
+                                    <button class=" btn-minus rounded-circle bg-light border custom-btn" type="button"
                                             id="cart-add"
                                             th:value="${cartItem.cartItemId}"
                                             onclick="updateQuantity(this, 'minus', getId())">
@@ -137,7 +133,7 @@
                                        th:id="'quantity' + ${cartItem.cartItemId}"
                                        th:value="${cartItem.quantity}" min="1">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-plus rounded-circle bg-light border custom-btn"
+                                    <button class=" btn-plus rounded-circle bg-light border custom-btn" type="button"
                                             data-cart-item-id="[[${cartItem.cartItemId}]]"
                                             th:value="${cartItem.cartItemId}"
                                             onclick="updateQuantity(this, 'plus', getId())">
@@ -145,9 +141,7 @@
                                            th:value="${cartItem.cartItemId}"></i>
                                     </button>
                                 </div>
-                            </div>
-                            <div>
-                                <span class="error-message" id="errorMessage" style="color:red; visibility:hidden" name="errorMessage">Error message here</span>
+
                             </div>
                         </td>
                         <td>
@@ -166,9 +160,12 @@
                             </form>
                         </td>
                     </tr>
-<!--                    <tr type="hidden" id="errorMessage" style="color:red;visibility:hidden" name="errorMessage"></tr>-->
+
                     </tbody>
                 </table>
+
+                <span type="hidden" id="errorMessage" style="color:red;visibility:hidden;" name="errorMessage"></span>
+
 
             </div>
         </div>
@@ -188,18 +185,6 @@
             <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
                 <div class="bg-light rounded">
                     <form action="/checkout" method="get">
-                        <!--                        <div class="p-4">-->
-                        <!--                            <h1 class="display-6 mb-4">Thanh Toán Giỏ Hàng</h1>-->
-                        <!--                            <div class="d-flex justify-content-between mb-4">-->
-                        <!--                                <h5 class="mb-0 me-4">Tổng số món ăn : </h5>-->
-                        <!--                                <p class="mb-0"><span th:text="${totalQuantity}"></span></p>-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">-->
-                        <!--                            <h5 class="mb-0 ps-4 me-4">Total</h5>-->
-                        <!--                            <p class="mb-0 pe-4"><span class="formatted-price" th:value="${totalOrderPrice}"-->
-                        <!--                                                       th:text="${totalOrderPrice}"></span></p>-->
-                        <!--                        </div>-->
                         <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
                                 type="submit">Thanh Toán
                         </button>
@@ -250,22 +235,6 @@
         });
     });
 
-    // function validateQuantity() {
-    //     const quatityFood = document.getElementById('foodQuantity');
-    //     const quatityCart = document.getElementById('');
-    //     if (passwordValue === '') {
-    //         passwordError.innerText = 'Mật khẩu không được để trống.';
-    //         passwordError.style.display = 'block';
-    //         return false;
-    //     } else if (passwordValue.length < 6) {
-    //         passwordError.innerText = 'Mật khẩu phải có ít nhất 6 ký tự.';
-    //         passwordError.style.display = 'block';
-    //         return false;
-    //     } else {
-    //         passwordError.style.display = 'none';
-    //         return true;
-    //     }
-    // }
 </script>
 <!-- Template Javascript -->
 <script th:src="@{/js/main_test.js}"></script>

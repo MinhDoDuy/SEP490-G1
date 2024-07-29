@@ -98,20 +98,16 @@
 
 <body>
 
-<!-- Page Preloader -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
-
 <div th:replace="header :: header"></div>
 
+<div class="container-fluid page-header py-5">
+</div>
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Cart</h1>
+    <h1 class="text-center text-white display-6">Lịch sử mua hàng</h1>
     <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Pages</a></li>
-        <li class="breadcrumb-item active text-white">Cart</li>
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white">Lịch sử mua hàng</li>
     </ol>
 </div>
 <!-- Single Page Header End -->
@@ -127,11 +123,15 @@
                     </h6>
                 </div>
                 <div class="order-status">
-                    <span th:text="${order.orderStatus}"></span>
+                    <span th:text="${order.orderStatus.displayName}"></span>
                 </div>
             </div>
-            <p>Mã đơn hàng: <span th:text="${order.orderCode}"></span></p>
-            <p>Ngày đặt hàng: <span class="order-date" th:text="${order.orderDate}"></span></p>
+            <div style="display: flex; justify-content: space-between; align-items: center;margin-right: 50px;margin-left: 50px">
+                <p>Mã đơn hàng: <span th:text="${order.orderCode}"></span></p>
+                <p th:if="${order.deliveryRoleId}">Nhân viên giao hàng: <span th:text="${order.deliveryRoleName}"></span></p>
+            </div>
+
+            <p style="margin-right: 50px;margin-left: 50px">Ngày đặt hàng: <span class="order-date" th:text="${order.orderDate}"></span></p>
             <hr>
             <div th:each="detail : ${order.orderDetails}" class="order-details bordered-div">
                 <img th:src="${detail.food.imageFood}" alt="Product Image">
@@ -147,8 +147,8 @@
 
             <div class="order-footer">
                 <div>
-                    <button class="btn btn-outline-danger btn-sm" th:text="${order.orderType}"></button>
-                    <button class="btn btn-outline-success btn-sm" th:text="${order.paymentMethod}"></button>
+                    <button class="btn btn-outline-danger btn-sm" th:text="${order.orderType.displayName}"></button>
+                    <button class="btn btn-outline-success btn-sm" th:text="${order.paymentMethod.displayName}"></button>
                 </div>
                 <div>
                     <p>Thành tiền: <span class="order-price formatted-price" th:text="${order.totalOrderPrice}"></span>

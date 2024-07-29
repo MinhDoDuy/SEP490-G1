@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zxx" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8">
     <title>Fruitables - Vegetable Website Template</title>
@@ -11,8 +10,7 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
@@ -30,10 +28,10 @@
 
     <style>
         .quantity-input {
-            width: 120px; /* Tăng kích thước chiều rộng */
-            height: 50px; /* Tăng kích thước chiều cao */
-            font-size: 1.5rem; /* Tăng kích thước font chữ */
-            text-align: center; /* Canh giữa chữ */
+            width: 120px;
+            height: 50px;
+            font-size: 1.5rem;
+            text-align: center;
         }
 
         .quantity-input::-webkit-inner-spin-button,
@@ -46,77 +44,27 @@
             -moz-appearance: textfield;
         }
     </style>
-    <style>
-        .toast {
-            visibility: hidden;
-            max-width: 50%;
-            margin: 0 auto;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 2px;
-            padding: 16px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .toast.show {
-            visibility: visible;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        }
-
-        @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-    </style>
 </head>
 
 <body>
-<!-- Page Preloder -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
 
 <div th:replace="header :: header"></div>
 
-
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Shop Detail</h1>
+
+</div>
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Chi tiết sản phẩm</h1>
     <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Pages</a></li>
-        <li class="breadcrumb-item active text-white">Shop Detail</li>
+        <li class="breadcrumb-item"><a href="/homepage">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white">Chi tiết sản phẩm</li>
     </ol>
 </div>
 <!-- Single Page Header End -->
 
 <!-- Single Product Start -->
 <div class="container-fluid py-5 mt-5">
-
     <div class="container py-5">
         <div class="row g-4 mb-5">
             <div class="col-lg-8 col-xl-9">
@@ -129,17 +77,13 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <!--                        id="add-to-cart-form-${food.foodId}"-->
-                        <form id="addToCartForm" th:action="@{/add_to_cart}" method="GET"
-                              class="mb-3">
-
+                        <!-- id="add-to-cart-form-${food.foodId}" -->
+                        <form id="addToCartForm" th:action="@{/add_to_cart}" method="GET" class="mb-3">
                             <h4 class="fw-bold mb-3"><span th:text="${food.foodName}"> </span></h4>
                             <span th:if="${food.salesCount == null}" th:text="'Đã bán : 0 sản phẩm'"></span>
-                            <span th:if="${food.salesCount != null }"
-                                  th:text="'Đã bán : '+${food.salesCount}  +' sản phẩm'"></span>
+                            <span th:if="${food.salesCount != null }" th:text="'Đã bán : '+${food.salesCount}  +' sản phẩm'"></span>
                             <p class="mb-3">Category: <span th:text="${food.category.categoryName}"></span></p>
-                            <span class="fw-bold mb-3">Giá: <span class="formatted-price"
-                                                                  th:text="${food.price}"></span> </span>
+                            <span class="fw-bold mb-3">Giá: <span class="formatted-price" th:text="${food.price}"></span> </span>
                             <input type="hidden" class="formatted-price" name="price" th:value="${food.price}"/>
 
                             <p class="mb-4">Mô tả về món ăn : <span th:text="${food.description}"></span></p>
@@ -147,21 +91,14 @@
                             <input type="hidden" name="foodId" th:value="${food.foodId}"/>
                             <div class="input-group mb-3" th:if="${food.foodQuantity}>0">
                                 <div class="input-group-prepend">
-                                    <button type="button" class="btn btn-outline-secondary"
-                                            onclick="decreaseQuantity('${food.foodId}')">-
-                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity('${food.foodId}')">-</button>
                                 </div>
                                 <label for="quantity-${food.foodId}">
-                                    <input type="number" id="quantity-${food.foodId}" name="quantity"
-                                           class="form-control text-center quantity-input" value="1" min="1"
-                                           th:max="${food.foodQuantity}" required>
+                                    <input type="number" id="quantity-${food.foodId}" name="quantity" class="form-control text-center quantity-input" value="1" min="1" th:max="${food.foodQuantity}" required>
                                 </label>
                                 <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-secondary"
-                                            onclick="increaseQuantity('${food.foodId}')">+
-                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity('${food.foodId}')">+</button>
                                 </div>
-
                             </div>
                             <p class="mb-4" th:if="${food.foodQuantity}>0">Số lượng sản phẩm còn lại : <span th:text="${food.foodQuantity}"></span></p>
                             <p class="mb-4" th:if="${food.foodQuantity}==0" style="color: #cc3030">Sản phẩm tạm thời hết hàng !!! </p>
@@ -169,6 +106,28 @@
                             <button type="submit" class="btn btn-primary" th:if="${food.foodQuantity}>0">
                                 <i class="fa fa-shopping-bag me-2"></i> Add to cart
                             </button>
+                            <!-- Success Modal -->
+                            <div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document" >
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
+                                        </div>
+                                        <div class="modal-body" >
+                                            <span th:text="${messageAddFood}"></span>
+                                        </div>
+                                        <div class="modal-footer" th:if="${messageAddFoodStatus}==1">
+                                            <span>Nếu bạn muốn xem thêm các sản phẩm cùng cửa hàng hãy chọn "Vào Cửa Hàng"</span>
+                                            <a th:href="@{/canteen_info(canteenId=${food.canteen.canteenId})}"><button type="button" class="btn btn-primary" data-dismiss="modal">Vào Cửa Hàng</button></a>
+                                        </div>
+                                        <div class="modal-footer" th:if="${messageAddFoodStatus}==0">
+                                            <span>Nếu bạn muốn thêm sản phẩm này vào giỏ hàng hãy chọn "Xóa và Thêm"(lưu ý: Các món ăn trong giỏ hàng của bạn sẽ bị xóa)</span>
+                                            <a th:href="@{/change_cart(foodId=${food.foodId},url=3)}" ><button type="button" class="btn btn-primary" data-dismiss="modal" style="background-color: red">Xóa và Thêm</button>
+                                                <a th:href="@{/canteen_info(canteenId=${canteenIdExist})}"><button type="button" class="btn btn-primary" data-dismiss="modal" >Vào Cửa Hàng</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -177,10 +136,7 @@
                 <div class="col-lg-12">
                     <nav>
                         <div class="nav nav-tabs mb-3">
-                            <button class="nav-link border-white border-bottom-0" type="button" role="tab"
-                                    id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
-                                    aria-controls="nav-mission" aria-selected="false">Reviews
-                            </button>
+                            <button class="nav-link border-white border-bottom-0" type="button" role="tab" id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission" aria-controls="nav-mission" aria-selected="false">Reviews</button>
                         </div>
                     </nav>
                     <div class="tab-content mb-5">
@@ -188,13 +144,10 @@
                             <div class="d-flex" th:if="${feedbacksFood.size() == 0}">
                                 <h6> Hiện tại chưa có nhận xét nào về sản phẩm này</h6>
                             </div>
-                            <div class="d-flex" th:if="${feedbacksFood.size() != 0}"
-                                 th:each="feedback : ${feedbacksFood}">
-                                <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3"
-                                     style="width: 100px; height: 100px;" alt="">
+                            <div class="d-flex" th:if="${feedbacksFood.size() != 0}" th:each="feedback : ${feedbacksFood}">
+                                <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
                                 <div class="">
-                                    <p class="mb-2" style="font-size: 14px;"><span th:text="${feedback.timeCreated}">April 12, 2024</span>
-                                    </p>
+                                    <p class="mb-2" style="font-size: 14px;"><span th:text="${feedback.timeCreated}">April 12, 2024</span></p>
                                     <div class="d-flex justify-content-between">
                                         <h5 th:text="${feedback.user.userName}">Sam Peters</h5>
                                     </div>
@@ -206,25 +159,20 @@
                 </div>
                 <hr class="section-divider">
                 <!-- Leave a Reply Form -->
-                <form th:action="@{/create_new_feedback_food}"
-                      method="post">
+                <form th:action="@{/create_new_feedback_food}" method="post">
                     <h4 class="mb-5 fw-bold">Leave a Reply</h4>
                     <input type="hidden" name="canteenId" th:value="${food.canteen.canteenId}" readonly>
                     <input type="hidden" name="foodId" th:value="${food.foodId}" readonly>
                     <div class="row g-4">
                         <div class="col-lg-12">
                             <div class="border-bottom rounded my-4">
-        <textarea name="comment" id="comment" class="form-control border-2" cols="30" rows="8"
-                  placeholder="Ý kiến của bạn về cửa hàng *" spellcheck="false"></textarea>
+                                <label for="comment"></label><textarea name="comment" id="comment" class="form-control border-2" cols="30" rows="8" placeholder="Ý kiến của bạn về cửa hàng *" spellcheck="false"></textarea>
                             </div>
                         </div>
 
                         <div class="col-lg-12">
                             <div class="d-flex justify-content-between py-3 mb-5">
-                                <button type="submit"
-                                        class="btn border border-secondary text-primary rounded-pill px-4 py-3"
-                                >Post Comment
-                                </button>
+                                <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3">Post Comment</button>
                             </div>
                         </div>
                     </div>
@@ -235,9 +183,7 @@
                     <div class="col-lg-12">
                         <form id="categoryForm" action="/canteen_details" method="get">
                             <div class="input-group w-100 mx-auto d-flex mb-4">
-                                <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
-                                       name="name" th:value="${name}" placeholder="Search for food..."
-                                       onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
+                                <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" name="name" th:value="${name}" placeholder="Search for food..." onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
                             </div>
                         </form>
                         <div class="mb-4">
@@ -245,14 +191,8 @@
                             <ul class="list-unstyled fruite-categorie">
                                 <li th:each="category : ${categories}">
                                     <div class="d-flex justify-content-lg-start fruite-name">
-                                        <input class="pixel-checkbox" type="checkbox"
-                                               style="margin-right: 30px;margin-left: 20px"
-                                               name="checkedCategories " th:value="${category.categoryId}"
-                                               id="${'category_' + category.categoryId}"
-                                               onchange="document.getElementById('categoryForm').submit()"
-                                               th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
-                                        <label for="${'category_' + category.categoryId}"
-                                               th:text="${category.categoryName}" style="color: #0b0b0b"></label>
+                                        <input class="pixel-checkbox" type="checkbox" style="margin-right: 30px;margin-left: 20px" name="checkedCategories" th:value="${category.categoryId}" id="${'category_' + category.categoryId}" onchange="document.getElementById('categoryForm').submit()" th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
+                                        <label for="${'category_' + category.categoryId}" th:text="${category.categoryName}" style="color: #0b0b0b"></label>
                                     </div>
                                 </li>
                             </ul>
@@ -262,13 +202,10 @@
                         <h4 class="mb-4">Sản phẩm bán chạy</h4>
                         <div class="d-flex align-items-center justify-content-start" th:each="food : ${items_home}">
                             <div class="rounded" style="width: 100px; height: 100px;">
-                                <img th:src="${food.imageFood}" class="img-fluid rounded"
-                                     style="width: 80px;height: 80px" alt="Image">
+                                <img th:src="${food.imageFood}" class="img-fluid rounded" style="width: 80px;height: 80px" alt="Image">
                             </div>
                             <div>
-                                <h6 class="mb-2"><a th:href="@{/food_details(id=${food.foodId})}"><span
-                                        th:text="${food.foodName}"></span></a></h6>
-
+                                <h6 class="mb-2"><a th:href="@{/food_details(id=${food.foodId})}"><span th:text="${food.foodName}"></span></a></h6>
                                 <div class="d-flex mb-2">
                                     <span class=" fw-bold me-2" th:value="${food.price}"></span>
                                 </div>
@@ -283,18 +220,17 @@
 </div>
 <!-- Single Product End -->
 
+
 <!-- Footer Start -->
 <div th:replace="footer :: footer"></div>
 <!-- Footer End -->
 
 <!-- Back to Top -->
-<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
-        class="fa fa-arrow-up"></i></a>
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
 
 <!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/lib/easing/easing.min.js}"></script>
 <script th:src="@{/lib/waypoints/waypoints.min.js}"></script>
 <script th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
@@ -325,19 +261,9 @@
 
     // Hiển thị thông báo từ server nếu có
     document.addEventListener('DOMContentLoaded', function () {
-        const messageElement = document.getElementById('toast-message');
-        const message = messageElement ? messageElement.value : null;
-
+        const message = /*[[${messageAddFood}]]*/ 'Food item added to the cart successfully!';
         if (message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast show';
-            toast.innerText = message;
-            document.body.appendChild(toast);
-
-            setTimeout(function () {
-                toast.classList.remove('show');
-                document.body.removeChild(toast);
-            }, 5000);
+            $('#successModal').modal('show');
         }
     });
 
@@ -356,10 +282,7 @@
             element.innerText = formatCurrencyVND(price);
         });
     });
-
 </script>
 
-<input type="hidden" id="toast-message" th:value="${messageAddFood}"/>
 </body>
-
 </html>
