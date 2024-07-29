@@ -23,6 +23,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Page<User> findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase
 	(String fullName, String email, Pageable pageable);
 
+	@Query("SELECT u FROM User u WHERE (u.email LIKE %:keyword% OR u.fullName LIKE %:keyword%) AND u.role.roleId = :roleId AND u.canteen.canteenId = :canteenId")
+	Page<User> findByKeywordRoleIdAndCanteenId(@Param("keyword") String keyword, @Param("roleId") Integer roleId, @Param("canteenId") Integer canteenId, Pageable pageable);
+
 	@Query("SELECT u FROM User u WHERE " +
 			"(LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
 			"OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
@@ -34,8 +37,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("SELECT u FROM User u WHERE u.canteen.canteenId = :canteenId AND u.role.roleId = 2")
 	Page<User> findAllStaffByCanteenId(@Param("canteenId") Integer canteenId, Pageable pageable);
 
-	@Query("SELECT u FROM User u WHERE u.role.roleName = :roleName")
-	Page<User> findAllByRoleName(@Param("roleName") String roleName, Pageable pageable);
+	@Query("SELECT u FROM User u WHERE u.role.roleId = :roleId AND u.canteen.canteenId = :canteenId")
+	Page<User> findAllByRoleIdAndCanteenId(@Param("roleId") Integer roleId, @Param("canteenId") Integer canteenId, Pageable pageable);
 
 
 	@Query("SELECT COUNT(u) FROM User u WHERE u.role.roleId = 2 AND u.canteen.canteenId = :canteenId")

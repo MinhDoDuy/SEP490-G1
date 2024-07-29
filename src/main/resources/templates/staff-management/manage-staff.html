@@ -69,7 +69,6 @@
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Email</th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Số Điện Thoại</th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Vị Trí</th>
-                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng Thái</th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Hành Động</th>
                     </tr>
                     </thead>
@@ -85,7 +84,6 @@
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <span th:if="${staff.role.roleName == 'ROLE_STAFF'}">Nhân viên</span>
                         </td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.isActive ? 'Hoạt động' : 'Không hoạt động'}">Status</td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <a th:href="@{/edit-staff/{userId}(userId=${staff.userId}, canteenId=${canteenId})}" class="btn btn-primary"
                                style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Sửa</a>

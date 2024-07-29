@@ -49,9 +49,9 @@ public interface UserService extends UserDetailsService {
 
     Page<User> getAllStaff(int page, int size, Integer canteenId);
 
-    Page<User> getStaffUsers(int page, int size);
+    Page<User> getStaffUsers(int page, int size, int roleId, int canteenId);
 
-    Page<User> searchStaff(String keyword, int page, int size);
+    Page<User> searchStaff(String keyword, int page, int size, int roleId, int canteenId);
 
     Integer countStaffByCanteenId(Integer canteenId);
 

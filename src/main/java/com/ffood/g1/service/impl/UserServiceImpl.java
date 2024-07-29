@@ -197,16 +197,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public Page<User> getStaffUsers(int page, int size) {
+    public Page<User> getStaffUsers(int page, int size, int roleId, int canteenId) {
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAllByRoleName("staff", pageable);
+        return userRepository.findAllByRoleIdAndCanteenId(roleId, canteenId, pageable);
     }
-
-    public Page<User> searchStaff(String keyword, int page, int size) {
+    public Page<User> searchStaff(String keyword, int page, int size, int roleId, int canteenId) {
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable);
+        return userRepository.findByKeywordRoleIdAndCanteenId(keyword, roleId, canteenId, pageable);
     }
-
 
 
     @Override

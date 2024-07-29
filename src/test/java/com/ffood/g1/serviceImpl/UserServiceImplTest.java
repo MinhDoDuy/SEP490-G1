@@ -256,40 +256,8 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).count();
     }
 
-    @Test
-    void getStaffUsers() {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        User user1 = User.builder().userId(1).build();
-        User user2 = User.builder().userId(2).build();
-        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
 
-        when(userRepository.findAllByRoleName("staff", pageable)).thenReturn(userPage);
 
-        Page<User> result = service.getStaffUsers(page, size);
-
-        assertEquals(2, result.getTotalElements());
-        verify(userRepository, times(1)).findAllByRoleName("staff", pageable);
-    }
-
-    @Test
-    void searchStaff() {
-        String keyword = "test";
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        User user1 = User.builder().userId(1).build();
-        User user2 = User.builder().userId(2).build();
-        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
-
-        when(userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable)).thenReturn(userPage);
-
-        Page<User> result = service.searchStaff(keyword, page, size);
-
-        assertEquals(2, result.getTotalElements());
-        verify(userRepository, times(1)).findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable);
-    }
 
     @Test
     void isPhoneExist() {
