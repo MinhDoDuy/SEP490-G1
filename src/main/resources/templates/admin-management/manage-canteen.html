@@ -25,14 +25,14 @@
         <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
       </li>
       <li class="text-gray-600 mr-2 font-medium">/</li>
-      <li class="text-gray-600 mr-2 font-medium">View All Canteen</li>
+      <li class="text-gray-600 mr-2 font-medium">Xem Tất Cả Căn Tin</li>
     </ul>
   </div>
 
   <div class="p-6">
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
-        <div class="font-medium">Manage Canteens</div>
+        <div class="font-medium">Quản Lý Căn Tin </div>
       </div>
 
       <div class="flex justify-between items-center mb-4">
@@ -48,6 +48,7 @@
         <div class="flex items-center">
           <a th:href="@{/add-canteen}" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Thêm căn tin mới</a>
         </div>
+
 
       </div>
       <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
@@ -80,6 +81,9 @@
               Giờ mở cửa
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+              Ngày mở cửa
+            </th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
               Trạng thái
             </th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">
@@ -100,10 +104,15 @@
             </td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.canteenPhone}">Số điện thoại</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingHours}">Giờ mở cửa</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.openingDay}">Ngày mở cửa</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${canteen.isActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng thái</td>
             <td class="py-2 px-4 border-b border-b-gray-50">
-              <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Chỉnh sửa</a>
-              <a th:href="@{/assign-manager-form(canteenId=${canteen.canteenId})}" class="btn btn-secondary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">Assign Manager</a>
+              <a th:href="@{/edit-canteen/{canteenId}(canteenId=${canteen.canteenId})}" class="btn btn-primary" title="Sửa" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">
+                <i class="ri-edit-box-line" style="margin-right: 5px;" ></i>
+              </a>
+
+              <a th:href="@{/assign-manager-form(canteenId=${canteen.canteenId})}" class="btn btn-secondary" title="Đăng Ký Quản Lý" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">
+                <i class="ri-user-add-line"></i></a>
             </td>
           </tr>
           </tbody>

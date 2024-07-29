@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface OrderDetailService {
     List<OrderDetail> getOrderDetailsByOrderId(Integer orderId);
-    List<OrderDetail> getOrderDetailsByOrder(Order order);
+
 }

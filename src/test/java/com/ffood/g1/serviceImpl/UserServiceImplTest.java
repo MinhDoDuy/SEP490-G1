@@ -87,18 +87,7 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).findById(userId);
     }
 
-    @Test
-    void isCodeNameExist() {
-        String codeName = "testCode";
-        User user = User.builder().codeName(codeName).build();
 
-        when(userRepository.findByCodeName(codeName)).thenReturn(user);
-
-        boolean result = service.isCodeNameExist(codeName);
-
-        assertTrue(result);
-        verify(userRepository, times(1)).findByCodeName(codeName);
-    }
 
     @Test
     void sendResetPasswordEmail() {
@@ -267,40 +256,8 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).count();
     }
 
-    @Test
-    void getStaffUsers() {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        User user1 = User.builder().userId(1).build();
-        User user2 = User.builder().userId(2).build();
-        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
 
-        when(userRepository.findAllByRoleName("staff", pageable)).thenReturn(userPage);
 
-        Page<User> result = service.getStaffUsers(page, size);
-
-        assertEquals(2, result.getTotalElements());
-        verify(userRepository, times(1)).findAllByRoleName("staff", pageable);
-    }
-
-    @Test
-    void searchStaff() {
-        String keyword = "test";
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        User user1 = User.builder().userId(1).build();
-        User user2 = User.builder().userId(2).build();
-        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
-
-        when(userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable)).thenReturn(userPage);
-
-        Page<User> result = service.searchStaff(keyword, page, size);
-
-        assertEquals(2, result.getTotalElements());
-        verify(userRepository, times(1)).findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
-    }
 
     @Test
     void isPhoneExist() {

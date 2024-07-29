@@ -44,7 +44,11 @@
   <div class="p-6">
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
-        <div class="font-medium">Quản lý phản hồi</div>
+        <div class="font-medium">Phản hổi người dùng của quán  <span th:text="${canteenName}"></span></div>
+      </div>
+      <div th:if="${message}" class="alert alert-success" id="successAlert">
+        <span th:text="${message}"></span>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
       </div>
 
       <div class="tab-content" id="feedbackTabsContent">
@@ -68,7 +72,7 @@
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedbacks.number * feedbacks.size + iterStat.index + 1}">STT</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.comment}">Bình luận</td>
                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackStatus.displayName}">Trạng thái</td>
-                <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
+                <td class="py-2 px-4 border-b border-b-gray-50 feedback-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <form th:action="@{'/approve-feedback/' + ${feedback.feedbackId}}" method="post" style="display: inline;">
                     <input type="hidden" name="canteenId" th:value="${canteenId}"/>
@@ -110,6 +114,39 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+  // Function to format date to a more readable format
+  function formatDate(dateString) {
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString('vi-VN', options);
+  }
 
+  // Format all order dates on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.feedback-date').forEach(function (element) {
+      let dateText = element.innerText;
+      element.innerText = formatDate(dateText);
+    });
+  });
+
+  function hideAlert() {
+    var alert = document.getElementById('successAlert');
+    if (alert) {
+      setTimeout(function () {
+        alert.style.display = 'none';
+      }, 3000);
+    }
+  }
+
+  // Call the function to hide the alert
+  hideAlert();
+</script>
 </body>
 </html>

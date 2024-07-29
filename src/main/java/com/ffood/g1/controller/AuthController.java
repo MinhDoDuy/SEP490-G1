@@ -168,15 +168,7 @@ public class AuthController {
                 hasError = true;
             }
 
-            if (!user.getCodeName().matches(codeNamePattern)) {
-                redirectAttributes.addAttribute("codeNameExistsError", "MSSV không hợp lệ. Vui lòng nhập các chữ cái và số trong khoảng 6-20 ký tự.");
-                hasError = true;
-            }
 
-            if (userService.isCodeNameExist(user.getCodeName())) {
-                redirectAttributes.addAttribute("codeNameExistsError", "MSSV này đã được đăng ký. Vui lòng sử dụng một MSSV khác.");
-                hasError = true;
-            }
 
             if (userService.isPhoneExist(user.getPhone())) {
                 redirectAttributes.addAttribute("phoneExistsError", "Số điện thoại này đã được đăng ký. Vui lòng sử dụng số khác.");

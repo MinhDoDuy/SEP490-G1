@@ -97,7 +97,7 @@
     <div class="p-6">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
-                <div class="font-medium">Quản lý đơn hàng</div>
+                <div class="font-medium">Quản lý đơn hàng <span th:text="${canteenName}"></span></div>
             </div>
             <div th:if="${successOrder}" class="alert alert-success" th:text="${successOrder}" id="successMessage">
                 <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">

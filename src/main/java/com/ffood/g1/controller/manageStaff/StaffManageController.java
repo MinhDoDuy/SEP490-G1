@@ -62,11 +62,12 @@ public class StaffManageController {
                               @RequestParam(value = "size", defaultValue = "10") int size,
                               @RequestParam(value = "keyword", required = false) String keyword,
                               @RequestParam(value = "canteenId") Integer canteenId) {
+        int roleId = 2; // Assuming 2 is the roleId for staff
         Page<User> staffPage;
         if (keyword == null || keyword.isEmpty()) {
-            staffPage = userService.getStaffUsers(page, size);
+            staffPage = userService.getStaffUsers(page, size, roleId, canteenId);
         } else {
-            staffPage = userService.searchStaff(keyword, page, size);
+            staffPage = userService.searchStaff(keyword, page, size, roleId, canteenId);
         }
         Canteen canteen = canteenService.getCanteenById(canteenId); // Retrieve the canteen object
 
@@ -84,55 +85,29 @@ public class StaffManageController {
     public String editStaffForm(@PathVariable Integer userId, Model model,
                                 @RequestParam(value = "canteenId") Integer canteenId) {
         User user = userService.getUserById(userId);
-        List<Role> roles = roleService.getAllRoles(); // Assume you have a method to get all roles
         Canteen canteen = canteenService.getCanteenById(canteenId); // Retrieve the canteen object
 
         model.addAttribute("userId", userId);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("user", user);
-        model.addAttribute("roles", roles);
         model.addAttribute("canteen", canteen); // Add canteen to the model
         return "staff-management/edit-staff";
     }
 
-
     @PostMapping("/edit-staff")
-    public String updateStaffRole(@RequestParam Integer userId,
-                                  @RequestParam("isActive") Boolean isActive,
-                                  @RequestParam(value = "canteenId") Integer canteenId,
-                                  RedirectAttributes redirectAttributes) {
+    public String fireStaff(@RequestParam Integer userId,
+                            @RequestParam(value = "canteenId") Integer canteenId,
+                            RedirectAttributes redirectAttributes) {
         User user = userService.getUserById(userId);
-        user.setIsActive(isActive);  // Cập nhật trạng thái hoạt động của người dùng
-        userService.saveUser(user);  // Lưu thay đổi
+        user.setRole(roleService.findRoleById(1)); // Set role to customer
+        user.setCanteen(null); // Set canteen to null
+        userService.saveUser(user); // Save changes
 
-        redirectAttributes.addFlashAttribute("successMessage", "Nhân viên  đã được cập nhật thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Nhân viên đã được đuổi thành công!");
         return "redirect:/manage-staff?canteenId=" + canteenId;
     }
 
 
-    @GetMapping("/add-staff-form")
-    public String showAddStaffForm(Model model, @RequestParam(value = "canteenId") Integer canteenId) {
-        User user = new User();
-        Role staffRole = roleService.getRoleByName("ROLE_STAFF");
-        user.setRole(staffRole);
-        Canteen canteen = canteenService.getCanteenById(canteenId);
-
-        user.setCanteen(canteen);
-
-        model.addAttribute("user", user);
-        model.addAttribute("canteenId", canteenId);
-        model.addAttribute("canteenName", canteen.getCanteenName());
-        return "staff-management/add-staff";
-    }
-
-    @PostMapping("/add-staff")
-    public String addStaff(@ModelAttribute("user") User user,
-                           @RequestParam("canteenId") Integer canteenId) {
-        Canteen canteen = canteenService.getCanteenById(canteenId);
-        user.setCanteen(canteen);
-        userService.saveUser(user);
-        return "redirect:/manage-staff?canteenId=" + canteenId + "&success=add";
-    }
 
     @GetMapping("/assign-staff-form")
     public String showAssignStaffForm(@RequestParam("canteenId") Integer canteenId, Model model) {
@@ -147,7 +122,7 @@ public class StaffManageController {
                              RedirectAttributes redirectAttributes) {
         try {
             userService.sendAssignStaffEmail(email, request, canteenId);
-            redirectAttributes.addFlashAttribute("successMessage", "Token đã được gửi tới email!");
+            redirectAttributes.addFlashAttribute("successMessage", "Lời mời đã được gửi tới email!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

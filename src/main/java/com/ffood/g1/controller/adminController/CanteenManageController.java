@@ -151,6 +151,7 @@ public class CanteenManageController {
         // Cập nhật thông tin từ updatedCanteen sang existingCanteen
         existingCanteen.setCanteenName(updatedCanteen.getCanteenName());
         existingCanteen.setLocation(updatedCanteen.getLocation());
+        existingCanteen.setOpeningDay(updatedCanteen.getOpeningDay());
         existingCanteen.setCanteenPhone(updatedCanteen.getCanteenPhone());
         existingCanteen.setOpeningHours(updatedCanteen.getOpeningHours());
         existingCanteen.setIsActive(updatedCanteen.getIsActive());
@@ -183,7 +184,7 @@ public class CanteenManageController {
                                     RedirectAttributes redirectAttributes) {
         try {
             userService.sendAssignManagerEmail(email, request, canteenId);
-            redirectAttributes.addFlashAttribute("successMessage", "Token đã được gửi tới email!");
+            redirectAttributes.addFlashAttribute("successMessage", "Lời mời đã được gửi tới email!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

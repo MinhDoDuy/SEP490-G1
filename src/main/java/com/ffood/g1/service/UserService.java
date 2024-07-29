@@ -23,10 +23,6 @@ public interface UserService extends UserDetailsService {
 
     void registerNewUser(User user);
 
-    void saveUserWithDefaultRole(User user);
-
-    boolean isCodeNameExist(String codeName);
-
     //forgot pass
     void sendResetPasswordEmail(String email, HttpServletRequest request);
     boolean isResetTokenValid(String token);
@@ -53,9 +49,9 @@ public interface UserService extends UserDetailsService {
 
     Page<User> getAllStaff(int page, int size, Integer canteenId);
 
-    Page<User> getStaffUsers(int page, int size);
+    Page<User> getStaffUsers(int page, int size, int roleId, int canteenId);
 
-    Page<User> searchStaff(String keyword, int page, int size);
+    Page<User> searchStaff(String keyword, int page, int size, int roleId, int canteenId);
 
     Integer countStaffByCanteenId(Integer canteenId);
 
@@ -63,8 +59,6 @@ public interface UserService extends UserDetailsService {
 
 
     void sendAssignStaffEmail(String email, HttpServletRequest request , Integer canteenId);
-
-    boolean isAssignTokenValid(String token);
 
     void confirmAssignStaff(String token, Integer canteenId);
 

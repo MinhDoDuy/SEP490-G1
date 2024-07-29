@@ -1,7 +1,9 @@
 package com.ffood.g1.controller.manageStaff;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Feedback;
 import com.ffood.g1.enum_pay.FeedbackStatus;
+import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,9 @@ public class FeedbackManagementController {
     @Autowired
     private FeedbackService feedbackService;
 
+    @Autowired
+    private CanteenService canteenService;
+
     @GetMapping("/manage-feedback")
     public String getFeedbacks(@RequestParam Integer canteenId,
                                @RequestParam(value = "status", defaultValue = "PENDING") FeedbackStatus status,
@@ -26,7 +31,8 @@ public class FeedbackManagementController {
                                Model model) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Feedback> feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, status, pageable);
-
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        model.addAttribute("canteenName", canteen.getCanteenName());
         model.addAttribute("feedbacks", feedbacks);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("status", status);

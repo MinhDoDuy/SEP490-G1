@@ -72,10 +72,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElse(null);
     }
 
-    @Override
-    public boolean isCodeNameExist(String codeName) {
-        return userRepository.findByCodeName(codeName) != null;
-    }
+
 
 
     @Override
@@ -160,20 +157,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable);
     }
 
-
     @Override
     public Page<User> getAllStaff(int page, int size, Integer canteenId) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAllStaffByCanteenId(canteenId, pageable);
     }
 
-
     @Override
     public User getUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
-
-
 
     @Override
     public void updateUserStatus(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
@@ -198,23 +191,20 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public Integer countUsers() {
         return Math.toIntExact(userRepository.count());
     }
 
 
-    public Page<User> getStaffUsers(int page, int size) {
+    public Page<User> getStaffUsers(int page, int size, int roleId, int canteenId) {
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAllByRoleName("staff", pageable);
+        return userRepository.findAllByRoleIdAndCanteenId(roleId, canteenId, pageable);
     }
-
-    public Page<User> searchStaff(String keyword, int page, int size) {
+    public Page<User> searchStaff(String keyword, int page, int size, int roleId, int canteenId) {
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCodeNameContainingIgnoreCase(keyword, keyword, keyword, pageable);
+        return userRepository.findByKeywordRoleIdAndCanteenId(keyword, roleId, canteenId, pageable);
     }
-
 
 
     @Override
@@ -256,11 +246,6 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
         }
         userRepository.save(user);
-    }
-
-    @Override
-    public void saveUserWithDefaultRole(User user) {
-
     }
 
 
@@ -321,11 +306,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public boolean isAssignTokenValid(String token) {
-        ResetToken resetToken = resetTokenRepository.findByToken(token);
-        return resetToken != null && !resetToken.isExpired();
-    }
 
     @Override
     public void confirmAssignStaff(String token, Integer canteenId) {
