@@ -174,7 +174,7 @@ public class OrderManagementController {
                                 @RequestParam Integer userId,
                                 RedirectAttributes redirectAttributes) {
         orderService.completeOrder(orderId);
-        redirectAttributes.addFlashAttribute("message", "Order completed successfully");
+        redirectAttributes.addFlashAttribute("message", "Đơn được gửi hoàn thành");
         return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
     }
 
