@@ -142,7 +142,7 @@ public class OrderManagementController {
     @PostMapping("/reject-order/{orderId}")
     public String cancelOrder(@PathVariable Integer orderId, @RequestParam Integer canteenId, RedirectAttributes redirectAttributes) {
         orderService.rejectOrder(orderId);
-        redirectAttributes.addFlashAttribute("message", "Order cancelled successfully");
+        redirectAttributes.addFlashAttribute("message", "Đơn đã bị hủy");
         return "redirect:/order-list/" + canteenId;
     }
 
@@ -174,7 +174,7 @@ public class OrderManagementController {
                                 @RequestParam Integer userId,
                                 RedirectAttributes redirectAttributes) {
         orderService.completeOrder(orderId);
-        redirectAttributes.addFlashAttribute("message", "Order completed successfully");
+        redirectAttributes.addFlashAttribute("message", "Đơn được gửi hoàn thành");
         return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
     }
 
