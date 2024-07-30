@@ -105,19 +105,19 @@
                         </thead>
                         <tbody>
                         <tr th:if="${#lists.isEmpty(foodPage.content)}">
-                            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">No food found</td>
+                            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không Có Đồ ăn Nào Được Tìm Thấy</td>
                         </tr>
                         <tr th:each="food, iterStat : ${foodPage.content}">
                             <td class="py-2 px-4 border-b border-b-gray-50"
                                 th:text="${foodPage.number * foodPage.size + iterStat.index + 1}">STT
                             </td>
                             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.category.categoryName}">
-                                Category Name
+                                Tên Danh Mục
                             </td>
-                            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Food Name</td>
+                            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Tên Đồ Ăn</td>
                             <td class="py-2 px-4 border-b border-b-gray-50 formatted-price"   th:text="${food.price}">100.0</td>
                             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodQuantity}">
-                                foodQuantity
+                                Số Lượng Thực Phẩm
                             </td>
                             <td class="py-2 px-4 border-b border-b-gray-50"
                                 th:text="${food.foodStatusActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng Thái

@@ -44,7 +44,19 @@
             max-width: 500px;
         }
         .back-btn {
-            margin-bottom: 20px;
+            display: inline-block;
+            padding: 8px 16px; /* Giảm kích thước */
+            font-size: 12px; /* Giảm kích thước chữ */
+            color: #fff;
+            background-color: #6c757d;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; /* Khoảng cách giữa hai nút */
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
         }
         .form-group {
             display: flex;
@@ -54,7 +66,6 @@
         .form-wrapper {
             width: 100%;
         }
-        /* Updated styles for alert messages */
         .alert {
             padding: 15px;
             margin: 10px 0;
@@ -63,12 +74,34 @@
             color: #fff;
         }
         .alert-danger {
-            background-color: #f8d7da; /* Light red for error messages */
-            color: #721c24; /* Darker red text for contrast */
+            background-color: #f8d7da;
+            color: #721c24;
         }
         .alert-success {
-            background-color: #d4edda; /* Light green for success messages */
-            color: #155724; /* Darker green text for contrast */
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .btn-primary {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .button-holder {
+            display: flex;
+            justify-content: center; /* Căn giữa các nút */
+            align-items: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -96,11 +129,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-end">
-            <div class="button-holder">
-                <button type="submit" class="btn btn-primary">Gửi</button>
-                <a th:href="@{/login}" class="btn-sm back-btn">Quay lại Đăng Nhập</a>
-            </div>
+        <div class="button-holder">
+            <button type="submit" class="btn btn-primary">Gửi</button>
+            <a th:href="@{/register}" class="btn back-btn">Quay lại</a>
         </div>
     </form>
 </div>
