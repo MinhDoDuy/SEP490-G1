@@ -142,7 +142,7 @@ public class OrderManagementController {
     @PostMapping("/reject-order/{orderId}")
     public String cancelOrder(@PathVariable Integer orderId, @RequestParam Integer canteenId, RedirectAttributes redirectAttributes) {
         orderService.rejectOrder(orderId);
-        redirectAttributes.addFlashAttribute("message", "Order cancelled successfully");
+        redirectAttributes.addFlashAttribute("message", "Đơn đã bị hủy");
         return "redirect:/order-list/" + canteenId;
     }
 
