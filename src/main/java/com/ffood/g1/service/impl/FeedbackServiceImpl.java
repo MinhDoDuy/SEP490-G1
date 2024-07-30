@@ -64,4 +64,9 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbackRepository.save(feedback);
     }
 
+    @Override
+    public Page<Feedback> findByStatus(FeedbackStatus status, Pageable pageable) {
+        return feedbackRepository.findByStatus(status, pageable);
+    }
+
 }

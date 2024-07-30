@@ -39,8 +39,11 @@
             <div class="text-center mx-auto" style="max-width: 700px;">
               <h1 class="text-primary">Phản Hồi Về Hệ Thống</h1>
               <p class="mb-4">Chúng tôi đánh giá cao ý kiến phản hồi của bạn. Vui lòng cho chúng tôi biết suy nghĩ và đề xuất của bạn để cải thiện hệ thống của chúng tôi.</p>
-              <div th:if="${successMessage}" class="alert alert-success" role="alert">
+              <div th:if="${successMessage}" class="alert alert-success" id="Alert" role="alert">
                 <span th:text="${successMessage}"></span>
+              </div>
+              <div th:if="${errorMessage}" class="alert alert-danger" id="Alert" role="alert">
+                <span th:text="${errorMessage}" style="color: red"></span>
               </div>
             </div>
           </div>
@@ -87,7 +90,7 @@
 
 <script>
   function hideAlert() {
-    var alert = document.getElementById('successAlert');
+    var alert = document.getElementById('Alert');
     if (alert) {
       setTimeout(function () {
         alert.style.display = 'none';

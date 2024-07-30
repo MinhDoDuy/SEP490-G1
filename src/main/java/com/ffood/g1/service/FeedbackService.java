@@ -20,4 +20,6 @@ public interface FeedbackService {
     void updateFeedbackStatus(Integer feedbackId, FeedbackStatus status);
 
     void createFeedbackSystem(User user, String comment, Integer foodId, Integer canteenId, FeedbackStatus feedbackStatus);
+
+    Page<Feedback> findByStatus(FeedbackStatus status, Pageable pageable);
 }

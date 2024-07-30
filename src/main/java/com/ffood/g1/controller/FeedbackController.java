@@ -59,8 +59,12 @@ public class FeedbackController {
         if (user == null) {
             return "redirect:/login";
         }
+        if (comment.length() > 400) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Bình luận không được vượt quá 400 ký tự.");
+            return "redirect:/feedback-system-form/" + userId;
+        }
         feedbackService.createFeedbackSystem(user, comment, null, null, FeedbackStatus.VIEWABLE);
-        redirectAttributes.addFlashAttribute("successMessage", "Feedback submitted successfully!");
+        redirectAttributes.addFlashAttribute("successMessage", "Phản Hồi của bạn đã được Gửi đi");
         return "redirect:/feedback-system-form/" + userId; // Điều hướng tới trang bạn muốn
     }
 }
