@@ -54,7 +54,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_info", "/food_details","/update_cart_quantity").permitAll()
                 .antMatchers("/add_to_cart","/foodByCategory/{categoryId}","/assign-confirm","/assign-confirm/**").permitAll()
-                .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password")
+                .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password"
+                ,"/submit-feedback/**","/feedback-system-form/**")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 .antMatchers("/search-staff", "/dashboard/", "/manage-user/**",
                         "/edit-profile/**", "/edit-user/**", "/add-user/**",

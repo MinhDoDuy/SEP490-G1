@@ -18,4 +18,6 @@ public interface FeedbackService {
     Page<Feedback> getFeedbacksByCanteen(Integer canteenId, FeedbackStatus status, Pageable pageable);
 
     void updateFeedbackStatus(Integer feedbackId, FeedbackStatus status);
+
+    void createFeedbackSystem(User user, String comment, Integer foodId, Integer canteenId, FeedbackStatus feedbackStatus);
 }

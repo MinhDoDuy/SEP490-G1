@@ -33,9 +33,9 @@
                                 <div th:each="canteen : ${session.canteens}">
                                     <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}" th:text="${canteen.canteenName}" class="dropdown-item"></a>
                                 </div>
-
                             </div>
                         </div>
+                        <a th:href="@{/feedback-system-form/{userId}(userId=${session.user.userId})}" class="nav-item nav-link">Gửi phản hồi</a>
                     </div>
                     <div class="d-flex m-3 me-0">
                         <!--                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>-->
