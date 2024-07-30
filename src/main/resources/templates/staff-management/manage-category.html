@@ -59,8 +59,8 @@
                     <tbody>
                     <tr th:each="category, iterStat : ${categories}">
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${iterStat.index + 1}">1</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${category.categoryName}">Category Name</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${category.description}">Description</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${category.categoryName}">Tên Danh Mục</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${category.description}">Mô tả</td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <img th:src="@{${category.categoryImage}}" alt="Category Image" style="width: 100px; height: auto;"/>
                         </td>

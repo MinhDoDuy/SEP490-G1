@@ -152,7 +152,7 @@
                                                                        th:text="${food.foodName}"></a></h4>
                                         <p><span th:text="${food.canteen.canteenName}"></span></p>
                                         <p th:if="${food.foodQuantity}>0">Số lượng còn lại :<span th:text="${food.foodQuantity}"></span></p>
-                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Số lượng hiện có : HẾT HÀNG</span></p>
+                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red">HẾT HÀNG</span></p>
 
                                         <div class="d-flex justify-content-between flex-lg-wrap">
 
@@ -172,7 +172,7 @@
                                 <ul class="pagination justify-content-center d-flex mt-5">
                                     <li class="page-item rounded" th:classappend="${currentPage == 0} ? 'disabled'">
                                         <a class="page-link rounded"
-                                           th:href="@{/canteen_details(page=${currentPage - 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Previous</a>
+                                           th:href="@{/canteen_details(page=${currentPage - 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang Trước</a>
                                     </li>
                                     <li class="page-item rounded" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                                         th:classappend="${i == currentPage} ? 'active'">
@@ -183,7 +183,7 @@
                                     <li class="page-item rounded"
                                         th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{/canteen_details(page=${currentPage + 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Next</a>
+                                           th:href="@{/canteen_details(page=${currentPage + 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang Sau</a>
                                     </li>
                                 </ul>
                             </div>
