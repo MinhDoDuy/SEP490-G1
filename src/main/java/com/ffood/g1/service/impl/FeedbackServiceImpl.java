@@ -51,4 +51,17 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbackRepository.save(feedback);
     }
 
+    @Override
+    public void createFeedbackSystem(User user, String comment, Integer foodId, Integer canteenId, FeedbackStatus feedbackStatus) {
+        Feedback feedback = new Feedback();
+        feedback.setUser(user);
+        feedback.setComment(comment);
+        feedback.setFoodId(foodId); // Đây sẽ là null
+        feedback.setCanteenId(canteenId); // Đây sẽ là null
+        feedback.setTimeCreated(LocalDateTime.now());
+        feedback.setFeedbackStatus(feedbackStatus); // Thiết lập trạng thái là VIEWABLE
+
+        feedbackRepository.save(feedback);
+    }
+
 }
