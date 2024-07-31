@@ -4,6 +4,7 @@ import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.service.CanteenService;
+import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class StaffManageController {
 
     @Autowired
     private CanteenService canteenService;
+
+    @Autowired
+    private OrderService orderService;
 
     //--------------------------------------------STAFF MANAGEMENT--------------------------------------------
 
@@ -98,6 +102,11 @@ public class StaffManageController {
     public String fireStaff(@RequestParam Integer userId,
                             @RequestParam(value = "canteenId") Integer canteenId,
                             RedirectAttributes redirectAttributes) {
+        if (orderService.hasActiveOrders(userId)) { // Here deliveryRoleId is actually userId
+            redirectAttributes.addFlashAttribute("errorMessage", "Nhân viên không thể bị đuổi vì đang có đơn hàng đang giao!");
+            return "redirect:/manage-staff?canteenId=" + canteenId;
+        }
+
         User user = userService.getUserById(userId);
         user.setRole(roleService.findRoleById(1)); // Set role to customer
         user.setCanteen(null); // Set canteen to null

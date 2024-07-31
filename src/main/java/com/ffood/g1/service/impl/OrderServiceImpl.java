@@ -279,5 +279,10 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public boolean hasActiveOrders(Integer deliveryRoleId) {
+        return orderRepository.countActiveOrdersByDeliveryRoleId(deliveryRoleId) > 0;
+    }
+
 
 }

@@ -65,4 +65,6 @@ public interface OrderService {
     List<Order> getOrdersByUserId(Integer userId);
 
     void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod,Integer totalOrderPrice);
+
+    boolean hasActiveOrders(Integer deliveryRoleId);
 }
