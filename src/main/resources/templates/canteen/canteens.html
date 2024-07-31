@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Chợ Cóc </title>
+    <title>Chợ Cóc</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -38,6 +38,10 @@
     .form-check-label {
         flex-grow: 1;
     }
+
+    .border-orange {
+        border-color: orange !important;
+    }
 </style>
 <body>
 
@@ -51,7 +55,7 @@
 <div class="container-fluid page-header py-5">
 </div>
 <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white " style="font-size: 2rem">Cửa hàng</h1>
+    <h1 class="text-center text-white" style="font-size: 2rem">Cửa hàng</h1>
     <ol class="breadcrumb justify-content-center mb-0">
         <li class="breadcrumb-item"><a th:href="@{/homepage}">Trang Chủ</a></li>
         <li class="breadcrumb-item active text-white">Cửa hàng</li>
@@ -151,8 +155,7 @@
                             </div>
 
                             <div class="col-md-6 col-lg-6 col-xl-4" th:each="food : ${items_home}">
-
-                                <div th:if="${food.canteen.isActive}" class="rounded position-relative fruite-item">
+                                <div th:if="${food.canteen.isActive}" class="rounded position-relative fruite-item border border-orange">
                                     <div class="fruite-img">
                                         <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt=""
                                              style="width: 100px;height: 220px">
@@ -172,7 +175,6 @@
                                         </p>
 
                                         <div class="d-flex justify-content-between flex-lg-wrap">
-
                                             <p class=" text-dark fs-5 fw-bold mb-0"><span class="formatted-price"
                                                                                           th:text="${food.price}"></span>
                                             </p>
@@ -237,10 +239,8 @@
 
 <!-- Template Javascript -->
 <script th:src="@{/js/main_test.js}"></script>
-<!---->
 
 <script>
-
     function submitForm(categoryId) {
         // Tạo input ẩn chứa giá trị của categoryId
         const input = document.createElement('input');
@@ -286,27 +286,75 @@
             element.innerText = formatCurrencyVND(price);
         });
 
+        document.querySelectorAll('.nav-item1 a').forEach(item => {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+                let categoryId = this.getAttribute('data-category-id');
+                console.log("Category ID: " + categoryId); // Ghi lại giá trị của categoryId
 
-    });
+                fetch(`/foodByCategory/${categoryId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Data received: ", data); // Ghi lại dữ liệu nhận được từ API
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const messageElement = document.getElementById('toast-message');
-        const message = messageElement ? messageElement.value : null;
+                        let foodContainer = document.getElementById('food-container');
+                        foodContainer.innerHTML = '';
+                        data.forEach(food => {
+                            let foodElement = document.createElement('div');
+                            foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
 
-        if (message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast show';
-            toast.innerText = message;
-            document.body.appendChild(toast);
+                            // Kiểm tra số lượng thực phẩm và điều kiện để hiển thị
+                            let quantityInfo = '';
+                            let addButton = '';
 
-            setTimeout(function () {
-                toast.classList.remove('show');
-                document.body.removeChild(toast);
-            }, 5000);
-        }
+                            if (food.foodQuantity > 0) {
+                                quantityInfo = `<p><span style="display: flex; justify-content: left"> Số lượng hiện có: ${food.foodQuantity}</span></p>`;
+                                addButton = `<a href="/add_to_cart?foodId=${food.foodId}&price=${food.price}&quantity=1&url=1" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Đặt Món
+                                        </a>`;
+                            } else {
+                                quantityInfo = `<p class="flex-grow-1"><span style="display: flex; justify-content: left; color: red">Tạm thời hết hàng</span></p>`;
+                            }
+
+                            foodElement.innerHTML = `
+                            <div class="rounded position-relative fruite-item border border-orange">
+                                <div class="fruite-img">
+                                    <img src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="${food.foodName}">
+                                </div>
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                    <span>${food.category.categoryName}</span>
+                                </div>
+                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                    <h4 style="height: 55.41px"><a href="/food_details?id=${food.foodId}" class="text-dark">${food.foodName}</a></h4>
+                                    <p><span style="display: flex; justify-content: left">${food.canteen.canteenName}</span></p>
+                                    ${quantityInfo}
+                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                        <p class="formatted-price text-dark fs-5 fw-bold mb-0">${food.price}</p>
+                                        ${addButton}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                            foodContainer.appendChild(foodElement);
+                        });
+
+                        document.querySelectorAll('p.formatted-price').forEach(function (element) {
+                            let price = element.innerText;
+                            element.innerText = formatCurrencyVND(price);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            });
+        });
     });
 </script>
-
 
 <!-- Template Javascript -->
 <script src="/js/main_test.js"></script>
