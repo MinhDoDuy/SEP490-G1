@@ -126,11 +126,6 @@
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-center">
                             <h4 style="justify-content: center; display: flex">Sản phẩm</h4>
-                            <div th:if="${messageAddFood}" class="alert alert-success" th:text="${messageAddFood}" id="successMessage">
-                                <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
                             <div th:if="${items_home.size() == 0}">
                                 <h6 style="justify-content: center; display: flex">Không có kết quả phù hợp với lựa chọn
                                     của bạn</h6>
@@ -198,6 +193,19 @@
 </div>
 <!-- Fruits Shop End-->
 
+<!-- Success Modal -->
+<div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
+            </div>
+            <div class="modal-body" >
+                <span th:text="${messageAddFood}"></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Footer Start -->
 <div th:replace="footer :: footer"></div>
@@ -246,21 +254,6 @@
 
     // Format all prices on page load
     document.addEventListener('DOMContentLoaded', function () {
-        // Hiển thị thông báo từ server nếu có
-        const messageElement = document.getElementById('toast-message');
-        const message = messageElement ? messageElement.value : null;
-
-        if (message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast show';
-            toast.innerText = message;
-            document.body.appendChild(toast);
-
-            setTimeout(function () {
-                toast.classList.remove('show');
-                document.body.removeChild(toast);
-            }, 5000);
-        }
         document.querySelectorAll('.formatted-price').forEach(function (element) {
             let price = element.innerText;
             element.innerText = formatCurrencyVND(price);
@@ -285,6 +278,17 @@
             }, 5000);
         }
     });
+    // Hiển thị thông báo từ server nếu có
+    document.addEventListener('DOMContentLoaded', function () {
+        const message = /*[[${messageAddFood}]]*/ 'Food item added to the cart successfully!';
+        if (message) {
+            $('#successModal').modal('show');
+            setTimeout(function() {
+                $('#successModal').modal('hide');
+            }, 2000); // Hide the modal after 3 seconds
+        }
+    });
+
 </script>
 
 

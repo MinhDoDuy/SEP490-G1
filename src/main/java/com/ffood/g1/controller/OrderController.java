@@ -18,11 +18,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class OrderController {
@@ -47,28 +50,31 @@ public class OrderController {
     private VNPayService vnpayService;
 
     @GetMapping("/checkout")
-    public String showCheckoutPage(Model model) {
+    public String showCheckoutPage(@RequestParam("cartItemIds") List<Integer> cartItemIds, Model model,HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
             String email = authentication.getName();
             User user = userService.findByEmail(email);
-            if (user != null) {
-                Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-                Integer totalOrderPrice = (int) cartService.getTotalFoodPriceByCartId(cartId);
-                model.addAttribute("totalOrderPrice", totalOrderPrice);
-                model.addAttribute("user", user);
-            }
-            int totalQuantity = cartService.getTotalQuantityByUser(user);
-            model.addAttribute("totalQuantity", totalQuantity);
-            // Lấy các sản phẩm trong giỏ hàng của người dùng
-            List<CartItem> cartItems = cartItemService.getCartItemsByUserId(user.getUserId());
-            // Đưa dữ liệu giỏ hàng vào model
-            model.addAttribute("cartItems", cartItems);
-
+            model.addAttribute("user", user);
         }
-
-
-        return "order/check-out";
+        // Assume a method exists to fetch cart items by their IDs
+        List<CartItem> cartItems = cartItemService.getCartItemsByIds(cartItemIds);
+        // Check all items are from the same canteen
+        Integer canteenId = null;
+        int totalOrderPrice=0;
+        for (CartItem item : cartItems) {
+            totalOrderPrice += item.getFood().getPrice()*item.getQuantity();
+            if (canteenId == null) {
+                canteenId = item.getFood().getCanteen().getCanteenId();
+            } else if (!canteenId.equals(item.getFood().getCanteen().getCanteenId())) {
+                model.addAttribute("error", "Cannot checkout items from multiple canteens.");
+                return "cart/cart"; // Redirect back to the cart page with an error message
+            }
+        }
+        model.addAttribute("totalOrderPrice", totalOrderPrice);
+        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("cartItemIds", cartItemIds);
+        return "order/check-out"; // Render the checkout page
     }
 
 
@@ -77,55 +83,50 @@ public class OrderController {
                                   @RequestParam("note") String note,
                                   @RequestParam("paymentMethod") PaymentMethod paymentMethod,
                                   @RequestParam("orderType") OrderType orderType,
-                                  HttpSession session,
+                                  @RequestParam("cartItemIdsString") String cartItemIdsString,
                                   Model model) {
+        //Hãy thêm hàm đổi từ string sang List<Integer>
+        List<Integer> cartItemIds = Arrays.stream(cartItemIdsString.replaceAll("\\[|\\]", "").split(","))
+                .map(String::trim)
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
             String email = authentication.getName();
             User user = userService.findByEmail(email);
             if (user != null) {
-                // Lấy giỏ hàng hiện tại
-                Cart cart = cartService.getOrCreateCart(user);
-                session.setAttribute("cart", cart);
-                // Tạo và lưu đơn hàng
-                Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-                int totalOrderPrice = cartService.getTotalFoodPriceByCartId(cartId);
-                if (paymentMethod.equals(PaymentMethod.CASH)) {
-                    PaymentStatus paymentStatus = PaymentStatus.PENDING_PAYMENT;
-                    String orderCode=RandomOrderCodeGenerator.generateOrderCode();
-                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, paymentStatus,orderCode);
-                    cart.setStatus("deactive");
-                    order = orderRepository.save(order);
-                    model.addAttribute("order", order);
-                    // Xóa giỏ hàng
-                    cartService.clearCart(cart);
+                // Create and save the order
+                Order order = orderService.createOrder(user, address, note, orderType, paymentMethod, cartItemIds);
+                // Remove the selected cart items
+                cartItemService.removeCartItemsByIds(cartItemIds);
 
-                }else if(paymentMethod.equals(PaymentMethod.VNPAY)) {
-                    PaymentStatus paymentStatus = PaymentStatus.PAYMENT_COMPLETE;
-                    String orderCode=RandomOrderCodeGenerator.generateOrderCode();
-                    Order order = orderService.createOrder(user, address, totalOrderPrice, note, cart, orderType, paymentMethod, paymentStatus,orderCode);
-
-
-                    for (OrderDetail orderItem : order.getOrderDetails()) {
-                        Food food = orderItem.getFood();
-                        int orderedQuantity = orderItem.getQuantity();
-                        System.out.println(food.getFoodQuantity());
-                        // Giảm số lượng tồn kho
-                        food.setFoodQuantity(food.getFoodQuantity() - orderedQuantity);
-                        System.out.println(food.getFoodQuantity());
-                        // Tăng số lượng đã bán
-                        food.setSalesCount(food.getSalesCount() + orderedQuantity);
-
-                        foodRepository.save(food);
-                    }
-                    session.setAttribute("order", order);
-                    model.addAttribute("order", order);
-                    return "order/create-order";
-                }
+               model.addAttribute("order", order);
+                return "order/create-order";
             }
-
         }
         return "redirect:/homepage";
+    }
+
+
+
+
+
+    @PostMapping("/processCheckout")
+    public String processCheckout(@RequestParam("cartItemIds") List<Integer> cartItemIds, RedirectAttributes redirectAttributes) {
+        try {
+            // This is a placeholder for your actual checkout processing logic
+            redirectAttributes.addFlashAttribute("message", "Checkout completed successfully!");
+            return "redirect:/orderConfirmation"; // Redirect to an order confirmation page
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error during checkout: " + e.getMessage());
+            return "redirect:/cart"; // Redirect back to cart on error
+        }
+    }
+
+    @GetMapping("/orderConfirmation")
+    public String orderConfirmation() {
+        return "checkout/orderConfirmation"; // Show order confirmation page
     }
 
 

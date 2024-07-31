@@ -9,6 +9,7 @@ import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.repository.OrderDetailRepository;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.repository.UserRepository;
+import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CartItemService cartItemService;
+
     public List<Object[]> getBestSellingItems() {
         return orderRepository.findBestSellingItems();
     }
@@ -61,53 +65,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Double calculateTotalOrder() {
         return orderRepository.findTotalOrder();
-    }
-
-
-    public Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, PaymentStatus paymentStatus, String orderCode) {
-        Order order = new Order();
-        order.setUser(user);
-        order.setOrderDate(LocalDateTime.now());
-        order.setPaymentStatus(paymentStatus);
-        order.setOrderAddress(address);
-        order.setTotalOrderPrice(totalOrderPrice);
-        order.setNote(note);
-        order.setOrderType(orderType);
-        order.setPaymentMethod(paymentMethod);
-        order.setOrderCode(orderCode);
-        order.setOrderStatus(OrderStatus.PENDING);
-       Integer canteenId= cart.getCartItems().get(0).getFood().getCanteen().getCanteenId();
-        order.setCanteenId(canteenId);
-//        // Lưu Order trước để lấy ID
-//        order = orderRepository.save(order);
-
-        // Thiết lập các OrderDetail và thêm vào Order đã lưu
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
-            orderDetail.setFood(cartItem.getFood());
-            orderDetail.setQuantity(cartItem.getQuantity());
-            orderDetail.setPrice(cartItem.getPrice());
-
-            // Debug: In ra các thông tin của CartItem và OrderDetail
-            System.out.println("CartItem ID: " + cartItem.getCartItemId());
-            System.out.println("OrderDetail Food ID: " + orderDetail.getFood().getFoodId());
-            System.out.println("OrderDetail Quantity: " + orderDetail.getQuantity());
-            System.out.println("OrderDetail Price: " + orderDetail.getPrice());
-
-            // Thêm OrderDetail vào List
-            orderDetails.add(orderDetail);
-        }
-        order.setOrderDetails(orderDetails);
-
-
-        // Debug: In ra số lượng OrderDetails trước khi lưu
-        System.out.println("Total OrderDetails: " + orderDetails.size());
-        // Lưu lại Order cùng với OrderDetail
-        // Debug: In ra ID của Order sau khi lưu
-        System.out.println("Order ID: " + order.getOrderId());
-        return order;
     }
 
 
@@ -236,7 +193,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    public void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod,Integer totalOrderPrice) {
+    public void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod, Integer totalOrderPrice) {
         // Create and save order
         Order order = new Order();
         order.setCanteenId(canteenId);
@@ -251,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.COMPLETE);
         order.setTotalOrderPrice(totalOrderPrice);
-        User userAnonymous  = userRepository.findByEmail("anonymous@gmail.com");
+        User userAnonymous = userRepository.findByEmail("anonymous@gmail.com");
         order.setUser(userAnonymous);
         orderRepository.save(order);
 
@@ -277,6 +234,49 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setPrice(food.getPrice() * quantity);
             orderDetailRepository.save(orderDetail);
         }
+    }
+
+    public Order createOrder(User user, String address, String note, OrderType orderType, PaymentMethod paymentMethod, List<Integer> cartItemIds) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDate(LocalDateTime.now());
+        order.setOrderAddress(address);
+        order.setNote(note);
+        order.setOrderType(orderType);
+        order.setPaymentMethod(paymentMethod);
+        order.setOrderStatus(OrderStatus.PENDING);
+        order.setPaymentStatus(PaymentStatus.PAYMENT_COMPLETE);
+        order.setOrderCode(RandomOrderCodeGenerator.generateOrderCode());
+
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        int totalOrderPrice = 0;
+
+        int canteenId = 0;
+        for (Integer cartItemId : cartItemIds) {
+            CartItem cartItem = cartItemService.getCartItemById(cartItemId);
+            canteenId = cartItem.getFood().getCanteen().getCanteenId();
+            if (cartItem != null) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrder(order);
+                orderDetail.setFood(cartItem.getFood());
+                orderDetail.setQuantity(cartItem.getQuantity());
+                orderDetail.setPrice(cartItem.getPrice());
+                totalOrderPrice += cartItem.getPrice() * cartItem.getQuantity();
+
+                orderDetails.add(orderDetail);
+
+                // Update inventory
+                Food food = cartItem.getFood();
+                food.setFoodQuantity(food.getFoodQuantity() - cartItem.getQuantity());
+                food.setSalesCount(food.getSalesCount() + cartItem.getQuantity());
+                foodRepository.save(food);
+            }
+        }
+        order.setCanteenId(canteenId);
+        order.setTotalOrderPrice(totalOrderPrice);
+        order.setOrderDetails(orderDetails);
+        orderRepository.save(order);
+        return order;
     }
 
 

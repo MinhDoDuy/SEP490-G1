@@ -27,4 +27,19 @@ public class CartItemServiceImpl implements CartItemService {
         cartItemRepository.save(cartItem);
     }
 
+    @Override
+    public List<CartItem> getCartItemsByIds(List<Integer> cartItemIds) {
+        return cartItemRepository.findByCartItemIdIn(cartItemIds);
+    }
+
+    public CartItem getCartItemById(Integer cartItemId) {
+        return cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new EntityNotFoundException("CartItem not found with id: " + cartItemId));
+    }
+
+    @Transactional
+    public void removeCartItemsByIds(List<Integer> cartItemIds) {
+        cartItemRepository.deleteByIds(cartItemIds);
+    }
+
 }

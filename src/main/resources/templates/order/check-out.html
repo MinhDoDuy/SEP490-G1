@@ -87,7 +87,7 @@
 
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-muted">Thanh toán</span>
-                    <span class="badge badge-secondary badge-pill formatted-price" th:text="${totalQuantity}">0</span>
+<!--                    <span class="badge badge-secondary badge-pill formatted-price" th:text="${totalQuantity}">0</span>-->
                 </h4>
                 <ul class="list-group mb-3">
                     <!-- Example item, loop through actual items -->
@@ -105,15 +105,15 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Tổng tiền </span>
-                        <strong class="formatted-price" th:text="${totalOrderPrice}"></strong>
+                        <strong class="formatted-price"  th:text="${totalOrderPrice}"></strong>
                     </li>
                 </ul>
-
-
             </div>
             <div class="col-md-8 order-md-1">
                 <h4 class="mb-3">Thông tin khách hàng</h4>
-                <form class="needs-validation" th:action="@{/checkout}" method="post" >
+                <form  class="needs-validation" th:action="@{/checkout}" method="post" >
+                    <input type="hidden" name="cartItemIdsString" th:value="${cartItemIds}">
+                    <input type="hidden" name="totalOrderPrice" th:value="${totalOrderPrice}">
                     <div class="mb-3">
                         <label for="email">Tên khách hàng <span class="text-muted"></span></label>
                         <input type="email" class="form-control" id="" placeholder="you@example.com" th:value="${user.fullName}" readonly >

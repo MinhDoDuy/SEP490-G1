@@ -189,7 +189,8 @@ public class OrderManagementController {
             model.addAttribute("successOrder", session.getAttribute("successOrder"));
             session.removeAttribute("successOrder");
         }
-        return "staff-management/create-order-at-couter";
+//        return "staff-management/create-order-at-couter";
+        return "cart/pos-screen";
     }
 
 

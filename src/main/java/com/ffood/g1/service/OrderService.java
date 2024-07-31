@@ -26,7 +26,6 @@ public interface OrderService {
 
     List<Object[]> getRevenueDataByMonth();
 
-    Order createOrder(User user, String address, Integer totalOrderPrice, String note, Cart cart, OrderType orderType, PaymentMethod paymentMethod, PaymentStatus paymentStatus, String orderCode);
 
     List<Object[]> getRevenueDataByYear();
 
@@ -65,4 +64,6 @@ public interface OrderService {
     List<Order> getOrdersByUserId(Integer userId);
 
     void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod,Integer totalOrderPrice);
+
+    Order createOrder(User user, String address, String note, OrderType orderType, PaymentMethod paymentMethod, List<Integer> cartItemIds);
 }

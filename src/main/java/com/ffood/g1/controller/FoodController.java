@@ -78,15 +78,10 @@ public class FoodController {
             model.addAttribute("feedbacksFood", feedbacksFood);
 
             String messageAddFood = (String) session.getAttribute("messageAddFood");
-            Integer messageAddFoodStatus =(Integer) session.getAttribute("messageAddFoodStatus");
-            Integer canteenIdExist =(Integer) session.getAttribute("canteenIdExist");
             if (messageAddFood != null) {
                 model.addAttribute("messageAddFood", messageAddFood);
-                model.addAttribute("messageAddFoodStatus", messageAddFoodStatus);
-                model.addAttribute("canteenIdExist", canteenIdExist);
                 session.removeAttribute("messageAddFood");
-                session.removeAttribute("canteenIdExist");
-                session.removeAttribute("messageAddFoodStatus");
+                System.out.println("Oi caidjt con me ni"+messageAddFood);
             }
             return "canteen/food-details";
         } else {

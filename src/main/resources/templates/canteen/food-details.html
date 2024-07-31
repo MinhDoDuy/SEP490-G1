@@ -77,7 +77,6 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <!-- id="add-to-cart-form-${food.foodId}" -->
                         <form id="addToCartForm" th:action="@{/add_to_cart}" method="GET" class="mb-3">
                             <h4 class="fw-bold mb-3"><span th:text="${food.foodName}"> </span></h4>
                             <span th:if="${food.salesCount == null}" th:text="'Đã bán : 0 sản phẩm'"></span>
@@ -106,28 +105,7 @@
                             <button type="submit" class="btn btn-primary" th:if="${food.foodQuantity}>0">
                                 <i class="fa fa-shopping-bag me-2"></i> Add to cart
                             </button>
-                            <!-- Success Modal -->
-                            <div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document" >
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
-                                        </div>
-                                        <div class="modal-body" >
-                                            <span th:text="${messageAddFood}"></span>
-                                        </div>
-                                        <div class="modal-footer" th:if="${messageAddFoodStatus}==1">
-                                            <span>Nếu bạn muốn xem thêm các sản phẩm cùng cửa hàng hãy chọn "Vào Cửa Hàng"</span>
-                                            <a th:href="@{/canteen_info(canteenId=${food.canteen.canteenId})}"><button type="button" class="btn btn-primary" data-dismiss="modal">Vào Cửa Hàng</button></a>
-                                        </div>
-                                        <div class="modal-footer" th:if="${messageAddFoodStatus}==0">
-                                            <span>Nếu bạn muốn thêm sản phẩm này vào giỏ hàng hãy chọn "Xóa và Thêm"(lưu ý: Các món ăn trong giỏ hàng của bạn sẽ bị xóa)</span>
-                                            <a th:href="@{/change_cart(foodId=${food.foodId},url=3)}" ><button type="button" class="btn btn-primary" data-dismiss="modal" style="background-color: red">Xóa và Thêm</button>
-                                                <a th:href="@{/canteen_info(canteenId=${canteenIdExist})}"><button type="button" class="btn btn-primary" data-dismiss="modal" >Vào Cửa Hàng</button></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                         </form>
                     </div>
                 </div>
@@ -219,7 +197,19 @@
     </div>
 </div>
 <!-- Single Product End -->
-
+<!-- Success Modal -->
+<div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
+            </div>
+            <div class="modal-body" >
+                <span th:text="${messageAddFood}"></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Footer Start -->
 <div th:replace="footer :: footer"></div>
@@ -264,8 +254,12 @@
         const message = /*[[${messageAddFood}]]*/ 'Food item added to the cart successfully!';
         if (message) {
             $('#successModal').modal('show');
+            setTimeout(function() {
+                $('#successModal').modal('hide');
+            }, 2000); // Hide the modal after 3 seconds
         }
     });
+
 
     // Function to format currency in VND
     function formatCurrencyVND(amount) {

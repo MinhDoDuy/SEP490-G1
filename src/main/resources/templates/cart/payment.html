@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Payment Screen</title>
+    <style>
+        body {
+            background-color: #fff8f0;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .card {
+            margin: 20px;
+            border: 1px solid #ffcc99;
+        }
+
+        .card-header,
+        .card-footer {
+            background-color: #fff8f0;
+            border-color: #ffcc99;
+        }
+
+        .btn-success {
+            background-color: #ff6600;
+            border-color: #ff6600;
+        }
+
+        .btn-success:hover {
+            background-color: #e65c00;
+            border-color: #e65c00;
+        }
+
+        .btn-secondary {
+            background-color: #ffcc99;
+            border-color: #ffcc99;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ffb366;
+            border-color: #ffb366;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="container mt-5">
+    <h2 style="color: #ff6600;">Payment Screen</h2>
+    <div class="card">
+        <div class="card-header">
+            Order Summary
+        </div>
+        <div class="card-body">
+            <div id="orderSummary"></div>
+            <hr>
+            <h5>Payment Method</h5>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="cash" value="cash" checked>
+                <label class="form-check-label" for="cash">Cash</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="qr" value="qr">
+                <label class="form-check-label" for="qr">QR Code</label>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-success" id="completePayment">Complete Payment</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cartData = JSON.parse(localStorage.getItem('cartData')) || {};
+        const orderSummary = document.getElementById('orderSummary');
+
+        function formatCurrencyVND(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        let totalItems = 0;
+        let totalPrice = 0;
+        Object.values(cartData).forEach(item => {
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
+
+            const itemDiv = document.createElement('div');
+            itemDiv.innerHTML = `
+                <div class="d-flex justify-content-between">
+                    <p>${item.name} x ${item.quantity}</p>
+                    <p>${formatCurrencyVND(item.price * item.quantity)}</p>
+                </div>
+            `;
+            orderSummary.appendChild(itemDiv);
+        });
+
+        const totalDiv = document.createElement('div');
+        totalDiv.innerHTML = `
+            <hr>
+            <div class="d-flex justify-content-between">
+                <p><strong>Total Items:</strong></p>
+                <p>${totalItems}</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p><strong>Total Price:</strong></p>
+                <p>${formatCurrencyVND(totalPrice)}</p>
+            </div>
+        `;
+        orderSummary.appendChild(totalDiv);
+
+        document.getElementById('completePayment').addEventListener('click', function () {
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            alert(`Payment of ${formatCurrencyVND(totalPrice)} will be made using ${paymentMethod === 'cash' ? 'Cash' : 'QR Code'}`);
+        });
+    });
+</script>
+</body>
+</html>

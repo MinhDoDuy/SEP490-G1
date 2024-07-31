@@ -4,6 +4,7 @@ import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.CartItem;
 import com.ffood.g1.entity.Food;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -26,4 +27,10 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     List<CartItem> findByCart(Cart cart);
     @Query("SELECT ci FROM CartItem ci WHERE ci.cartItemId = :cartItemId")
     CartItem getCartItemByCartItemId(Integer cartItemId);
+
+    List<CartItem> findByCartItemIdIn(List<Integer> cartItemIds);
+
+    @Modifying
+    @Query("DELETE FROM CartItem ci WHERE ci.cartItemId IN :ids")
+    void deleteByIds(@Param("ids") List<Integer> ids);
 }

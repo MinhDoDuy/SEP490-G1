@@ -1,9 +1,6 @@
 package com.ffood.g1.controller;
 
-import com.ffood.g1.entity.Cart;
-import com.ffood.g1.entity.CartItem;
-import com.ffood.g1.entity.Food;
-import com.ffood.g1.entity.User;
+import com.ffood.g1.entity.*;
 import com.ffood.g1.repository.CartItemRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.CartItemService;
@@ -24,7 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class CartController {
@@ -52,9 +51,7 @@ public class CartController {
                             HttpSession session,
                             RedirectAttributes redirectAttributes,
                             Model model) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         // Check if the user is authenticated
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             redirectAttributes.addFlashAttribute("message", "You need to log in to add items to the cart.");
@@ -62,54 +59,18 @@ public class CartController {
         }
         String email = authentication.getName();
         User user = userService.findByEmail(email);
-
         Cart cart = cartService.getOrCreateCart(user);
-        List<CartItem> cartItems = cartItemService.getCartItemsByUserId(user.getUserId());
-
         model.addAttribute("user", user);
+
         Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
         int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
         session.setAttribute("totalQuantity", totalQuantity);
 
-        // Get the canteen of the food item to be added
-        Optional<Food> newFoodOpt = foodService.getFoodById(foodId);
-        if (!newFoodOpt.isPresent()) {
-
-            session.setAttribute("messageAddFood", "The food item does not exist.");
-            if (url == 1) {
-                return "redirect:/homepage";
-            } else if (url == 2) {
-                return "redirect:/canteen_details";
-            } else if (url == 3) {
-                return "redirect:/food_details?id=" + foodId;
-            }
-        }
-        Food newFood = newFoodOpt.get();
-        Integer newFoodCanteenId = newFood.getCanteen().getCanteenId();
-
-        // Check if the cart is empty
-        if (!cartItems.isEmpty()) {
-            // Check if the cart already contains items from a different canteen
-            for (CartItem cartItem : cartItems) {
-                Food existingFood = cartItem.getFood();
-                if (!existingFood.getCanteen().getCanteenId().equals(newFoodCanteenId)) {
-                    session.setAttribute("messageAddFood", "Bạn đã có sản phẩm của cửa hàng " + existingFood.getCanteen().getCanteenName() + " ! Hãy vui lòng chọn sản phẩm cùng cửa hàng, tiếp tục muốn chọn món nhấn vào cửa hàng");
-                    session.setAttribute("messageAddFoodStatus",0 );
-                    session.setAttribute("canteenIdExist",existingFood.getCanteen().getCanteenId());
-                    if (url == 1) {
-                        return "redirect:/homepage";
-                    } else if (url == 2) {
-                        return "redirect:/canteen_details";
-                    } else if (url == 3) {
-                        return "redirect:/food_details?id=" + foodId;
-                    }
-                }
-            }
-        }
-
         cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
+
         session.setAttribute("messageAddFood", "Sản phẩm đã được thêm vào giỏ hàng thành công!!!");
-        session.setAttribute("messageAddFoodStatus",1 );
+        ;
+
         if (url == 1) {
             return "redirect:/homepage";
         } else if (url == 2) {
@@ -117,37 +78,30 @@ public class CartController {
         } else if (url == 3) {
             return "redirect:/food_details?id=" + foodId;
         }
-        // Redirect to the food details page after adding to the cart
         return null;
     }
 
     @GetMapping("/cart_items")
-    public String getCartItems(Model model, HttpSession session) {
+    public String getCartItems(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.findByEmail(email);
         Integer userId = user.getUserId();
-        Integer cartId = cartService.findCartIdByUserId(user.getUserId());
-
-
-        Integer totalOrderPricefinal = cartService.getTotalFoodPriceByCartId(cartId);
-        int totalOrderPrice = (totalOrderPricefinal != null) ? totalOrderPricefinal : 0;
-
-        model.addAttribute("totalOrderPrice", totalOrderPrice);
-
-        // Lấy các sản phẩm trong giỏ hàng của người dùng
         List<CartItem> cartItems = cartItemService.getCartItemsByUserId(userId);
 
-        // Đưa dữ liệu giỏ hàng vào model
-        model.addAttribute("cartItems", cartItems);
+        // Grouping cart items by canteen
+        Map<Canteen, List<CartItem>> groupedItems = cartItems.stream()
+                .collect(Collectors.groupingBy(item -> item.getFood().getCanteen()));
 
-        Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
-        int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
-        session.setAttribute("totalQuantity", totalQuantity);
-        // Trả về trang HTML
+        model.addAttribute("cartItemsGroupedByCanteen", groupedItems);
+
+        Integer totalOrderPrice = cartItems.stream()
+                .mapToInt(item -> item.getQuantity() * item.getFood().getPrice())
+                .sum();
+
+        model.addAttribute("totalOrderPrice", totalOrderPrice);
         return "cart/cart";
     }
-
 
     @PostMapping("/remove_cartItem")
     public String removeCartItem(@RequestParam("cartItemId") Integer cartItemId) {
@@ -177,34 +131,16 @@ public class CartController {
 
 
     }
-    @GetMapping("/change_cart")
-    public String changeCart(@RequestParam("foodId") Integer foodId,
-                             @RequestParam("url") Integer url,
-                             Model model, HttpSession session) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
 
-        Cart cart = cartService.getOrCreateCart(user);
-        cartService.clearCart(cart);
 
-        Cart cartNew = cartService.getOrCreateCart(user);
-        Optional<Food> food= foodService.getFoodById(foodId);
-        Integer price= food.get().getPrice();
-        cartService.addToCart(cartNew, foodId, 1, LocalDateTime.now(),price );
-        Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
-        int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
-        session.setAttribute("totalQuantity", totalQuantity);
-        // Trả về trang HTML
-        if (url == 1) {
-            return "redirect:/homepage";
-        } else if (url == 2) {
-            return "redirect:/canteen_details";
-        } else if (url == 3) {
-            return "redirect:/food_details?id=" + foodId;
-        }
 
-        return null;
+
+    @PostMapping("/payment")
+    public String showPaymentScreen(@RequestParam("cartData") String cartData, Model model) {
+        model.addAttribute("cartData", cartData);
+        System.out.println("Cứ the cart data is: " + cartData);
+        return "cart/payment"; // The name of the payment screen HTML file
     }
+
 }
 

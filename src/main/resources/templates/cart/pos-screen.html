@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>POS Screen</title>
+    <style>
+        body {
+            /*background-color: #fff8f0;*/
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .product-card {
+            border: 1px solid #ffcc99;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 10px;
+            text-align: center;
+            transition: box-shadow 0.3s, border 0.3s;
+            background-color: #fff;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 0 11px rgba(255, 165, 0, .3);
+            border: 1px solid #ffa500;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-bottom: 1px solid #ffcc99;
+            margin-bottom: 10px;
+        }
+
+        .product-info {
+            margin: 10px 0;
+        }
+
+        .product-info h5 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #ff6600;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #ffcc99;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+        }
+
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item-quantity input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .cart-summary {
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ffcc99;
+            background-color: #fff8f0;
+        }
+
+        .btn-success {
+            background-color: #ff6600;
+            border-color: #ff6600;
+        }
+
+        .btn-success:hover {
+            background-color: #e65c00;
+            border-color: #e65c00;
+        }
+
+        .btn-secondary {
+            background-color: #ffcc99;
+            border-color: #ffcc99;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ffb366;
+            border-color: #ffb366;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #fff8f0;
+            padding: 10px 0;
+            border-top: 1px solid #ffcc99;
+        }
+
+        .card-header,
+        .card-footer {
+            background-color: #fff8f0;
+            border-color: #ffcc99;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 style="color: #ff6600;">POS Screen</h2>
+    <div class="row">
+        <div class="col-md-8" style="border: 2px solid #cccccc;border-radius: 5px;">
+            <label for="search" style="margin-top: 10px"></label><input type="text" class="form-control mb-3" id="search" placeholder="Nhập tên món ăn cần tìm kiếm...">
+            <div class="row" id="productList">
+                <!-- Products will be displayed here -->
+                <div class="col-md-4" th:each="food : ${foods}">
+                    <div class="product-card">
+                        <img class="product-img" th:src="${food.imageFood}" alt="Product Image">
+                        <div class="product-info">
+                            <h5 th:text="${food.foodName}">Product Name</h5>
+                            <span th:text="'Đang còn : '+${food.foodQuantity}"></span>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <p class="text-danger" th:text="${food.price} + ' VND'">25,000 VND</p>
+                                <button class="btn btn-success btn-add" th:data-id="${food.foodId}"
+                                        th:data-name="${food.foodName}" th:data-price="${food.price}" th:data-quantity="${food.foodQuantity}">+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Cart
+                </div>
+                <div class="card-body" id="cartItems">
+                    <!-- Cart Items will be displayed here -->
+                </div>
+                <div class="card-footer">
+                    <div class="cart-summary">
+                        <p>Món: <span id="totalItems">0</span></p>
+                        <p>Tổng tiền: <span id="totalPrice">0 VND</span></p>
+                        <button class="btn btn-success" id="proceedToPayment">Proceed to Payment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="cartForm" method="post" action="/payment" style="display: none;">
+    <input type="hidden" name="cartData" id="cartData">
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const productList = document.getElementById('productList');
+        const cartItems = document.getElementById('cartItems');
+        const addButtons = document.querySelectorAll('.btn-add');
+        const proceedToPaymentButton = document.getElementById('proceedToPayment');
+        const cartForm = document.getElementById('cartForm');
+        const cartDataInput = document.getElementById('cartData');
+        let cart = {};
+
+        addButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = this.getAttribute('data-id');
+                const productName = this.getAttribute('data-name');
+                const productPrice = parseFloat(this.getAttribute('data-price'));
+                const productQuantity = parseInt(this.getAttribute('data-quantity'));
+
+                if (!cart[productId]) {
+                    cart[productId] = {
+                        id: productId,
+                        name: productName,
+                        price: productPrice,
+                        quantity: 1,
+                        maxQuantity: productQuantity
+                    };
+                } else {
+                    if (cart[productId].quantity < cart[productId].maxQuantity) {
+                        cart[productId].quantity += 1;
+                    } else {
+                        alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
+                    }
+                }
+
+                updateCartDisplay();
+            });
+        });
+
+        proceedToPaymentButton.addEventListener('click', function () {
+            cartDataInput.value = JSON.stringify(cart);
+            cartForm.submit();
+        });
+
+        function updateCartDisplay() {
+            cartItems.innerHTML = '';
+            let totalItems = 0;
+            let totalPrice = 0;
+            Object.values(cart).forEach(item => {
+                totalItems += item.quantity;
+                totalPrice += item.price * item.quantity;
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+
+                    <div class="cart-item-info">
+                        <p>${item.name}</p>
+                        <p class="text-danger">${formatCurrencyVND(item.price)}</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="btn btn-secondary btn-sm btn-decrease" data-id="${item.id}">-</button>
+                        <input type="text" value="${item.quantity}" readonly>
+                        <button class="btn btn-secondary btn-sm btn-increase" data-id="${item.id}">+</button>
+                    </div>
+                    <button class="btn btn-danger btn-sm btn-remove" data-id="${item.id}">x</button>
+                `;
+
+                cartItems.appendChild(cartItem);
+            });
+
+            document.getElementById('totalItems').innerText = totalItems;
+            document.getElementById('totalPrice').innerText = formatCurrencyVND(totalPrice);
+
+            addCartEventListeners();
+        }
+
+        function addCartEventListeners() {
+            document.querySelectorAll('.btn-decrease').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-id');
+                    if (cart[productId].quantity > 1) {
+                        cart[productId].quantity -= 1;
+                    } else {
+                        delete cart[productId];
+                    }
+                    updateCartDisplay();
+                });
+            });
+
+            document.querySelectorAll('.btn-increase').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-id');
+                    if (cart[productId].quantity < cart[productId].maxQuantity) {
+                        cart[productId].quantity += 1;
+                    } else {
+                        alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
+                    }
+                    updateCartDisplay();
+                });
+            });
+
+            document.querySelectorAll('.btn-remove').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-id');
+                    delete cart[productId];
+                    updateCartDisplay();
+                });
+            });
+        }
+
+        function formatCurrencyVND(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        document.getElementById('search').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const products = productList.querySelectorAll('.product-card');
+
+            products.forEach(product => {
+                const productName = product.querySelector('h5').innerText.toLowerCase();
+                if (productName.includes(searchTerm)) {
+                    product.parentElement.style.display = '';
+                } else {
+                    product.parentElement.style.display = 'none';
+                }
+            });
+        });
+    });
+
+</script>
+</body>
+</html>
