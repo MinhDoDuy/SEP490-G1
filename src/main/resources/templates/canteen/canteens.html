@@ -28,7 +28,17 @@
     <link th:href="@{/css/style_test.css}" rel="stylesheet">
 
 </head>
+<style>
+    .form-check {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
+    .form-check-label {
+        flex-grow: 1;
+    }
+</style>
 <body>
 
 <!-- Page Preloder -->
@@ -75,25 +85,25 @@
                                         <h4>Tìm Kiếm</h4>
                                         <input type="text" class="form-control" name="name" th:value="${name}"
                                                placeholder="Tìm đồ ăn..."
-                                               onkeypress="if(event.keyCode == 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
+                                               onkeypress="if(event.keyCode == 13) { event.preventDefault(); this.form.submit(); }">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="mb-3">
                                         <h4>Danh mục đồ ăn</h4>
                                         <ul class="list-unstyled fruite-categorie">
-                                            <li th:each="category : ${categories}">
-                                                <div class="d-flex justify-content-lg-start  fruite-name">
-                                                    <input class="pixel-checkbox"
-                                                           style="margin-right: 30px;margin-left: 30px" type="checkbox"
-                                                           name="checkedCategories" th:value="${category.categoryId}"
-                                                           id="${'category_' + category.categoryId}"
-                                                           onchange="document.getElementById('categoryForm').submit()"
-                                                           th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
-                                                    <label for="${'category_' + category.categoryId}"
-                                                           th:text="${category.categoryName}"
-                                                           style="color: #0b0b0b"></label>
-                                                </div>
+                                            <li th:each="category : ${categories}"
+                                                class="d-flex align-items-center mb-2">
+                                                <input class="form-check-input me-2"
+                                                       type="checkbox"
+                                                       name="checkedCategories"
+                                                       th:value="${category.categoryId}"
+                                                       th:id="${'category_' + category.categoryId}"
+                                                       onchange="this.form.submit()"
+                                                       th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
+                                                <label class="form-check-label"
+                                                       th:for="${'category_' + category.categoryId}"
+                                                       th:text="${category.categoryName}"></label>
                                             </li>
                                         </ul>
                                     </div>
@@ -102,32 +112,36 @@
                                     <div class="mb-3">
                                         <h4>Cửa hàng</h4>
                                         <ul class="list-unstyled fruite-categorie">
-                                            <li th:each="canteen : ${canteens}">
-                                                <div class="d-flex justify-content-lg-start fruite-name">
-                                                    <input class="pixel-checkbox"
-                                                           style="margin-right: 30px;margin-left: 30px" type="checkbox"
-                                                           name="checkedCanteens" th:value="${canteen.canteenId}"
-                                                           id="${'canteen_' + canteen.canteenId}"
-                                                           onchange="document.getElementById('categoryForm').submit()"
+                                            <li th:each="canteen : ${canteens}" class="d-flex align-items-center mb-2">
+                                                <div class="form-check d-flex align-items-center" style="width: 100%;">
+                                                    <input class="form-check-input me-3"
+                                                           type="checkbox"
+                                                           name="checkedCanteens"
+                                                           th:value="${canteen.canteenId}"
+                                                           th:id="${'canteen_' + canteen.canteenId}"
+                                                           onchange="this.form.submit()"
                                                            th:checked="${checkedCanteens != null and #lists.contains(checkedCanteens, canteen.canteenId)}">
-                                                    <label for="${'canteen_' + canteen.canteenId}"
+                                                    <label class="form-check-label"
+                                                           th:for="${'canteen_' + canteen.canteenId}"
                                                            th:text="${canteen.canteenName}"
-                                                           style="color: #0b0b0b"></label>
+                                                           style="flex-grow: 1; color: #0b0b0b;"></label>
                                                 </div>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                                <!-- Other filters like Additional can be here -->
                             </div>
                         </form>
+                        <!-- Other filters like Additional can be here -->
                     </div>
 
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-center">
                             <h4 style="justify-content: center; display: flex">Sản phẩm</h4>
-                            <div th:if="${messageAddFood}" class="alert alert-success" th:text="${messageAddFood}" id="successMessage">
-                                <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">
+                            <div th:if="${messageAddFood}" class="alert alert-success" th:text="${messageAddFood}"
+                                 id="successMessage">
+                                <button type="button" class="close" aria-label="Close"
+                                        onclick="this.parentElement.style.display='none';">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -151,8 +165,11 @@
                                         <h4 style="height: 55.41px"><a th:href="@{/food_details(id=${food.foodId})} "
                                                                        th:text="${food.foodName}"></a></h4>
                                         <p><span th:text="${food.canteen.canteenName}"></span></p>
-                                        <p th:if="${food.foodQuantity}>0">Số lượng còn lại :<span th:text="${food.foodQuantity}"></span></p>
-                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red">HẾT HÀNG</span></p>
+                                        <p th:if="${food.foodQuantity}>0">Số lượng còn lại :<span
+                                                th:text="${food.foodQuantity}"></span></p>
+                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span
+                                                style="display: flex; justify-content: left;color: red">HẾT HÀNG</span>
+                                        </p>
 
                                         <div class="d-flex justify-content-between flex-lg-wrap">
 
@@ -172,7 +189,8 @@
                                 <ul class="pagination justify-content-center d-flex mt-5">
                                     <li class="page-item rounded" th:classappend="${currentPage == 0} ? 'disabled'">
                                         <a class="page-link rounded"
-                                           th:href="@{/canteen_details(page=${currentPage - 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang Trước</a>
+                                           th:href="@{/canteen_details(page=${currentPage - 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang
+                                            Trước</a>
                                     </li>
                                     <li class="page-item rounded" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                                         th:classappend="${i == currentPage} ? 'active'">
@@ -183,7 +201,8 @@
                                     <li class="page-item rounded"
                                         th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{/canteen_details(page=${currentPage + 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang Sau</a>
+                                           th:href="@{/canteen_details(page=${currentPage + 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang
+                                            Sau</a>
                                     </li>
                                 </ul>
                             </div>
@@ -221,6 +240,7 @@
 <!---->
 
 <script>
+
     function submitForm(categoryId) {
         // Tạo input ẩn chứa giá trị của categoryId
         const input = document.createElement('input');
