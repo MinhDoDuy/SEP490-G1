@@ -146,13 +146,11 @@ public class AuthController {
                                        @RequestParam(required = false) String emailExistsError,
                                        @RequestParam(required = false) String fullName,
                                        @RequestParam(required = false) String password,
-                                       @RequestParam(required = false) String codeNameExistsError,
                                        @RequestParam(required = false) String phoneExistsError) {
         model.addAttribute("user", new User()); // Thêm một đối tượng User mới vào model
         model.addAttribute("emailExistsError", emailExistsError); // Thêm thông báo lỗi email vào model
         model.addAttribute("fullName", fullName); // Thêm giá trị của trường fullName vào model để hiển thị lại khi có lỗi
         model.addAttribute("password", password); // Thêm giá trị của trường password vào model để hiển thị lại khi có lỗi
-        model.addAttribute("codeNameExistsError", codeNameExistsError); // Thêm giá trị của trường codeName vào model để hiển thị lại khi có lỗi
         model.addAttribute("phoneExistsError", phoneExistsError);// Thêm giá trị của trường phone vào model để hiển thị lại khi có lỗi
         return "register"; // Trả về view register
     }
@@ -160,27 +158,25 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-            boolean hasError = false;
-            String codeNamePattern = "^[a-zA-Z0-9]{6,20}$";
+        boolean hasError = false;
+//            String codeNamePattern = "^[a-zA-Z0-9]{6,20}$";
 
-            if (userService.isEmailExist(user.getEmail())) {
-                redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
-                hasError = true;
-            }
+        if (userService.isEmailExist(user.getEmail())) {
+            redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
+            hasError = true;
+        }
 
+        if (userService.isPhoneExist(user.getPhone())) {
+            redirectAttributes.addAttribute("phoneExistsError", "Số điện thoại này đã được đăng ký. Vui lòng sử dụng số khác.");
+            hasError = true;
+        }
 
-
-            if (userService.isPhoneExist(user.getPhone())) {
-                redirectAttributes.addAttribute("phoneExistsError", "Số điện thoại này đã được đăng ký. Vui lòng sử dụng số khác.");
-                hasError = true;
-            }
-
-            if (hasError) {
-                redirectAttributes.addAttribute("fullName", user.getFullName());
-                redirectAttributes.addAttribute("password", user.getPassword());
-                redirectAttributes.addAttribute("phone", user.getPhone());
-                return "redirect:/register";
-            }
+        if (hasError) {
+            redirectAttributes.addAttribute("fullName", user.getFullName());
+            redirectAttributes.addAttribute("password", user.getPassword());
+            redirectAttributes.addAttribute("phone", user.getPhone());
+            return "redirect:/register";
+        }
 
 
         // Xử lý đăng ký người dùng (lưu thông tin người dùng vào cơ sở dữ liệu)

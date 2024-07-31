@@ -49,19 +49,28 @@
                     </div>
                     <!-- Filter by Role -->
                     <div class="relative w-64 mr-2">
-                        <select name="role" class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500">
+                        <select name="role"
+                                class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500">
                             <option value="">Tất cả vai trò</option>
-                            <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleId == 1 ? 'Người dùng' : role.roleId == 2 ? 'Nhân viên' : role.roleId == 3 ? 'Quản lý' : role.roleId == 4 ? 'Quản trị viên' : 'Unknow'}" th:selected="${role.roleId == roleId}"></option>
+                            <option th:each="role : ${roles}" th:value="${role.roleId}"
+                                    th:text="${role.roleId == 1 ? 'Người dùng' : role.roleId == 2 ? 'Nhân viên' : role.roleId == 3 ? 'Quản lý' : role.roleId == 4 ? 'Quản trị viên' : 'Unknow'}"
+                                    th:selected="${role.roleId == roleId}"></option>
                         </select>
                     </div>
                     <!-- Filter by Canteen -->
                     <div class="relative w-64 mr-2">
-                        <select name="canteen" class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500">
+                        <select name="canteen"
+                                class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500">
                             <option value="">Tất cả căn tin</option>
-                            <option th:each="canteen : ${canteens}" th:value="${canteen.canteenId}" th:text="${canteen.canteenName}" th:selected="${canteen.canteenId == canteenId}"></option>
+                            <option th:each="canteen : ${canteens}" th:value="${canteen.canteenId}"
+                                    th:text="${canteen.canteenName}"
+                                    th:selected="${canteen.canteenId == canteenId}"></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Tìm kiếm</button>
+                    <button type="submit" class="btn btn-primary"
+                            style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+                        Tìm kiếm
+                    </button>
                 </form>
             </div>
             <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
@@ -77,11 +86,9 @@
                     <tr>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                             STT
-                        </th><th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                        Họ và Tên
-                    </th>
+                        </th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                            Tên Mã
+                            Họ và Tên
                         </th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                             Email
@@ -106,16 +113,24 @@
                     </thead>
                     <tbody>
                     <tr th:if="${#lists.isEmpty(userPage.content)}">
-                        <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không có người dùng nào</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không có người dùng
+                            nào
+                        </td>
                     </tr>
                     <tr th:each="user, iterStat : ${userPage.content}">
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${userPage.number * userPage.size + iterStat.index + 1}">STT</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50"
+                            th:text="${userPage.number * userPage.size + iterStat.index + 1}">STT
+                        </td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.fullName}">Họ và Tên</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.email}">Email</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.phone}">Số Điện Thoại</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen != null}" th:text="${user.canteen.canteenName}">Căn Tin</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen != null}"
+                            th:text="${user.canteen.canteenName}">Căng Tin
+                        </td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:if="${user.canteen == null}"></td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${user.isActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng Thái</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50"
+                            th:text="${user.isActive ? 'Hoạt động' : 'Không hoạt động'}">Trạng Thái
+                        </td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <span th:if="${user.role.roleId == 1}">Người dùng</span>
                             <span th:if="${user.role.roleId == 2}">Nhân viên</span>
@@ -123,7 +138,8 @@
                             <span th:if="${user.role.roleId == 4}"></span>
                         </td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
-                            <a th:href="@{/edit-user/{userId}(userId=${user.userId})}" class="btn btn-primary" style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">
+                            <a th:href="@{/edit-user/{userId}(userId=${user.userId})}" class="btn btn-primary"
+                               style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 2px;">
                                 <i class="fas fa-edit"></i>
                             </a>
                         </td>
@@ -132,7 +148,8 @@
                 </table>
                 <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
         <span th:if="${userPage.hasPrevious()}">
-            <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}" class="page-link">&laquo;</a>
+            <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}"
+               class="page-link">&laquo;</a>
         </span>
                     <span th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
             <a th:classappend="${i} == ${userPage.number} ? 'active' : ''"
@@ -141,7 +158,8 @@
             </a>
         </span>
                     <span th:if="${userPage.hasNext()}">
-            <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}" class="page-link">&raquo;</a>
+            <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}"
+               class="page-link">&raquo;</a>
         </span>
                 </div>
             </div>

@@ -1,12 +1,19 @@
 package com.ffood.g1.controller.adminController;
 
+import com.ffood.g1.entity.Feedback;
+import com.ffood.g1.enum_pay.FeedbackStatus;
 import com.ffood.g1.service.CanteenService;
+import com.ffood.g1.service.FeedbackService;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,66 +29,22 @@ public class DashBoardController {
     private CanteenService canteenService;
 
     @Autowired
-    private OrderService orderService;
+    private FeedbackService feedbackService;
 
     @GetMapping("/dashboard-admin")
-    public String showDashboard(Model model) {
+    public String showDashboard(@RequestParam(value = "status", defaultValue = "VIEWABLE") FeedbackStatus status,
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "10") int size,
+                                Model model) {
         Integer userCount = userService.countUsers();
         Integer canteenCount = canteenService.countCanteens();
-        Double totalOrder = orderService.calculateTotalOrder();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Feedback> feedbacks = feedbackService.findByStatus(status, pageable);
 
-
-        List<Object[]> bestSellingItems = orderService.getBestSellingItems();
-        List<Object[]> orderStats = orderService.getOrderStats();
-
-        List<String> bestSellingItemsLabels = new ArrayList<>();
-        List<Long> bestSellingItemsData = new ArrayList<>();
-        for (Object[] item : bestSellingItems) {
-            bestSellingItemsLabels.add((String) item[0]);
-            bestSellingItemsData.add((Long) item[1]);
-        }
-
-        List<String> orderStatsLabels = new ArrayList<>();
-        List<Long> orderStatsData = new ArrayList<>();
-        for (Object[] stat : orderStats) {
-            orderStatsLabels.add((String) stat[0]);
-            orderStatsData.add((Long) stat[1]);
-        }
-
-
-        List<Object[]> revenueDataByMonth = orderService.getRevenueDataByMonth();
-        List<Object[]> revenueDataByYear = orderService.getRevenueDataByYear();
-
-
-
-        List<String> revenueLabelsByMonth = new ArrayList<>();
-        List<Double> revenueDataByMonthList = new ArrayList<>();
-        for (Object[] data : revenueDataByMonth) {
-            revenueLabelsByMonth.add((String) data[0]);
-            revenueDataByMonthList.add((Double) data[1]);
-        }
-
-        List<String> revenueLabelsByYear = new ArrayList<>();
-        List<Double> revenueDataByYearList = new ArrayList<>();
-        for (Object[] data : revenueDataByYear) {
-            revenueLabelsByYear.add((String) data[0]);
-            revenueDataByYearList.add((Double) data[1]);
-        }
-
+        model.addAttribute("feedbacks", feedbacks);
+        model.addAttribute("status", status);
         model.addAttribute("userCount", userCount);
-        model.addAttribute("totalOrder", totalOrder);
         model.addAttribute("canteenCount", canteenCount);
-        model.addAttribute("bestSellingItemsLabels", bestSellingItemsLabels);
-        model.addAttribute("bestSellingItemsData", bestSellingItemsData);
-        model.addAttribute("orderStatsLabels", orderStatsLabels);
-        model.addAttribute("orderStatsData", orderStatsData);
-
-        model.addAttribute("revenueLabelsByMonth", revenueLabelsByMonth);
-        model.addAttribute("revenueDataByMonth", revenueDataByMonthList);
-        model.addAttribute("revenueLabelsByYear", revenueLabelsByYear);
-        model.addAttribute("revenueDataByYear", revenueDataByYearList);
-
-
 
         return "admin-management/dashboard";
     }

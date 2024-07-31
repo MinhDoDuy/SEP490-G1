@@ -30,8 +30,6 @@
     </div>
 
     <div class="p-6">
-        <div th:if="${successMessage}" class="alert alert-success hidden" th:text="${successMessage}" id="successMessage"></div>
-        <div th:if="${errorMessage}" class="alert alert-danger hidden" th:text="${errorMessage}" id="errorMessage"></div>
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Quản Lý Nhân Viên của: <span th:text="${canteenName}"></span></div>
@@ -53,11 +51,10 @@
                        style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Đăng Ký Nhân viên</a>
                 </div>
             </div>
-            <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+            <div th:if="${successMessage}" class="alert alert-success" id="Alert">
                 <span th:text="${successMessage}"></span>
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             </div>
-            <div th:if="${errorMessage}" class="alert alert-danger">
+            <div th:if="${errorMessage}" class="alert alert-danger" id="Alert">
                 <span th:text="${errorMessage}"></span>
             </div>
             <div class="overflow-x-auto">
@@ -74,13 +71,13 @@
                     </thead>
                     <tbody>
                     <tr th:if="${#lists.isEmpty(staffPage.content)}">
-                        <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">No staff members found</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không Tìm Thấy Nhân Viên</td>
                     </tr>
                     <tr th:each="staff, iterStat : ${staffPage.content}">
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staffPage.number * staffPage.size + iterStat.index + 1}">STT</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.fullName}">Full Name</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.fullName}">Họ Tên</td>
                         <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.email}">Email</td>
-                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.phone}">Phone</td>
+                        <td class="py-2 px-4 border-b border-b-gray-50" th:text="${staff.phone}">Số Điện Thoại</td>
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <span th:if="${staff.role.roleName == 'ROLE_STAFF'}">Nhân viên</span>
                         </td>
@@ -116,7 +113,7 @@
 <script th:src="@{/js/manage.js}"></script>
 <script>  // Function to hide the alert after 3 seconds
 function hideAlert() {
-    var alert = document.getElementById('successAlert');
+    var alert = document.getElementById('Alert');
     if (alert) {
         setTimeout(function() {
             alert.style.display = 'none';

@@ -5,6 +5,7 @@ import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FileS3Service;
 import com.ffood.g1.service.UserService;
+import com.ffood.g1.utils.PhoneUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -129,6 +130,15 @@ public class CanteenManageController {
 
         // Lấy thông tin canteen hiện tại từ database
         Canteen existingCanteen = canteenService.getCanteenById(canteenId);
+
+
+        // Xác thực số điện thoại
+        String phoneValidationResult = PhoneUtils.validatePhoneNumber(updatedCanteen.getCanteenPhone());
+        if (phoneValidationResult != null) {
+            model.addAttribute("phoneError", phoneValidationResult);
+            model.addAttribute("existingImage", existingCanteen.getCanteenImg());
+            return "admin-management/edit-canteen";
+        }
 
         // Kiểm tra nếu số điện thoại thay đổi và đã tồn tại trong database
         if (!existingCanteen.getCanteenPhone().equals(updatedCanteen.getCanteenPhone()) && canteenService.isPhoneExist(updatedCanteen.getCanteenPhone())) {

@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>Dashboard</title>
     <style>
-        .chart-container {
-            height: 400px; /* Adjust as needed */
-        }
-        .chart-half {
-            width: 50%;
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Adjust as needed */
         }
     </style>
 </head>
@@ -32,7 +33,7 @@
                 <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Analytics</li>
+            <li class="text-gray-600 mr-2 font-medium">Phân Tích</li>
         </ul>
     </div>
     <div class="p-6">
@@ -55,155 +56,126 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-                <div class="flex justify-between mb-6">
-                    <div>
-                        <div class="text-2xl font-semibold mb-1" th:text="${totalOrder}"></div>
-                        <div class="text-sm font-medium text-gray-400">Đơn Hàng Hoàn Thành</div>
+        </div>
+        <div class="p-6">
+            <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md" style="width: 1500px">
+                <div class="flex justify-between mb-4 items-start">
+                    <div class="font-medium">Phản hổi người dùng</div>
+                </div>
+                <div th:if="${message}" class="alert alert-success" id="successAlert">
+                    <span th:text="${message}"></span>
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+
+                <div class="tab-content" id="feedbackTabsContent">
+                    <div class="tab-pane fade show active" id="feedbacks" role="tabpanel" aria-labelledby="feedbacks-tab">
+                        <div class="overflow-x-auto">
+                            <table class="w-full min-w-[540px]">
+                                <thead>
+                                <tr>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Người dùng</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Thời gian tạo</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Bình luận</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành Động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${#lists.isEmpty(feedbacks.content)}">
+                                    <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="4">Không có phản hồi nào</td>
+                                </tr>
+                                <tr th:each="feedback, iterStat : ${feedbacks.content}">
+                                    <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedbacks.number * feedbacks.size + iterStat.index + 1}">STT</td>
+                                    <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.user.fullName}">người dùng</td>
+                                    <td class="py-2 px-4 border-b border-b-gray-50 feedback-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
+                                    <td class="py-2 px-4 border-b border-b-gray-50 truncate" th:text="${feedback.comment}">Bình luận</td>
+                                    <td class="py-2 px-4 border-b border-b-gray-50">
+                                        <button class="btn btn-info" data-toggle="modal" th:data-target="'#commentModal' + ${feedback.feedbackId}">
+                                            <i class="ri-eye-line"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
+                                <span th:if="${feedbacks.hasPrevious()}">
+                                    <a th:href="@{/manage-feedback(status=${status}, page=${feedbacks.number - 1}, size=${feedbacks.size})}" class="page-link">&laquo;</a>
+                                </span>
+                                <span th:each="i : ${#numbers.sequence(0, feedbacks.totalPages - 1)}">
+                                    <a th:classappend="${i} == ${feedbacks.number} ? 'active' : ''"
+                                       th:href="@{/manage-feedback(status=${status}, page=${i}, size=${feedbacks.size})}" class="page-link">
+                                        <span th:text="${i + 1}">1</span>
+                                    </a>
+                                </span>
+                                <span th:if="${feedbacks.hasNext()}">
+                                    <a th:href="@{/manage-feedback(status=${status}, page=${feedbacks.number + 1}, size=${feedbacks.size})}" class="page-link">&raquo;</a>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="flex gap-6 mb-6">
-            <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md chart-container chart-half">
-                <h4>Top 5 Đồ ăn Bán Chạy Nhất</h4>
-                <canvas id="bestSellingItemsChart"></canvas>
-            </div>
-            <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md chart-container chart-half">
-                <h4>Biểu Đồ Đơn Hàng</h4>
-                <canvas id="ordersChart"></canvas>
+        <!-- The Modals -->
+        <div th:each="feedback : ${feedbacks.content}" th:id="'commentModal' + ${feedback.feedbackId}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="commentModalLabel">Chi tiết bình luận</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p th:text="${feedback.comment}"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 mb-6">
-            <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
-                <h4>Biểu Đồ Doanh Thu</h4>
-                <select id="revenue-chart-type" class="form-control mb-3">
-                    <option value="month">Theo Tháng</option>
-                    <option value="year">Theo Năm</option>
-                </select>
-                <canvas id="revenueChart"></canvas>
-            </div>
-        </div>
     </div>
 </main>
 <!-- end: Main -->
 
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{./js/manage.js}"></script>
-<script th:inline="javascript">
-    // Dữ liệu Best Selling Items Chart
-    const bestSellingItemsLabels = /*[[${bestSellingItemsLabels}]]*/ [];
-    const bestSellingItemsData = /*[[${bestSellingItemsData}]]*/ [];
+<script>
+    function formatDate(dateString) {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        return new Date(dateString).toLocaleDateString('vi-VN', options);
+    }
 
-    // Giới hạn dữ liệu để chỉ lấy 5 món ăn bán chạy nhất
-    const top5bestSellingItemsLabels = bestSellingItemsLabels.slice(0, 5);
-    const top5bestSellingItemsData= bestSellingItemsData.slice(0, 5);
-
-
-    // Biểu đồ Best Selling Items
-    const ctxBestSellingItems = document.getElementById('bestSellingItemsChart').getContext('2d');
-    const bestSellingItemsChart = new Chart(ctxBestSellingItems, {
-        type: 'bar',
-        data: {
-            labels: top5bestSellingItemsLabels,
-            datasets: [{
-                label: 'Đồ ăn Bán Chạy Nhất',
-                data: top5bestSellingItemsData,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        }
+    // Format all order dates on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.feedback-date').forEach(function (element) {
+            let dateText = element.innerText;
+            element.innerText = formatDate(dateText);
+        });
     });
 
-
-    // Dữ liệu Orders Chart
-    const ordersLabels = /*[[${orderStatsLabels}]]*/ [];
-    const ordersData = /*[[${orderStatsData}]]*/ [];
-
-    // Thêm màu vào danh sách
-    const backgroundColors = [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)',
-        'rgba(199, 199, 199, 0.2)'
-    ];
-    const borderColors = [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)',
-        'rgba(199, 199, 199, 1)'
-    ];
-
-    // Biểu đồ Orders
-    const ctxOrders = document.getElementById('ordersChart').getContext('2d');
-    const ordersChart = new Chart(ctxOrders, {
-        type: 'bar',
-        data: {
-            labels: ordersLabels,
-            datasets: [{
-                label: 'Đơn Hàng',
-                data: ordersData,
-                backgroundColor: ordersData.map((_, index) => backgroundColors[index % backgroundColors.length]),
-                borderColor: ordersData.map((_, index) => borderColors[index % borderColors.length]),
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    beginAtZero: true
-                }
-            }
+    function hideAlert() {
+        var alert = document.getElementById('successAlert');
+        if (alert) {
+            setTimeout(function () {
+                alert.style.display = 'none';
+            }, 3000);
         }
-    });
+    }
 
-    // Dữ liệu Revenue Chart
-    const revenueLabelsByMonth = /*[[${revenueLabelsByMonth}]]*/ [];
-    const revenueDataByMonth = /*[[${revenueDataByMonth}]]*/ [];
-
-    const revenueLabelsByYear = /*[[${revenueLabelsByYear}]]*/ [];
-    const revenueDataByYear = /*[[${revenueDataByYear}]]*/ [];
-
-
-    document.getElementById('revenue-chart-type').addEventListener('change', function () {
-        const value = this.value;
-        let labels, data;
-        if (value === 'month') {
-            labels = revenueLabelsByMonth;
-            data = revenueDataByMonth;
-        } else if (value === 'year') {
-            labels = revenueLabelsByYear;
-            data = revenueDataByYear;
-        }
-        revenueChart.data.labels = labels;
-        revenueChart.data.datasets[0].data = data;
-        revenueChart.update();
-    });
-
-    // Biểu đồ Revenue
-    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-    let revenueChart = new Chart(ctxRevenue, {
-        type: 'line',
-        data: {
-            labels: revenueLabelsByMonth,
-            datasets: [{
-                label: 'Doanh Thu',
-                data: revenueDataByMonth,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: false
-            }]
-        }
-    });
+    // Call the function to hide the alert
+    hideAlert();
 </script>
 </body>
 </html>

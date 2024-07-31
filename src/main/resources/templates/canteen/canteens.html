@@ -28,7 +28,21 @@
     <link th:href="@{/css/style_test.css}" rel="stylesheet">
 
 </head>
+<style>
+    .form-check {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
+    .form-check-label {
+        flex-grow: 1;
+    }
+
+    .border-orange {
+        border-color: orange !important;
+    }
+</style>
 <body>
 
 <!-- Page Preloder -->
@@ -41,7 +55,7 @@
 <div class="container-fluid page-header py-5">
 </div>
 <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white " style="font-size: 2rem">Cửa hàng</h1>
+    <h1 class="text-center text-white" style="font-size: 2rem">Cửa hàng</h1>
     <ol class="breadcrumb justify-content-center mb-0">
         <li class="breadcrumb-item"><a th:href="@{/homepage}">Trang Chủ</a></li>
         <li class="breadcrumb-item active text-white">Cửa hàng</li>
@@ -74,26 +88,26 @@
                                     <div class="mb-3">
                                         <h4>Tìm Kiếm</h4>
                                         <input type="text" class="form-control" name="name" th:value="${name}"
-                                               placeholder="Search for food..."
-                                               onkeypress="if(event.keyCode == 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }">
+                                               placeholder="Tìm đồ ăn..."
+                                               onkeypress="if(event.keyCode == 13) { event.preventDefault(); this.form.submit(); }">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="mb-3">
                                         <h4>Danh mục đồ ăn</h4>
                                         <ul class="list-unstyled fruite-categorie">
-                                            <li th:each="category : ${categories}">
-                                                <div class="d-flex justify-content-lg-start  fruite-name">
-                                                    <input class="pixel-checkbox"
-                                                           style="margin-right: 30px;margin-left: 30px" type="checkbox"
-                                                           name="checkedCategories" th:value="${category.categoryId}"
-                                                           id="${'category_' + category.categoryId}"
-                                                           onchange="document.getElementById('categoryForm').submit()"
-                                                           th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
-                                                    <label for="${'category_' + category.categoryId}"
-                                                           th:text="${category.categoryName}"
-                                                           style="color: #0b0b0b"></label>
-                                                </div>
+                                            <li th:each="category : ${categories}"
+                                                class="d-flex align-items-center mb-2">
+                                                <input class="form-check-input me-2"
+                                                       type="checkbox"
+                                                       name="checkedCategories"
+                                                       th:value="${category.categoryId}"
+                                                       th:id="${'category_' + category.categoryId}"
+                                                       onchange="this.form.submit()"
+                                                       th:checked="${checkedCategories != null and #lists.contains(checkedCategories, category.categoryId)}">
+                                                <label class="form-check-label"
+                                                       th:for="${'category_' + category.categoryId}"
+                                                       th:text="${category.categoryName}"></label>
                                             </li>
                                         </ul>
                                     </div>
@@ -102,38 +116,46 @@
                                     <div class="mb-3">
                                         <h4>Cửa hàng</h4>
                                         <ul class="list-unstyled fruite-categorie">
-                                            <li th:each="canteen : ${canteens}">
-                                                <div class="d-flex justify-content-lg-start fruite-name">
-                                                    <input class="pixel-checkbox"
-                                                           style="margin-right: 30px;margin-left: 30px" type="checkbox"
-                                                           name="checkedCanteens" th:value="${canteen.canteenId}"
-                                                           id="${'canteen_' + canteen.canteenId}"
-                                                           onchange="document.getElementById('categoryForm').submit()"
+                                            <li th:each="canteen : ${canteens}" class="d-flex align-items-center mb-2">
+                                                <div class="form-check d-flex align-items-center" style="width: 100%;">
+                                                    <input class="form-check-input me-3"
+                                                           type="checkbox"
+                                                           name="checkedCanteens"
+                                                           th:value="${canteen.canteenId}"
+                                                           th:id="${'canteen_' + canteen.canteenId}"
+                                                           onchange="this.form.submit()"
                                                            th:checked="${checkedCanteens != null and #lists.contains(checkedCanteens, canteen.canteenId)}">
-                                                    <label for="${'canteen_' + canteen.canteenId}"
+                                                    <label class="form-check-label"
+                                                           th:for="${'canteen_' + canteen.canteenId}"
                                                            th:text="${canteen.canteenName}"
-                                                           style="color: #0b0b0b"></label>
+                                                           style="flex-grow: 1; color: #0b0b0b;"></label>
                                                 </div>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                                <!-- Other filters like Additional can be here -->
                             </div>
                         </form>
+                        <!-- Other filters like Additional can be here -->
                     </div>
 
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-center">
                             <h4 style="justify-content: center; display: flex">Sản phẩm</h4>
+                            <div th:if="${messageAddFood}" class="alert alert-success" th:text="${messageAddFood}"
+                                 id="successMessage">
+                                <button type="button" class="close" aria-label="Close"
+                                        onclick="this.parentElement.style.display='none';">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                             <div th:if="${items_home.size() == 0}">
                                 <h6 style="justify-content: center; display: flex">Không có kết quả phù hợp với lựa chọn
                                     của bạn</h6>
                             </div>
 
                             <div class="col-md-6 col-lg-6 col-xl-4" th:each="food : ${items_home}">
-
-                                <div th:if="${food.canteen.isActive}" class="rounded position-relative fruite-item">
+                                <div th:if="${food.canteen.isActive}" class="rounded position-relative fruite-item border border-orange">
                                     <div class="fruite-img">
                                         <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt=""
                                              style="width: 100px;height: 220px">
@@ -146,8 +168,11 @@
                                         <h4 style="height: 55.41px"><a th:href="@{/food_details(id=${food.foodId})} "
                                                                        th:text="${food.foodName}"></a></h4>
                                         <p><span th:text="${food.canteen.canteenName}"></span></p>
-                                        <p th:if="${food.foodQuantity}>0">Số lượng còn lại :<span th:text="${food.foodQuantity}"></span></p>
-                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Số lượng hiện có : HẾT HÀNG</span></p>
+                                        <p th:if="${food.foodQuantity}>0">Số lượng còn lại :<span
+                                                th:text="${food.foodQuantity}"></span></p>
+                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span
+                                                style="display: flex; justify-content: left;color: red">HẾT HÀNG</span>
+                                        </p>
 
                                         <div class="d-flex justify-content-between flex-lg-wrap">
 
@@ -167,7 +192,8 @@
                                 <ul class="pagination justify-content-center d-flex mt-5">
                                     <li class="page-item rounded" th:classappend="${currentPage == 0} ? 'disabled'">
                                         <a class="page-link rounded"
-                                           th:href="@{/canteen_details(page=${currentPage - 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Previous</a>
+                                           th:href="@{/canteen_details(page=${currentPage - 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang
+                                            Trước</a>
                                     </li>
                                     <li class="page-item rounded" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                                         th:classappend="${i == currentPage} ? 'active'">
@@ -178,7 +204,8 @@
                                     <li class="page-item rounded"
                                         th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
                                         <a class="page-link"
-                                           th:href="@{/canteen_details(page=${currentPage + 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Next</a>
+                                           th:href="@{/canteen_details(page=${currentPage + 1}, checkedCategories=${checkedCategories}, checkedCanteens=${checkedCanteens}, name=${name})}">Trang
+                                            Sau</a>
                                     </li>
                                 </ul>
                             </div>
@@ -226,7 +253,6 @@
 
 <!-- Template Javascript -->
 <script th:src="@{/js/main_test.js}"></script>
-<!---->
 
 <script>
     function submitForm(categoryId) {
@@ -259,24 +285,73 @@
             element.innerText = formatCurrencyVND(price);
         });
 
+        document.querySelectorAll('.nav-item1 a').forEach(item => {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+                let categoryId = this.getAttribute('data-category-id');
+                console.log("Category ID: " + categoryId); // Ghi lại giá trị của categoryId
 
-    });
+                fetch(`/foodByCategory/${categoryId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Data received: ", data); // Ghi lại dữ liệu nhận được từ API
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const messageElement = document.getElementById('toast-message');
-        const message = messageElement ? messageElement.value : null;
+                        let foodContainer = document.getElementById('food-container');
+                        foodContainer.innerHTML = '';
+                        data.forEach(food => {
+                            let foodElement = document.createElement('div');
+                            foodElement.classList.add('col-md-6', 'col-lg-4', 'col-xl-3');
 
-        if (message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast show';
-            toast.innerText = message;
-            document.body.appendChild(toast);
+                            // Kiểm tra số lượng thực phẩm và điều kiện để hiển thị
+                            let quantityInfo = '';
+                            let addButton = '';
 
-            setTimeout(function () {
-                toast.classList.remove('show');
-                document.body.removeChild(toast);
-            }, 5000);
-        }
+                            if (food.foodQuantity > 0) {
+                                quantityInfo = `<p><span style="display: flex; justify-content: left"> Số lượng hiện có: ${food.foodQuantity}</span></p>`;
+                                addButton = `<a href="/add_to_cart?foodId=${food.foodId}&price=${food.price}&quantity=1&url=1" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Đặt Món
+                                        </a>`;
+                            } else {
+                                quantityInfo = `<p class="flex-grow-1"><span style="display: flex; justify-content: left; color: red">Tạm thời hết hàng</span></p>`;
+                            }
+
+                            foodElement.innerHTML = `
+                            <div class="rounded position-relative fruite-item border border-orange">
+                                <div class="fruite-img">
+                                    <img src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="${food.foodName}">
+                                </div>
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                    <span>${food.category.categoryName}</span>
+                                </div>
+                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                    <h4 style="height: 55.41px"><a href="/food_details?id=${food.foodId}" class="text-dark">${food.foodName}</a></h4>
+                                    <p><span style="display: flex; justify-content: left">${food.canteen.canteenName}</span></p>
+                                    ${quantityInfo}
+                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                        <p class="formatted-price text-dark fs-5 fw-bold mb-0">${food.price}</p>
+                                        ${addButton}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                            foodContainer.appendChild(foodElement);
+                        });
+
+                        document.querySelectorAll('p.formatted-price').forEach(function (element) {
+                            let price = element.innerText;
+                            element.innerText = formatCurrencyVND(price);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            });
+        });
     });
     // Hiển thị thông báo từ server nếu có
     document.addEventListener('DOMContentLoaded', function () {
@@ -290,7 +365,6 @@
     });
 
 </script>
-
 
 <!-- Template Javascript -->
 <script src="/js/main_test.js"></script>

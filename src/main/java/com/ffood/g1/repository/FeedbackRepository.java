@@ -24,6 +24,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
     @Query("SELECT f FROM Feedback f WHERE f.canteenId = :canteenId AND f.feedbackStatus = :status ORDER BY f.timeCreated DESC" )
     Page<Feedback> findByCanteenIdAndStatus(@Param("canteenId") Integer canteenId, @Param("status") FeedbackStatus status, Pageable pageable);
 
-
+    @Query("SELECT f FROM Feedback f WHERE f.feedbackStatus = :status ORDER BY f.timeCreated DESC")
+    Page<Feedback> findByStatus(@Param("status") FeedbackStatus status, Pageable pageable);
 
 }
