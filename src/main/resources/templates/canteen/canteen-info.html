@@ -137,13 +137,6 @@
                                         <span class="text-dark" style="width: 130px;">Tất cả sản phẩm</span>
                                     </a>
                                 </li>
-                                <!--                                <li class="nav-item" th:each="category : ${categories}">-->
-                                <!--                                    <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2"-->
-                                <!--                                       th:data-category-id="${category.categoryId}">-->
-                                <!--                                        <span class="text-dark" style="width: 130px;"-->
-                                <!--                                              th:text="${category.categoryName}"></span>-->
-                                <!--                                    </a>-->
-                                <!--                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -171,13 +164,13 @@
                                                     <p><span th:text="${food.canteen.canteenName}"
                                                              style="display: flex ; justify-content: left"></span></p>
                                                     <p th:if="${food.foodQuantity}>0"><span th:text="'Số lượng hiện có: '+${food.foodQuantity}"
-                                                             style="display: flex ; justify-content: left"></span></p>
+                                                                                            style="display: flex ; justify-content: left"></span></p>
                                                     <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span style="display: flex; justify-content: left;color: red"> Tạm thời hết hàng</span></p>
 
                                                     <div class="d-flex justify-content-between flex-lg-wrap">
                                                         <span class=" text-dark fs-5 fw-bold mb-0"><span
                                                                 class="formatted-price" th:text="${food.price}"></span></span>
-                                                        <a th:href="@{/add_to_cart(foodId=${food.foodId},price=${food.price},quantity=1,url=1)}"
+                                                        <a th:if="${food.foodQuantity} > 0" th:href="@{/add_to_cart(foodId=${food.foodId},price=${food.price},quantity=1,url=1)}"
                                                            class="btn border border-secondary rounded-pill px-3 text-primary">
                                                             <i class="fa fa-shopping-bag me-2 text-primary"></i>Đặt món
                                                         </a>

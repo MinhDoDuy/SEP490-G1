@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>Fruitables - Vegetable Website Template</title>
+    <title>Croak Order - Giỏ Hàng</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -40,14 +40,143 @@
             width: 30px;
             font-size: 16px;
             display: flex;
+            align-items: center;
+            justify-content: center;
             border: none;
+            outline: none;
+            box-shadow: none; /* Remove shadow */
+        }
+        /*nút tăng giảm*/
+        .custom-btn.btn-info {
+            background-color: #FF914D;
+            color: white;
+            border-radius: 4px;
+        }
+        .custom-btn.btn-info:hover {
+            background-color: #e26b0c;
+        }
+        .custom-btn.btn-info:focus {
+            outline: none; /* Remove focus outline */
+            box-shadow: none; /* Remove shadow */
         }
         .table th, .table td {
             vertical-align: middle;
+            text-align: center;
+        }
+        .table th {
+            width: auto; /* Ensure table header cells auto adjust to content */
         }
         .formatted-price {
-            color: #007bff;
+            color: #747d88;
         }
+        .container {
+            margin-top: auto;
+        }
+        .card-header {
+            background-color: #81c408;
+            color: white;
+            padding: 10px;
+            font-size: 1.5rem;
+        }
+        .card-header label {
+            margin: 0;
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .breadcrumb-item a {
+            color: #81c408;
+        }
+        .breadcrumb-item.active {
+            color: #6c757d;
+        }
+        .page-header {
+            background-color: #81c408;
+            color: white;
+        }
+        .btn-success {
+            background-color: #81c408;
+            border: none;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .btn-md.rounded-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qty-input {
+            width: 70px;
+            text-align: center;
+            margin: 0 10px;
+        }
+        /* Ẩn các nút tăng giảm trong ô nhập số lượng */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        .centered {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-btn button {
+            height: 30px;
+            width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Checkbox customization */
+        input[type="checkbox"].shop-checkbox, input[type="checkbox"].product-checkbox {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid;
+            border-radius: 7px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            background-color: white;
+            vertical-align: middle; /* Align vertically */
+        }
+        input[type="checkbox"].shop-checkbox:checked::before,
+        input[type="checkbox"].product-checkbox:checked::before {
+            content: '\2714';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: white;
+            background-color: #FF914D;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: none; /* Không có viền */
+        }
+
     </style>
 </head>
 <body>
@@ -55,6 +184,12 @@
 <div th:replace="header :: header"></div>
 
 <!-- Page Header -->
+<div class="container-fluid page-header py-5">
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="/homepage">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white">Giỏ hàng</li>
+    </ol>
+</div>
 <div class="container-fluid page-header py-5">
     <h1 class="text-center text-white display-6">Giỏ hàng</h1>
     <ol class="breadcrumb justify-content-center mb-0">
@@ -67,7 +202,7 @@
 <div class="container mt-5">
     <div th:each="canteenEntry : ${cartItemsGroupedByCanteen}">
         <div class="card mt-4">
-            <div class="card-header" style="background-color: #fff3cd">
+            <div class="card-header">
                 <label>
                     <input type="checkbox" th:id="${'canteen' + canteenEntry.key.canteenId}" class="shop-checkbox" />
                 </label>
@@ -76,40 +211,45 @@
             <div class="card-body">
                 <table class="table">
                     <thead>
-                    <tr style="align-items: center;justify-content: center">
-                        <th>Sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Số lượng đang có</th>
-                        <th>Số lượng mua</th>
-                        <th>Tổng</th>
-                        <th>Thao tác</th>
+                    <tr>
+                        <th style="width: 5%;"></th> <!-- New column for checkboxes -->
+                        <th style="width: 20%;">Sản phẩm</th>
+                        <th style="width: 10%;">Giá</th>
+                        <th style="width: 20%;">Số lượng đang có</th>
+                        <th style="width: 20%;">Số lượng mua</th>
+                        <th style="width: 15%;">Tổng</th>
+                        <th style="width: 20%;">Thao tác</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="item : ${canteenEntry.value}">
-                        <td>
+                        <td class="align-middle">
                             <label>
                                 <input type="checkbox" th:id="${'product' + item.cartItemId}" class="product-checkbox" th:data-canteen="${'canteen' + canteenEntry.key.canteenId}"/>
                             </label>
+                        </td>
+                        <td class="align-middle">
                             <label th:for="${'product' + item.cartItemId}" th:text="${item.food.foodName}" style="width: 100px">Product Name</label>
                         </td>
-                        <td class="formatted-price" th:text="${item.food.price}"></td>
-                        <td  th:text="${item.food.foodQuantity}"></td>
-                        <td style="display: flex;height: 78.4px;align-items: center;justify-content: center">
-                            <button class="custom-btn btn-minus btn-info" th:attr="data-id=${item.cartItemId}">-</button>
-                            <label>
-                                <input type="number" min="1" th:id="'qty' + ${item.cartItemId}" th:value="${item.quantity}" class="form-control qty-input" style="width: 60px; display: inline-block;">
-                            </label>
-                            <button class="custom-btn btn-plus btn-info" th:attr="data-id=${item.cartItemId}">+</button>
+                        <td class="formatted-price align-middle" th:text="${item.food.price}"></td>
+                        <td class="align-middle" th:text="${item.food.foodQuantity}"></td>
+                        <td class="align-middle">
+                            <div class="quantity-control">
+                                <button class="custom-btn btn-minus btn-info" th:attr="data-id=${item.cartItemId}">-</button>
+                                <input type="number" min="1" th:id="'qty' + ${item.cartItemId}" th:value="${item.quantity}" class="form-control qty-input">
+                                <button class="custom-btn btn-plus btn-info" th:attr="data-id=${item.cartItemId}">+</button>
+                            </div>
                         </td>
-                        <td class="formatted-price" th:id="'total' + ${item.cartItemId}" th:text="${item.food.price * item.quantity} ">Total</td>
-                        <td>
-                            <form th:action=" @{/remove_cartItem}" method="post" style="display:inline;">
-                                <input type="hidden" name="cartItemId" th:value="${item.cartItemId}"/>
-                                <button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </form>
+                        <td class="formatted-price align-middle" th:id="'total' + ${item.cartItemId}" th:text="${item.food.price * item.quantity} ">Total</td>
+                        <td class="align-middle">
+                            <div class="action-btn">
+                                <form th:action=" @{/remove_cartItem}" method="post" style="display:inline;">
+                                    <input type="hidden" name="cartItemId" th:value="${item.cartItemId}"/>
+                                    <button type="submit" class="btn btn-md rounded-circle bg-light border">
+                                        <i class="fa fa-times text-danger"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     </tbody>
@@ -121,9 +261,9 @@
 
 <!-- Footer with Checkout Button -->
 <div class="footer1 text-center">
-    <span>Total Quantity: <span id="totalQuantity">0</span></span> |
-    <span>Total Price: <span class="formatted-price" id="totalPrice">0</span></span>
-    <button id="checkoutButton" class="btn btn-success">Proceed to Checkout</button>
+    <span>Tổng Số Lượng: <span id="totalQuantity">0</span></span> |
+    <span>Tổng Giá: <span class="formatted-price" id="totalPrice">0</span></span>
+    <button id="checkoutButton" class="btn btn-success">Thanh Toán</button>
 </div>
 
 <!-- Modal for Multi-Canteen Checkout -->
@@ -131,16 +271,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="checkoutModalLabel">Checkout Alert</h5>
+                <h5 class="modal-title" id="checkoutModalLabel">Thông Báo Thanh Toán</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                You cannot check out items from multiple canteens at once. Please select items from one canteen only.
-            </div>
+                Bạn không thể thanh toán các món ăn từ nhiều căng tin cùng một lúc. Vui lòng chỉ chọn các mặt hàng từ một căng tin.            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -180,7 +319,7 @@
             $('.product-checkbox:checked').each(function() {
                 const cartItemId = $(this).attr('id').replace('product', '');
                 const quantity = parseInt($('#qty' + cartItemId).val());
-                const price = parseFloat($($(this).closest('tr').find('td')[1]).text());
+                const price = parseFloat($($(this).closest('tr').find('td')[2]).text().replace(/[^\d]/g, ''));
                 totalQuantity += quantity;
                 totalPrice += price * quantity;
             });
@@ -200,7 +339,7 @@
         $('.qty-input').on('change', function() {
             const cartItemId = $(this).attr('id').replace('qty', '');
             const quantity = parseInt($(this).val());
-            const price = parseFloat($($(this).closest('tr').find('td')[1]).text());
+            const price = parseFloat($($(this).closest('tr').find('td')[2]).text().replace(/[^\d]/g, ''));
             const total = quantity * price;
             $('#total' + cartItemId).text(formatCurrencyVND(total)); // Ensure VND formatting on quantity change
             updateTotal();
@@ -240,8 +379,14 @@
 
         // Format all initial and dynamically updated prices on page load
         document.querySelectorAll('.formatted-price').forEach(function (element) {
-            let price = parseFloat(element.innerText.replace(/[^\d.]/g, '')); // Remove non-numeric characters
+            let price = parseFloat(element.innerText.replace(/[^\d]/g, '')); // Remove non-numeric characters
             element.innerText = formatCurrencyVND(price);
+        });
+
+        // Apply CSS for quantity control
+        $('.quantity-control').each(function() {
+            $(this).find('input').addClass('qty-input');
+            $(this).find('button').addClass('custom-btn btn-info');
         });
     });
 </script>
