@@ -43,30 +43,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CartItemService cartItemService;
 
-    public List<Object[]> getBestSellingItems() {
-        return orderRepository.findBestSellingItems();
-    }
-
-    public List<Object[]> getOrderStats() {
-        return orderRepository.findOrderStats();
-    }
-
-
-    @Override
-    public List<Object[]> getRevenueDataByMonth() {
-        return orderRepository.findRevenueDataByMonth();
-    }
-
-    @Override
-    public List<Object[]> getRevenueDataByYear() {
-        return orderRepository.findRevenueDataByYear();
-    }
-
-    @Override
-    public Double calculateTotalOrder() {
-        return orderRepository.findTotalOrder();
-    }
-
 
     @Override
     public Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable) {

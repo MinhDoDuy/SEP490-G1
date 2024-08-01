@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 public interface FoodService {
-   //get food random in home
+    //get food random in home
     List<Food> getRandomFood();
 
     //get all Food
@@ -19,7 +19,7 @@ public interface FoodService {
     //get food by category
     List<Food> getFoodsByCategory(Integer categoryId);
 
-    Optional<Food> getFoodById(Integer id) ;
+    Optional<Food> getFoodById(Integer id);
 
     Page<Food> getFilteredFoods(List<Integer> checkedCategories, List<Integer> checkedCanteens, String name, Pageable pageable);
 
@@ -32,16 +32,16 @@ public interface FoodService {
 
     List<Food> getFoodsByCategoryId(Integer categoryId);
 
- List<Food> getFoodsByCanteenId(Integer canteenId);
+    List<Food> getFoodsByCanteenId(Integer canteenId);
 
     Integer countFoodsByCanteenId(Integer canteenId);
 
- Integer countFoodByCanteenId(Integer canteenId);
+    Integer countFoodByCanteenId(Integer canteenId);
 
 
-  Page<Food> findFoodByCanteenId(Integer canteenId, Pageable pageable);
+    Page<Food> findFoodByCanteenId(Integer canteenId, Pageable pageable);
 
- Page<Food> searchFoods(String keyword, Integer categoryId, Integer canteenId, Pageable pageable);
+    Page<Food> searchFoods(String keyword, Integer categoryId, Integer canteenId, Pageable pageable);
 
- Integer getSaleCountByCanteenId(Integer canteenId);
+    Integer getSaleCountByCanteenId(Integer canteenId);
 }

@@ -196,11 +196,13 @@ public class UserServiceImpl implements UserService {
         return Math.toIntExact(userRepository.count());
     }
 
-
+    @Override
     public Page<User> getStaffUsers(int page, int size, int roleId, int canteenId) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAllByRoleIdAndCanteenId(roleId, canteenId, pageable);
     }
+
+    @Override
     public Page<User> searchStaff(String keyword, int page, int size, int roleId, int canteenId) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findByKeywordRoleIdAndCanteenId(keyword, roleId, canteenId, pageable);
@@ -304,7 +306,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Failed to send email", e);
         }
     }
-
 
 
     @Override

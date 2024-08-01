@@ -19,17 +19,6 @@ import java.util.Optional;
 
 @Service
 public interface OrderService {
-    
-    List<Object[]> getBestSellingItems();
-
-    List<Object[]> getOrderStats();
-
-    List<Object[]> getRevenueDataByMonth();
-
-
-    List<Object[]> getRevenueDataByYear();
-
-    Double calculateTotalOrder();
 
 
     Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable);
