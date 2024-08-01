@@ -170,7 +170,7 @@
                                         <p><span th:text="${food.canteen.canteenName}"></span></p>
                                         <p th:if="${food.foodQuantity}>0">Số lượng còn lại :<span
                                                 th:text="${food.foodQuantity}"></span></p>
-                                        <p th:if="${food.foodQuantity}==0" class="flex-grow-1"><span
+                                        <p  th:if="${food.foodQuantity}==0" class="flex-grow-1"><span
                                                 style="display: flex; justify-content: left;color: red">HẾT HÀNG</span>
                                         </p>
 
@@ -179,7 +179,7 @@
                                             <p class=" text-dark fs-5 fw-bold mb-0"><span class="formatted-price"
                                                                                           th:text="${food.price}"></span>
                                             </p>
-                                            <a th:href="@{/add_to_cart(foodId=${food.foodId},price=${food.price},quantity=1,url=2)}"
+                                            <a th:if="${food.foodQuantity} > 0" th:href="@{/add_to_cart(foodId=${food.foodId},price=${food.price},quantity=1,url=2)}"
                                                class=" btn border border-secondary rounded-pill px-3 text-primary">
                                                 <i class="fa fa-shopping-bag me-2 text-primary"></i>Đặt Món
                                             </a>

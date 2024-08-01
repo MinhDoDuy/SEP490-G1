@@ -33,6 +33,7 @@
             background-color: #0c0202; /* Màu cam nhạt */
             margin: 40px 0; /* Khoảng cách trên và dưới của đường ngang */
         }
+
         .border-orange {
             border-color: orange !important;
         }
@@ -48,9 +49,11 @@
             <div class="col-md-12 col-lg-7">
                 <br>
                 <h4 class="mb-3 text-secondary">100% Nguyên liệu sạch</h4>
-                <h1 class="mb-5 text-primary" style="font-size: 4.5rem;">Bữa ăn tiện lợi <span style="display: block;">Trọn vẹn yêu thương!</span></h1>
+                <h1 class="mb-5 text-primary" style="font-size: 4.5rem;">Bữa ăn tiện lợi <span style="display: block;">Trọn vẹn yêu thương!</span>
+                </h1>
                 <form id="categoryForm" action="/canteen_details" method="get">
-                    <div class="position-relative mx-auto" style="display: flex; justify-content: center; align-items: center;">
+                    <div class="position-relative mx-auto"
+                         style="display: flex; justify-content: center; align-items: center;">
                         <input class="form-control border-2 border-secondary py-3 px-4 rounded-pill"
                                name="name" th:value="${name}" placeholder="Nhập từ khóa tìm kiếm..."
                                onkeypress="if(event.keyCode === 13) { event.preventDefault(); document.getElementById('categoryForm').submit(); }"
@@ -65,13 +68,15 @@
             </div>
 
             <div class="col-md-12 col-lg-5">
-                <div id="carouselId" class="carousel slide position-relative border border-orange rounded" data-bs-ride="carousel">
+                <div id="carouselId" class="carousel slide position-relative border border-orange rounded"
+                     data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active rounded" th:each="food, stat : ${items_home}"
                              th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                             <img th:src="${food.imageFood}" class="img-fluid w-100 h-100 rounded" alt="First slide">
                             <div class="carousel-caption d-none d-md-block">
-                                <a th:href="@{/food_details(id=${food.foodId})}"><h5 th:text="${food.foodName}"></h5></a>
+                                <a th:href="@{/food_details(id=${food.foodId})}"><h5 th:text="${food.foodName}"></h5>
+                                </a>
                                 <!-- <p class="formatted-price" th:text="${food.price}"></p> -->
                             </div>
                         </div>
@@ -108,13 +113,15 @@
                         <div class="col-lg-8 text-end">
                             <ul class="nav nav-pills d-inline-flex text-center mb-5">
                                 <li class="nav-item">
-                                    <a class="d-flex m-2 py-2 bg-light rounded-pill border border-orange active" data-bs-toggle="pill"
+                                    <a class="d-flex m-2 py-2 bg-light rounded-pill border border-orange active"
+                                       data-bs-toggle="pill"
                                        href="#tab-1">
                                         <span class="text-dark" style="width: 130px;">Bán chạy</span>
                                     </a>
                                 </li>
                                 <li class="nav-item1" th:each="category : ${categories}">
-                                    <a class="d-flex py-2 m-2 bg-light rounded-pill border border-orange" data-bs-toggle="pill" href="#tab-2"
+                                    <a class="d-flex py-2 m-2 bg-light rounded-pill border border-orange"
+                                       data-bs-toggle="pill" href="#tab-2"
                                        th:data-category-id="${category.categoryId}">
                                         <span class="text-dark" style="width: 130px;"
                                               th:text="${category.categoryName}"></span>
@@ -131,19 +138,32 @@
                                         <div class="col-md-6 col-lg-4 col-xl-3" th:each="food : ${items_home}">
                                             <div class="rounded position-relative fruite-item border border-orange">
                                                 <div class="fruite-img">
-                                                    <img th:href="@{/food_details(id=${food.foodId})}" th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" style="height: 220px" alt="">
+                                                    <img th:href="@{/food_details(id=${food.foodId})}"
+                                                         th:src="${food.imageFood}" class="img-fluid w-100 rounded-top"
+                                                         style="height: 220px" alt="">
                                                 </div>
-                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                                                     style="top: 10px; left: 10px;">
                                                     <span th:text="${food.category.categoryName}"></span>
                                                 </div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4><a th:href="@{/food_details(id=${food.foodId})}" th:text="${food.foodName}" style="display: flex; justify-content: left; margin-bottom: 1px; height: 55.41px"></a></h4>
-                                                    <p><span th:text="${food.canteen.canteenName}" style="display: flex; justify-content: left"></span></p>
-                                                    <p><span th:if="${food.foodQuantity} > 0" th:text="'Số lượng hiện có: ' + ${food.foodQuantity}" style="display: flex; justify-content: left"></span></p>
-                                                    <p th:if="${food.foodQuantity} == 0" class="flex-grow-1"><span style="display: flex; justify-content: left; color: red"> Tạm thời hết hàng</span></p>
+                                                    <h4><a th:href="@{/food_details(id=${food.foodId})}"
+                                                           th:text="${food.foodName}"
+                                                           style="display: flex; justify-content: left; margin-bottom: 1px; height: 55.41px; text-overflow: ellipsis;"></a>
+                                                    </h4>
+                                                    <p><span th:text="${food.canteen.canteenName}"
+                                                             style="display: flex; justify-content: left"></span></p>
+                                                    <p><span th:if="${food.foodQuantity} > 0"
+                                                             th:text="'Số lượng hiện có: ' + ${food.foodQuantity}"
+                                                             style="display: flex; justify-content: left"></span></p>
+                                                    <p th:if="${food.foodQuantity} == 0" class="flex-grow-1"><span
+                                                            style="display: flex; justify-content: left; color: red"> Tạm thời hết hàng</span>
+                                                    </p>
                                                     <div class="d-flex justify-content-between flex-lg-wrap">
-                                                        <span class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:text="${food.price}"></span></span>
-                                                        <a th:href="@{/add_to_cart(foodId=${food.foodId}, price=${food.price}, quantity=1, url=1)}" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                        <span class="text-dark fs-5 fw-bold mb-0"><span
+                                                                class="formatted-price" th:text="${food.price}"></span></span>
+                                                        <a th:if="${food.foodQuantity} > 0" th:href="@{/add_to_cart(foodId=${food.foodId}, price=${food.price}, quantity=1, url=1)}"
+                                                           class="btn border border-secondary rounded-pill px-3 text-primary">
                                                             <i class="fa fa-shopping-bag me-2 text-primary"></i>Đặt Món
                                                         </a>
                                                     </div>
@@ -222,7 +242,8 @@
         <h1 class="mb-0">Có thể bạn sẽ thích</h1>
         <div style="margin-top: 10px"></div>
         <div class="owl-carousel vegetable-carousel justify-content-center">
-            <div class="d-flex flex-column border border-orange rounded position-relative" th:each="food : ${items_home}">
+            <div class="d-flex flex-column border border-orange rounded position-relative"
+                 th:each="food : ${items_home}">
                 <div class="vesitable-img">
                     <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt="" style="height: 220px">
                 </div>
@@ -230,14 +251,21 @@
                     <span th:text="${food.category.categoryName}">Vegetable</span>
                 </div>
                 <div class="p-4 rounded-bottom d-flex flex-column flex-grow-1">
-                    <h4 class="flex-grow-1" style="height: 55.41px"><a th:href="@{/food_details(id=${food.foodId})}" th:text="${food.foodName}"></a></h4>
+                    <h4 class="flex-grow-1" style="height: 55.41px; text-overflow: ellipsis;"><a th:href="@{/food_details(id=${food.foodId})}"
+                                                                                                 th:text="${food.foodName}"></a></h4>
                     <p class="flex-grow-1"><span th:text="${food.canteen.canteenName}"></span></p>
-                    <p th:if="${food.foodQuantity} > 0" class="flex-grow-1"><span th:text="'Số lượng hiện có: ' + ${food.foodQuantity}" style="display: flex; justify-content: left"></span></p>
-                    <p th:if="${food.foodQuantity} == 0" class="flex-grow-1"><span style="display: flex; justify-content: left; color: red"> Tạm thời hết hàng</span></p>
+                    <p th:if="${food.foodQuantity} > 0" class="flex-grow-1"><span
+                            th:text="'Số lượng hiện có: ' + ${food.foodQuantity}"
+                            style="display: flex; justify-content: left"></span></p>
+                    <p th:if="${food.foodQuantity} == 0" class="flex-grow-1"><span
+                            style="display: flex; justify-content: left; color: red"> Tạm thời hết hàng</span></p>
                     <div class="d-flex justify-content-between flex-lg-wrap mt-auto">
-                        <p class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:value="${food.price}" th:text="${food.price}"></span></p>
-                        <a th:if="${food.foodQuantity} > 0" th:href="@{/add_to_cart(foodId=${food.foodId}, price=${food.price}, quantity=1, url=1)}" class="btn border border-secondary rounded-pill px-3 text-primary">
-                            <i class="fa fa-shopping-bag me-2 text-primary"></i>Đặt Món
+                        <p class="text-dark fs-5 fw-bold mb-0"><span class="formatted-price" th:value="${food.price}"
+                                                                     th:text="${food.price}"></span></p>
+                        <a th:if="${food.foodQuantity} > 0"
+                           th:href="@{/add_to_cart(foodId=${food.foodId}, price=${food.price}, quantity=1, url=1)}"
+                           class="btn border border-secondary rounded-pill px-3 text-primary">
+                            <i th:if="${food.foodQuantity} > 0" class="fa fa-shopping-bag me-2 text-primary"></i>Đặt Món
                         </a>
                     </div>
                 </div>
@@ -298,13 +326,14 @@
     </div>
 </div>
 <!-- Success Modal -->
-<div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" >
+<div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog"
+     aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
             </div>
-            <div class="modal-body" >
+            <div class="modal-body">
                 <span th:text="${messageAddFood}"></span>
             </div>
         </div>
@@ -404,7 +433,7 @@
         const message = /*[[${messageAddFood}]]*/ 'Food item added to the cart successfully!';
         if (message) {
             $('#successModal').modal('show');
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#successModal').modal('hide');
             }, 2000); // Hide the modal after 3 seconds
         }
