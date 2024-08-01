@@ -69,48 +69,63 @@ public class CanteenManageController {
                              RedirectAttributes redirectAttributes) throws IOException, SpringBootFileUploadException {
         boolean hasErrors = false;
 
-        // Kiểm tra các trường không được rỗng
-        if (canteen.getCanteenName() == null || canteen.getCanteenName().isEmpty()) {
-            model.addAttribute("canteenNameError", "Canteen name cannot be empty.");
+        // Kiểm tra các trường không được rỗng và không chứa dấu cách không hợp lệ
+        if (canteen.getCanteenName() == null || canteen.getCanteenName().trim().isEmpty()) {
+            model.addAttribute("canteenNameError", "Tên căng tin không được để trống.");
             hasErrors = true;
-        } else if (canteenService.isCanteenNameExist(canteen.getCanteenName())) {
-            model.addAttribute("canteenNameError", "Canteen name already exists.");
+        } else if (canteenService.isCanteenNameExist(canteen.getCanteenName().trim())) {
+            model.addAttribute("canteenNameError", "Tên căng tin đã tồn tại.");
             hasErrors = true;
         }
 
         if (canteen.getCanteenPhone() == null || canteen.getCanteenPhone().isEmpty()) {
-            model.addAttribute("phoneError", "Phone number cannot be empty.");
+            model.addAttribute("phoneError", "Số điện thoại không được để trống.");
             hasErrors = true;
-        } else if (canteenService.isPhoneExist(canteen.getCanteenPhone())) {
-            model.addAttribute("phoneError", "Phone number already exists.");
+        } else if (canteen.getCanteenPhone().contains(" ")) {
+            model.addAttribute("phoneError", "Số điện thoại không được chứa dấu cách.");
+            hasErrors = true;
+        } else {
+            String phoneValidationResult = PhoneUtils.validatePhoneNumber(canteen.getCanteenPhone());
+            if (phoneValidationResult != null) {
+                model.addAttribute("phoneError", phoneValidationResult);
+                hasErrors = true;
+            } else if (canteenService.isPhoneExist(canteen.getCanteenPhone())) {
+                model.addAttribute("phoneError", "Số điện thoại đã tồn tại.");
+                hasErrors = true;
+            }
+        }
+
+        if (canteen.getLocation() == null || canteen.getLocation().trim().isEmpty()) {
+            model.addAttribute("locationError", "Địa điểm không được để trống.");
             hasErrors = true;
         }
 
-        if (canteen.getLocation() == null || canteen.getLocation().isEmpty()) {
-            model.addAttribute("locationError", "Location cannot be empty.");
+        if (canteen.getOpeningHours() == null || canteen.getOpeningHours().trim().isEmpty()) {
+            model.addAttribute("openingHoursError", "Giờ mở cửa không được để trống.");
             hasErrors = true;
         }
 
-        if (canteen.getOpeningHours() == null || canteen.getOpeningHours().isEmpty()) {
-            model.addAttribute("openingHoursError", "Opening hours cannot be empty.");
-            hasErrors = true;
-        }
-
+        // Nếu có lỗi, trả về form thêm với các thông báo lỗi
         if (hasErrors) {
             model.addAttribute("canteen", canteen);
-            return "./admin-management/add-canteen"; // Change to your actual form view name
+            return "admin-management/add-canteen"; // Thay đổi thành tên view form thực tế của bạn
         }
 
+        // Xử lý upload ảnh nếu có
         if (imageCanteenInput != null && !imageCanteenInput.isEmpty()) {
             String canteenImageUrl = fileS3Service.uploadFile(imageCanteenInput);
             canteen.setCanteenImg(canteenImageUrl);
         }
 
+        // Lưu thông tin căng tin
         canteenService.saveCanteen(canteen);
-        redirectAttributes.addFlashAttribute("successMessage", "Canteen added successfully");
+        redirectAttributes.addFlashAttribute("successMessage", "Thêm căng tin thành công");
 
         return "redirect:/manage-canteen";
     }
+
+
+
 
     @GetMapping("/edit-canteen/{canteenId}")
     public String editCanteen(@PathVariable Integer canteenId, Model model) {
@@ -131,7 +146,6 @@ public class CanteenManageController {
         // Lấy thông tin canteen hiện tại từ database
         Canteen existingCanteen = canteenService.getCanteenById(canteenId);
 
-
         // Xác thực số điện thoại
         String phoneValidationResult = PhoneUtils.validatePhoneNumber(updatedCanteen.getCanteenPhone());
         if (phoneValidationResult != null) {
@@ -141,15 +155,23 @@ public class CanteenManageController {
         }
 
         // Kiểm tra nếu số điện thoại thay đổi và đã tồn tại trong database
-        if (!existingCanteen.getCanteenPhone().equals(updatedCanteen.getCanteenPhone()) && canteenService.isPhoneExist(updatedCanteen.getCanteenPhone())) {
-            model.addAttribute("phoneError", "Số điện thoại đã tồn tại.");
-            hasErrors = true;
+        if (!existingCanteen.getCanteenPhone().equals(updatedCanteen.getCanteenPhone())) {
+            if (updatedCanteen.getCanteenPhone().contains(" ")) {
+                model.addAttribute("phoneError", "Số điện thoại không được chứa dấu cách.");
+                hasErrors = true;
+            } else if (canteenService.isPhoneExist(updatedCanteen.getCanteenPhone())) {
+                model.addAttribute("phoneError", "Số điện thoại đã tồn tại.");
+                hasErrors = true;
+            }
         }
 
         // Kiểm tra nếu tên canteen thay đổi và đã tồn tại trong database
-        if (!existingCanteen.getCanteenName().equals(updatedCanteen.getCanteenName()) && canteenService.isCanteenNameExist(updatedCanteen.getCanteenName())) {
-            model.addAttribute("canteenNameError", "Tên căng tin đã tồn tại.");
-            hasErrors = true;
+        if (!existingCanteen.getCanteenName().equals(updatedCanteen.getCanteenName())) {
+            String trimmedCanteenName = updatedCanteen.getCanteenName().trim();
+            if (trimmedCanteenName.isEmpty() || canteenService.isCanteenNameExist(trimmedCanteenName)) {
+                model.addAttribute("canteenNameError", "Tên căng tin không hợp lệ hoặc đã tồn tại.");
+                hasErrors = true;
+            }
         }
 
         // Nếu có lỗi, trả về form chỉnh sửa với các thông báo lỗi
@@ -180,6 +202,8 @@ public class CanteenManageController {
 
         return "redirect:/manage-canteen";
     }
+
+
 
     @GetMapping("/assign-manager-form")
     public String showAssignManagerForm(@RequestParam("canteenId") Integer canteenId, Model model) {
