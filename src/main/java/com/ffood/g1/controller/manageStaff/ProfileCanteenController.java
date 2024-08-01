@@ -39,12 +39,27 @@ public class ProfileCanteenController {
         }
     }
 
+
     @PostMapping("/update-profile-canteen")
     public String updateProfileCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
                                        @RequestParam("imageProfileInput") MultipartFile imageProfileInput, Model model)
             throws SpringBootFileUploadException, IOException {
         if (result.hasErrors()) {
             return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=Validation error";
+        }
+
+        // Validate canteen fields
+        String canteenName = canteen.getCanteenName().trim();
+        String location = canteen.getLocation().trim();
+        String canteenPhone = canteen.getCanteenPhone().trim();
+
+        if (canteenName.isEmpty() || location.isEmpty() || canteenPhone.isEmpty()) {
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=All fields are required";
+        }
+
+        // Check if the phone number exists for a different canteen
+        if (canteenService.isPhoneExist(canteenPhone) && !canteenService.loadCanteenId(canteen.getCanteenId()).getCanteenPhone().equals(canteenPhone)) {
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=Phone number already exists";
         }
 
         Canteen existingCanteen = canteenService.loadCanteenId(canteen.getCanteenId());
@@ -59,7 +74,11 @@ public class ProfileCanteenController {
             canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
 
+        canteen.setCanteenName(canteenName);
+        canteen.setLocation(location);
+        canteen.setCanteenPhone(canteenPhone);
+
         canteenService.updateCanteen(canteen);
-        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?success=Cập nhật thông tin thành công";
+        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?success=Update Success";
     }
 }
