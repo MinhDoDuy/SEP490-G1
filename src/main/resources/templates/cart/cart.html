@@ -50,6 +50,7 @@
         .custom-btn.btn-info {
             background-color: #FF914D;
             color: white;
+            border-radius: 4px;
         }
         .custom-btn.btn-info:hover {
             background-color: #e26b0c;
@@ -62,18 +63,20 @@
             vertical-align: middle;
             text-align: center;
         }
+        .table th {
+            width: auto; /* Ensure table header cells auto adjust to content */
+        }
         .formatted-price {
             color: #747d88;
         }
         .container {
-            max-width: 960px;
             margin-top: auto;
         }
         .card-header {
             background-color: #81c408;
             color: white;
-            padding: 15px;
-            font-size: 1.25rem;
+            padding: 10px;
+            font-size: 1.5rem;
         }
         .card-header label {
             margin: 0;
@@ -109,9 +112,9 @@
             justify-content: center;
         }
         .qty-input {
-            width: 60px;
+            width: 70px;
             text-align: center;
-            margin: 0 5px;
+            margin: 0 10px;
         }
         /* Ẩn các nút tăng giảm trong ô nhập số lượng */
         input[type=number]::-webkit-inner-spin-button,
@@ -147,12 +150,13 @@
             appearance: none;
             width: 20px;
             height: 20px;
-            border: 2px solid #FF914D;
-            border-radius: 3px;
+            border: 1.5px solid;
+            border-radius: 7px;
             outline: none;
             cursor: pointer;
             position: relative;
             background-color: white;
+            vertical-align: middle; /* Align vertically */
         }
         input[type="checkbox"].shop-checkbox:checked::before,
         input[type="checkbox"].product-checkbox:checked::before {
@@ -169,7 +173,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 3px;
+            border-radius: 6px;
             border: none; /* Không có viền */
         }
 
@@ -208,12 +212,13 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>Sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Số lượng đang có</th>
-                        <th>Số lượng mua</th>
-                        <th>Tổng</th>
-                        <th>Thao tác</th>
+                        <th style="width: 5%;"></th> <!-- New column for checkboxes -->
+                        <th style="width: 20%;">Sản phẩm</th>
+                        <th style="width: 15%;">Giá</th>
+                        <th style="width: 15%;">Số lượng đang có</th>
+                        <th style="width: 25%;">Số lượng mua</th>
+                        <th style="width: 15%;">Tổng</th>
+                        <th style="width: 5%;">Thao tác</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -222,15 +227,17 @@
                             <label>
                                 <input type="checkbox" th:id="${'product' + item.cartItemId}" class="product-checkbox" th:data-canteen="${'canteen' + canteenEntry.key.canteenId}"/>
                             </label>
+                        </td>
+                        <td class="align-middle">
                             <label th:for="${'product' + item.cartItemId}" th:text="${item.food.foodName}" style="width: 100px">Product Name</label>
                         </td>
                         <td class="formatted-price align-middle" th:text="${item.food.price}"></td>
                         <td class="align-middle" th:text="${item.food.foodQuantity}"></td>
                         <td class="align-middle">
                             <div class="quantity-control">
-                                <button class="custom-btn btn-plus btn-info" th:attr="data-id=${item.cartItemId}">+</button>
-                                <input type="number" min="1" th:id="'qty' + ${item.cartItemId}" th:value="${item.quantity}" class="form-control qty-input">
                                 <button class="custom-btn btn-minus btn-info" th:attr="data-id=${item.cartItemId}">-</button>
+                                <input type="number" min="1" th:id="'qty' + ${item.cartItemId}" th:value="${item.quantity}" class="form-control qty-input">
+                                <button class="custom-btn btn-plus btn-info" th:attr="data-id=${item.cartItemId}">+</button>
                             </div>
                         </td>
                         <td class="formatted-price align-middle" th:id="'total' + ${item.cartItemId}" th:text="${item.food.price * item.quantity} ">Total</td>
@@ -312,7 +319,7 @@
             $('.product-checkbox:checked').each(function() {
                 const cartItemId = $(this).attr('id').replace('product', '');
                 const quantity = parseInt($('#qty' + cartItemId).val());
-                const price = parseFloat($($(this).closest('tr').find('td')[1]).text().replace(/[^\d]/g, ''));
+                const price = parseFloat($($(this).closest('tr').find('td')[2]).text().replace(/[^\d]/g, ''));
                 totalQuantity += quantity;
                 totalPrice += price * quantity;
             });
@@ -332,7 +339,7 @@
         $('.qty-input').on('change', function() {
             const cartItemId = $(this).attr('id').replace('qty', '');
             const quantity = parseInt($(this).val());
-            const price = parseFloat($($(this).closest('tr').find('td')[1]).text().replace(/[^\d]/g, ''));
+            const price = parseFloat($($(this).closest('tr').find('td')[2]).text().replace(/[^\d]/g, ''));
             const total = quantity * price;
             $('#total' + cartItemId).text(formatCurrencyVND(total)); // Ensure VND formatting on quantity change
             updateTotal();
