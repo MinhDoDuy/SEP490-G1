@@ -43,6 +43,8 @@
             align-items: center;
             justify-content: center;
             border: none;
+            outline: none;
+            box-shadow: none; /* Remove shadow */
         }
         /*nút tăng giảm*/
         .custom-btn.btn-info {
@@ -51,6 +53,10 @@
         }
         .custom-btn.btn-info:hover {
             background-color: #e26b0c;
+        }
+        .custom-btn.btn-info:focus {
+            outline: none; /* Remove focus outline */
+            box-shadow: none; /* Remove shadow */
         }
         .table th, .table td {
             vertical-align: middle;
@@ -61,7 +67,7 @@
         }
         .container {
             max-width: 960px;
-            margin-top: 20px;
+            margin-top: auto;
         }
         .card-header {
             background-color: #81c408;
