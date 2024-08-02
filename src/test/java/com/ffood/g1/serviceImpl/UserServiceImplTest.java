@@ -217,16 +217,13 @@ public class UserServiceImplTest {
     @Test
     void updateUserStatus() {
         Integer userId = 1;
-        Integer roleId = 1;
         Boolean isActive = true;
-        Integer canteenId = 1;
         User user = User.builder().userId(userId).build();
-        Canteen canteen = Canteen.builder().canteenId(canteenId).build();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(canteenRepository.findById(canteenId)).thenReturn(Optional.of(canteen));
 
-        service.updateUserStatus(userId, roleId, isActive, canteenId);
+
+        service.updateUserStatus(userId, isActive);
 
         verify(userRepository, times(1)).save(user);
     }

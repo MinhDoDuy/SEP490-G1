@@ -40,7 +40,7 @@ public interface UserService extends UserDetailsService {
 
     User getUserById(Integer userId);
 
-    void updateUserStatus(Integer userId, Integer roleId , Boolean isActive , Integer canteenId);
+    void updateUserStatus(Integer userId , Boolean isActive );
     
     void saveUser(User user);
 

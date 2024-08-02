@@ -77,10 +77,9 @@ public class UserManageController {
     @PostMapping("/edit-user")
     public String editUserStatus(@RequestParam("userId") Integer userId,
                                @RequestParam("isActive") Boolean isActive,
-                               @RequestParam(value = "canteenId", required = false) Integer canteenId,
                                RedirectAttributes redirectAttributes) {
 
-        userService.updateUserStatus(userId, 3, isActive, canteenId); // Luôn luôn role_id = 3
+        userService.updateUserStatus(userId, isActive); // Luôn luôn role_id = 3
         redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
 
         return "redirect:/manage-user";
