@@ -60,7 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .antMatchers("/add_to_cart","/foodByCategory/{categoryId}","/assign-confirm","/assign-confirm/**").permitAll()
                 // Các quyền truy cập yêu cầu xác thực
                 .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password",
-                        "/submit-feedback/**","/feedback-system-form/**")
+                        "/submit-feedback/**","/feedback-system-form/**",
+                        "/vn/**","/submitOrder/**","/now/**","/vnpay-payment/**")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
                 // Quyền cho ADMIN
                 .antMatchers("/search-staff", "/dashboard/", "/manage-user/**",
