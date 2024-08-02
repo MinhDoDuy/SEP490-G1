@@ -1,12 +1,7 @@
 package com.ffood.g1.security;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -24,7 +21,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
 
     @Autowired
     private UserService userService;
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -44,9 +40,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
         auth.authenticationProvider(authenticationProvider());
     }
 
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        AccessDeniedHandlerImpl accessDeniedHandler = new AccessDeniedHandlerImpl();
+        accessDeniedHandler.setErrorPage("/403");
+        return accessDeniedHandler;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                // Cho phép tất cả mọi người truy cập vào các URL này
                 .antMatchers("/resources/**", "/templates/**", "/static/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
                         "/dashboard/**", "/register","/forgot-password","/reset-password/**").permitAll()
@@ -54,26 +58,35 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_info", "/food_details","/update_cart_quantity").permitAll()
                 .antMatchers("/add_to_cart","/foodByCategory/{categoryId}","/assign-confirm","/assign-confirm/**").permitAll()
-                .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password"
-                ,"/submit-feedback/**","/feedback-system-form/**")
+                // Các quyền truy cập yêu cầu xác thực
+                .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password",
+                        "/submit-feedback/**","/feedback-system-form/**")
                 .hasAnyRole("ADMIN", "MANAGER", "STAFF", "CUSTOMER")
+                // Quyền cho ADMIN
                 .antMatchers("/search-staff", "/dashboard/", "/manage-user/**",
                         "/edit-profile/**", "/edit-user/**", "/add-user/**",
                         "/manage-canteen/**", "/add-canteen", "/search-canteen",
-                        "/edit-canteen/**", "/delete-canteen", "/dashboard-admin")
-                .hasAnyRole("ADMIN", "MANAGER")
-                .antMatchers("/assign-manager-form/**","/check-email-manager/**","/assign-manager-confirm/**").hasRole("ADMIN")
+                        "/edit-canteen/**", "/delete-canteen", "/dashboard-admin",
+                        "/assign-manager-form/**","/check-email-manager/**","/assign-manager-confirm/**")
+                .hasRole("ADMIN")
+                // Quyền cho MANAGER
                 .antMatchers("/manage-staff/**", "/search-staff", "/add-staff/**",
                         "/edit-staff/**", "/canteen-details/**", "/canteen/update-profile-canteen/**",
                         "/canteen/edit-profile-canteen/**","/manage-food/**","/manage-food","/canteen/**",
-                        "/add-food-form", "/add-food-form/**",
-                        "/add-food", "/add-food/**","/check-email/**","/assign-staff-form/**","/assign-confirm/**",
-                        "/manage-category/**", "/add-category-form", "/add-category", "/edit-category/**","/create-order-at-couter","/create-order-at-couter1")
-               .hasRole("MANAGER")
-                .antMatchers()
+                        "/add-food-form", "/add-food-form/**", "/add-food", "/add-food/**","/check-email/**",
+                        "/assign-staff-form/**","/assign-confirm/**", "/manage-category/**",
+                        "/add-category-form", "/add-category", "/edit-category/**",
+                        "/create-order-at-couter","/create-order-at-couter1", "dashboard-manager/**",
+                        "/manage-feedback","/approve-feedback/**","/reject-feedback/**",
+                        "/search-food/**","/add-food-form/**","/add-food","/edit-food/**",
+                        "/add-quantity/**","/order-list/**","/update-order-status/**",
+                        "/bulk-assign-orders/**","/reject-order/**")
+                .hasRole("MANAGER")
+                // Quyền cho STAFF
+                .antMatchers("/order-list-ship/**","/complete-order/**",
+                        "/order-list","/order-list/**","/update-order-status",
+                        "/update-order-status/**","/reject-order","/reject-order/**")
                 .hasRole("STAFF")
-                .antMatchers("/order-list","/order-list/**","/update-order-status"
-                ,"/update-order-status/**","/reject-order","/reject-order/**").hasAnyRole("STAFF", "MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -85,7 +98,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .permitAll();
+                .permitAll()
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
     }
 
     @Autowired
@@ -93,5 +108,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
         auth.inMemoryAuthentication()
                 .withUser("user").password("{noop}password").roles("USER");
     }
-
 }
