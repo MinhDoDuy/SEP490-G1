@@ -169,11 +169,11 @@ public class FoodManagementController {
                            @RequestParam("imageFood") MultipartFile imageFood, RedirectAttributes redirectAttributes) {
         Optional<Food> existingFood = foodService.getFoodById(food.getFoodId());
         if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
-            result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
+            result.rejectValue("foodName", "error.food", "Tên Đồ Ăn không được để chống hoặc không được bắt đầu ô trống.");
         }
 
         if (food.getDescription().trim().startsWith(" ")) {
-            result.rejectValue("description", "error.food", "Description cannot start with a space.");
+            result.rejectValue("description", "error.food", "Mô tả không được bắt đầu bằng dấu cách.");
         }
 
         try {
@@ -198,7 +198,7 @@ public class FoodManagementController {
             }
 
             foodService.save(food);
-            redirectAttributes.addFlashAttribute("successMessage", "Food đã được cập nhật thành công!");
+            redirectAttributes.addFlashAttribute("successMessage", "Món ăn đã được cập nhật thành công!");
         } catch (SpringBootFileUploadException | IOException e) {
             return "redirect:/edit-food-form?canteenId=" + canteenId + "&error=" + e.getMessage();
         }
@@ -266,7 +266,7 @@ public class FoodManagementController {
             }
 
             categoryService.saveCategory(category);
-            redirectAttributes.addFlashAttribute("successMessage", "Category added successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Danh mục được thêm thành công!");
         } catch (SpringBootFileUploadException | IOException e) {
             return "staff-management/add-category";
         }

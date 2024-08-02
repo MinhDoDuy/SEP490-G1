@@ -80,7 +80,7 @@ public class UserManageController {
                                RedirectAttributes redirectAttributes) {
 
         userService.updateUserStatus(userId, isActive); // Luôn luôn role_id = 3
-        redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
+        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật người dùng thành công!");
 
         return "redirect:/manage-user";
     }
