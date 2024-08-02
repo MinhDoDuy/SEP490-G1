@@ -83,9 +83,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/bulk-assign-orders/**","/reject-order/**")
                 .hasRole("MANAGER")
                 // Quyền cho STAFF
-                .antMatchers("/order-list-ship/**","/complete-order/**",
-                        "/order-list","/order-list/**","/update-order-status",
-                        "/update-order-status/**","/reject-order","/reject-order/**")
+                .antMatchers("/order-list-ship/**","/complete-order/**")
                 .hasRole("STAFF")
                 .anyRequest().authenticated()
                 .and()
