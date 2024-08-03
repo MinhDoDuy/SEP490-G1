@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -26,5 +27,15 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
 
     @Query("SELECT f FROM Feedback f WHERE f.feedbackStatus = :status ORDER BY f.timeCreated DESC")
     Page<Feedback> findByStatus(@Param("status") FeedbackStatus status, Pageable pageable);
+
+    @Query("SELECT f FROM Feedback f " +
+            "WHERE f.feedbackStatus = :status " +
+            "AND f.timeCreated BETWEEN :startDate AND :endDate")
+    Page<Feedback> findByStatusAndDateRange(
+            @Param("status") FeedbackStatus status,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable
+    );
 
 }

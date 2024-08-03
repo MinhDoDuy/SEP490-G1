@@ -10,14 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class DashBoardController {
@@ -35,17 +40,38 @@ public class DashBoardController {
     public String showDashboard(@RequestParam(value = "status", defaultValue = "VIEWABLE") FeedbackStatus status,
                                 @RequestParam(value = "page", defaultValue = "0") int page,
                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
+                                @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endDate,
                                 Model model) {
         Integer userCount = userService.countUsers();
         Integer canteenCount = canteenService.countCanteens();
         Pageable pageable = PageRequest.of(page, size);
-        Page<Feedback> feedbacks = feedbackService.findByStatus(status, pageable);
+        Page<Feedback> feedbacks;
+
+        LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
+        LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
+
+        try {
+            if (startDate.isPresent() && endDate.isPresent()) {
+                feedbacks = feedbackService.findByStatusAndDateRange(status, start, end, pageable);
+            } else {
+                feedbacks = feedbackService.findByStatus(status, pageable);
+            }
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("messageType", "error");
+            feedbacks = Page.empty();
+        }
 
         model.addAttribute("feedbacks", feedbacks);
         model.addAttribute("status", status);
         model.addAttribute("userCount", userCount);
         model.addAttribute("canteenCount", canteenCount);
+        model.addAttribute("startDate", startDate.orElse(null));
+        model.addAttribute("endDate", endDate.orElse(null));
 
         return "admin-management/dashboard";
     }
+
+
 }

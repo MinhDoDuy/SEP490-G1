@@ -69,4 +69,12 @@ public class FeedbackServiceImpl implements FeedbackService {
         return feedbackRepository.findByStatus(status, pageable);
     }
 
+    @Override
+    public Page<Feedback> findByStatusAndDateRange(FeedbackStatus status, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Ngày bắt đầu không thể sau ngày kết thúc");
+        }
+        return feedbackRepository.findByStatusAndDateRange(status, startDate, endDate, pageable);
+    }
+
 }
