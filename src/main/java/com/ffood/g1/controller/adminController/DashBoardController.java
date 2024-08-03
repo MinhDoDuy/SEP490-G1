@@ -48,19 +48,21 @@ public class DashBoardController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Feedback> feedbacks;
 
-        LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
-        LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
+        if ((startDate.isPresent() && !endDate.isPresent()) || (!startDate.isPresent() && endDate.isPresent())) {
+            model.addAttribute("errorMessage", "Vui lòng nhập cả ngày bắt đầu và ngày kết thúc.");
+            feedbacks = feedbackService.findByStatus(status, pageable);
+        } else if (!startDate.isPresent() && !endDate.isPresent()) {
+            feedbacks = feedbackService.findByStatus(status, pageable);
+        } else {
+            LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
+            LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
 
-        try {
-            if (startDate.isPresent() && endDate.isPresent()) {
+            try {
                 feedbacks = feedbackService.findByStatusAndDateRange(status, start, end, pageable);
-            } else {
-                feedbacks = feedbackService.findByStatus(status, pageable);
+            } catch (IllegalArgumentException e) {
+                model.addAttribute("errorMessage", e.getMessage());
+                feedbacks = Page.empty();
             }
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("messageType", "error");
-            feedbacks = Page.empty();
         }
 
         model.addAttribute("feedbacks", feedbacks);

@@ -14,6 +14,11 @@
             text-overflow: ellipsis;
             max-width: 200px; /* Adjust as needed */
         }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body class="text-gray-800 font-inter">
@@ -62,9 +67,8 @@
                 <div class="flex justify-between mb-4 items-start">
                     <div class="font-medium">Phản hồi người dùng</div>
                 </div>
-                <div th:if="${message}" th:classappend="${messageType == 'error'} ? 'alert alert-danger' : 'alert alert-success'" id="successAlert">
-                    <span th:text="${message}"></span>
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <div th:if="${errorMessage}" th:classappend="${messageType == 'error'} ? 'alert alert-danger' : 'alert alert-success'" id="errorAlert">
+                    <span th:text="${errorMessage}"></span>
                 </div>
 
                 <!-- Form lọc theo ngày -->
@@ -72,9 +76,11 @@
                     <input type="hidden" name="status" th:value="${status}">
                     <div class="relative w-64 mr-2">
                         <input type="date" name="startDate" class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500" placeholder="Từ ngày" th:value="${startDate}">
+                        <div id="startDateError" class="error-message"></div>
                     </div>
                     <div class="relative w-64 mr-2">
                         <input type="date" name="endDate" class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500" placeholder="Đến ngày" th:value="${endDate}">
+                        <div id="endDateError" class="error-message"></div>
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="return validateDates()"
                             style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
@@ -181,7 +187,7 @@
     });
 
     function hideAlert() {
-        var alert = document.getElementById('successAlert');
+        var alert = document.getElementById('errorAlert');
         if (alert) {
             setTimeout(function () {
                 alert.style.display = 'none';
@@ -195,9 +201,19 @@
     function validateDates() {
         const startDate = document.querySelector('input[name="startDate"]').value;
         const endDate = document.querySelector('input[name="endDate"]').value;
+        const startDateError = document.getElementById('startDateError');
+        const endDateError = document.getElementById('endDateError');
+
+        startDateError.innerText = '';
+        endDateError.innerText = '';
 
         if (startDate === '' || endDate === '') {
-            alert('Vui lòng nhập cả hai ngày bắt đầu và ngày kết thúc.');
+            if (startDate === '') {
+                startDateError.innerText = 'Vui lòng nhập ngày bắt đầu.';
+            }
+            if (endDate === '') {
+                endDateError.innerText = 'Vui lòng nhập ngày kết thúc.';
+            }
             return false;
         }
 
@@ -205,7 +221,7 @@
         const end = new Date(endDate);
 
         if (end < start) {
-            alert('Ngày kết thúc không thể sớm hơn ngày bắt đầu.');
+            endDateError.innerText = 'Ngày kết thúc không thể sớm hơn ngày bắt đầu.';
             return false;
         }
 
