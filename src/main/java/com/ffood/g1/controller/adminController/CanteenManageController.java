@@ -174,6 +174,15 @@ public class CanteenManageController {
             }
         }
 
+        // Kiểm tra nếu location thay đổi và không hợp lệ (chỉ chứa khoảng trắng)
+        if (!existingCanteen.getLocation().equals(updatedCanteen.getLocation())) {
+            String trimmedLocation = updatedCanteen.getLocation().trim();
+            if (trimmedLocation.isEmpty()) {
+                model.addAttribute("locationError", "Địa điểm căng tin không được để trống hoặc chỉ chứa khoảng trắng.");
+                hasErrors = true;
+            }
+        }
+
         // Nếu có lỗi, trả về form chỉnh sửa với các thông báo lỗi
         if (hasErrors) {
             model.addAttribute("canteen", updatedCanteen);

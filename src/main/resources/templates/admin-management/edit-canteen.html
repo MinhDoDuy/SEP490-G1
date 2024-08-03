@@ -151,6 +151,7 @@
             <div class="form-group">
               <label for="location">Địa Điểm:</label>
               <input type="text" id="location" th:field="*{location}" required class="form-control"/>
+              <div th:if="${locationError != null}" class="error-message" th:text="${locationError}"></div>
             </div>
           </div>
 

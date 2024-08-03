@@ -6,7 +6,6 @@
     <title>Manage Food</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-
 </head>
 <body class="text-gray-800 font-inter">
 
@@ -115,7 +114,7 @@
                                 Tên Danh Mục
                             </td>
                             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Tên Đồ Ăn</td>
-                            <td class="py-2 px-4 border-b border-b-gray-50 formatted-price"   th:text="${food.price}">100.0</td>
+                            <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${food.price}">100.0</td>
                             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodQuantity}">
                                 Số Lượng Thực Phẩm
                             </td>
@@ -141,20 +140,20 @@
                 </div>
 
                 <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-          <span th:if="${foodPage.hasPrevious()}">
-            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number - 1}, size=${foodPage.size})}"
-               class="page-link">&laquo;</a>
-          </span>
+                    <span th:if="${foodPage.hasPrevious()}">
+                        <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number - 1}, size=${foodPage.size})}"
+                           class="page-link">&laquo;</a>
+                    </span>
                     <span th:each="i : ${#numbers.sequence(0, foodPage.totalPages - 1)}">
-            <a th:classappend="${i} == ${foodPage.number} ? 'active' : ''"
-               th:href="@{/manage-food(canteenId=${canteenId}, page=${i}, size=${foodPage.size})}" class="page-link">
-              <span th:text="${i + 1}">1</span>
-            </a>
-          </span>
+                        <a th:classappend="${i} == ${foodPage.number} ? 'active' : ''"
+                           th:href="@{/manage-food(canteenId=${canteenId}, page=${i}, size=${foodPage.size})}" class="page-link">
+                            <span th:text="${i + 1}">1</span>
+                        </a>
+                    </span>
                     <span th:if="${foodPage.hasNext()}">
-            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number + 1}, size=${foodPage.size})}"
-               class="page-link">&raquo;</a>
-          </span>
+                        <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number + 1}, size=${foodPage.size})}"
+                           class="page-link">&raquo;</a>
+                    </span>
                 </div>
             </div>
         </div>
@@ -162,40 +161,35 @@
 </main>
 <!-- end: Main -->
 
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:src="@{/js/manage.js}"></script>
-<script>  // Function to hide the alert after 3 seconds
-function hideAlert() {
-    var alert = document.getElementById('successAlert');
-    if (alert) {
-        setTimeout(function () {
-            alert.style.display = 'none';
-        }, 3000);
+<script>
+    // Function to hide the alert after 3 seconds
+    function hideAlert() {
+        var alert = document.getElementById('successAlert');
+        if (alert) {
+            setTimeout(function () {
+                alert.style.display = 'none';
+            }, 3000);
+        }
     }
-}
 
-// Call the function to hide the alert
-hideAlert();
+    // Call the function to hide the alert
+    hideAlert();
 
+    // Function to format currency in VND
+    function formatCurrencyVND(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
 
-// Function to format currency in VND
-function formatCurrencyVND(amount) {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    }).format(amount);
-}
-
-// Format all prices on page load
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.formatted-price').forEach(function (element) {
-        let price = element.innerText;
-        element.innerText = formatCurrencyVND(price);
+    // Format all prices on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.formatted-price').forEach(function (element) {
+            let price = element.innerText;
+            element.innerText = formatCurrencyVND(price);
+        });
     });
-});
 </script>
-
-
 </body>
 </html>

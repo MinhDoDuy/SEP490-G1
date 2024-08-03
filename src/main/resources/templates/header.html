@@ -63,14 +63,14 @@
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_ADMIN'}">
 
-                                    <a th:href="@{/dashboard-admin}" class="dropdown-item">Phân Tích</a>
+                                    <a th:href="@{/dashboard-admin}" class="dropdown-item">Quản Lý</a>
 
                                 </div>
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_MANAGER'}">
 
                                     <a th:href="@{/dashboard-manager(canteenId=${session.user.canteen.canteenId})}"
-                                       class="dropdown-item">Phân Tích</a>
+                                       class="dropdown-item">Quản Lý</a>
                                 </div>
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_STAFF'}">
