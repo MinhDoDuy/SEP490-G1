@@ -45,12 +45,19 @@
             border-radius: 4px;
             position: relative;
             animation: fadeIn 0.5s;
+            font-family: 'Arial', sans-serif; /* Đảm bảo phông chữ */
         }
 
         .alert-success {
             color: #3c763d;
             background-color: #dff0d8;
             border-color: #d6e9c6;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
         }
 
         @keyframes fadeIn {
@@ -118,14 +125,14 @@
 <!-- end: Sidebar -->
 
 <!-- start: Main -->
-<main class="main">
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
     <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
         <button type="button" class="text-lg text-gray-600 sidebar-toggle">
             <i class="ri-menu-line"></i>
         </button>
         <ul class="flex items-center text-sm ml-4">
             <li class="mr-2">
-                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Trang Chủ</a>
+                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Bảng Điều Khiển</a>
             </li>
             <li class="text-gray-600 mr-2 font-medium">/</li>
             <li class="text-gray-600 mr-2 font-medium">Chỉnh Sửa Căng Tin</li>
@@ -138,8 +145,14 @@
                 <div class="font-medium">Chỉnh Sửa Căng Tin</div>
             </div>
             <div class="overflow-x-auto">
-                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                    <span th:text="${successMessage}"></span>
+                </div>
+
+                <!-- Hiển thị thông báo lỗi -->
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                    <span th:text="${errorMessage}"></span>
+                </div>
                 <form id="canteenForm" th:action="@{/canteen/update-profile-canteen}" method="post" th:object="${canteen}" enctype="multipart/form-data" class="w-full">
                     <input type="hidden" id="canteenId" name="canteenId" th:value="${canteen.canteenId}" />
                     <div class="card-body media align-items-center mb-4">
@@ -170,18 +183,18 @@
                         <div class="form-group mb-4">
                             <label for="isActive" class="form-label">Hành Động:</label>
                             <select id="isActive" name="isActive" class="form-control">
-                                <option th:value="true" th:text="'Active'" th:selected="${canteen.isActive} == true"></option>
-                                <option th:value="false" th:text="'Inactive'" th:selected="${canteen.isActive} == false"></option>
+                                <option th:value="true" th:text="'Hoạt Động'" th:selected="${canteen.isActive} == true"></option>
+                                <option th:value="false" th:text="'Không Hoạt Động'" th:selected="${canteen.isActive} == false"></option>
                             </select>
                         </div>
                     </div>
                     <div class="inline-group">
                         <div class="form-group mb-4">
-                            <label class="form-label">Giờ Mở Cửa Bắt Đầu</label>
+                            <label class="form-label">Giờ Mở Cửa</label>
                             <select id="openingHoursStart" class="form-control"></select>
                         </div>
                         <div class="form-group mb-4">
-                            <label class="form-label">Giờ Mở Cửa Kết Thúc</label>
+                            <label class="form-label">Giờ Đóng Cửa</label>
                             <select id="openingHoursEnd" class="form-control"></select>
                         </div>
                     </div>
