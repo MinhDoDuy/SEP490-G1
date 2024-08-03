@@ -107,7 +107,7 @@
                 <span th:text="${message}"></span>
             </div>
 
-            <form th:action="@{/add-food}" method="post" th:object="${food}" enctype="multipart/form-data">
+            <form th:action="@{/add-food}" method="post" th:object="${food}" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
 
                 <div class="form-group">
@@ -115,30 +115,35 @@
                     <select id="categoryId" th:field="*{category.categoryId}" class="form-control">
                         <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
                     </select>
+                    <div class="error-message" id="categoryError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="foodName" class="form-label">Tên Đồ Ăn</label>
                     <input type="text" id="foodName" th:field="*{foodName}" class="form-control" required>
                     <div class="error-message" th:errors="*{foodName}"></div>
+                    <div class="error-message" id="foodNameError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="form-label">Mô Tả</label>
                     <textarea id="description" th:field="*{description}" required class="form-control" rows="4"></textarea>
                     <div class="error-message" th:errors="*{description}"></div>
+                    <div class="error-message" id="descriptionError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="price" class="form-label">Giá</label>
                     <input type="number" id="price" th:field="*{price}" class="form-control" required>
                     <div class="error-message" th:errors="*{price}"></div>
+                    <div class="error-message" id="priceError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="foodQuantity" class="form-label">Số Lượng</label>
-                    <input type="number" id="foodQuantity" th:field="*{foodQuantity}" required class="form-control" >
-                    <div class="error-message"  th:errors="*{foodQuantity}"></div>
+                    <input type="number" id="foodQuantity" th:field="*{foodQuantity}" required class="form-control">
+                    <div class="error-message" th:errors="*{foodQuantity}"></div>
+                    <div class="error-message" id="foodQuantityError"></div>
                 </div>
 
                 <div class="form-group">
@@ -156,10 +161,44 @@
 <!-- end: Main -->
 
 <script>
-    function capitalizeWords(input) {
-        input.value = input.value.replace(/\b\w/g, function(match) {
-            return match.toUpperCase();
-        });
+    function validateForm() {
+        let isValid = true;
+
+        const categoryId = document.getElementById('categoryId').value;
+        const foodName = document.getElementById('foodName').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const foodQuantity = document.getElementById('foodQuantity').value.trim();
+
+        // Reset previous error messages
+        document.getElementById('categoryError').textContent = '';
+        document.getElementById('foodNameError').textContent = '';
+        document.getElementById('descriptionError').textContent = '';
+        document.getElementById('priceError').textContent = '';
+        document.getElementById('foodQuantityError').textContent = '';
+
+        if (categoryId === '') {
+            document.getElementById('categoryError').textContent = 'Vui lòng chọn danh mục.';
+            isValid = false;
+        }
+        if (foodName === '') {
+            document.getElementById('foodNameError').textContent = 'Vui lòng nhập tên đồ ăn.';
+            isValid = false;
+        }
+        if (description === '') {
+            document.getElementById('descriptionError').textContent = 'Vui lòng nhập mô tả.';
+            isValid = false;
+        }
+        if (price === '' || isNaN(price) || price <= 0) {
+            document.getElementById('priceError').textContent = 'Vui lòng nhập giá hợp lệ.';
+            isValid = false;
+        }
+        if (foodQuantity === '' || isNaN(foodQuantity) || foodQuantity <= 0) {
+            document.getElementById('foodQuantityError').textContent = 'Vui lòng nhập số lượng hợp lệ.';
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
