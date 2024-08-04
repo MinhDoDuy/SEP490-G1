@@ -121,7 +121,7 @@
 <body>
 
 <div class="container mt-5">
-    <h2 style="color: #ff6600;">POS Screen</h2>
+    <h2 style="color: #ff6600;" th:text="${canteens.canteenName}"></h2>
 
     <!-- Tab Navigation -->
     <ul class="nav nav-tabs" id="posTabs" role="tablist">
@@ -175,7 +175,7 @@
                             <div class="cart-summary">
                                 <p>Món: <span id="totalItems">0</span></p>
                                 <p>Tổng tiền: <span id="totalPrice">0 VND</span></p>
-                                <button class="btn btn-success" id="proceedToPayment">Proceed to Payment</button>
+                                <button class="btn btn-success" id="proceedToPayment" style="display: none;">Proceed to Payment</button>
                             </div>
                         </div>
                     </div>
@@ -278,6 +278,12 @@
 
             document.getElementById('totalItems').innerText = totalItems;
             document.getElementById('totalPrice').innerText = formatCurrencyVND(totalPrice);
+
+            if (totalItems > 0) {
+                proceedToPaymentButton.style.display = 'block';
+            } else {
+                proceedToPaymentButton.style.display = 'none';
+            }
 
             addCartEventListeners();
         }

@@ -210,11 +210,14 @@ public class CartController {
         List<CartItem> cartItems = cartItemService.getCartItemsByUserId(1);
         model.addAttribute("cartItems", cartItems);
         int totalOrderPrice = 0;
+        int canteenId=0;
         for (CartItem cartItem : cartItems) {
             totalOrderPrice += cartItem.getQuantity() * cartItem.getFood().getPrice();
+            canteenId=cartItem.getFood().getCanteen().getCanteenId();
         }
         cartRepository.save(cartService.getCartByUserId(1));
         model.addAttribute("totalOrderPrice", totalOrderPrice);
+        model.addAttribute("canteenId", canteenId);
         return "cart/payment";
     }
 
@@ -235,7 +238,7 @@ public class CartController {
         return "cart/payment :: user-not-found";
     }
 
-    @PostMapping("/cart/haha")
+    @PostMapping("/cart/newUser")
     public String registerUser(@RequestParam("fullName") String fullName,
                                @RequestParam("email") String email,
                                @RequestParam("phone") String phone,

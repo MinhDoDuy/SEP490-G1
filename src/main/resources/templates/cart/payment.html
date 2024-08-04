@@ -93,6 +93,7 @@
 
 <div class="container mt-5">
     <h2 style="color: #ff6600;">Payment</h2>
+    <input id="canteenId" type="hidden" th:value="${canteenId}">
 
     <div class="card">
         <div class="card-header">
@@ -112,7 +113,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="card-header" style=" border: 1px solid #0c0202;">
+            <div class="card-header" style="border: 1px solid #0c0202;">
                 <label for="searchPhone">Người dùng</label>
                 <button class="btn btn-primary" id="openRegisterModal" style="margin-left: 20px;">Thêm khách hàng</button>
             </div>
@@ -130,7 +131,7 @@
                 </label>
                 Name: <span th:text="${userProvisional.fullName}"></span>, Phone: <span th:text="${userProvisional.phone}"></span>
             </p>
-            <p th:if="${userProvisional == null}">Không tìm thấy người dùng</p>
+            <p th:if="${userProvisional == null}">Hiện tại là khách chưa có tài khoản</p>
         </div>
 
         <div class="card-footer">
@@ -213,9 +214,17 @@
 
     document.getElementById('submitPayment').addEventListener('click', function () {
         const paymentMethod = document.getElementById('paymentMethod').value;
-        const cashReceived = document.getElementById('cashReceived').value || 0;
+        const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
+        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').innerText.replace(/\D/g, ''));
         const userProvisionalElement = document.querySelector('input[name="userId"]');
         const userId = userProvisionalElement ? userProvisionalElement.value : 1;
+        const canteenId = document.getElementById('canteenId').value;
+        console.log(canteenId);
+
+        if (paymentMethod === 'cash' && cashReceived < totalOrderPrice) {
+            alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng tổng tiền hóa đơn.');
+            return;
+        }
 
         fetch('/cart/submit-payment', {
             method: 'POST',
@@ -231,7 +240,7 @@
             .then(response => response.text())
             .then(data => {
                 alert(data);
-                window.location.href = '/homepage';
+                window.location.href = `/create-order-at-couter?canteenId=${canteenId}`;
             })
             .catch(error => console.error('Error:', error));
     });
@@ -259,7 +268,7 @@
         const form = document.getElementById('registerForm');
         const formData = new FormData(form);
 
-        fetch('/cart/haha', {
+        fetch('/cart/newUser', {
             method: 'POST',
             body: new URLSearchParams(formData)
         })
