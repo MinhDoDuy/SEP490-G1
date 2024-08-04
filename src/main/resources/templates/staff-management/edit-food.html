@@ -10,32 +10,35 @@
         .form-container {
             width: 50%;
             margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
         }
 
         .form-group label {
             margin-bottom: 5px;
             font-weight: bold;
+            color: #333;
         }
 
         .form-group input, .form-group select, .form-group textarea {
-            padding: 8px;
-            border: 2px solid #ccc;
+            padding: 10px;
+            border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
-            width: 100%;
+            transition: border-color 0.3s ease-in-out;
         }
 
-        .form-row {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .form-row .form-group {
-            width: 48%;
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         .error-message {
@@ -43,18 +46,24 @@
             font-size: 12px;
         }
 
+        .success-message {
+            color: green;
+            font-size: 12px;
+        }
+
         button[type="submit"] {
-            background-color: #007bff;
+            background: linear-gradient(90deg, #007bff, #0056b3);
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
+            transition: background 0.3s ease-in-out;
         }
 
         button[type="submit"]:hover {
-            background-color: #0056b3;
+            background: linear-gradient(90deg, #0056b3, #003f7f);
         }
 
         .back-link {
@@ -63,116 +72,72 @@
             font-size: 14px;
             color: #007bff;
             text-decoration: none;
+            transition: color 0.3s ease-in-out;
         }
 
         .back-link:hover {
+            color: #0056b3;
             text-decoration: underline;
-        }
-
-        .form-group img {
-            margin-top: 10px;
-            width: 100px;
-            height: auto;
-            border-radius: 4px;
         }
     </style>
 </head>
-<body class="text-gray-800 font-inter">
-<!-- start: Sidebar -->
-<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
-<!-- end: Sidebar -->
+<body>
+<div class="form-container">
+    <h2>Chỉnh Sửa Đồ Ăn</h2>
+    <form th:action="@{/edit-food}" th:object="${food}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{foodId}">
+        <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
 
-<!-- start: Main -->
-<main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
-    <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
-        <button type="button" class="text-lg text-gray-600 sidebar-toggle">
-            <i class="ri-menu-line"></i>
-        </button>
-        <ul class="flex items-center text-sm ml-4">
-            <li class="mr-2">
-                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
-            </li>
-            <li class="text-gray-600 mr-2 font-medium">/</li>
-            <li class="text-gray-600 mr-2 font-medium">Chỉnh Sửa Đồ Ăn</li>
-        </ul>
-    </div>
-
-    <div class="p-6 flex justify-center">
-        <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
-            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}" id="successMessage">
-                <button type="button" class="close" aria-label="Close" onclick="this.parentElement.style.display='none';">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <form th:action="@{/edit-food}" method="post" th:object="${food}" enctype="multipart/form-data">
-                <input type="hidden" th:field="*{foodId}">
-                <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="foodName" class="form-label">Tên Đồ Ăn</label>
-                        <input type="text" id="foodName" th:field="*{foodName}" class="form-control">
-                        <div th:if="${#fields.hasErrors('foodName')}" th:errors="*{foodName}" class="error-message"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="categoryId" class="form-label">Danh Mục Đồ Ăn</label>
-                        <select id="categoryId" th:field="*{category.categoryId}" class="form-control">
-                            <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="description" class="form-label">Mô Tả</label>
-                    <textarea id="description" th:field="*{description}" class="form-control" rows="10"></textarea>
-                    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message"></div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="price" class="form-label">Giá</label>
-                        <input type="number" id="price" th:field="*{price}" required class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="foodQuantity" class="form-label">Số Lượng</label>
-                        <input type="number" id="foodQuantity" th:field="*{foodQuantity}" required class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="imageFood" class="form-label">Ảnh Đồ Ăn</label>
-                        <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
-                        <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image" class="mt-2" style="max-width: 100px;">
-                    </div>
-                    <div class="form-group">
-                        <label for="foodStatusActive" class="form-label">Trạng Thái</label>
-                        <select id="foodStatusActive" name="foodStatusActive" class="form-control">
-                            <option th:value="true" th:text="'Hoạt Động'" th:selected="${food.foodStatusActive} == true"></option>
-                            <option th:value="false" th:text="'Không Hoạt Động'" th:selected="${food.foodStatusActive} == false"></option>
-                        </select>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Cập Nhật</button>
-            </form>
-            <a th:href="@{/manage-food(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
+        <div class="form-group">
+            <label for="foodName" class="form-label">Tên Đồ Ăn</label>
+            <input type="text" id="foodName" th:field="*{foodName}" class="form-control">
+            <div class="error-message" th:if="${#fields.hasErrors('foodName')}" th:errors="*{foodName}"></div>
         </div>
-    </div>
-</main>
 
-<!-- end: Main -->
+        <div class="form-group">
+            <label for="categoryId" class="form-label">Danh Mục Đồ Ăn</label>
+            <select id="categoryId" th:field="*{category.categoryId}" class="form-control">
+                <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
+            </select>
+            <div class="error-message" th:if="${#fields.hasErrors('category.categoryId')}" th:errors="*{category.categoryId}"></div>
+        </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const successMessage = document.getElementById('successMessage');
-        if (successMessage) {
-            setTimeout(function () {
-                window.location.href = '/manage-food?canteenId=' + /*[[${canteenId}]]*/;
-            }, 1000); // 1 giây
-        }
-    });
-</script>
+        <div class="form-group">
+            <label for="description" class="form-label">Mô Tả</label>
+            <textarea id="description" th:field="*{description}" class="form-control" rows="10"></textarea>
+            <div class="error-message" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="price" class="form-label">Giá</label>
+            <input type="number" id="price" th:field="*{price}" class="form-control">
+            <div class="error-message" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="foodQuantity" class="form-label">Số Lượng</label>
+            <input type="number" id="foodQuantity" th:field="*{foodQuantity}" class="form-control">
+            <div class="error-message" th:if="${#fields.hasErrors('foodQuantity')}" th:errors="*{foodQuantity}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="imageFood" class="form-label">Ảnh Đồ Ăn</label>
+            <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
+            <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image" class="mt-2" style="max-width: 100px;">
+            <div class="error-message" th:if="${#fields.hasErrors('imageFood')}" th:errors="*{imageFood}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="foodStatusActive" class="form-label">Trạng Thái</label>
+            <select id="foodStatusActive" name="foodStatusActive" class="form-control">
+                <option th:value="true" th:text="'Hoạt Động'" th:selected="${food.foodStatusActive} == true"></option>
+                <option th:value="false" th:text="'Không Hoạt Động'" th:selected="${food.foodStatusActive} == false"></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cập Nhật</button>
+    </form>
+    <a th:href="@{/manage-food(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
+</div>
 </body>
 </html>
