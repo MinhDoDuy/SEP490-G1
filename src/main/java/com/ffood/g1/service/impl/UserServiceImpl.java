@@ -169,15 +169,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserStatus(Integer userId, Integer roleId, Boolean isActive, Integer canteenId) {
+    public void updateUserStatus(Integer userId, Boolean isActive) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
         user.setIsActive(isActive);
-        if (canteenId != null) {
-            Canteen canteen = canteenRepository.findById(canteenId).orElse(null);
-            user.setCanteen(canteen);
-        } else {
-            user.setCanteen(null);
-        }
         user.setUpdatedDate(LocalDate.now());
         userRepository.save(user);
     }

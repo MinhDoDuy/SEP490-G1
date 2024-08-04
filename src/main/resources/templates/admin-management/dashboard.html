@@ -14,6 +14,11 @@
             text-overflow: ellipsis;
             max-width: 200px; /* Adjust as needed */
         }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body class="text-gray-800 font-inter">
@@ -60,12 +65,28 @@
         <div class="p-6">
             <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md" style="width: 1500px">
                 <div class="flex justify-between mb-4 items-start">
-                    <div class="font-medium">Phản hổi người dùng</div>
+                    <div class="font-medium">Phản hồi người dùng</div>
                 </div>
-                <div th:if="${message}" class="alert alert-success" id="successAlert">
-                    <span th:text="${message}"></span>
-                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <div th:if="${errorMessage}" th:classappend="${messageType == 'error'} ? 'alert alert-danger' : 'alert alert-success'" id="errorAlert">
+                    <span th:text="${errorMessage}"></span>
                 </div>
+
+                <!-- Form lọc theo ngày -->
+                <form th:action="@{/dashboard-admin}" method="get" class="search-bar flex items-center mb-4">
+                    <input type="hidden" name="status" th:value="${status}">
+                    <div class="relative w-64 mr-2">
+                        <input type="date" name="startDate" class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500" placeholder="Từ ngày" th:value="${startDate}">
+                        <div id="startDateError" class="error-message"></div>
+                    </div>
+                    <div class="relative w-64 mr-2">
+                        <input type="date" name="endDate" class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500" placeholder="Đến ngày" th:value="${endDate}">
+                        <div id="endDateError" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="return validateDates()"
+                            style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+                        Lọc
+                    </button>
+                </form>
 
                 <div class="tab-content" id="feedbackTabsContent">
                     <div class="tab-pane fade show active" id="feedbacks" role="tabpanel" aria-labelledby="feedbacks-tab">
@@ -86,7 +107,7 @@
                                 </tr>
                                 <tr th:each="feedback, iterStat : ${feedbacks.content}">
                                     <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedbacks.number * feedbacks.size + iterStat.index + 1}">STT</td>
-                                    <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.user.fullName}">người dùng</td>
+                                    <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.user.fullName}">Người dùng</td>
                                     <td class="py-2 px-4 border-b border-b-gray-50 feedback-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
                                     <td class="py-2 px-4 border-b border-b-gray-50 truncate" th:text="${feedback.comment}">Bình luận</td>
                                     <td class="py-2 px-4 border-b border-b-gray-50">
@@ -99,16 +120,16 @@
                             </table>
                             <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
                                 <span th:if="${feedbacks.hasPrevious()}">
-                                    <a th:href="@{/manage-feedback(status=${status}, page=${feedbacks.number - 1}, size=${feedbacks.size})}" class="page-link">&laquo;</a>
+                                    <a th:href="@{/dashboard-admin(status=${status}, page=${feedbacks.number - 1}, size=${feedbacks.size})}" class="page-link">&laquo;</a>
                                 </span>
                                 <span th:each="i : ${#numbers.sequence(0, feedbacks.totalPages - 1)}">
                                     <a th:classappend="${i} == ${feedbacks.number} ? 'active' : ''"
-                                       th:href="@{/manage-feedback(status=${status}, page=${i}, size=${feedbacks.size})}" class="page-link">
+                                       th:href="@{/dashboard-admin(status=${status}, page=${i}, size=${feedbacks.size})}" class="page-link">
                                         <span th:text="${i + 1}">1</span>
                                     </a>
                                 </span>
                                 <span th:if="${feedbacks.hasNext()}">
-                                    <a th:href="@{/manage-feedback(status=${status}, page=${feedbacks.number + 1}, size=${feedbacks.size})}" class="page-link">&raquo;</a>
+                                    <a th:href="@{/dashboard-admin(status=${status}, page=${feedbacks.number + 1}, size=${feedbacks.size})}" class="page-link">&raquo;</a>
                                 </span>
                             </div>
                         </div>
@@ -166,7 +187,7 @@
     });
 
     function hideAlert() {
-        var alert = document.getElementById('successAlert');
+        var alert = document.getElementById('errorAlert');
         if (alert) {
             setTimeout(function () {
                 alert.style.display = 'none';
@@ -176,6 +197,36 @@
 
     // Call the function to hide the alert
     hideAlert();
+
+    function validateDates() {
+        const startDate = document.querySelector('input[name="startDate"]').value;
+        const endDate = document.querySelector('input[name="endDate"]').value;
+        const startDateError = document.getElementById('startDateError');
+        const endDateError = document.getElementById('endDateError');
+
+        startDateError.innerText = '';
+        endDateError.innerText = '';
+
+        if (startDate === '' || endDate === '') {
+            if (startDate === '') {
+                startDateError.innerText = 'Vui lòng nhập ngày bắt đầu.';
+            }
+            if (endDate === '') {
+                endDateError.innerText = 'Vui lòng nhập ngày kết thúc.';
+            }
+            return false;
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (end < start) {
+            endDateError.innerText = 'Ngày kết thúc không thể sớm hơn ngày bắt đầu.';
+            return false;
+        }
+
+        return true;
+    }
 </script>
 </body>
 </html>

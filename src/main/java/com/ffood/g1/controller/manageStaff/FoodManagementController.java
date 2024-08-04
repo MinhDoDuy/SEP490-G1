@@ -107,22 +107,26 @@ public class FoodManagementController {
     @PostMapping("/add-food")
     public String addFood(@ModelAttribute("food") Food food, BindingResult result, Model model,
                           @RequestParam("canteenId") Integer canteenId,
-                          @RequestParam("imageFood") MultipartFile imageFood) {
+                          @RequestParam("imageFood") MultipartFile imageFood, RedirectAttributes redirectAttributes) {
+        boolean hasErrors = false;
+
+        if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
+            result.rejectValue("foodName", "error.food", "Tên Đồ Ăn không được để trống hoặc không được bắt đầu ô trống");
+            hasErrors = true;
+        }
+
+        if (food.getDescription().trim().isEmpty() || food.getDescription().trim().startsWith(" ")) {
+            result.rejectValue("description", "error.food", "Mô tả không được bắt đầu bằng dấu cách");
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            model.addAttribute("canteenId", canteenId);
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "staff-management/add-food";
+        }
+
         try {
-            if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
-                result.rejectValue("foodName", "error.food", "Tên Đồ Ăn không được để chống hoặc không được bắt đầu ô trống");
-                model.addAttribute("message", "Tên món ăn không được để trống hoặc bắt đầu bằng khoảng cách.");
-                model.addAttribute("messageType", "error");
-                return "staff-management/add-food";
-            }
-
-            if (food.getDescription().trim().startsWith(" ")) {
-                result.rejectValue("description", "error.food", "mô tả không được bắt đầu bằng trống");
-                model.addAttribute("message", "Mô tả không được bắt đầu bằng dấu cách.");
-                model.addAttribute("messageType", "error");
-                return "staff-management/add-food";
-            }
-
             Canteen canteen = canteenService.getCanteenById(canteenId);
             food.setCanteen(canteen);
 
@@ -136,17 +140,16 @@ public class FoodManagementController {
             }
             food.setSalesCount(0);
             foodService.save(food);
-            model.addAttribute("message", "Đồ Ăn thêm thành công vào căn tin");
-            model.addAttribute("messageType", "success");
+            redirectAttributes.addFlashAttribute("successMessage", "Đồ Ăn thêm thành công vào căn tin");
+            return "redirect:/manage-food?canteenId=" + canteenId;
         } catch (SpringBootFileUploadException | IOException e) {
             model.addAttribute("message", "Error: " + e.getMessage());
             model.addAttribute("messageType", "error");
+            model.addAttribute("canteenId", canteenId);
+            model.addAttribute("categories", categoryService.getAllCategories());
             return "staff-management/add-food";
         }
-        return "redirect:/manage-food?canteenId=" + canteenId + "&success=add";
     }
-
-
 
     @GetMapping("/edit-food/{foodId}")
     public String showEditFoodForm(@PathVariable("foodId") Integer foodId, Model model) {
@@ -168,12 +171,23 @@ public class FoodManagementController {
                            @RequestParam("canteenId") Integer canteenId,
                            @RequestParam("imageFood") MultipartFile imageFood, RedirectAttributes redirectAttributes) {
         Optional<Food> existingFood = foodService.getFoodById(food.getFoodId());
+
+        boolean hasErrors = false;
+
         if (food.getFoodName().trim().isEmpty() || food.getFoodName().trim().startsWith(" ")) {
-            result.rejectValue("foodName", "error.food", "Food name cannot be empty or start with a space.");
+            result.rejectValue("foodName", "error.food", "Tên Đồ Ăn không được để trống hoặc không được bắt đầu ô trống.");
+            hasErrors = true;
         }
 
-        if (food.getDescription().trim().startsWith(" ")) {
-            result.rejectValue("description", "error.food", "Description cannot start with a space.");
+        if (food.getDescription().trim().isEmpty() || food.getDescription().trim().startsWith(" ")) {
+            result.rejectValue("description", "error.food", "Mô tả không được bắt đầu bằng dấu cách.");
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            model.addAttribute("canteenId", canteenId);
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "staff-management/edit-food";
         }
 
         try {
@@ -187,23 +201,20 @@ public class FoodManagementController {
             if (!imageFood.isEmpty()) {
                 String foodImageUrl = fileS3Service.uploadFile(imageFood);
                 food.setImageFood(foodImageUrl);
-            }
-            // Check if a new image is uploaded
-            if (imageFood != null && !imageFood.isEmpty()) {
-                String foodImageUrl = fileS3Service.uploadFile(imageFood);
-                food.setImageFood(foodImageUrl);
             } else {
-                // Retain the existing image if no new image is uploaded
                 food.setImageFood(existingFood.get().getImageFood());
             }
 
             foodService.save(food);
-            redirectAttributes.addFlashAttribute("successMessage", "Food đã được cập nhật thành công!");
+            redirectAttributes.addFlashAttribute("successMessage", "Món ăn đã được cập nhật thành công!");
         } catch (SpringBootFileUploadException | IOException e) {
-            return "redirect:/edit-food-form?canteenId=" + canteenId + "&error=" + e.getMessage();
+            model.addAttribute("canteenId", canteenId);
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "staff-management/edit-food";
         }
-        return "redirect:/manage-food?canteenId=" + canteenId ;
+        return "redirect:/manage-food?canteenId=" + canteenId;
     }
+
 
 
     @GetMapping("/manage-category")
@@ -266,7 +277,7 @@ public class FoodManagementController {
             }
 
             categoryService.saveCategory(category);
-            redirectAttributes.addFlashAttribute("successMessage", "Category added successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Danh mục được thêm thành công!");
         } catch (SpringBootFileUploadException | IOException e) {
             return "staff-management/add-category";
         }

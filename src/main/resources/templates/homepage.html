@@ -340,11 +340,48 @@
     </div>
 </div>
 
+<!-- Modal thông báo tài khoản bị cấm -->
+<div class="modal fade" id="banModal" tabindex="-1" role="dialog" aria-labelledby="banModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="banModalLabel">Tài khoản bị cấm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Xin chào bạn, tài khoản của bạn đã bị cấm. Vui lòng liên hệ với admin.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="okButton">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:replace="footer :: footer"></div>
 
 <script th:src="@{/js/owl.carousel.min.js}"></script>
 <script th:src="@{/js/main.js}"></script>
 <script>
+    $(document).ready(function(){
+        // Kiểm tra nếu isBanned là true, thì hiển thị modal
+        var isBanned = [[${isBanned}]];
+        if(isBanned){
+            $('#banModal').modal('show');
+
+            // Tự động đăng xuất sau 3 giây
+            setTimeout(function(){
+                window.location.href = '/logout';
+            }, 3000);
+
+            // Đăng xuất khi nhấn nút OK
+            $('#okButton').on('click', function(){
+                window.location.href = '/logout';
+            });
+        }
+    });
     // Function to format currency in VND
     function formatCurrencyVND(amount) {
         return new Intl.NumberFormat('vi-VN', {

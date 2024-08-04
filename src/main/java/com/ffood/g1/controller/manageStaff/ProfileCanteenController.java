@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
@@ -30,46 +31,59 @@ public class ProfileCanteenController {
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
-            model.addAttribute("success", success);
-            model.addAttribute("error", error);
-            return "staff-management/edit-profile-canteen"; // Thymeleaf template name
+            if (success != null) {
+                model.addAttribute("successMessage", success);
+            }
+            if (error != null) {
+                model.addAttribute("errorMessage", error);
+            }
+            return "staff-management/edit-profile-canteen"; // Tên template Thymeleaf
         } else {
-            model.addAttribute("error", "Canteen not found");
-            return "error"; // Error page template
+            model.addAttribute("errorMessage", "Không tìm thấy canteen.");
+            return "error"; // Template trang lỗi
         }
     }
 
-
     @PostMapping("/update-profile-canteen")
     public String updateProfileCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,
-                                       @RequestParam("imageProfileInput") MultipartFile imageProfileInput, Model model)
+                                       @RequestParam("imageProfileInput") MultipartFile imageProfileInput,
+                                       RedirectAttributes redirectAttributes)
             throws SpringBootFileUploadException, IOException {
         if (result.hasErrors()) {
-            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=Validation error";
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi xác thực.");
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
         }
 
-        // Validate canteen fields
+        // Xác thực các trường của canteen
         String canteenName = canteen.getCanteenName().trim();
         String location = canteen.getLocation().trim();
         String canteenPhone = canteen.getCanteenPhone().trim();
 
         if (canteenName.isEmpty() || location.isEmpty() || canteenPhone.isEmpty()) {
-            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=All fields are required";
+            redirectAttributes.addFlashAttribute("errorMessage", "Tất cả các trường là bắt buộc.");
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
         }
 
-        // Check if the phone number exists for a different canteen
+        // Kiểm tra số điện thoại đã tồn tại cho một canteen khác
         if (canteenService.isPhoneExist(canteenPhone) && !canteenService.loadCanteenId(canteen.getCanteenId()).getCanteenPhone().equals(canteenPhone)) {
-            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=Phone number already exists";
+            redirectAttributes.addFlashAttribute("errorMessage", "Số điện thoại đã tồn tại.");
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
         }
 
         Canteen existingCanteen = canteenService.loadCanteenId(canteen.getCanteenId());
         if (existingCanteen == null) {
-            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?error=Canteen not found";
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy canteen.");
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
         }
 
         if (imageProfileInput != null && !imageProfileInput.isEmpty()) {
-            String avatarURL = fileS3Service.uploadFile(imageProfileInput);
-            canteen.setCanteenImg(avatarURL);
+            try {
+                String avatarURL = fileS3Service.uploadFile(imageProfileInput);
+                canteen.setCanteenImg(avatarURL);
+            } catch (SpringBootFileUploadException e) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Lỗi tải lên tệp.");
+                return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
+            }
         } else {
             canteen.setCanteenImg(existingCanteen.getCanteenImg());
         }
@@ -79,6 +93,7 @@ public class ProfileCanteenController {
         canteen.setCanteenPhone(canteenPhone);
 
         canteenService.updateCanteen(canteen);
-        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId() + "?success=Update Success";
+        redirectAttributes.addFlashAttribute("successMessage", "Thay đổi thành công.");
+        return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
     }
 }
