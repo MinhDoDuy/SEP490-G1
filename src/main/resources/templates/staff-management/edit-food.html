@@ -79,6 +79,10 @@
             color: #0056b3;
             text-decoration: underline;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -122,9 +126,10 @@
 
         <div class="form-group">
             <label for="imageFood" class="form-label">Ảnh Đồ Ăn</label>
-            <input type="file" id="imageFood" th:field="*{imageFood}" class="form-control">
+            <input type="file" id="imageFood" name="imageFood" class="form-control">
+            <div class="error-message hidden" th:if="${#fields.hasErrors('imageFood')}" th:errors="*{imageFood}"></div>
             <img th:if="${food.imageFood}" th:src="@{${food.imageFood}}" alt="Food Image" class="mt-2" style="max-width: 100px;">
-            <div class="error-message" th:if="${#fields.hasErrors('imageFood')}" th:errors="*{imageFood}"></div>
+            <img th:if="${foodImage}" th:src="@{${foodImage}}" alt="Food Image" class="mt-2" style="max-width: 100px;">
         </div>
 
         <div class="form-group">

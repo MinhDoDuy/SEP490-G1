@@ -187,6 +187,7 @@ public class FoodManagementController {
         if (hasErrors) {
             model.addAttribute("canteenId", canteenId);
             model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("foodImage", existingFood.isPresent() ? existingFood.get().getImageFood() : null);
             return "staff-management/edit-food";
         }
 
@@ -202,7 +203,7 @@ public class FoodManagementController {
                 String foodImageUrl = fileS3Service.uploadFile(imageFood);
                 food.setImageFood(foodImageUrl);
             } else {
-                food.setImageFood(existingFood.get().getImageFood());
+                food.setImageFood(existingFood.isPresent() ? existingFood.get().getImageFood() : null);
             }
 
             foodService.save(food);
@@ -210,6 +211,7 @@ public class FoodManagementController {
         } catch (SpringBootFileUploadException | IOException e) {
             model.addAttribute("canteenId", canteenId);
             model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("foodImage", existingFood.isPresent() ? existingFood.get().getImageFood() : null);
             return "staff-management/edit-food";
         }
         return "redirect:/manage-food?canteenId=" + canteenId;

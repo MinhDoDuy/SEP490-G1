@@ -4,6 +4,7 @@ import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FileS3Service;
+import com.ffood.g1.utils.PhoneUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,6 +62,13 @@ public class ProfileCanteenController {
 
         if (canteenName.isEmpty() || location.isEmpty() || canteenPhone.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Tất cả các trường là bắt buộc.");
+            return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
+        }
+
+        // Validate phone number
+        String phoneValidationError = PhoneUtils.validatePhoneNumber(canteenPhone);
+        if (phoneValidationError != null) {
+            redirectAttributes.addFlashAttribute("errorMessage", phoneValidationError);
             return "redirect:/canteen/edit-profile-canteen/" + canteen.getCanteenId();
         }
 
