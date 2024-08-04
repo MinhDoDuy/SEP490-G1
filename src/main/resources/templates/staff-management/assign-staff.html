@@ -22,7 +22,7 @@
     }
 
     .form-container {
-      width: 30%;
+      width: 50%; /* Increase width to 50% */
       margin-top: 50px;
       background-color: #fff;
       border: 1px solid #ccc;
@@ -162,7 +162,7 @@
           <input type="hidden" name="canteenId" th:value="${canteenId}">
           <div class="inline-group">
             <div class="form-group mb-4 relative">
-              <label for="email" class="form-label">Email:</label>
+              <label for="email" class="form-label">Email: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
               <input type="email" id="email" name="email" class="form-control" placeholder="Nhập email" required>
             </div>
             <button type="submit" class="btn btn-primary">Kiểm tra Email</button>
