@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -287,42 +287,44 @@
         function saveCartItem(productId, quantity) {
             fetch('/cart/add-to-cart-provisional', {
                 method: 'POST',
-                dataType: 'json',
-                contentType: 'json',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    // "Access-Control-Origin": "*"
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: new URLSearchParams({
                     'foodId': productId,
                     'quantity': quantity
                 })
             })
-                // .then(response => response.text())
-                // .then(data => console.log(data))
-                // .catch(error => console.error('Error:', error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         function updateCartItem(productId, quantity) {
-            console.log('Updating cart item:', productId, quantity); // Add this line
+            console.log('Updating cart item:', productId, quantity);
             fetch('/cart/update-cart-item-provisional', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    // "Access-Control-Origin": "*"
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: new URLSearchParams({
                     'cartItemId': productId,
                     'quantity': quantity
                 })
             })
-                // .then(response => response.text())
-                // .then(data => console.log(data))
-                // .catch(error => console.error('Error:', error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         function removeCartItem(productId) {
-            console.log('Removing from cart:', productId); // Add this line
+            console.log('Removing from cart:', productId);
             fetch('/cart/remove-from-cart-provisional', {
                 method: 'POST',
                 headers: {
@@ -332,9 +334,12 @@
                     'cartItemId': productId
                 })
             })
-                // .then(response => response.text())
-                // .then(data => console.log(data))
-                // .catch(error => console.error('Error:', error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         function formatCurrencyVND(amount) {
@@ -362,4 +367,3 @@
 </script>
 </body>
 </html>
-`

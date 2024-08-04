@@ -1,16 +1,22 @@
 package com.ffood.g1.controller;
 
-import com.ffood.g1.entity.*;
-import com.ffood.g1.enum_pay.PaymentStatus;
+import com.ffood.g1.entity.CartItem;
+import com.ffood.g1.entity.Food;
+import com.ffood.g1.entity.Order;
+import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.repository.UserRepository;
-import com.ffood.g1.service.*;
+import com.ffood.g1.service.CartItemService;
+import com.ffood.g1.service.CartService;
+import com.ffood.g1.service.FoodService;
+import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.impl.VNPayService;
-import com.ffood.g1.utils.RandomOrderCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,9 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,15 +50,16 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private FoodRepository foodRepository;;
+    private FoodRepository foodRepository;
+    ;
 
     @Autowired
     private VNPayService vnpayService;
 
     @GetMapping("/checkout")
-    public String showCheckoutPage(@RequestParam("cartItemIds") List<Integer> cartItemIds, Model model,HttpSession session) {
+    public String showCheckoutPage(@RequestParam("cartItemIds") List<Integer> cartItemIds, Model model, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             String email = authentication.getName();
             User user = userService.findByEmail(email);
             model.addAttribute("user", user);
@@ -61,9 +68,9 @@ public class OrderController {
         List<CartItem> cartItems = cartItemService.getCartItemsByIds(cartItemIds);
         // Check all items are from the same canteen
         Integer canteenId = null;
-        int totalOrderPrice=0;
+        int totalOrderPrice = 0;
         for (CartItem item : cartItems) {
-            totalOrderPrice += item.getFood().getPrice()*item.getQuantity();
+            totalOrderPrice += item.getFood().getPrice() * item.getQuantity();
             if (canteenId == null) {
                 canteenId = item.getFood().getCanteen().getCanteenId();
             } else if (!canteenId.equals(item.getFood().getCanteen().getCanteenId())) {
@@ -92,7 +99,7 @@ public class OrderController {
                 .collect(Collectors.toList());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             String email = authentication.getName();
             User user = userService.findByEmail(email);
             if (user != null) {
@@ -101,15 +108,12 @@ public class OrderController {
                 // Remove the selected cart items
                 cartItemService.removeCartItemsByIds(cartItemIds);
 
-               model.addAttribute("order", order);
+                model.addAttribute("order", order);
                 return "order/create-order";
             }
         }
         return "redirect:/homepage";
     }
-
-
-
 
 
     @PostMapping("/processCheckout")
@@ -137,9 +141,38 @@ public class OrderController {
         List<Order> orders = orderService.getOrdersByUserId(user.getUserId());
         model.addAttribute("orders", orders);
 
-        List<Food> foods=foodService.getRandomFood();
+        List<Food> foods = foodService.getRandomFood();
         model.addAttribute("foods", foods);
 //        return "order/order-history";
         return "order/order-history";
+    }
+
+    @PostMapping("/cart/submit-payment")
+    public ResponseEntity<String> submitPayment(
+            @RequestParam("paymentMethod") String paymentMethod,
+            @RequestParam("userId") Integer userId) {
+        OrderType orderType = OrderType.AT_COUNTER;
+        List<Integer> cartItemIds = new ArrayList<>();
+        System.out.println("paymentMethod: " + paymentMethod);
+        System.out.println("userId: " + userId);
+        // Giả sử bạn có dịch vụ để tạo đơn hàng
+        User user = userRepository.getOne(userId);
+        List<CartItem> listCartItems = cartItemService.getCartItemsByUserId(1);
+        for (CartItem item : listCartItems) {
+            cartItemIds.add(item.getCartItemId());
+        }
+        System.out.println(cartItemIds);
+        PaymentMethod paymentMethodDone = null;
+        if (paymentMethod.equals("qr")) {
+            paymentMethodDone = PaymentMethod.VNPAY;
+        } else if (paymentMethod.equals("cash")) {
+            paymentMethodDone = PaymentMethod.CASH;
+        }
+
+        Order order = orderService.createOrder(user, null, null, orderType, paymentMethodDone, cartItemIds);
+        cartItemService.removeCartItemsByIds(cartItemIds);
+        // Xử lý logic liên quan đến thanh toán, ví dụ lưu thông tin đơn hàng vào cơ sở dữ liệu
+
+        return ResponseEntity.ok("Thanh toán thành công!");
     }
 }

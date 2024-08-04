@@ -1,7 +1,6 @@
 package com.ffood.g1.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import antlr.BaseAST;
 import com.ffood.g1.entity.*;
 import com.ffood.g1.repository.CartItemRepository;
 import com.ffood.g1.repository.CartRepository;
@@ -13,13 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,6 +50,8 @@ public class CartController {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/add_to_cart")
     public String addToCart(@RequestParam("foodId") Integer foodId,
@@ -135,16 +143,14 @@ public class CartController {
     }
 
 
-
-
     @GetMapping("/create-order-at-couter")
     public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId, HttpSession session) {
         // Delete existing provisional cart for user with ID 1
-       Cart cartProvisionalPre= cartService.getCartByUserId(1);
-       if (cartProvisionalPre != null) {
-           cartItemRepository.deleteAll(cartProvisionalPre.getCartItems());
-           cartRepository.delete(cartProvisionalPre);
-       }
+        Cart cartProvisionalPre = cartService.getCartByUserId(1);
+        if (cartProvisionalPre != null) {
+            cartItemRepository.deleteAll(cartProvisionalPre.getCartItems());
+            cartRepository.delete(cartProvisionalPre);
+        }
         // Create a new provisional cart for user with ID 1
 //        User user = userService.getUserById(1);
         Cart cartProvisional = new Cart();
@@ -164,74 +170,93 @@ public class CartController {
     }
 
     @PostMapping("/cart/add-to-cart-provisional")
-    public void  addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity, HttpSession session) {
+    public ResponseEntity<Void> addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity, HttpSession session) {
         System.out.println("Cos thuc hien chuc nang add");
-        Optional<Food> foodProvisional=foodService.getFoodById(foodId);
+        Optional<Food> foodProvisional = foodService.getFoodById(foodId);
         Cart cartProvisional = cartService.getCartByUserId(1);
         cartService.addToCart(cartProvisional, foodId, quantity, LocalDateTime.now(), foodProvisional.get().getPrice());
+        return ResponseEntity.ok().build();
     }
 
+
     @PostMapping("/cart/update-cart-item-provisional")
-    public void updateCartItemProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("quantity") Integer quantity) {
-        Cart cartProvisional= cartService.getCartByUserId(1);
-        for (CartItem cartItem: cartProvisional.getCartItems() ){
-            if (Objects.equals(cartItem.getFood().getFoodId(), foodId)){
+    public ResponseEntity<Void> updateCartItemProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("quantity") Integer quantity) {
+        Cart cartProvisional = cartService.getCartByUserId(1);
+        for (CartItem cartItem : cartProvisional.getCartItems()) {
+            if (Objects.equals(cartItem.getFood().getFoodId(), foodId)) {
                 cartItem.setQuantity(quantity);
                 cartItemRepository.save(cartItem);
+                break; // Exit the loop once the item is found and updated
             }
         }
-
+        return ResponseEntity.ok().build(); // Return a successful response
     }
 
     @PostMapping("/cart/remove-from-cart-provisional")
-    public void removeFromCartProvisional(@RequestParam("cartItemId") Integer foodId) {
-        Cart cartProvisional= cartService.getCartByUserId(1);
-        for (CartItem cartItem: cartProvisional.getCartItems() ){
-            if (Objects.equals(cartItem.getFood().getFoodId(), foodId)){
-                removeCartItem(cartItem.getCartItemId());
+    public ResponseEntity<Void> removeFromCartProvisional(@RequestParam("cartItemId") Integer foodId) {
+        Cart cartProvisional = cartService.getCartByUserId(1);
+        for (CartItem cartItem : cartProvisional.getCartItems()) {
+            if (Objects.equals(cartItem.getFood().getFoodId(), foodId)) {
+                cartItemRepository.deleteById(cartItem.getCartItemId());
+                break; // Exit the loop once the item is found and removed
             }
         }
+        return ResponseEntity.ok().build(); // Return a successful response
     }
 
+
     @GetMapping("/cart/payment")
-    public String showPaymentScreen(Model model,@RequestParam(value = "phone", required = false) String phone) {
+    public String showPaymentScreen(Model model, @RequestParam(value = "phone", required = false) String phone) {
         List<CartItem> cartItems = cartItemService.getCartItemsByUserId(1);
         model.addAttribute("cartItems", cartItems);
         int totalOrderPrice = 0;
-        for (CartItem cartItem: cartItems) {
-          totalOrderPrice += cartItem.getQuantity() * cartItem.getFood().getPrice();
+        for (CartItem cartItem : cartItems) {
+            totalOrderPrice += cartItem.getQuantity() * cartItem.getFood().getPrice();
         }
         cartRepository.save(cartService.getCartByUserId(1));
         model.addAttribute("totalOrderPrice", totalOrderPrice);
         return "cart/payment";
     }
 
-//    @GetMapping("/cart/search-user")
-//    public void searchUserByPhone(@RequestParam("phone") String phone,HttpSession session,Model model) {
-//        List<User> listUsers = userRepository.findAll();
-//        System.out.println("phone "+phone);
-//        for (User userProvisional : listUsers) {
-//            String ph = userProvisional.getPhone();
-//            if (phone.equals(ph)) {
-//                System.out.println("Test: " + userProvisional);
-//                model.addAttribute("userProvisional", userProvisional);
-//            }
-//        }
-//    }
-@GetMapping("/cart/search-user")
-public String searchUserByPhone(@RequestParam("phone") String phone, HttpSession session, Model model) {
-    List<User> listUsers = userRepository.findAll();
-    System.out.println("phone " + phone);
-    for (User userProvisional : listUsers) {
-        String ph = userProvisional.getPhone();
-        if (phone.equals(ph)) {
-            System.out.println("Test: " + userProvisional);
-            model.addAttribute("userProvisional", userProvisional);
-            return "cart/payment :: user-info";
+    
+    
+    @GetMapping("/cart/search-user")
+    public String searchUserByPhone(@RequestParam("phone") String phone, HttpSession session, Model model) {
+        List<User> listUsers = userRepository.findAll();
+        System.out.println("phone " + phone);
+        for (User userProvisional : listUsers) {
+            String ph = userProvisional.getPhone();
+            if (phone.equals(ph)) {
+                System.out.println("Test: " + userProvisional);
+                model.addAttribute("userProvisional", userProvisional);
+                return "cart/payment :: user-info";
+            }
         }
+        return "cart/payment :: user-not-found";
     }
-    return "cart/payment :: user-not-found";
-}
+
+    @PostMapping("/cart/haha")
+    public String registerUser(@RequestParam("fullName") String fullName,
+                               @RequestParam("email") String email,
+                               @RequestParam("phone") String phone,
+                               @RequestParam("password") String password,
+                               Model model) {
+        // Create a new user instance
+        User user = new User();
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPassword(passwordEncoder.encode(password));
+        // Set the default role as CUSTOMER
+        Role role = new Role();
+        role.setRoleId(1); // Assuming role ID 1 is for "CUSTOMER"
+        user.setRole(role);
+        // Save the user to the database
+        userRepository.save(user);
+        model.addAttribute("userProvisional", user);
+        return "cart/payment :: user-info";
+    }
+
 
 
 

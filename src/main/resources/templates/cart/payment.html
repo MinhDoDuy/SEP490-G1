@@ -51,6 +51,42 @@
         .search-result {
             margin-top: 10px;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -76,17 +112,25 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="searchPhone">Search User by Phone:</label>
+            <div class="card-header" style=" border: 1px solid #0c0202;">
+                <label for="searchPhone">Người dùng</label>
+                <button class="btn btn-primary" id="openRegisterModal" style="margin-left: 20px;">Thêm khách hàng</button>
+            </div>
             <div class="input-group">
-                <input type="text" id="searchPhone" class="form-control" placeholder="Enter phone number...">
+                <input type="text" id="searchPhone" class="form-control" placeholder="Nhập số điện thoại .....">
                 <div class="input-group-append">
-                    <button class="btn btn-primary" id="searchUserButton">Search</button>
+                    <button class="btn btn-primary" id="searchUserButton">Tìm kiếm</button>
                 </div>
             </div>
         </div>
         <div id="searchResult" class="search-result" th:fragment="user-info">
-            <p th:if="${userProvisional != null}">Name: <span th:text="${userProvisional.fullName}"></span>, Phone: <span th:text="${userProvisional.phone}"></span></p>
-            <p th:if="${userProvisional == null}"></p>
+            <p th:if="${userProvisional != null}">
+                <label>
+                    <input type="hidden" name="userId" th:value="${userProvisional.userId}">
+                </label>
+                Name: <span th:text="${userProvisional.fullName}"></span>, Phone: <span th:text="${userProvisional.phone}"></span>
+            </p>
+            <p th:if="${userProvisional == null}">Không tìm thấy người dùng</p>
         </div>
 
         <div class="card-footer">
@@ -99,9 +143,40 @@
                         <option value="qr">QR Code</option>
                     </select>
                 </div>
+                <div id="cashPayment" style="display: none;">
+                    <label for="cashReceived">Tiền nhận từ khách:</label>
+                    <input type="number" id="cashReceived" class="form-control" placeholder="Nhập số tiền nhận từ khách">
+                    <p id="changeDue"></p>
+                </div>
                 <button class="btn btn-success mt-3" id="submitPayment">Thanh toán</button>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Thêm khách hàng</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="fullName">Họ và tên:</label>
+                <input type="text" id="fullName" name="fullName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Số điện thoại:</label>
+                <input type="text" id="phone" name="phone" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mật khẩu:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="button" class="btn btn-success" id="registerButton">Đăng ký</button>
+        </form>
     </div>
 </div>
 
@@ -119,21 +194,82 @@
             .catch(error => console.error('Error:', error));
     });
 
+    document.getElementById('paymentMethod').addEventListener('change', function () {
+        const paymentMethod = this.value;
+        const cashPayment = document.getElementById('cashPayment');
+        if (paymentMethod === 'cash') {
+            cashPayment.style.display = 'block';
+        } else {
+            cashPayment.style.display = 'none';
+        }
+    });
+
+    document.getElementById('cashReceived').addEventListener('input', function () {
+        const cashReceived = parseFloat(this.value);
+        const totalOrderPrice = parseFloat(document.querySelector('[th\\:text="${totalOrderPrice}"]').textContent.replace(/\D/g, ''));
+        const changeDue = cashReceived - totalOrderPrice;
+        document.getElementById('changeDue').innerText = `Tiền thối lại: ${changeDue} VND`;
+    });
+
     document.getElementById('submitPayment').addEventListener('click', function () {
         const paymentMethod = document.getElementById('paymentMethod').value;
+        const cashReceived = document.getElementById('cashReceived').value || 0;
+        const userProvisionalElement = document.querySelector('input[name="userId"]');
+        const userId = userProvisionalElement ? userProvisionalElement.value : 1;
+
         fetch('/cart/submit-payment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: new URLSearchParams({
-                'paymentMethod': paymentMethod
+                'paymentMethod': paymentMethod,
+                'cashReceived': cashReceived,
+                'userId': userId
             })
         })
             .then(response => response.text())
             .then(data => {
                 alert(data);
-                window.location.href = '/cart/success';
+                window.location.href = '/homepage';
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    // Modal functionality
+    const modal = document.getElementById("registerModal");
+    const btn = document.getElementById("openRegisterModal");
+    const span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    document.getElementById('registerButton').addEventListener('click', function () {
+        const form = document.getElementById('registerForm');
+        const formData = new FormData(form);
+
+        fetch('/cart/haha', {
+            method: 'POST',
+            body: new URLSearchParams(formData)
+        })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const userInfo = doc.querySelector('#searchResult');
+                document.getElementById('searchResult').innerHTML = userInfo.innerHTML;
+                modal.style.display = "none";
             })
             .catch(error => console.error('Error:', error));
     });
