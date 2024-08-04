@@ -9,7 +9,7 @@
   <title>Đơn cho shipper</title>
 </head>
 <body class="text-gray-800 font-inter">
-
+<div th:replace="sidebar-staff :: sidebar-staff(${canteenId})"></div>
 <!-- start: Main -->
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
   <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}"/>
