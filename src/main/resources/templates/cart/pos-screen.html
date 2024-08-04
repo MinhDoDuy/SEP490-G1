@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,6 @@
     <title>POS Screen</title>
     <style>
         body {
-            /*background-color: #fff8f0;*/
             font-family: 'Open Sans', sans-serif;
         }
 
@@ -124,8 +123,9 @@
 <div class="container mt-5">
     <h2 style="color: #ff6600;">POS Screen</h2>
     <div class="row">
-        <div class="col-md-8" style="border: 2px solid #cccccc;border-radius: 5px;">
-            <label for="search" style="margin-top: 10px"></label><input type="text" class="form-control mb-3" id="search" placeholder="Nhập tên món ăn cần tìm kiếm...">
+        <div class="col-md-8" style="border: 2px solid #cccccc; border-radius: 5px;">
+            <label for="search" style="margin-top: 10px;"></label>
+            <input type="text" class="form-control mb-3" id="search" placeholder="Nhập tên món ăn cần tìm kiếm...">
             <div class="row" id="productList">
                 <!-- Products will be displayed here -->
                 <div class="col-md-4" th:each="food : ${foods}">
@@ -133,11 +133,12 @@
                         <img class="product-img" th:src="${food.imageFood}" alt="Product Image">
                         <div class="product-info">
                             <h5 th:text="${food.foodName}">Product Name</h5>
-                            <span th:text="'Đang còn : '+${food.foodQuantity}"></span>
+                            <span th:text="'Đang còn: ' + ${food.foodQuantity}"></span>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <p class="text-danger" th:text="${food.price} + ' VND'">25,000 VND</p>
                                 <button class="btn btn-success btn-add" th:data-id="${food.foodId}"
-                                        th:data-name="${food.foodName}" th:data-price="${food.price}" th:data-quantity="${food.foodQuantity}">+
+                                        th:data-name="${food.foodName}" th:data-price="${food.price}"
+                                        th:data-quantity="${food.foodQuantity}">+
                                 </button>
                             </div>
                         </div>
@@ -165,7 +166,7 @@
     </div>
 </div>
 
-<form id="cartForm" method="post" action="/payment" style="display: none;">
+<form id="cartForm" method="get" action="/cart/payment" style="display: none;">
     <input type="hidden" name="cartData" id="cartData">
 </form>
 
@@ -194,9 +195,11 @@
                         quantity: 1,
                         maxQuantity: productQuantity
                     };
+                    saveCartItem(productId, 1);
                 } else {
                     if (cart[productId].quantity < cart[productId].maxQuantity) {
                         cart[productId].quantity += 1;
+                        updateCartItem(productId, cart[productId].quantity);
                     } else {
                         alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
                     }
@@ -222,7 +225,6 @@
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
                 cartItem.innerHTML = `
-
                     <div class="cart-item-info">
                         <p>${item.name}</p>
                         <p class="text-danger">${formatCurrencyVND(item.price)}</p>
@@ -250,7 +252,9 @@
                     const productId = this.getAttribute('data-id');
                     if (cart[productId].quantity > 1) {
                         cart[productId].quantity -= 1;
+                        updateCartItem(productId, cart[productId].quantity);
                     } else {
+                        removeCartItem(productId);
                         delete cart[productId];
                     }
                     updateCartDisplay();
@@ -262,6 +266,7 @@
                     const productId = this.getAttribute('data-id');
                     if (cart[productId].quantity < cart[productId].maxQuantity) {
                         cart[productId].quantity += 1;
+                        updateCartItem(productId, cart[productId].quantity);
                     } else {
                         alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
                     }
@@ -272,10 +277,64 @@
             document.querySelectorAll('.btn-remove').forEach(button => {
                 button.addEventListener('click', function () {
                     const productId = this.getAttribute('data-id');
+                    removeCartItem(productId);
                     delete cart[productId];
                     updateCartDisplay();
                 });
             });
+        }
+
+        function saveCartItem(productId, quantity) {
+            fetch('/cart/add-to-cart-provisional', {
+                method: 'POST',
+                dataType: 'json',
+                contentType: 'json',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    // "Access-Control-Origin": "*"
+                },
+                body: new URLSearchParams({
+                    'foodId': productId,
+                    'quantity': quantity
+                })
+            })
+                // .then(response => response.text())
+                // .then(data => console.log(data))
+                // .catch(error => console.error('Error:', error));
+        }
+
+        function updateCartItem(productId, quantity) {
+            console.log('Updating cart item:', productId, quantity); // Add this line
+            fetch('/cart/update-cart-item-provisional', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    // "Access-Control-Origin": "*"
+                },
+                body: new URLSearchParams({
+                    'cartItemId': productId,
+                    'quantity': quantity
+                })
+            })
+                // .then(response => response.text())
+                // .then(data => console.log(data))
+                // .catch(error => console.error('Error:', error));
+        }
+
+        function removeCartItem(productId) {
+            console.log('Removing from cart:', productId); // Add this line
+            fetch('/cart/remove-from-cart-provisional', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'cartItemId': productId
+                })
+            })
+                // .then(response => response.text())
+                // .then(data => console.log(data))
+                // .catch(error => console.error('Error:', error));
         }
 
         function formatCurrencyVND(amount) {
@@ -300,7 +359,7 @@
             });
         });
     });
-
 </script>
 </body>
 </html>
+`

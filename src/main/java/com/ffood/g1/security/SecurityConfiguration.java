@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
@@ -57,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_info", "/food_details","/update_cart_quantity").permitAll()
-                .antMatchers("/add_to_cart","/foodByCategory/{categoryId}","/assign-confirm","/assign-confirm/**").permitAll()
+                .antMatchers("/add_to_cart","/foodByCategory/{categoryId}","/assign-confirm","/assign-confirm/**","/cart/**","/cart/payment","/cart/remove-from-cart-provisional").permitAll()
                 // Các quyền truy cập yêu cầu xác thực
                 .antMatchers("/view-profile/**", "/update-profile", "/staff-change-password/**", "/staff-change-password",
                         "/submit-feedback/**","/feedback-system-form/**",
@@ -77,11 +78,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/add-food-form", "/add-food-form/**", "/add-food", "/add-food/**","/check-email/**",
                         "/assign-staff-form/**","/assign-confirm/**", "/manage-category/**",
                         "/add-category-form", "/add-category", "/edit-category/**",
-                        "/create-order-at-couter","/create-order-at-couter1", "dashboard-manager/**",
+                        "/create-order-at-couter", "dashboard-manager/**",
                         "/manage-feedback","/approve-feedback/**","/reject-feedback/**",
                         "/search-food/**","/add-food-form/**","/add-food","/edit-food/**",
                         "/add-quantity/**","/order-list/**","/update-order-status/**",
-                        "/bulk-assign-orders/**","/reject-order/**")
+                        "/bulk-assign-orders/**","/reject-order/**"
+                        )
                 .hasRole("MANAGER")
                 // Quyền cho STAFF
                 .antMatchers("/order-list-ship/**","/complete-order/**")
@@ -99,6 +101,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .permitAll()
                 .and()
+                .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
     }
 
