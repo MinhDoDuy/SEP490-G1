@@ -220,7 +220,11 @@ public class OrderServiceImpl implements OrderService {
         order.setNote(note);
         order.setOrderType(orderType);
         order.setPaymentMethod(paymentMethod);
-        order.setOrderStatus(OrderStatus.PENDING);
+        if (orderType == OrderType.ONLINE_ORDER) {
+            order.setOrderStatus(OrderStatus.PENDING);
+        }else if (orderType == OrderType.AT_COUNTER) {
+            order.setOrderStatus(OrderStatus.COMPLETE);
+        }
         order.setPaymentStatus(PaymentStatus.PAYMENT_COMPLETE);
         order.setOrderCode(RandomOrderCodeGenerator.generateOrderCode());
 

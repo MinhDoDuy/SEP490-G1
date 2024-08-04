@@ -122,45 +122,78 @@
 
 <div class="container mt-5">
     <h2 style="color: #ff6600;">POS Screen</h2>
-    <div class="row">
-        <div class="col-md-8" style="border: 2px solid #cccccc; border-radius: 5px;">
-            <label for="search" style="margin-top: 10px;"></label>
-            <input type="text" class="form-control mb-3" id="search" placeholder="Nhập tên món ăn cần tìm kiếm...">
-            <div class="row" id="productList">
-                <!-- Products will be displayed here -->
-                <div class="col-md-4" th:each="food : ${foods}">
-                    <div class="product-card">
-                        <img class="product-img" th:src="${food.imageFood}" alt="Product Image">
-                        <div class="product-info">
-                            <h5 th:text="${food.foodName}">Product Name</h5>
-                            <span th:text="'Đang còn: ' + ${food.foodQuantity}"></span>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <p class="text-danger" th:text="${food.price} + ' VND'">25,000 VND</p>
-                                <button class="btn btn-success btn-add" th:data-id="${food.foodId}"
-                                        th:data-name="${food.foodName}" th:data-price="${food.price}"
-                                        th:data-quantity="${food.foodQuantity}">+
-                                </button>
+
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs" id="posTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="features-tab" data-toggle="tab" href="#features" role="tab" aria-controls="features" aria-selected="false">Features</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pricing-tab" data-toggle="tab" href="#pricing" role="tab" aria-controls="pricing" aria-selected="false">Pricing</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="posTabsContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row mt-3">
+                <div class="col-md-8" style="border: 2px solid #cccccc; border-radius: 5px;">
+                    <label for="search" style="margin-top: 10px;"></label>
+                    <input type="text" class="form-control mb-3" id="search" placeholder="Nhập tên món ăn cần tìm kiếm...">
+                    <div class="row" id="productList">
+                        <!-- Products will be displayed here -->
+                        <div class="col-md-4" th:each="food : ${foods}">
+                            <div class="product-card">
+                                <img class="product-img" th:src="${food.imageFood}" alt="Product Image">
+                                <div class="product-info">
+                                    <h5 th:text="${food.foodName}">Product Name</h5>
+                                    <span th:text="'Đang còn: ' + ${food.foodQuantity}"></span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <p class="text-danger" th:text="${food.price} + ' VND'">25,000 VND</p>
+                                        <button class="btn btn-success btn-add" th:data-id="${food.foodId}"
+                                                th:data-name="${food.foodName}" th:data-price="${food.price}"
+                                                th:data-quantity="${food.foodQuantity}">+
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Cart
+                        </div>
+                        <div class="card-body" id="cartItems">
+                            <!-- Cart Items will be displayed here -->
+                        </div>
+                        <div class="card-footer">
+                            <div class="cart-summary">
+                                <p>Món: <span id="totalItems">0</span></p>
+                                <p>Tổng tiền: <span id="totalPrice">0 VND</span></p>
+                                <button class="btn btn-success" id="proceedToPayment">Proceed to Payment</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    Cart
-                </div>
-                <div class="card-body" id="cartItems">
-                    <!-- Cart Items will be displayed here -->
-                </div>
-                <div class="card-footer">
-                    <div class="cart-summary">
-                        <p>Món: <span id="totalItems">0</span></p>
-                        <p>Tổng tiền: <span id="totalPrice">0 VND</span></p>
-                        <button class="btn btn-success" id="proceedToPayment">Proceed to Payment</button>
-                    </div>
-                </div>
+        <div class="tab-pane fade" id="features" role="tabpanel" aria-labelledby="features-tab">
+            <div class="container mt-3">
+                <h4>Features</h4>
+                <p>This is the features tab content.</p>
+                <p>Here you can describe the features of the POS system.</p>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pricing" role="tabpanel" aria-labelledby="pricing-tab">
+            <div class="container mt-3">
+                <h4>Pricing</h4>
+                <p>This is the pricing tab content.</p>
+                <p>Here you can provide information about the pricing plans of the POS system.</p>
             </div>
         </div>
     </div>
@@ -169,6 +202,9 @@
 <form id="cartForm" method="get" action="/cart/payment" style="display: none;">
     <input type="hidden" name="cartData" id="cartData">
 </form>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

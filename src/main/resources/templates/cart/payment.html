@@ -135,12 +135,12 @@
 
         <div class="card-footer">
             <div class="cart-summary">
-                <p>Tổng tiền: <span th:text="${totalOrderPrice} + ' VND'">0 VND</span></p>
+                <p>Tổng tiền: <span id="totalOrderPrice" th:text="${totalOrderPrice} + ' VND'">0 VND</span></p>
                 <div>
                     <label for="paymentMethod">Phương thức thanh toán:</label>
                     <select id="paymentMethod" class="form-control">
-                        <option value="cash">Tiền mặt</option>
                         <option value="qr">QR Code</option>
+                        <option value="cash">Tiền mặt</option>
                     </select>
                 </div>
                 <div id="cashPayment" style="display: none;">
@@ -206,9 +206,9 @@
 
     document.getElementById('cashReceived').addEventListener('input', function () {
         const cashReceived = parseFloat(this.value);
-        const totalOrderPrice = parseFloat(document.querySelector('[th\\:text="${totalOrderPrice}"]').textContent.replace(/\D/g, ''));
+        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').innerText.replace(/\D/g, ''));
         const changeDue = cashReceived - totalOrderPrice;
-        document.getElementById('changeDue').innerText = `Tiền thối lại: ${changeDue} VND`;
+        document.getElementById('changeDue').innerText = `Tiền thối lại: ${changeDue.toLocaleString('vi-VN')} VND`;
     });
 
     document.getElementById('submitPayment').addEventListener('click', function () {
