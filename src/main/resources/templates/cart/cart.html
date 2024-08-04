@@ -277,7 +277,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                Bạn không thể thanh toán các món ăn từ nhiều căng tin cùng một lúc. Vui lòng chỉ chọn các mặt hàng từ một căng tin.            </div>
+                Bạn không thể thanh toán các món ăn từ nhiều căng tin cùng một lúc. Vui lòng chỉ chọn các mặt hàng từ một căng tin.
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
             </div>
@@ -327,6 +328,40 @@
             $('#totalPrice').text(formatCurrencyVND(totalPrice)); // Ensure VND formatting on update
         }
 
+        function validateQuantity(input) {
+            const cartItemId = input.attr('id').replace('qty', '');
+            const quantity = parseInt(input.val());
+            const availableQuantity = parseInt($($(input).closest('tr').find('td')[3]).text());
+
+            if (quantity > availableQuantity) {
+                alert('Số lượng mua không được vượt quá số lượng hiện có.');
+                input.val(availableQuantity);
+            }
+        }
+
+        function updateCartQuantity(cartItemId, quantity) {
+            fetch('/update_cart_quantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'cartItemId': cartItemId,
+                    'quantity': quantity
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error updating quantity');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
         $('.btn-minus, .btn-plus').on('click', function() {
             const button = $(this);
             const cartItemId = button.data('id');
@@ -342,6 +377,8 @@
             const price = parseFloat($($(this).closest('tr').find('td')[2]).text().replace(/[^\d]/g, ''));
             const total = quantity * price;
             $('#total' + cartItemId).text(formatCurrencyVND(total)); // Ensure VND formatting on quantity change
+            validateQuantity($(this));
+            updateCartQuantity(cartItemId, quantity);
             updateTotal();
         });
 

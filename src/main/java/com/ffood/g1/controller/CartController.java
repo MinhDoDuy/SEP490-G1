@@ -75,18 +75,19 @@ public class CartController {
         Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
         int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
         session.setAttribute("totalQuantity", totalQuantity);
-
         cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
-
         session.setAttribute("messageAddFood", "Sản phẩm đã được thêm vào giỏ hàng thành công!!!");
-        ;
 
+        Optional<Food> food=foodService.getFoodById(foodId);
+        int canteenId=food.get().getCanteen().getCanteenId();
         if (url == 1) {
             return "redirect:/homepage";
         } else if (url == 2) {
             return "redirect:/canteen_details";
         } else if (url == 3) {
             return "redirect:/food_details?id=" + foodId;
+        } else if (url == 4) {
+            return "redirect:/canteen_info?canteenId="+canteenId;
         }
         return null;
     }
@@ -120,7 +121,7 @@ public class CartController {
     }
 
 
-    @GetMapping("/update_cart_quantity")
+    @PostMapping("/update_cart_quantity")
     public ResponseEntity<String> updateCartQuantity(@RequestParam("cartItemId") Integer cartItemId,
                                                      @RequestParam("quantity") int quantity,
                                                      Model model,
