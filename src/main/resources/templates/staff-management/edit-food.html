@@ -86,6 +86,7 @@
     </style>
 </head>
 <body>
+<div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
 <div class="form-container">
     <h2>Chỉnh Sửa Đồ Ăn</h2>
     <form th:action="@{/edit-food}" th:object="${food}" method="post" enctype="multipart/form-data">
