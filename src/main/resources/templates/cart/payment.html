@@ -4,22 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Payment Screen</title>
+    <title>Payment</title>
     <style>
         body {
-            background-color: #fff8f0;
             font-family: 'Open Sans', sans-serif;
         }
 
-        .card {
-            margin: 20px;
-            border: 1px solid #ffcc99;
+        .cart-item {
+            border-bottom: 1px solid #ffcc99;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
         }
 
-        .card-header,
-        .card-footer {
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .cart-summary {
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ffcc99;
             background-color: #fff8f0;
-            border-color: #ffcc99;
         }
 
         .btn-success {
@@ -32,93 +48,96 @@
             border-color: #e65c00;
         }
 
-        .btn-secondary {
-            background-color: #ffcc99;
-            border-color: #ffcc99;
-        }
-
-        .btn-secondary:hover {
-            background-color: #ffb366;
-            border-color: #ffb366;
+        .search-result {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-
 <div class="container mt-5">
-    <h2 style="color: #ff6600;">Payment Screen</h2>
+    <h2 style="color: #ff6600;">Payment</h2>
+
     <div class="card">
         <div class="card-header">
-            Order Summary
+            Cart
         </div>
         <div class="card-body">
-            <div id="orderSummary"></div>
-            <hr>
-            <h5>Payment Method</h5>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="paymentMethod" id="cash" value="cash" checked>
-                <label class="form-check-label" for="cash">Cash</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="paymentMethod" id="qr" value="qr">
-                <label class="form-check-label" for="qr">QR Code</label>
+            <div th:each="cartItem : ${cartItems}" class="cart-item">
+                <div class="cart-item-info">
+                    <p th:text="${cartItem.food.foodName}">Food Name</p>
+                    <p class="text-danger" th:text="${cartItem.totalFoodPrice} + ' VND'">Price</p>
+                </div>
+                <div class="cart-item-quantity">
+                    <label>
+                        <input type="text" th:value="${cartItem.quantity}" readonly>
+                    </label>
+                </div>
             </div>
         </div>
+        <div class="form-group">
+            <label for="searchPhone">Search User by Phone:</label>
+            <div class="input-group">
+                <input type="text" id="searchPhone" class="form-control" placeholder="Enter phone number...">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" id="searchUserButton">Search</button>
+                </div>
+            </div>
+        </div>
+        <div id="searchResult" class="search-result" th:fragment="user-info">
+            <p th:if="${userProvisional != null}">Name: <span th:text="${userProvisional.fullName}"></span>, Phone: <span th:text="${userProvisional.phone}"></span></p>
+            <p th:if="${userProvisional == null}"></p>
+        </div>
+
         <div class="card-footer">
-            <button class="btn btn-success" id="completePayment">Complete Payment</button>
+            <div class="cart-summary">
+                <p>Tổng tiền: <span th:text="${totalOrderPrice} + ' VND'">0 VND</span></p>
+                <div>
+                    <label for="paymentMethod">Phương thức thanh toán:</label>
+                    <select id="paymentMethod" class="form-control">
+                        <option value="cash">Tiền mặt</option>
+                        <option value="qr">QR Code</option>
+                    </select>
+                </div>
+                <button class="btn btn-success mt-3" id="submitPayment">Thanh toán</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const cartData = JSON.parse(localStorage.getItem('cartData')) || {};
-        const orderSummary = document.getElementById('orderSummary');
+    document.getElementById('searchUserButton').addEventListener('click', function () {
+        const phone = document.getElementById('searchPhone').value;
+        fetch(`/cart/search-user?phone=${phone}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const userInfo = doc.querySelector('#searchResult');
+                document.getElementById('searchResult').innerHTML = userInfo.innerHTML;
+            })
+            .catch(error => console.error('Error:', error));
+    });
 
-        function formatCurrencyVND(amount) {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                minimumFractionDigits: 0
-            }).format(amount);
-        }
-
-        let totalItems = 0;
-        let totalPrice = 0;
-        Object.values(cartData).forEach(item => {
-            totalItems += item.quantity;
-            totalPrice += item.price * item.quantity;
-
-            const itemDiv = document.createElement('div');
-            itemDiv.innerHTML = `
-                <div class="d-flex justify-content-between">
-                    <p>${item.name} x ${item.quantity}</p>
-                    <p>${formatCurrencyVND(item.price * item.quantity)}</p>
-                </div>
-            `;
-            orderSummary.appendChild(itemDiv);
-        });
-
-        const totalDiv = document.createElement('div');
-        totalDiv.innerHTML = `
-            <hr>
-            <div class="d-flex justify-content-between">
-                <p><strong>Total Items:</strong></p>
-                <p>${totalItems}</p>
-            </div>
-            <div class="d-flex justify-content-between">
-                <p><strong>Total Price:</strong></p>
-                <p>${formatCurrencyVND(totalPrice)}</p>
-            </div>
-        `;
-        orderSummary.appendChild(totalDiv);
-
-        document.getElementById('completePayment').addEventListener('click', function () {
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            alert(`Payment of ${formatCurrencyVND(totalPrice)} will be made using ${paymentMethod === 'cash' ? 'Cash' : 'QR Code'}`);
-        });
+    document.getElementById('submitPayment').addEventListener('click', function () {
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        fetch('/cart/submit-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'paymentMethod': paymentMethod
+            })
+        })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                window.location.href = '/cart/success';
+            })
+            .catch(error => console.error('Error:', error));
     });
 </script>
+
 </body>
 </html>

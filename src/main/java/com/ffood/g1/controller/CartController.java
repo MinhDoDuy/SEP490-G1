@@ -1,11 +1,12 @@
 package com.ffood.g1.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ffood.g1.entity.*;
 import com.ffood.g1.repository.CartItemRepository;
+import com.ffood.g1.repository.CartRepository;
 import com.ffood.g1.repository.UserRepository;
-import com.ffood.g1.service.CartItemService;
-import com.ffood.g1.service.CartService;
-import com.ffood.g1.service.FoodService;
+import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -34,13 +31,18 @@ public class CartController {
     UserRepository userRepository;
 
     @Autowired
-    UserRepository userService;
+    UserService userService;
     @Autowired
     CartItemService cartItemService;
     @Autowired
     FoodService foodService;
     @Autowired
     private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private CanteenService canteenService;
+    @Autowired
+    private CartRepository cartRepository;
 
 
     @GetMapping("/add_to_cart")
@@ -135,12 +137,103 @@ public class CartController {
 
 
 
-    @PostMapping("/payment")
-    public String showPaymentScreen(@RequestParam("cartData") String cartData, Model model) {
-        model.addAttribute("cartData", cartData);
-        System.out.println("Cứ the cart data is: " + cartData);
-        return "cart/payment"; // The name of the payment screen HTML file
+    @GetMapping("/create-order-at-couter")
+    public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId, HttpSession session) {
+        // Delete existing provisional cart for user with ID 1
+       Cart cartProvisionalPre= cartService.getCartByUserId(1);
+       if (cartProvisionalPre != null) {
+           cartItemRepository.deleteAll(cartProvisionalPre.getCartItems());
+           cartRepository.delete(cartProvisionalPre);
+       }
+        // Create a new provisional cart for user with ID 1
+//        User user = userService.getUserById(1);
+        Cart cartProvisional = new Cart();
+        cartProvisional.setUser(userService.getUserById(1));
+        cartProvisional.setCreatedAt(LocalDateTime.now());
+        cartProvisional.setTransactionDate(LocalDateTime.now());
+        cartProvisional.setTotalAmount(0);
+        cartProvisional.setStatus("provisional");
+        cartProvisional = cartRepository.save(cartProvisional);
+
+        model.addAttribute("canteens", canteenService.getCanteenById(canteenId));
+        model.addAttribute("foods", foodService.findByCanteenId(canteenId));
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+        model.addAttribute("canteenName", canteen.getCanteenName());
+        session.setAttribute("cartProvisional", cartProvisional);
+        return "cart/pos-screen";
     }
+
+    @PostMapping("/cart/add-to-cart-provisional")
+    public void  addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity, HttpSession session) {
+        System.out.println("Cos thuc hien chuc nang add");
+        Optional<Food> foodProvisional=foodService.getFoodById(foodId);
+        Cart cartProvisional = cartService.getCartByUserId(1);
+        cartService.addToCart(cartProvisional, foodId, quantity, LocalDateTime.now(), foodProvisional.get().getPrice());
+    }
+
+    @PostMapping("/cart/update-cart-item-provisional")
+    public void updateCartItemProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("quantity") Integer quantity) {
+        Cart cartProvisional= cartService.getCartByUserId(1);
+        for (CartItem cartItem: cartProvisional.getCartItems() ){
+            if (Objects.equals(cartItem.getFood().getFoodId(), foodId)){
+                cartItem.setQuantity(quantity);
+                cartItemRepository.save(cartItem);
+            }
+        }
+
+    }
+
+    @PostMapping("/cart/remove-from-cart-provisional")
+    public void removeFromCartProvisional(@RequestParam("cartItemId") Integer foodId) {
+        Cart cartProvisional= cartService.getCartByUserId(1);
+        for (CartItem cartItem: cartProvisional.getCartItems() ){
+            if (Objects.equals(cartItem.getFood().getFoodId(), foodId)){
+                removeCartItem(cartItem.getCartItemId());
+            }
+        }
+    }
+
+    @GetMapping("/cart/payment")
+    public String showPaymentScreen(Model model,@RequestParam(value = "phone", required = false) String phone) {
+        List<CartItem> cartItems = cartItemService.getCartItemsByUserId(1);
+        model.addAttribute("cartItems", cartItems);
+        int totalOrderPrice = 0;
+        for (CartItem cartItem: cartItems) {
+          totalOrderPrice += cartItem.getQuantity() * cartItem.getFood().getPrice();
+        }
+        cartRepository.save(cartService.getCartByUserId(1));
+        model.addAttribute("totalOrderPrice", totalOrderPrice);
+        return "cart/payment";
+    }
+
+//    @GetMapping("/cart/search-user")
+//    public void searchUserByPhone(@RequestParam("phone") String phone,HttpSession session,Model model) {
+//        List<User> listUsers = userRepository.findAll();
+//        System.out.println("phone "+phone);
+//        for (User userProvisional : listUsers) {
+//            String ph = userProvisional.getPhone();
+//            if (phone.equals(ph)) {
+//                System.out.println("Test: " + userProvisional);
+//                model.addAttribute("userProvisional", userProvisional);
+//            }
+//        }
+//    }
+@GetMapping("/cart/search-user")
+public String searchUserByPhone(@RequestParam("phone") String phone, HttpSession session, Model model) {
+    List<User> listUsers = userRepository.findAll();
+    System.out.println("phone " + phone);
+    for (User userProvisional : listUsers) {
+        String ph = userProvisional.getPhone();
+        if (phone.equals(ph)) {
+            System.out.println("Test: " + userProvisional);
+            model.addAttribute("userProvisional", userProvisional);
+            return "cart/payment :: user-info";
+        }
+    }
+    return "cart/payment :: user-not-found";
+}
+
+
 
 }
 

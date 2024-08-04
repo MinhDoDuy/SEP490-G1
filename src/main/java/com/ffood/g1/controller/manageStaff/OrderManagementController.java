@@ -178,38 +178,6 @@ public class OrderManagementController {
         return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
     }
 
-    @GetMapping("/create-order-at-couter")
-    public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId, HttpSession session) {
-        model.addAttribute("canteens",
-                canteenService.getCanteenById(canteenId));
-        model.addAttribute("foods", foodRepository.findByCanteenId(canteenId));
-        Canteen canteen = canteenService.getCanteenById(canteenId);
-        model.addAttribute("canteenName", canteen.getCanteenName());
-        if (session.getAttribute("successOrder") != null) {
-            model.addAttribute("successOrder", session.getAttribute("successOrder"));
-            session.removeAttribute("successOrder");
-        }
-//        return "staff-management/create-order-at-couter";
-        return "cart/pos-screen";
-    }
-
-
-    @GetMapping("/create-order-at-couter1")
-    public String createOrder(@RequestParam("canteenId") Integer canteenId, @RequestParam("foodId") List<Integer> foodIds,
-                              @RequestParam("quantity") List<Integer> quantities, @RequestParam("paymentMethod") String paymentMethod,
-                              @RequestParam("totalOrderPrice") Integer totalOrderPrice,
-                              Model model,RedirectAttributes redirectAttributes,HttpSession session) {
-        try {
-            orderService.createOrderAtCouter(canteenId, foodIds, quantities, paymentMethod,totalOrderPrice);
-            session.setAttribute("successOrder", "Tạo order thành công !!!");
-            System.out.println("Oke rồi");
-            return "redirect:/create-order-at-couter?canteenId="+canteenId;
-        } catch (Exception e) {
-            session.setAttribute("successOrder", "Có lỗi xảy ra trong quá trình tạo đơn hàng.");
-            System.out.println("Toang rồi");
-            return "redirect:/create-order-at-couter?canteenId="+canteenId;
-        }
-    }
 
 
 }
