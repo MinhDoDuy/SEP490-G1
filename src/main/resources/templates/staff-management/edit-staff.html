@@ -123,7 +123,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn-fire" data-toggle="modal" data-target="#fireStaffModal">Đuổi Nhân Viên</button>
+                <button type="button" class="btn-fire" data-toggle="modal" data-target="#fireStaffModal">Xoá Nhân Viên</button>
                 <a th:href="@{/manage-staff(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
             </form>
         </div>
@@ -145,8 +145,8 @@
                 Bạn có chắc chắn muốn xóa nhân viên này không?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                 <button type="button" class="btn btn-danger" onclick="document.getElementById('fireForm').submit();">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
             </div>
         </div>
     </div>
