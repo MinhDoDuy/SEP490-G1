@@ -78,7 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/add-food-form", "/add-food-form/**", "/add-food", "/add-food/**","/check-email/**",
                         "/assign-staff-form/**","/assign-confirm/**", "/manage-category/**",
                         "/add-category-form", "/add-category", "/edit-category/**",
-                        "dashboard-manager/**",
+                        "/create-order-at-couter", "dashboard-manager/**",
                         "/manage-feedback","/approve-feedback/**","/reject-feedback/**",
                         "/search-food/**","/add-food-form/**","/add-food","/edit-food/**",
                         "/add-quantity/**","/order-list/**","/update-order-status/**",
@@ -86,8 +86,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         )
                 .hasRole("MANAGER")
                 // Quyền cho STAFF
-                .antMatchers("/order-list-ship/**","/complete-order/**","/create-order-at-couter/**",
-                        "/manage-food/**")
+                .antMatchers("/order-list-ship/**","/complete-order/**")
                 .hasRole("STAFF")
                 .anyRequest().authenticated()
                 .and()
