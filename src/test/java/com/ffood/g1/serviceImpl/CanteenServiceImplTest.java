@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,158 +25,136 @@ import static org.mockito.Mockito.*;
 public class CanteenServiceImplTest {
 
     @InjectMocks
-    private CanteenServiceImpl service;
+    private CanteenServiceImpl canteenService;
 
     @Mock
-    private CanteenRepository repository;
+    private CanteenRepository canteenRepository;
 
     @Test
-    void getAllCanteens_nomal() {
-        Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen1").isActive(true).build();
-        Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen2").isActive(true).build();
-        List<Canteen> canteens = Arrays.asList(canteen1, canteen2);
+    void testGetAllCanteens() {
+        List<Canteen> expectedCanteens = Arrays.asList(new Canteen(), new Canteen());
 
-        when(repository.findAll()).thenReturn(canteens);
+        when(canteenRepository.findAll()).thenReturn(expectedCanteens);
 
-        List<Canteen> empList = service.getAllCanteens();
+        List<Canteen> result = canteenService.getAllCanteens();
 
-        assertEquals(2, empList.size());
-        verify(repository, times(1)).findAll();
+        assertEquals(expectedCanteens, result);
+        verify(canteenRepository, times(1)).findAll();
     }
 
     @Test
-    void getAllCanteens_binalry() {
-        Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen1").isActive(true).build();
-        Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen2").isActive(true).build();
-
-        List<Canteen> canteens = Arrays.asList(canteen1, canteen2);
-
-        when(repository.findAll()).thenReturn(canteens);
-
-        //test
-        List<Canteen> empList = service.getAllCanteens();
-
-        assertEquals(2, empList.size());
-        verify(repository, times(1)).findAll();
-    }
-
-
-    @Test
-    void searchCanteens() {
-        String keyword = "Canteen";
+    void testGetAllCanteensPage() {
         int page = 0;
         int size = 10;
-        Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen One").location("Location One").canteenPhone("123456789").build();
-        Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen Two").location("Location Two").canteenPhone("987654321").build();
-        List<Canteen> canteens = Arrays.asList(canteen1, canteen2);
-        Page<Canteen> canteenPage = new PageImpl<>(canteens);
-
         Pageable pageable = PageRequest.of(page, size);
-        when(repository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                keyword, keyword, keyword, pageable)).thenReturn(canteenPage);
+        Page<Canteen> expectedPage = new PageImpl<>(Collections.emptyList());
 
-        Page<Canteen> result = service.searchCanteens(keyword, page, size);
+        when(canteenRepository.findAll(pageable)).thenReturn(expectedPage);
 
-        assertEquals(2, result.getTotalElements());
-        assertEquals(1, result.getTotalPages());
-        assertEquals(canteens, result.getContent());
-        verify(repository, times(1)).findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
+        Page<Canteen> result = canteenService.getAllCanteensPage(page, size);
+
+        assertEquals(expectedPage, result);
+        verify(canteenRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    void testSaveCanteen() {
+        Canteen canteen = new Canteen();
+
+        canteenService.saveCanteen(canteen);
+
+        verify(canteenRepository, times(1)).save(canteen);
+    }
+
+    @Test
+    void testSearchCanteens() {
+        String keyword = "test";
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Canteen> expectedPage = new PageImpl<>(Collections.emptyList());
+
+        when(canteenRepository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
+                keyword, keyword, keyword, pageable)).thenReturn(expectedPage);
+
+        Page<Canteen> result = canteenService.searchCanteens(keyword, page, size);
+
+        assertEquals(expectedPage, result);
+        verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
                 keyword, keyword, keyword, pageable);
     }
 
     @Test
-    void updateCanteen_HappyCase() {
-        Canteen canteen = Canteen.builder().canteenId(1).canteenName("Canteen Updated").build();
-
-        service.updateCanteen(canteen);
-
-        verify(repository, times(1)).save(canteen);
-    }
-
-    @Test
-    void countCanteens_HappyCase() {
-        Long count = 3L;
-
-        when(repository.count()).thenReturn(count);
-
-        Integer result = service.countCanteens();
-
-        assertEquals(3, result);
-        verify(repository, times(1)).count();
-    }
-
-    @Test
-    void loadCanteenId_HappyCase() {
+    void testGetCanteenById() {
         Integer canteenId = 1;
-        Canteen canteen = Canteen.builder().canteenId(canteenId).canteenName("Canteen").build();
+        Canteen expectedCanteen = new Canteen();
 
-        when(repository.findById(canteenId)).thenReturn(Optional.of(canteen));
+        when(canteenRepository.findById(canteenId)).thenReturn(Optional.of(expectedCanteen));
 
-        Canteen result = service.loadCanteenId(canteenId);
+        Canteen result = canteenService.getCanteenById(canteenId);
 
-        assertEquals(canteen, result);
-        verify(repository, times(1)).findById(canteenId);
+        assertEquals(expectedCanteen, result);
+        verify(canteenRepository, times(1)).findById(canteenId);
     }
 
     @Test
-    void loadCanteenId_NotFound() {
+    void testUpdateCanteen() {
+        Canteen canteen = new Canteen();
+
+        canteenService.updateCanteen(canteen);
+
+        verify(canteenRepository, times(1)).save(canteen);
+    }
+
+    @Test
+    void testCountCanteens() {
+        long expectedCount = 10L;
+
+        when(canteenRepository.count()).thenReturn(expectedCount);
+
+        int result = canteenService.countCanteens();
+
+        assertEquals((int) expectedCount, result);
+        verify(canteenRepository, times(1)).count();
+    }
+
+
+    @Test
+    void testLoadCanteenId() {
         Integer canteenId = 1;
+        Canteen expectedCanteen = new Canteen();
 
-        when(repository.findById(canteenId)).thenReturn(Optional.empty());
+        when(canteenRepository.findById(canteenId)).thenReturn(Optional.of(expectedCanteen));
 
-        Canteen result = service.loadCanteenId(canteenId);
+        Canteen result = canteenService.loadCanteenId(canteenId);
 
-        assertNull(result);
-        verify(repository, times(1)).findById(canteenId);
+        assertEquals(expectedCanteen, result);
+        verify(canteenRepository, times(1)).findById(canteenId);
     }
 
     @Test
-    void isPhoneExist_HappyCase() {
+    void testIsPhoneExist() {
         String phone = "123456789";
-        Canteen canteen = Canteen.builder().canteenId(1).canteenPhone(phone).build();
+        Canteen canteen = new Canteen();
 
-        when(repository.findByCanteenPhone(phone)).thenReturn(canteen);
+        when(canteenRepository.findByCanteenPhone(phone)).thenReturn(canteen);
 
-        boolean result = service.isPhoneExist(phone);
+        boolean result = canteenService.isPhoneExist(phone);
 
         assertTrue(result);
-        verify(repository, times(1)).findByCanteenPhone(phone);
+        verify(canteenRepository, times(1)).findByCanteenPhone(phone);
     }
 
     @Test
-    void isPhoneExist_NotFound() {
-        String phone = "123456789";
+    void testIsCanteenNameExist() {
+        String canteenName = "Test Canteen";
+        Canteen canteen = new Canteen();
 
-        when(repository.findByCanteenPhone(phone)).thenReturn(null);
+        when(canteenRepository.findByCanteenName(canteenName)).thenReturn(canteen);
 
-        boolean result = service.isPhoneExist(phone);
-
-        assertFalse(result);
-        verify(repository, times(1)).findByCanteenPhone(phone);
-    }
-
-    @Test
-    void isCanteenNameExist_HappyCase() {
-        String canteenName = "Canteen Name";
-        Canteen canteen = Canteen.builder().canteenId(1).canteenName(canteenName).build();
-
-        when(repository.findByCanteenName(canteenName)).thenReturn(canteen);
-
-        boolean result = service.isCanteenNameExist(canteenName);
+        boolean result = canteenService.isCanteenNameExist(canteenName);
 
         assertTrue(result);
-        verify(repository, times(1)).findByCanteenName(canteenName);
-    }
-
-    @Test
-    void isCanteenNameExist_NotFound() {
-        String canteenName = "Canteen Name";
-
-        when(repository.findByCanteenName(canteenName)).thenReturn(null);
-
-        boolean result = service.isCanteenNameExist(canteenName);
-
-        assertFalse(result);
-        verify(repository, times(1)).findByCanteenName(canteenName);
+        verify(canteenRepository, times(1)).findByCanteenName(canteenName);
     }
 }

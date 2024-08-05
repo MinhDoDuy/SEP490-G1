@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,63 +21,59 @@ import static org.mockito.Mockito.*;
 public class RoleServiceImplTest {
 
     @InjectMocks
-    private RoleServiceImpl service;
+    private RoleServiceImpl roleService;
 
     @Mock
-    private RoleRepository repository;
+    private RoleRepository roleRepository;
 
     @Test
-    void getAllRoles() {
-        Role role1 = Role.builder().roleId(1).roleName("ROLE_USER").build();
-        Role role2 = Role.builder().roleId(2).roleName("ROLE_ADMIN").build();
-        List<Role> roles = Arrays.asList(role1, role2);
+    void testGetAllRoles() {
+        List<Role> expectedRoles = Arrays.asList(new Role(), new Role());
 
-        when(repository.findAll()).thenReturn(roles);
+        when(roleRepository.findAll()).thenReturn(expectedRoles);
 
-        List<Role> result = service.getAllRoles();
+        List<Role> result = roleService.getAllRoles();
 
-        assertEquals(2, result.size());
-        assertTrue(result.contains(role1));
-        assertTrue(result.contains(role2));
-        verify(repository, times(1)).findAll();
+        assertEquals(expectedRoles, result);
+        verify(roleRepository, times(1)).findAll();
     }
 
     @Test
-    void findRoleById() {
+    void testFindRoleById() {
         Integer roleId = 1;
-        Role role = Role.builder().roleId(roleId).roleName("ROLE_USER").build();
+        Role expectedRole = new Role();
 
-        when(repository.findById(roleId)).thenReturn(Optional.of(role));
+        when(roleRepository.findById(roleId)).thenReturn(Optional.of(expectedRole));
 
-        Role result = service.findRoleById(roleId);
+        Role result = roleService.findRoleById(roleId);
 
-        assertEquals(role, result);
-        verify(repository, times(1)).findById(roleId);
+        assertEquals(expectedRole, result);
+        verify(roleRepository, times(1)).findById(roleId);
     }
 
     @Test
-    void getRoleByName() {
+    void testGetRoleByName() {
         String roleName = "ROLE_USER";
-        Role role = Role.builder().roleId(1).roleName(roleName).build();
+        Role expectedRole = new Role();
 
-        when(repository.findByName(roleName)).thenReturn(role);
+        when(roleRepository.findByName(roleName)).thenReturn(expectedRole);
 
-        Role result = service.getRoleByName(roleName);
+        Role result = roleService.getRoleByName(roleName);
 
-        assertEquals(role, result);
-        verify(repository, times(1)).findByName(roleName);
+        assertEquals(expectedRole, result);
+        verify(roleRepository, times(1)).findByName(roleName);
     }
 
     @Test
-    void getRoleById() {
+    void testGetRoleById() {
         Integer roleId = 1;
-        Role role = Role.builder().roleId(roleId).roleName("ROLE_USER").build();
+        Role expectedRole = new Role();
 
-        when(repository.findById(roleId)).thenReturn(Optional.of(role));
+        when(roleRepository.findById(roleId)).thenReturn(Optional.of(expectedRole));
 
-        Role result = service.getRoleById(roleId);
+        Role result = roleService.getRoleById(roleId);
 
-        assertEquals(role, result);
-        verify(repository, times(1)).findById(roleId);
+        assertEquals(expectedRole, result);
+        verify(roleRepository, times(1)).findById(roleId);
     }
 }

@@ -1,13 +1,8 @@
 package com.ffood.g1.serviceImpl;
 
-import com.ffood.g1.entity.Canteen;
-import com.ffood.g1.entity.ResetToken;
-import com.ffood.g1.entity.Role;
-import com.ffood.g1.entity.User;
-import com.ffood.g1.repository.CanteenRepository;
-import com.ffood.g1.repository.ResetTokenRepository;
-import com.ffood.g1.repository.RoleRepository;
-import com.ffood.g1.repository.UserRepository;
+import com.ffood.g1.entity.*;
+import com.ffood.g1.repository.*;
+import com.ffood.g1.service.*;
 import com.ffood.g1.service.impl.UserServiceImpl;
 import com.ffood.g1.utils.UrlUtil;
 import org.junit.jupiter.api.Test;
@@ -20,9 +15,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -38,7 +37,7 @@ import static org.mockito.Mockito.*;
 public class UserServiceImplTest {
 
     @InjectMocks
-    private UserServiceImpl service;
+    private UserServiceImpl userService;
 
     @Mock
     private UserRepository userRepository;
@@ -56,185 +55,188 @@ public class UserServiceImplTest {
     private JavaMailSender mailSender;
 
     @Mock
-    private CanteenRepository canteenRepository;
+    private RoleService roleService;
+
+    @Mock
+    private CanteenService canteenService;
 
     @Mock
     private HttpServletRequest request;
 
     @Test
-    void findByEmail() {
+    void testFindByEmail() {
         String email = "test@example.com";
-        User user = User.builder().email(email).build();
+        User expectedUser = new User();
 
-        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(userRepository.findByEmail(email)).thenReturn(expectedUser);
 
-        User result = service.findByEmail(email);
+        User result = userService.findByEmail(email);
 
-        assertEquals(user, result);
+        assertEquals(expectedUser, result);
         verify(userRepository, times(1)).findByEmail(email);
     }
 
     @Test
-    void loadUserById() {
+    void testLoadUserById() {
         Integer userId = 1;
-        User user = User.builder().userId(userId).build();
+        User expectedUser = new User();
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
 
-        User result = service.loadUserById(userId);
+        User result = userService.loadUserById(userId);
 
-        assertEquals(user, result);
+        assertEquals(expectedUser, result);
         verify(userRepository, times(1)).findById(userId);
     }
 
-
-
     @Test
-    void sendResetPasswordEmail() {
+    void testSendResetPasswordEmail() {
         String email = "test@example.com";
-        User user = User.builder().email(email).build();
-        String token = UUID.randomUUID().toString();
-        String baseUrl = "http://localhost:8080";
+        User user = new User();
+        user.setEmail(email);
 
         when(userRepository.findByEmail(email)).thenReturn(user);
-        when(request.getRequestURL()).thenReturn(new StringBuffer(baseUrl));
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost"));
+        when(request.getServletPath()).thenReturn("/reset-password");
 
-        service.sendResetPasswordEmail(email, request);
+        userService.sendResetPasswordEmail(email, request);
 
+        verify(userRepository, times(1)).findByEmail(email);
         verify(resetTokenRepository, times(1)).save(any(ResetToken.class));
-        verify(mailSender, times(1)).send((MimeMessage) any());
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
     }
 
     @Test
-    void isResetTokenValid() {
-        String token = "testToken";
-        ResetToken resetToken = new ResetToken(token, User.builder().build());
+    void testIsResetTokenValid() {
+        String token = UUID.randomUUID().toString();
+        ResetToken resetToken = new ResetToken();
+        resetToken.setToken(token);
 
         when(resetTokenRepository.findByToken(token)).thenReturn(resetToken);
 
-        boolean result = service.isResetTokenValid(token);
+        boolean result = userService.isResetTokenValid(token);
 
         assertTrue(result);
         verify(resetTokenRepository, times(1)).findByToken(token);
     }
 
     @Test
-    void updatePasswordReset() {
-        String token = "testToken";
+    void testUpdatePasswordReset() {
+        String token = UUID.randomUUID().toString();
         String password = "newPassword";
-        User user = User.builder().build();
-        ResetToken resetToken = new ResetToken(token, user);
+        ResetToken resetToken = new ResetToken();
+        User user = new User();
+        resetToken.setToken(token);
+        resetToken.setUser(user);
 
         when(resetTokenRepository.findByToken(token)).thenReturn(resetToken);
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
-        service.updatePasswordReset(token, password);
+        userService.updatePasswordReset(token, password);
 
+        assertEquals("encodedPassword", user.getPassword());
         verify(userRepository, times(1)).save(user);
         verify(resetTokenRepository, times(1)).delete(resetToken);
     }
 
     @Test
-    void updatePassword() {
-        User user = User.builder().build();
+    void testUpdatePassword() {
+        User user = new User();
         String newPassword = "newPassword";
 
         when(passwordEncoder.encode(newPassword)).thenReturn("encodedPassword");
 
-        service.updatePassword(user, newPassword);
+        userService.updatePassword(user, newPassword);
 
+        assertEquals("encodedPassword", user.getPassword());
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
-    void getAllUsers() {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        User user1 = User.builder().userId(1).build();
-        User user2 = User.builder().userId(2).build();
-        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
-
-        when(userRepository.findAll(pageable)).thenReturn(userPage);
-
-        Page<User> result = service.getAllUsers(page, size);
-
-        assertEquals(2, result.getTotalElements());
-        verify(userRepository, times(1)).findAll(pageable);
-    }
-
-    @Test
-    void searchUsersFilter() {
+    void testSearchUsersFilter() {
         String keyword = "test";
-        int page = 0;
-        int size = 10;
         Integer roleId = 1;
         Integer canteenId = 1;
+        int page = 0;
+        int size = 10;
         Pageable pageable = PageRequest.of(page, size);
-        User user1 = User.builder().userId(1).build();
-        User user2 = User.builder().userId(2).build();
-        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
+        Page<User> expectedPage = new PageImpl<>(Collections.emptyList());
 
-        when(userRepository.searchUsers(keyword, roleId, canteenId, pageable)).thenReturn(userPage);
+        when(userRepository.searchUsers(keyword, roleId, canteenId, pageable)).thenReturn(expectedPage);
 
-        Page<User> result = service.searchUsersFilter(keyword, roleId, canteenId, page, size);
+        Page<User> result = userService.searchUsersFilter(keyword, roleId, canteenId, page, size);
 
-        assertEquals(2, result.getTotalElements());
+        assertEquals(expectedPage, result);
         verify(userRepository, times(1)).searchUsers(keyword, roleId, canteenId, pageable);
     }
 
     @Test
-    void getAllStaff() {
+    void testGetAllUsers() {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> expectedPage = new PageImpl<>(Collections.emptyList());
+
+        when(userRepository.findAll(pageable)).thenReturn(expectedPage);
+
+        Page<User> result = userService.getAllUsers(page, size);
+
+        assertEquals(expectedPage, result);
+        verify(userRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    void testGetAllStaff() {
         int page = 0;
         int size = 10;
         Integer canteenId = 1;
         Pageable pageable = PageRequest.of(page, size);
-        User user1 = User.builder().userId(1).build();
-        User user2 = User.builder().userId(2).build();
-        Page<User> userPage = new PageImpl<>(Arrays.asList(user1, user2));
+        Page<User> expectedPage = new PageImpl<>(Collections.emptyList());
 
-        when(userRepository.findAllStaffByCanteenId(canteenId, pageable)).thenReturn(userPage);
+        when(userRepository.findAllStaffByCanteenId(canteenId, pageable)).thenReturn(expectedPage);
 
-        Page<User> result = service.getAllStaff(page, size, canteenId);
+        Page<User> result = userService.getAllStaff(page, size, canteenId);
 
-        assertEquals(2, result.getTotalElements());
+        assertEquals(expectedPage, result);
         verify(userRepository, times(1)).findAllStaffByCanteenId(canteenId, pageable);
     }
 
     @Test
-    void getUserById() {
+    void testGetUserById() {
         Integer userId = 1;
-        User user = User.builder().userId(userId).build();
+        User expectedUser = new User();
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
 
-        User result = service.getUserById(userId);
+        User result = userService.getUserById(userId);
 
-        assertEquals(user, result);
+        assertEquals(expectedUser, result);
         verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
-    void updateUserStatus() {
+    void testUpdateUserStatus() {
         Integer userId = 1;
         Boolean isActive = true;
-        User user = User.builder().userId(userId).build();
+        User user = new User();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
+        userService.updateUserStatus(userId, isActive);
 
-        service.updateUserStatus(userId, isActive);
-
+        assertEquals(isActive, user.getIsActive());
+        assertNotNull(user.getUpdatedDate());
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
-    void saveUser() {
-        User user = User.builder().password("password").build();
+    void testSaveUser() {
+        User user = new User();
+        user.setPassword("password");
 
-        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
+        when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
 
-        service.saveUser(user);
+        userService.saveUser(user);
 
         assertEquals("encodedPassword", user.getPassword());
         assertNotNull(user.getCreatedDate());
@@ -242,98 +244,239 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void countUsers() {
-        long count = 5L;
+    void testCountUsers() {
+        long expectedCount = 10L;
 
-        when(userRepository.count()).thenReturn(count);
+        when(userRepository.count()).thenReturn(expectedCount);
 
-        Integer result = service.countUsers();
+        int result = userService.countUsers();
 
-        assertEquals(5, result);
+        assertEquals((int) expectedCount, result);
         verify(userRepository, times(1)).count();
     }
 
+    @Test
+    void testGetStaffUsers() {
+        int page = 0;
+        int size = 10;
+        int roleId = 2;
+        int canteenId = 1;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> expectedPage = new PageImpl<>(Collections.emptyList());
 
+        when(userRepository.findAllByRoleIdAndCanteenId(roleId, canteenId, pageable)).thenReturn(expectedPage);
 
+        Page<User> result = userService.getStaffUsers(page, size, roleId, canteenId);
+
+        assertEquals(expectedPage, result);
+        verify(userRepository, times(1)).findAllByRoleIdAndCanteenId(roleId, canteenId, pageable);
+    }
 
     @Test
-    void isPhoneExist() {
+    void testSearchStaff() {
+        String keyword = "test";
+        int page = 0;
+        int size = 10;
+        int roleId = 2;
+        int canteenId = 1;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> expectedPage = new PageImpl<>(Collections.emptyList());
+
+        when(userRepository.findByKeywordRoleIdAndCanteenId(keyword, roleId, canteenId, pageable)).thenReturn(expectedPage);
+
+        Page<User> result = userService.searchStaff(keyword, page, size, roleId, canteenId);
+
+        assertEquals(expectedPage, result);
+        verify(userRepository, times(1)).findByKeywordRoleIdAndCanteenId(keyword, roleId, canteenId, pageable);
+    }
+
+    @Test
+    void testIsPhoneExist() {
         String phone = "123456789";
-        User user = User.builder().phone(phone).build();
+        User user = new User();
 
         when(userRepository.findByPhone(phone)).thenReturn(user);
 
-        boolean result = service.isPhoneExist(phone);
+        boolean result = userService.isPhoneExist(phone);
 
         assertTrue(result);
         verify(userRepository, times(1)).findByPhone(phone);
     }
 
     @Test
-    void updateUser() {
-        User user = User.builder().userId(1).fullName("New Name").build();
-        User existingUser = User.builder().userId(1).build();
+    void testUpdateUser() {
+        User user = new User();
+        user.setUserId(1);
+        user.setFullName("Updated Name");
+        user.setPhone("123456789");
+        user.setEmail("updated@example.com");
+
+        User existingUser = new User();
 
         when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(existingUser));
 
-        service.updateUser(user);
+        userService.updateUser(user);
 
+        assertEquals(user.getFullName(), existingUser.getFullName());
+        assertEquals(user.getPhone(), existingUser.getPhone());
+        assertEquals(user.getEmail(), existingUser.getEmail());
+        assertNotNull(existingUser.getUpdatedDate());
         verify(userRepository, times(1)).save(existingUser);
     }
 
     @Test
-    void isEmailExist() {
+    void testIsEmailExist() {
         String email = "test@example.com";
-        User user = User.builder().email(email).build();
+        User user = new User();
 
         when(userRepository.findByEmail(email)).thenReturn(user);
 
-        boolean result = service.isEmailExist(email);
+        boolean result = userService.isEmailExist(email);
 
         assertTrue(result);
         verify(userRepository, times(1)).findByEmail(email);
     }
 
     @Test
-    void registerNewUser() {
-        User user = User.builder().fullName("testUser").password("password").email("test@example.com").phone("123456789").build();
-        Role role = Role.builder().roleName("ROLE_CUSTOMER").build();
+    void testRegisterNewUser() {
+        User user = new User();
+        user.setFullName("username");
+        user.setPassword("password");
+        user.setEmail("test@example.com");
+        user.setPhone("123456789");
 
-        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
+        Role role = new Role();
+        role.setRoleName("ROLE_CUSTOMER");
+
+        when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
         when(roleRepository.findByName("ROLE_CUSTOMER")).thenReturn(role);
 
-        service.registerNewUser(user);
+        userService.registerNewUser(user);
 
+        assertEquals("username", user.getFullName());
         assertEquals("encodedPassword", user.getPassword());
-        assertEquals(role, user.getRole());
+        assertEquals("ROLE_CUSTOMER", user.getRole().getRoleName());
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
-    void loadUserByUsername() {
+    void testLoadUserByUsername() {
         String email = "test@example.com";
-        User user = User.builder().email(email).password("password").role(Role.builder().roleName("ROLE_CUSTOMER").build()).build();
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword("password");
+        Role role = new Role();
+        role.setRoleName("ROLE_USER");
+        user.setRole(role);
 
         when(userRepository.findByEmail(email)).thenReturn(user);
 
-        UserDetails userDetails = service.loadUserByUsername(email);
+        UserDetails result = userService.loadUserByUsername(email);
 
-        assertEquals(email, userDetails.getUsername());
-        assertEquals("password", userDetails.getPassword());
-        assertEquals("ROLE_CUSTOMER", userDetails.getAuthorities().iterator().next().getAuthority());
+        assertEquals(email, result.getUsername());
+        assertEquals("password", result.getPassword());
+        assertTrue(result.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
         verify(userRepository, times(1)).findByEmail(email);
     }
 
     @Test
-    void countStaffByCanteenId() {
+    void testCountStaffByCanteenId() {
         Integer canteenId = 1;
-        long count = 10L;
+        int expectedCount = 10;
 
-        when(userRepository.countStaffByCanteenId(canteenId)).thenReturn((int) count);
+        when(userRepository.countStaffByCanteenId(canteenId)).thenReturn(expectedCount);
 
-        Integer result = service.countStaffByCanteenId(canteenId);
+        int result = userService.countStaffByCanteenId(canteenId);
 
-        assertEquals(10, result);
+        assertEquals(expectedCount, result);
         verify(userRepository, times(1)).countStaffByCanteenId(canteenId);
+    }
+
+    @Test
+    void testSendAssignStaffEmail() {
+        String email = "test@example.com";
+        Integer canteenId = 1;
+        User user = new User();
+        user.setEmail(email);
+        Role role = new Role();
+        role.setRoleId(1);
+        user.setRole(role);
+
+        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost"));
+        when(request.getServletPath()).thenReturn("/assign-confirm");
+
+        userService.sendAssignStaffEmail(email, request, canteenId);
+
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(resetTokenRepository, times(1)).save(any(ResetToken.class));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
+    void testConfirmAssignStaff() {
+        String token = UUID.randomUUID().toString();
+        Integer canteenId = 1;
+        ResetToken resetToken = new ResetToken();
+        User user = new User();
+        Role staffRole = new Role();
+        staffRole.setRoleId(2); // ROLE_STAFF
+        resetToken.setToken(token);
+        resetToken.setUser(user);
+
+        when(resetTokenRepository.findByToken(token)).thenReturn(resetToken);
+        when(roleService.findRoleById(2)).thenReturn(staffRole);
+        when(canteenService.getCanteenById(canteenId)).thenReturn(new Canteen());
+
+        userService.confirmAssignStaff(token, canteenId);
+
+        assertEquals(staffRole, user.getRole());
+        assertNotNull(user.getCanteen());
+        verify(userRepository, times(1)).save(user);
+        verify(resetTokenRepository, times(1)).delete(resetToken);
+    }
+
+    @Test
+    void testSendAssignManagerEmail() {
+        String email = "test@example.com";
+        Integer canteenId = 1;
+        User user = new User();
+        user.setEmail(email);
+        Role role = new Role();
+        role.setRoleId(1);
+        user.setRole(role);
+
+        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost"));
+        when(request.getServletPath()).thenReturn("/assign-manager-confirm");
+
+        userService.sendAssignManagerEmail(email, request, canteenId);
+
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(resetTokenRepository, times(1)).save(any(ResetToken.class));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
+    void testConfirmAssignManager() {
+        String token = UUID.randomUUID().toString();
+        Integer canteenId = 1;
+        ResetToken resetToken = new ResetToken();
+        User user = new User();
+        Role managerRole = new Role();
+        managerRole.setRoleId(3); // ROLE_MANAGER
+        resetToken.setToken(token);
+        resetToken.setUser(user);
+
+        when(resetTokenRepository.findByToken(token)).thenReturn(resetToken);
+        when(roleService.findRoleById(3)).thenReturn(managerRole);
+        when(canteenService.getCanteenById(canteenId)).thenReturn(new Canteen());
+
+        userService.confirmAssignManager(token, canteenId);
+
+        assertEquals(managerRole, user.getRole());
+        assertNotNull(user.getCanteen());
+        verify(userRepository, times(1)).save(user);
+        verify(resetTokenRepository, times(1)).delete(resetToken);
     }
 }
