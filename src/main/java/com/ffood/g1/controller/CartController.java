@@ -146,11 +146,12 @@ public class CartController {
 
     @GetMapping("/create-order-at-couter")
     public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId, HttpSession session) {
+        System.out.println("diu mh");
         // Delete existing provisional cart for user with ID 1
-        Cart cartProvisionalPre = cartService.getCartByUserId(1);
-        if (cartProvisionalPre != null) {
-            cartItemRepository.deleteAll(cartProvisionalPre.getCartItems());
-            cartRepository.delete(cartProvisionalPre);
+
+        if (cartService.getCartByUserId(1) != null) {
+            cartItemRepository.deleteAll(cartService.getCartByUserId(1).getCartItems());
+            cartRepository.delete(cartService.getCartByUserId(1));
         }
         // Create a new provisional cart for user with ID 1
 //        User user = userService.getUserById(1);
