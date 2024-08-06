@@ -114,8 +114,9 @@
             <div>
                 <span th:text="${canteenInformation.canteenName}">Canteen Name</span>
                 <span>Sản Phẩm: <span th:text="${countFoodsByCanteenId}"></span></span>
-                <span>Đánh Giá: <span>0</span></span>
                 <span>Tổng số sản phẩm đã bán : <span th:text="${saleCountByCanteenId}">0</span></span>
+                <span>Ngày mở : <span th:text="${canteenInformation.openingDay}">0</span></span>
+                <span>Giờ mở : <span th:text="${canteenInformation.openingHours}">0</span></span>
             </div>
         </div>
     </div>
@@ -146,7 +147,7 @@
                             <div class="row g-4">
                                 <div class="col-lg-12">
                                     <div class="row g-4">
-                                        <div class="col-md-6 col-lg-4 col-xl-3" th:each="food : ${listFoodByCanteenId}">
+                                        <div class="col-md-6 col-lg-4 col-xl-3" th:each="food : ${listFoodByCanteenId}" th:if="${food.foodQuantity > 0} and ${food.foodStatusActive}">
                                             <div class="rounded position-relative fruite-item">
                                                 <div class="fruite-img">
                                                     <img th:href="@{/food_details(id=${food.foodId})}"  th:src="${food.imageFood}" class="img-fluid w-100 rounded-top"
