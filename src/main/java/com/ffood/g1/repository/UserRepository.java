@@ -19,9 +19,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	Page<User> findAll(Pageable pageable);
 
-    //search list user with fullname , codename , email
-	Page<User> findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase
-	(String fullName, String email, Pageable pageable);
 
 	@Query("SELECT u FROM User u WHERE (u.email LIKE %:keyword% OR u.fullName LIKE %:keyword%) AND u.role.roleId = :roleId AND u.canteen.canteenId = :canteenId")
 	Page<User> findByKeywordRoleIdAndCanteenId(@Param("keyword") String keyword, @Param("roleId") Integer roleId, @Param("canteenId") Integer canteenId, Pageable pageable);

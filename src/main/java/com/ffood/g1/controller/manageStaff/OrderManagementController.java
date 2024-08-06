@@ -36,12 +36,10 @@ public class OrderManagementController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private FoodService foodService;
+
     @Autowired
     private CanteenService canteenService;
-    @Autowired
-    private FoodRepository foodRepository;
+
 
     @GetMapping("/order-list/{canteenId}")
     public String manageOrders(@PathVariable Integer canteenId,

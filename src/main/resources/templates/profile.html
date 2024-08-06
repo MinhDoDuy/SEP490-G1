@@ -95,6 +95,7 @@
             min-width: 100px;
         }
 
+
         .readonly-input {
             background-color: #f1f1f1;
             border: 1px solid #ccc;
@@ -238,6 +239,11 @@
                                 <div class="form-group">
                                     <label for="email">Email:</label>
                                     <input type="email" id="email" th:field="*{email}" required readonly
+                                           class="form-control readonly-input"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fullName">Họ và Tên:</label>
+                                    <input type="text" id="fullName" th:field="*{fullName}" required readonly
                                            class="form-control readonly-input"/>
                                 </div>
                             </div>
