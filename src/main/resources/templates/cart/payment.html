@@ -55,13 +55,12 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1050; /* Ensure modal is on top */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgb(0, 0, 0);
             background-color: rgba(0, 0, 0, 0.4);
             padding-top: 60px;
         }
@@ -72,6 +71,7 @@
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
+            z-index: 1051; /* Ensure modal content is on top */
         }
 
         .close {
@@ -95,61 +95,71 @@
     <h2 style="color: #ff6600;">Payment</h2>
     <input id="canteenId" type="hidden" th:value="${canteenId}">
 
-    <div class="card">
-        <div class="card-header">
-            Cart
-        </div>
-        <div class="card-body">
-            <div th:each="cartItem : ${cartItems}" class="cart-item">
-                <div class="cart-item-info">
-                    <p th:text="${cartItem.food.foodName}">Food Name</p>
-                    <p class="text-danger" th:text="${cartItem.totalFoodPrice} + ' VND'">Price</p>
+    <div class="row">
+        <!-- Cart Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Cart
                 </div>
-                <div class="cart-item-quantity">
-                    <label>
-                        <input type="text" th:value="${cartItem.quantity}" readonly>
-                    </label>
+                <div class="card-body">
+                    <div th:each="cartItem : ${cartItems}" class="cart-item">
+                        <div class="cart-item-info">
+                            <p th:text="${cartItem.food.foodName}">Food Name</p>
+                            <p class="text-danger" th:text="${cartItem.totalFoodPrice} + ' VND'">Price</p>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <label>
+                                <input type="text" th:value="${cartItem.quantity}" readonly>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="cart-summary">
+                        <p>Tổng tiền: <span id="totalOrderPrice" th:text="${totalOrderPrice} + ' VND'">0 VND</span></p>
+                        <div>
+                            <label for="paymentMethod">Phương thức thanh toán:</label>
+                            <select id="paymentMethod" class="form-control">
+                                <option value="qr">QR Code</option>
+                                <option value="cash">Tiền mặt</option>
+                            </select>
+                        </div>
+                        <div id="cashPayment" style="display: none;">
+                            <label for="cashReceived">Tiền nhận từ khách:</label>
+                            <input type="number" id="cashReceived" class="form-control" placeholder="Nhập số tiền nhận từ khách">
+                            <p id="changeDue"></p>
+                        </div>
+                        <button class="btn btn-success mt-3" id="submitPayment">Thanh toán</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="card-header" style="border: 1px solid #0c0202;">
-                <label for="searchPhone">Người dùng</label>
-                <button class="btn btn-primary" id="openRegisterModal" style="margin-left: 20px;">Thêm khách hàng</button>
-            </div>
-            <div class="input-group">
-                <input type="text" id="searchPhone" class="form-control" placeholder="Nhập số điện thoại .....">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" id="searchUserButton">Tìm kiếm</button>
-                </div>
-            </div>
-        </div>
-        <div id="searchResult" class="search-result" th:fragment="user-info">
-            <p th:if="${userProvisional != null}">
-                <label>
-                    <input type="hidden" name="userId" th:value="${userProvisional.userId}">
-                </label>
-                Name: <span th:text="${userProvisional.fullName}"></span>, Phone: <span th:text="${userProvisional.phone}"></span>
-            </p>
-            <p th:if="${userProvisional == null}">Hiện tại là khách chưa có tài khoản</p>
         </div>
 
-        <div class="card-footer">
-            <div class="cart-summary">
-                <p>Tổng tiền: <span id="totalOrderPrice" th:text="${totalOrderPrice} + ' VND'">0 VND</span></p>
-                <div>
-                    <label for="paymentMethod">Phương thức thanh toán:</label>
-                    <select id="paymentMethod" class="form-control">
-                        <option value="qr">QR Code</option>
-                        <option value="cash">Tiền mặt</option>
-                    </select>
+        <!-- User Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="form-group">
+                    <div class="card-header" style="border: 1px solid #0c0202;">
+                        <label for="searchPhone">Người dùng</label>
+                        <button class="btn btn-primary" id="openRegisterModal" style="margin-left: 20px;">Thêm khách hàng</button>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="searchPhone" class="form-control" placeholder="Nhập số điện thoại .....">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" id="searchUserButton">Tìm kiếm</button>
+                        </div>
+                    </div>
                 </div>
-                <div id="cashPayment" style="display: none;">
-                    <label for="cashReceived">Tiền nhận từ khách:</label>
-                    <input type="number" id="cashReceived" class="form-control" placeholder="Nhập số tiền nhận từ khách">
-                    <p id="changeDue"></p>
+                <div id="searchResult" class="search-result" th:fragment="user-info">
+                    <p th:if="${userProvisional != null}">
+                        <label>
+                            <input type="hidden" name="userId" th:value="${userProvisional.userId}">
+                        </label>
+                        Name: <span th:text="${userProvisional.fullName}"></span>, Phone: <span th:text="${userProvisional.phone}"></span>
+                    </p>
+                    <p th:if="${userProvisional == null}">Hiện tại là khách chưa có tài khoản</p>
                 </div>
-                <button class="btn btn-success mt-3" id="submitPayment">Thanh toán</button>
             </div>
         </div>
     </div>
