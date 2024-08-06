@@ -22,7 +22,7 @@
     }
 
     .form-container {
-      width: 30%;
+      width: 50%; /* Increase width to 50% */
       margin-top: 50px;
       background-color: #fff;
       border: 1px solid #ccc;
@@ -148,7 +148,8 @@
   <div class="p-6 flex justify-center">
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
       <div class="flex justify-between mb-4 items-start">
-        <div class="font-medium">Đăng Ký Quản Lý cho Căn Tin: <span th:text="${canteenName}"></span></div>
+        <div class="font-medium">Đăng Ký Nhân Viên cho Căn Tin: <span th:text="${canteenName}"></span></div>
+
       </div>
       <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
         <span th:text="${successMessage}"></span>
@@ -162,10 +163,12 @@
           <input type="hidden" name="canteenId" th:value="${canteenId}">
           <div class="inline-group">
             <div class="form-group mb-4 relative">
-              <label for="email" class="form-label">Email:</label>
+              <label for="email" class="form-label">Email: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
+
               <input type="email" id="email" name="email" class="form-control" placeholder="Nhập email" required>
             </div>
             <button type="submit" class="btn btn-primary">Kiểm tra Email</button>
+
           </div>
         </form>
       </div>

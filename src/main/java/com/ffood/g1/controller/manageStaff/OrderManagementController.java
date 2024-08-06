@@ -36,12 +36,10 @@ public class OrderManagementController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private FoodService foodService;
+
     @Autowired
     private CanteenService canteenService;
-    @Autowired
-    private FoodRepository foodRepository;
+
 
     @GetMapping("/order-list/{canteenId}")
     public String manageOrders(@PathVariable Integer canteenId,
@@ -139,12 +137,16 @@ public class OrderManagementController {
         return "redirect:/order-list/" + canteenId + "?orderStatus=PENDING";
     }
 
-    @PostMapping("/reject-order/{orderId}")
-    public String cancelOrder(@PathVariable Integer orderId, @RequestParam Integer canteenId, RedirectAttributes redirectAttributes) {
-        orderService.rejectOrder(orderId);
-        redirectAttributes.addFlashAttribute("message", "Đơn đã bị hủy");
+    @PostMapping("/reject-order")
+    public String cancelOrder(@RequestParam Integer orderId,
+                              @RequestParam Integer canteenId,
+                              @RequestParam String note,
+                              RedirectAttributes redirectAttributes) {
+        orderService.rejectOrder(orderId, note);
+        redirectAttributes.addFlashAttribute("message", "Đơn đã bị hủy với lý do: " + note);
         return "redirect:/order-list/" + canteenId;
     }
+
 
 
     @GetMapping("/order-list-ship/{canteenId}")

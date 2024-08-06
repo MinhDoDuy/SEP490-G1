@@ -83,15 +83,18 @@
             background-color: #4CAF50;
             border: none;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 12px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            font-size: 16px;
+            font-size: 14px;
             margin-top: 10px;
             cursor: pointer;
             border-radius: 5px;
+            width: auto;
+            min-width: 100px;
         }
+
 
         .readonly-input {
             background-color: #f1f1f1;
@@ -120,78 +123,152 @@
             outline: none; /* Loại bỏ viền mặc định khi focus */
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Hiệu ứng đổ bóng khi focus */
         }
+
+        /* Custom styles for the breadcrumb */
+        .breadcrumb {
+            background-color: transparent;
+        }
+
+        .breadcrumb-item a {
+            color: #81c408;
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+        }
+
+        /* Custom styles for the page header */
+        .page-header {
+            background-color: #81c408;
+            color: white;
+            padding: 30px 0;
+        }
+
+        /* Adjust the container spacing */
+        .container-fluid.contact {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .container.py-5 {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+
+        /* Ensure footer is closer */
+        .footer {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .btn-custom {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%; /* Make the button take full width */
+            max-width: 250px; /* Set the maximum width */
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
     </style>
 </head>
 
 <body>
 <div th:replace="header :: header"></div>
+<div class="container-fluid page-header py-5">
+    <ol class="breadcrumb justify-content-center mb-0">
+    </ol>
+</div>
+<!-- Page Header -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Thông tin cá nhân</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="/homepage">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white">Thông tin cá nhân</li>
+    </ol>
+</div>
+
 <main>
     <div class="container-fluid contact py-5">
         <div class="container py-5">
-            <div class="p-5 bg-light rounded">
-                <div class="row g-4">
-                    <div class="col-12">
-                        <div class="text-center mx-auto" style="max-width: 700px;">
-                            <h1 class="text-primary">Thông tin cá nhân</h1>
-                            <p class="mb-4">Cập nhật thông tin cá nhân của bạn tại đây.</p>
-                        </div>
+            <div class="row g-4">
+                <div class="col-lg-7 mx-auto">
+                    <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
+                        <span th:text="${successMessage}"></span>
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                     </div>
-                    <div class="col-lg-7 mx-auto">
-                        <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
-                            <span th:text="${successMessage}"></span>
-                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <form th:action="@{/update-profile}" method="post" th:object="${user}"
+                          enctype="multipart/form-data">
+                        <div class="profile-info p-4 rounded mb-4 bg-white">
+                            <div class="profile-avatar">
+                                <img id="displayImage"
+                                     th:src="${user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png'}"
+                                     alt="Avatar" style="object-fit: cover;">
+                            </div>
+                            <div class="profile-details">
+                                <h4 th:text="${user.fullName}"></h4>
+                                <p th:text="${user.email}"></p>
+                            </div>
+                            <label class="btn-upload">
+                                Thay Đổi Ảnh
+                                <input type="file" id="image-upload" accept="image/*, .png, .jpg, .jpeg"
+                                       name="imageProfileInput"
+                                       onchange="onChangeFileTrigger()">
+                            </label>
                         </div>
-                        <form th:action="@{/update-profile}" method="post" th:object="${user}"
-                              enctype="multipart/form-data">
-                            <div class="profile-info p-4 rounded mb-4 bg-white">
-                                <div class="profile-avatar">
-                                    <img id="displayImage"
-                                         th:src="${user?.userImage != null ? user.userImage : 'https://nie.res.netease.com/r/pic/20240630/5252c218-16db-458f-9aa5-baf7566225ea.png'}"
-                                         alt="Avatar" style="object-fit: cover;">
+                        <div class="p-4 rounded mb-4 bg-white">
+                            <input type="hidden" th:field="*{userId}"/>
+                            <div class="form-group-inline">
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" th:field="*{email}" required readonly
+                                           class="form-control readonly-input"/>
                                 </div>
-                                <div class="profile-details">
-                                    <h4 th:text="${user.fullName}"></h4>
-                                    <p th:text="${user.email}"></p>
+                                <div class="form-group">
+                                    <label for="fullName">Họ và Tên:</label>
+                                    <input type="text" id="fullName" th:field="*{fullName}" required readonly
+                                           class="form-control readonly-input"/>
                                 </div>
-                                <label class="btn-upload">
-                                    Thay Đổi Ảnh
-                                    <input type="file" id="image-upload" accept="image/*, .png, .jpg, .jpeg"
-                                           name="imageProfileInput"
-                                           onchange="onChangeFileTrigger()">
-                                </label>
                             </div>
-                            <div class="p-4 rounded mb-4 bg-white">
-
-                                <input type="hidden" th:field="*{userId}"/>
-                                <div class="form-group-inline">
-                                    <div class="form-group">
-                                        <label for="email">Email:</label>
-                                        <input type="email" id="email" th:field="*{email}" required readonly
-                                               class="form-control readonly-input"/>
-                                    </div>
+                            <div class="form-group-inline">
+                                <div class="form-group">
+                                    <label for="phone">Số điện thoại:</label>
+                                    <input type="text" id="phone" th:field="*{phone}" required
+                                           class="form-control"/>
+                                    <div th:if="${phoneError != null}" class="error-message"
+                                         style="color: red" th:text="${phoneError}"></div>
                                 </div>
-                                <div class="form-group-inline">
-                                    <div class="form-group">
-                                        <label for="phone">Số điện thoại:</label>
-                                        <input type="text" id="phone" th:field="*{phone}" required
-                                               class="form-control"/>
-                                        <div th:if="${phoneError != null}" class="error-message"
-                                            style="color: red" th:text="${phoneError}"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="gender">Giới tính:</label>
-                                        <select id="gender" th:field="*{gender}" class="form-control">
-                                            <option value="true" th:selected="${user.gender == true}">Nam</option>
-                                            <option value="false" th:selected="${user.gender == false}">Nữ</option>
-                                        </select>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="gender">Giới tính:</label>
+                                    <select id="gender" th:field="*{gender}" class="form-control">
+                                        <option value="true" th:selected="${user.gender == true}">Nam</option>
+                                        <option value="false" th:selected="${user.gender == false}">Nữ</option>
+                                    </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">Cập nhật thông tin</button>
-                                <a th:href="@{/change-password}">Đổi mật khẩu</a>
-
                             </div>
-                        </form>
-                    </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-custom">Cập nhật thông tin</button>
+                                <a class="btn btn-custom" th:href="@{/change-password}">Đổi mật khẩu</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -145,7 +145,7 @@
                     <input type="text" class="form-control mb-3" id="search" placeholder="Nhập tên món ăn cần tìm kiếm...">
                     <div class="row" id="productList">
                         <!-- Products will be displayed here -->
-                        <div class="col-md-4" th:each="food : ${foods}">
+                        <div class="col-md-4" th:each="food : ${foods}" th:if="${food.foodQuantity}>0">
                             <div class="product-card">
                                 <img class="product-img" th:src="${food.imageFood}" alt="Product Image">
                                 <div class="product-info">

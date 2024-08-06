@@ -9,7 +9,7 @@
   <title>Chỉnh Sửa Căng Tin</title>
   <style>
     .form-container {
-      width: 50%;
+      width: 60%;
       margin: auto;
     }
 
@@ -36,19 +36,11 @@
       font-size: 12px;
     }
 
-    .alert {
-      padding: 15px;
-      margin-bottom: 20px;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      position: relative;
-      animation: fadeIn 0.5s;
-    }
-
-    .alert-success {
-      color: #3c763d;
-      background-color: #dff0d8;
-      border-color: #d6e9c6;
+    .readonly-input {
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      color: #666;
+      pointer-events: none;
     }
 
     @keyframes fadeIn {
@@ -145,12 +137,12 @@
           <div class="inline-group">
             <div class="form-group">
               <label for="canteenName">Tên Căng Tin:</label>
-              <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control" />
+              <input type="text" id="canteenName" th:field="*{canteenName}" required class="form-control readonly-input" />
               <div th:if="${canteenNameError != null}" class="error-message" th:text="${canteenNameError}"></div>
             </div>
             <div class="form-group">
               <label for="location">Địa Điểm:</label>
-              <input type="text" id="location" th:field="*{location}" required class="form-control"/>
+              <input type="text" id="location" th:field="*{location}" required class="form-control readonly-input"/>
               <div th:if="${locationError != null}" class="error-message" th:text="${locationError}"></div>
             </div>
           </div>
@@ -158,7 +150,7 @@
           <div class="inline-group">
             <div class="form-group">
               <label for="canteenPhone">Số Điện Thoại:</label>
-              <input type="text" id="canteenPhone" th:field="*{canteenPhone}" required class="form-control"/>
+              <input type="text" id="canteenPhone" th:field="*{canteenPhone}" required class="form-control readonly-input" />
               <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
             </div>
             <div class="form-group">
@@ -173,11 +165,11 @@
           <div class="inline-group">
             <div class="form-group">
               <label for="openingHoursStart">Giờ Mở Cửa:</label>
-              <select id="openingHoursStart" class="form-input"></select>
+              <select id="openingHoursStart" class="form-input readonly-input"></select>
             </div>
             <div class="form-group">
               <label for="openingHoursEnd">Giờ Đóng Cửa:</label>
-              <select id="openingHoursEnd" class="form-input"></select>
+              <select id="openingHoursEnd" class="form-input readonly-input"></select>
             </div>
           </div>
           <input type="hidden" id="openingHours" th:field="*{openingHours}">
@@ -185,7 +177,7 @@
           <div class="inline-group">
             <div class="form-group">
               <label for="openingDayStart">Ngày Mở:</label>
-              <select id="openingDayStart" class="form-control">
+              <select id="openingDayStart" class="form-control readonly-input">
                 <option value="Thứ 2">Thứ 2</option>
                 <option value="Thứ 3">Thứ 3</option>
                 <option value="Thứ 4">Thứ 4</option>
@@ -197,7 +189,7 @@
             </div>
             <div class="form-group">
               <label for="openingDayEnd">Ngày Đóng:</label>
-              <select id="openingDayEnd" class="form-control">
+              <select id="openingDayEnd" class="form-control readonly-input">
                 <option value="Thứ 2">Thứ 2</option>
                 <option value="Thứ 3">Thứ 3</option>
                 <option value="Thứ 4">Thứ 4</option>
@@ -213,7 +205,7 @@
           <div class="inline-group">
             <div class="form-group">
               <label for="imageCanteenInput">Hình Ảnh Căng Tin:</label>
-              <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control" accept="image/*" onchange="onChangeFileTrigger()" />
+              <input type="file" id="imageCanteenInput" name="imageCanteenInput" class="form-control readonly-input" accept="image/*" onchange="onChangeFileTrigger()" />
               <input type="hidden" id="currentImageUrl" th:field="*{canteenImg}" />
             </div>
             <div class="form-group">

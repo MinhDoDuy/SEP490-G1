@@ -20,7 +20,7 @@
     .container {
       display: flex;
       flex-wrap: wrap;
-      width: 80%;
+      width: 75%;
       max-width: 1200px;
       background: white;
       border-radius: 10px;
@@ -60,6 +60,10 @@
       margin-bottom: 0;
     }
 
+    .form-group-inline .form-group {
+      max-width: calc(50% - 10px); /* Ensure fields are half-width with a small gap */
+    }
+
     .form-group label {
       margin-bottom: 5px;
       font-weight: bold;
@@ -72,6 +76,8 @@
       border-radius: 4px;
       font-size: 14px;
       transition: border-color 0.3s ease-in-out;
+      height: 40px; /* Set consistent height */
+      box-sizing: border-box; /* Ensure padding is included in height */
     }
 
     .form-group input:focus, .form-group select:focus {
@@ -99,6 +105,7 @@
       font-size: 14px;
       transition: background 0.3s ease-in-out;
       margin-top: 10px;
+      height: 40px; /* Match height to inputs */
     }
 
     button[type="submit"]:hover {

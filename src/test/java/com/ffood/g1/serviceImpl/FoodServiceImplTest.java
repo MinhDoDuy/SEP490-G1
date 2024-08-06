@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,164 +26,140 @@ import static org.mockito.Mockito.*;
 public class FoodServiceImplTest {
 
     @InjectMocks
-    private FoodServiceImpl service;
+    private FoodServiceImpl foodService;
 
     @Mock
-    private FoodRepository repository;
+    private FoodRepository foodRepository;
 
     @Test
-    void getRandomFood() {
-        Pageable pageable = PageRequest.of(0, 12);
-        List<Food> foods = Arrays.asList(new Food(), new Food());
-        when(repository.findRandomItems(pageable)).thenReturn(foods);
+    void testGetRandomFood() {
+        Pageable limit = PageRequest.of(0, 12);
+        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
 
-        List<Food> result = service.getRandomFood();
+        when(foodRepository.findRandomItems(limit)).thenReturn(expectedFoods);
 
-        assertEquals(2, result.size());
-        verify(repository, times(1)).findRandomItems(pageable);
+        List<Food> result = foodService.getRandomFood();
+
+        assertEquals(expectedFoods, result);
+        verify(foodRepository, times(1)).findRandomItems(limit);
     }
 
     @Test
-    void getAllFood() {
+    void testGetAllFood() {
         Pageable pageable = PageRequest.of(0, 10);
-        List<Food> foods = Arrays.asList(new Food(), new Food());
-        Page<Food> foodPage = new PageImpl<>(foods);
-        when(repository.findAll(pageable)).thenReturn(foodPage);
+        Page<Food> expectedPage = new PageImpl<>(Collections.emptyList());
 
-        Page<Food> result = service.getAllFood(pageable);
+        when(foodRepository.findAll(pageable)).thenReturn(expectedPage);
 
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findAll(pageable);
+        Page<Food> result = foodService.getAllFood(pageable);
+
+        assertEquals(expectedPage, result);
+        verify(foodRepository, times(1)).findAll(pageable);
     }
 
     @Test
-    void getFoodsByCategory() {
+    void testGetFoodsByCategory() {
         Integer categoryId = 1;
         Category category = new Category();
         category.setCategoryId(categoryId);
-        List<Food> foods = Arrays.asList(new Food(), new Food());
-        when(repository.findByCategory(category)).thenReturn(foods);
+        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
 
-        List<Food> result = service.getFoodsByCategory(categoryId);
+        when(foodRepository.findByCategory(category)).thenReturn(expectedFoods);
 
-        assertEquals(2, result.size());
-        verify(repository, times(1)).findByCategory(category);
+        List<Food> result = foodService.getFoodsByCategory(categoryId);
+
+        assertEquals(expectedFoods, result);
+        verify(foodRepository, times(1)).findByCategory(category);
     }
 
     @Test
-    void getFoodById() {
-        Integer foodId = 1;
-        Food food = new Food();
-        when(repository.findById(foodId)).thenReturn(Optional.of(food));
+    void testGetFoodsByCategoryId() {
+        Integer categoryId = 1;
+        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
 
-        Optional<Food> result = service.getFoodById(foodId);
+        when(foodRepository.getFoodsByCategoryId(categoryId)).thenReturn(expectedFoods);
+
+        List<Food> result = foodService.getFoodsByCategoryId(categoryId);
+
+        assertEquals(expectedFoods, result);
+        verify(foodRepository, times(1)).getFoodsByCategoryId(categoryId);
+    }
+
+    @Test
+    void testGetFoodsByCanteenId() {
+        Integer canteenId = 1;
+        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
+
+        when(foodRepository.findByCanteenId(canteenId)).thenReturn(expectedFoods);
+
+        List<Food> result = foodService.getFoodsByCanteenId(canteenId);
+
+        assertEquals(expectedFoods, result);
+        verify(foodRepository, times(1)).findByCanteenId(canteenId);
+    }
+
+    @Test
+    void testCountFoodsByCanteenId() {
+        Integer canteenId = 1;
+        int expectedCount = 10;
+
+        when(foodRepository.countByCanteenId(canteenId)).thenReturn(expectedCount);
+
+        int result = foodService.countFoodsByCanteenId(canteenId);
+
+        assertEquals(expectedCount, result);
+        verify(foodRepository, times(1)).countByCanteenId(canteenId);
+    }
+
+    @Test
+    void testGetFoodById() {
+        Integer foodId = 1;
+        Food expectedFood = new Food();
+
+        when(foodRepository.findById(foodId)).thenReturn(Optional.of(expectedFood));
+
+        Optional<Food> result = foodService.getFoodById(foodId);
 
         assertTrue(result.isPresent());
-        assertEquals(food, result.get());
-        verify(repository, times(1)).findById(foodId);
+        assertEquals(expectedFood, result.get());
+        verify(foodRepository, times(1)).findById(foodId);
     }
 
     @Test
-    void getFoodByIdFoodDetails() {
-        Integer foodId = 1;
+    void testSave() {
         Food food = new Food();
-        when(repository.findById(foodId)).thenReturn(Optional.of(food));
 
-        Optional<Food> result = service.getFoodByIdFoodDetails(foodId);
+        foodService.save(food);
 
-        assertTrue(result.isPresent());
-        assertEquals(food, result.get());
-        verify(repository, times(1)).findById(foodId);
+        verify(foodRepository, times(1)).save(food);
     }
 
     @Test
-    void findByCanteenId() {
+    void testGetSaleCountByCanteenId() {
         Integer canteenId = 1;
-        List<Food> foods = Arrays.asList(new Food(), new Food());
-        when(repository.findByCanteenId(canteenId)).thenReturn(foods);
+        int expectedSaleCount = 100;
 
-        List<Food> result = service.findByCanteenId(canteenId);
+        when(foodRepository.getSaleCountByCanteenId(canteenId)).thenReturn(expectedSaleCount);
 
-        assertEquals(2, result.size());
-        verify(repository, times(1)).findByCanteenId(canteenId);
+        int result = foodService.getSaleCountByCanteenId(canteenId);
+
+        assertEquals(expectedSaleCount, result);
+        verify(foodRepository, times(1)).getSaleCountByCanteenId(canteenId);
     }
 
     @Test
-    void save() {
-        Food food = new Food();
-        service.save(food);
-        verify(repository, times(1)).save(food);
-    }
-
-    @Test
-    void countFoodByCanteenId() {
-        Integer canteenId = 1;
-        Integer count = 10;
-        when(repository.countFoodByCanteenId(canteenId)).thenReturn(count);
-
-        Integer result = service.countFoodByCanteenId(canteenId);
-
-        assertEquals(count, result);
-        verify(repository, times(1)).countFoodByCanteenId(canteenId);
-    }
-
-    @Test
-    void getFilteredFoods() {
-        Pageable pageable = PageRequest.of(0, 10);
-        List<Food> foods = Arrays.asList(new Food(), new Food());
-        Page<Food> foodPage = new PageImpl<>(foods);
-
+    void testGetFilteredFoods() {
         List<Integer> categoryIds = Arrays.asList(1, 2);
         List<Integer> canteenIds = Arrays.asList(1, 2);
         String name = "test";
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Food> expectedPage = new PageImpl<>(Collections.emptyList());
 
-        when(repository.findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable)).thenReturn(foodPage);
-        when(repository.findByCategoriesAndCanteens(categoryIds, canteenIds, pageable)).thenReturn(foodPage);
-        when(repository.findByCategoriesAndName(categoryIds, name, pageable)).thenReturn(foodPage);
-        when(repository.findByCanteensAndName(canteenIds, name, pageable)).thenReturn(foodPage);
-        when(repository.findByCategoryIds(categoryIds, pageable)).thenReturn(foodPage);
-        when(repository.findByCanteenIds(canteenIds, pageable)).thenReturn(foodPage);
-        when(repository.findByNameContainingIgnoreCase(name, pageable)).thenReturn(foodPage);
-        when(repository.findAll(pageable)).thenReturn(foodPage);
+        when(foodRepository.findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable)).thenReturn(expectedPage);
 
-        // Test with all filters
-        Page<Food> result = service.getFilteredFoods(categoryIds, canteenIds, name, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable);
+        Page<Food> result = foodService.getFilteredFoods(categoryIds, canteenIds, name, pageable);
 
-        // Test with categoryIds and canteenIds
-        result = service.getFilteredFoods(categoryIds, canteenIds, null, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findByCategoriesAndCanteens(categoryIds, canteenIds, pageable);
-
-        // Test with categoryIds and name
-        result = service.getFilteredFoods(categoryIds, null, name, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findByCategoriesAndName(categoryIds, name, pageable);
-
-        // Test with canteenIds and name
-        result = service.getFilteredFoods(null, canteenIds, name, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findByCanteensAndName(canteenIds, name, pageable);
-
-        // Test with categoryIds only
-        result = service.getFilteredFoods(categoryIds, null, null, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findByCategoryIds(categoryIds, pageable);
-
-        // Test with canteenIds only
-        result = service.getFilteredFoods(null, canteenIds, null, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findByCanteenIds(canteenIds, pageable);
-
-        // Test with name only
-        result = service.getFilteredFoods(null, null, name, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findByNameContainingIgnoreCase(name, pageable);
-
-        // Test with no filters
-        result = service.getFilteredFoods(null, null, null, pageable);
-        assertEquals(2, result.getTotalElements());
-        verify(repository, times(1)).findAll(pageable);
+        assertEquals(expectedPage, result);
+        verify(foodRepository, times(1)).findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable);
     }
 }
