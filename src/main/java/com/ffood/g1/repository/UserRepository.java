@@ -43,6 +43,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Query("SELECT u FROM User u WHERE u.canteen.canteenId = :canteenId AND u.role.roleId = 2")
 	List<User> findAllStaffByCanteenIdToShip(@Param("canteenId") Integer canteenId);
-
-    List<User> findByPhoneContaining(String phone);
+	
 }

@@ -116,10 +116,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void rejectOrder(Integer orderId) {
+    public void rejectOrder(Integer orderId, String rejectionReason) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
         order.setOrderStatus(OrderStatus.REJECT);
+
+        // Cập nhật lý do từ chối vào trường note
+        String currentNote = order.getNote();
+        String updatedNote = (currentNote != null ? currentNote + " - " : "") + "Lý do từ chối: " + rejectionReason;
+        order.setNote(updatedNote);
+
         orderRepository.save(order);
 
         // Lấy thông tin chi tiết đơn hàng
@@ -127,9 +133,10 @@ public class OrderServiceImpl implements OrderService {
 
         // Gửi email thông báo khi đơn hàng bị hủy
         String subject = "Đơn hàng của bạn đã bị hủy";
-        String text = "Đơn hàng của bạn với mã số " + orderId + " đã bị hủy.\n\n" + orderDetails;
+        String text = "Đơn hàng của bạn với mã số " + orderId + " đã bị hủy.\n\n" + orderDetails + "\n\nLý do từ chối: " + rejectionReason;
         sendEmail(order.getUser().getEmail(), subject, text);
     }
+
 
     @Override
     public List<Object[]> getOrderStatsByCanteenAndMonth(Integer canteenId) {

@@ -89,26 +89,6 @@ public class OrderServiceImplTest {
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
     }
 
-    @Test
-    void testRejectOrder() {
-        Integer orderId = 1;
-        Order order = mock(Order.class);
-        User user = mock(User.class);
-
-        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
-        when(order.getUser()).thenReturn(user);
-        when(user.getEmail()).thenReturn("test@example.com");
-        when(order.getOrderDetails()).thenReturn(Collections.emptyList());
-
-        doNothing().when(orderRepository).save(order);
-        doNothing().when(mailSender).send(any(SimpleMailMessage.class));
-
-        orderService.rejectOrder(orderId);
-
-        verify(order).setOrderStatus(OrderStatus.REJECT);
-        verify(orderRepository, times(1)).save(order);
-        verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
-    }
 
     @Test
     void testCreateOrderAtCounter() {

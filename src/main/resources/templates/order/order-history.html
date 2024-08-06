@@ -131,6 +131,7 @@
             </div>
 
             <p style="margin-right: 50px; margin-left: 50px;">Ngày đặt hàng: <span class="order-date" th:text="${order.orderDate}"></span></p>
+            <p style="margin-right: 50px; margin-left: 50px;">Note: <span  th:text="${order.note}"></span></p>
             <hr>
             <div th:each="detail : ${order.orderDetails}" class="order-details bordered-div">
                 <img th:src="${detail.food.imageFood}" alt="Product Image">
