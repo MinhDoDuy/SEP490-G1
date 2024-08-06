@@ -268,6 +268,20 @@
 
     </div>
 </div>
+<!-- Success Modal -->
+<div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog"
+     aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
+            </div>
+            <div class="modal-body">
+                <span th:text="${messageAddFood}"></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div th:replace="footer :: footer"></div>
 <!-- Js Plugins -->
@@ -287,6 +301,18 @@
 </a>
 
 <script>
+
+    // Hiển thị thông báo từ server nếu có
+    document.addEventListener('DOMContentLoaded', function () {
+        const message = /*[[${messageAddFood}]]*/ 'Food item added to the cart successfully!';
+        if (message) {
+            $('#successModal').modal('show');
+            setTimeout(function () {
+                $('#successModal').modal('hide');
+            }, 2000); // Hide the modal after 3 seconds
+        }
+    });
+
     // Function to format currency in VND
     function formatCurrencyVND(amount) {
         return new Intl.NumberFormat('vi-VN', {
