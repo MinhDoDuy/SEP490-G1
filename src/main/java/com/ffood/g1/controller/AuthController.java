@@ -1,9 +1,4 @@
 package com.ffood.g1.controller;
-
-import com.ffood.g1.dto.LoginForm;
-import com.ffood.g1.entity.Canteen;
-import com.ffood.g1.entity.Category;
-import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.service.UserService;
@@ -15,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,8 +47,7 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm,
-                            Authentication authentication,
+    public String loginForm(Authentication authentication,
                             Model model,
                             HttpSession session) {
         if (authentication != null && authentication.isAuthenticated()) {
@@ -69,9 +62,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String loginSubmit(@ModelAttribute("loginForm") LoginForm loginForm, HttpSession session, Model model) {
+    public String loginSubmit(@RequestParam("email") String email,
+                              @RequestParam("password") String password,
+                              HttpSession session,
+                              Model model) {
         try {
-            UserDetails userDetails = userService.loadUserByUsername(loginForm.getEmail());
+            UserDetails userDetails = userService.loadUserByUsername(email);
 
             if (userDetails == null) {
                 model.addAttribute("errorMessage", "Email không tồn tại");
@@ -79,7 +75,7 @@ public class AuthController {
             }
 
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, loginForm.getPassword(), userDetails.getAuthorities());
+                    new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
