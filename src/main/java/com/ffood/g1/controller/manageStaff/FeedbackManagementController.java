@@ -30,7 +30,20 @@ public class FeedbackManagementController {
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Feedback> feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, status, pageable);
+        Page<Feedback> feedbacks;
+
+        switch (status) {
+            case PENDING:
+                feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, FeedbackStatus.PENDING, pageable);
+                break;
+            case REJECT:
+                feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, FeedbackStatus.REJECT, pageable);
+                break;
+            default:
+                feedbacks = Page.empty();
+                break;
+        }
+
         Canteen canteen = canteenService.getCanteenById(canteenId);
         model.addAttribute("canteenName", canteen.getCanteenName());
         model.addAttribute("feedbacks", feedbacks);
@@ -38,6 +51,7 @@ public class FeedbackManagementController {
         model.addAttribute("status", status);
         return "staff-management/feedback-list";
     }
+
 
     @PostMapping("/approve-feedback/{feedbackId}")
     public String approveFeedback(@PathVariable Integer feedbackId,

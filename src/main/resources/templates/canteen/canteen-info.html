@@ -47,7 +47,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
     <style>
+        .comment {
+            display: none;
+        }
 
+        .comment.show {
+            display: flex;
+        }
         .section-divider {
             border: none;
             height: 2px;
@@ -213,23 +219,27 @@
                             </button>
                         </div>
                     </nav>
-                    <div class="tab-content mb-5">
-                        <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
-                            <div class="d-flex" th:each="feedback : ${feedbacksCanteen}">
-                                <!--                                <img th:src="${user.userImage}" class="img-fluid rounded-circle p-3"-->
-                                <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3"
-                                     style="width: 100px; height: 100px;" alt="">
-                                <div class="">
-                                    <p class="mb-2" style="font-size: 14px;"><span class="order-date" th:text="${feedback.timeCreated}">April 12, 2024</span>
-                                    </p>
-                                    <div class="d-flex justify-content-between">
-                                        <h5 th:text="${feedback.user.userName}">Sam Peters</h5>
+                    <div class="container">
+                        <div class="tab-content mb-5">
+                            <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+                                <div class="d-flex flex-column" id="feedback-container">
+                                    <div class="comment" th:each="feedback, iterStat : ${feedbacksCanteen}" th:classappend="${iterStat.index < 5} ? 'show' : ''">
+                                        <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3"
+                                             style="width: 100px; height: 100px;" alt="">
+                                        <div class="">
+                                            <p class="mb-2" style="font-size: 14px;">
+                                                <span class="order-date" th:text="${feedback.timeCreated}">April 12, 2024</span>
+                                            </p>
+                                            <div class="d-flex justify-content-between">
+                                                <h5 th:text="${feedback.user.userName}">Sam Peters</h5>
+                                            </div>
+                                            <p class="text-dark" th:text="${feedback.comment}"></p>
+                                        </div>
                                     </div>
-                                    <p class="text-dark" th:text="${feedback.comment}"></p>
                                 </div>
+                                <button id="show-more-btn" class="btn btn-primary" onclick="showMoreComments()">Xem thêm</button>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <hr class="section-divider">
@@ -300,7 +310,15 @@
 <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top">
     <i class="fa fa-arrow-up"></i>
 </a>
-
+<script>
+    function showMoreComments() {
+        const comments = document.querySelectorAll('.comment');
+        comments.forEach(comment => {
+            comment.classList.add('show');
+        });
+        document.getElementById('show-more-btn').style.display = 'none';
+    }
+</script>
 <script>
 
     // Hiển thị thông báo từ server nếu có
