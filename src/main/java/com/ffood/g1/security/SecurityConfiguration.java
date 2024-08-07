@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 // Cho phép tất cả mọi người truy cập vào các URL này
                 .antMatchers("/resources/**", "/templates/**", "/static/**",
                         "/css/**", "/js/**", "/img/**", "/scss/**", "/vendors/**",
-                        "/dashboard/**", "/register","/forgot-password","/reset-password/**").permitAll()
+                        "/dashboard/**", "/register","/forgot-password","/reset-password/**","/terms-of-service-and-privacy-policy").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/register/**", "/register", "/register/verify", "/change-password/**", "/change-password").permitAll()
                 .antMatchers("/", "/login/**","/login", "/homepage/**", "/canteens/**", "/canteen_details", "/canteen_info", "/food_details","/update_cart_quantity").permitAll()

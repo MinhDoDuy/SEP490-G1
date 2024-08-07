@@ -77,6 +77,30 @@ public class HomeController {
         return "homepage";
     }
 
+    @GetMapping("/terms-of-service-and-privacy-policy")
+    public String termsOfService(Model model, HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+
+        List<Canteen> canteens = canteenService.getAllCanteens();
+        model.addAttribute("canteens", canteens);
+        session.setAttribute("canteens", canteens);
+
+        List<Food> items_home = foodService.getRandomFood();
+        model.addAttribute("items_home", items_home);
+
+        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+
+        session.setAttribute("user", user);
+        String messageAddFood = (String) session.getAttribute("messageAddFood");
+        if (messageAddFood != null) {
+            model.addAttribute("messageAddFood", messageAddFood);
+            session.removeAttribute("messageAddFood");
+        }
+        return "termsOfServiceandprivacyPolicy";
+    }
+
 
     @GetMapping("/canteen_contact")
     public String getCanteenContact(Model model) {

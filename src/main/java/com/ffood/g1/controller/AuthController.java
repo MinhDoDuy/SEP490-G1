@@ -1,6 +1,9 @@
 package com.ffood.g1.controller;
 
 import com.ffood.g1.dto.LoginForm;
+import com.ffood.g1.entity.Canteen;
+import com.ffood.g1.entity.Category;
+import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.service.UserService;
@@ -28,6 +31,7 @@ import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -245,5 +249,7 @@ public class AuthController {
 
         mailSender.send(message); // Gửi email
     }
+
+
 
 }
