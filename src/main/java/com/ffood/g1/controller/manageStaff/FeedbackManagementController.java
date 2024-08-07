@@ -95,4 +95,26 @@ public class FeedbackManagementController {
         redirectAttributes.addFlashAttribute("message", "Phản hồi bị từ chối.");
         return "redirect:/manage-feedback?canteenId=" + canteenId;
     }
+
+    @PostMapping("/bulk-reject-feedback")
+    public String bulkRejectFeedback(@RequestParam(value = "selectedFeedbacks", required = false) List<Integer> feedbackIds,
+                                     @RequestParam Integer canteenId,
+                                     RedirectAttributes redirectAttributes) {
+        if (feedbackIds == null || feedbackIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Không có phản hồi nào được chọn");
+            return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
+        }
+
+        try {
+            for (Integer feedbackId : feedbackIds) {
+                feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.REJECT);
+            }
+            redirectAttributes.addFlashAttribute("message", "Từ chối phản hồi thành công cho các phản hồi đã chọn");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+        }
+
+        return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
+    }
+
 }

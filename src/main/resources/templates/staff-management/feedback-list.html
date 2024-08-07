@@ -28,10 +28,20 @@
       max-width: 200px; /* Adjust as needed */
     }
 
-    .bulk-approve-container {
+    .bulk-container {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 20px;
+    }
+
+    .bulk-approve-container {
+      display: inline;
+    }
+
+    .bulk-reject-container {
+      display: inline;
     }
   </style>
 </head>
@@ -71,16 +81,23 @@
              role="tab">Phản hồi bị từ chối</a>
         </li>
       </ul>
-      <form th:if="${status.name() == 'PENDING'}" th:action="@{/bulk-approve-feedback}" method="post" id="bulk-approve-form" class="bulk-approve-container">
-        <input type="hidden" name="canteenId" th:value="${canteenId}">
-        <button type="submit" class="btn btn-primary">Phê duyệt nhiều phản hồi</button>
-      </form>
+      <div class="bulk-container">
+        <form th:if="${status.name() == 'PENDING'}" th:action="@{/bulk-approve-feedback}" method="post" id="bulk-approve-form" class="bulk-approve-container">
+          <input type="hidden" name="canteenId" th:value="${canteenId}">
+          <button type="submit" class="btn btn-primary">Phê duyệt nhiều phản hồi</button>
+        </form>
+        <form th:if="${status.name() == 'PENDING'}" th:action="@{/bulk-reject-feedback}" method="post" id="bulk-reject-form" class="bulk-reject-container">
+          <input type="hidden" name="canteenId" th:value="${canteenId}">
+          <button type="submit" class="btn btn-danger">Từ chối nhiều phản hồi</button>
+        </form>
+      </div>
       <div th:if="${message}" class="alert alert-success" id="successAlert">
         <span th:text="${message}"></span>
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
       </div>
       <div th:if="${error}" class="alert alert-danger" >
         <span th:text="${error}"></span>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
       </div>
       <div class="tab-content" id="feedbackTabsContent">
         <div class="tab-pane fade show active" id="feedbacks" role="tabpanel" aria-labelledby="feedbacks-tab">

@@ -79,7 +79,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/assign-staff-form/**","/assign-confirm/**", "/manage-category/**",
                         "/add-category-form", "/add-category", "/edit-category/**",
                         "dashboard-manager/**",
-                        "/manage-feedback","/approve-feedback/**","/reject-feedback/**",
+                        "/manage-feedback","/approve-feedback/**","/reject-feedback/**","/bulk-approve-feedback/**","/bulk-reject-feedback/**",
                         "/search-food/**","/add-food-form/**","/add-food","/edit-food/**",
                         "/add-quantity/**","/order-list/**","/update-order-status/**",
                         "/bulk-assign-orders/**","/reject-order/**"
