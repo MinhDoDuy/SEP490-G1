@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -37,7 +38,7 @@ public class HomeController {
     CartRepository cartRepository;
 
     @GetMapping({"/", "/homepage"})
-    public String getCanteens(Model model, HttpSession session) {
+    public String getCanteens(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = null;
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
@@ -45,15 +46,17 @@ public class HomeController {
             user = userService.findByEmail(email);
             if (Objects.nonNull(user)) {
                 if (!user.getIsActive()) {
-                    model.addAttribute("isBanned", true);
-                    return "homepage";
+                    // Đăng xuất người dùng
+                    SecurityContextHolder.clearContext();
+                    // Thêm thông báo lỗi vào RedirectAttributes
+                    redirectAttributes.addFlashAttribute("errorMessage", "Tài khoản của bạn đã bị khóa.");
+                    return "redirect:/login";
                 }
                 model.addAttribute("user", user);
                 Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
                 int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
                 session.setAttribute("totalQuantity", totalQuantity);
             }
-
         }
         List<Canteen> canteens = canteenService.getAllCanteens();
         model.addAttribute("canteens", canteens);
@@ -65,7 +68,7 @@ public class HomeController {
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
 
-        session.setAttribute("user",user);
+        session.setAttribute("user", user);
         String messageAddFood = (String) session.getAttribute("messageAddFood");
         if (messageAddFood != null) {
             model.addAttribute("messageAddFood", messageAddFood);
@@ -73,6 +76,7 @@ public class HomeController {
         }
         return "homepage";
     }
+
 
     @GetMapping("/canteen_contact")
     public String getCanteenContact(Model model) {
