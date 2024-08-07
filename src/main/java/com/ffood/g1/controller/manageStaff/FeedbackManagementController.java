@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 public class FeedbackManagementController {
 
@@ -61,6 +63,29 @@ public class FeedbackManagementController {
         redirectAttributes.addFlashAttribute("message", "Phản hồi phê duyệt thành công .");
         return "redirect:/manage-feedback?canteenId=" + canteenId;
     }
+
+    @PostMapping("/bulk-approve-feedback")
+    public String bulkApproveFeedback(@RequestParam(value = "selectedFeedbacks", required = false) List<Integer> feedbackIds,
+                                      @RequestParam Integer canteenId,
+                                      RedirectAttributes redirectAttributes) {
+        if (feedbackIds == null || feedbackIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Không có phản hồi nào được chọn");
+            return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
+        }
+
+        try {
+            for (Integer feedbackId : feedbackIds) {
+                feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.COMPLETE);
+            }
+            redirectAttributes.addFlashAttribute("message", "Phê duyệt phản hồi thành công cho các phản hồi đã chọn");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+        }
+
+        return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
+    }
+
+
 
     @PostMapping("/reject-feedback/{feedbackId}")
     public String rejectFeedback(@PathVariable Integer feedbackId,

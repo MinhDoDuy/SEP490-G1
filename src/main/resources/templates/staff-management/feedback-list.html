@@ -27,6 +27,12 @@
       text-overflow: ellipsis;
       max-width: 200px; /* Adjust as needed */
     }
+
+    .bulk-approve-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 
@@ -52,10 +58,7 @@
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Phản hổi người dùng của quán <span th:text="${canteenName}"></span></div>
       </div>
-      <div th:if="${message}" class="alert alert-success" id="successAlert">
-        <span th:text="${message}"></span>
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-      </div>
+
       <ul class="nav nav-tabs" id="feedbackTabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link" th:classappend="${status.name() == 'PENDING'} ? 'active'"
@@ -68,65 +71,86 @@
              role="tab">Phản hồi bị từ chối</a>
         </li>
       </ul>
+      <form th:if="${status.name() == 'PENDING'}" th:action="@{/bulk-approve-feedback}" method="post" id="bulk-approve-form" class="bulk-approve-container">
+        <input type="hidden" name="canteenId" th:value="${canteenId}">
+        <button type="submit" class="btn btn-primary">Phê duyệt nhiều phản hồi</button>
+      </form>
+      <div th:if="${message}" class="alert alert-success" id="successAlert">
+        <span th:text="${message}"></span>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      </div>
+      <div th:if="${error}" class="alert alert-danger" >
+        <span th:text="${error}"></span>
+      </div>
       <div class="tab-content" id="feedbackTabsContent">
         <div class="tab-pane fade show active" id="feedbacks" role="tabpanel" aria-labelledby="feedbacks-tab">
           <div class="overflow-x-auto">
-            <table class="w-full min-w-[540px]">
-              <thead>
-              <tr>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Người dùng</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Bình luận</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Thời gian tạo</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:if="${#lists.isEmpty(feedbacks.content)}">
-                <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="6">Không có phản hồi nào</td>
-              </tr>
-              <tr th:each="feedback, iterStat : ${feedbacks.content}">
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedbacks.number * feedbacks.size + iterStat.index + 1}">STT</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.user.fullName}">Người dùng</td>
-                <td class="py-2 px-4 border-b border-b-gray-50 truncate" th:text="${feedback.comment}">Bình luận</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackStatus.displayName}">Trạng thái</td>
-                <td class="py-2 px-4 border-b border-b-gray-50 feedback-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
-                <td class="py-2 px-4 border-b border-b-gray-50">
-                  <button class="btn btn-info" data-toggle="modal" th:data-target="'#commentModal' + ${feedback.feedbackId}">
-                    <i class="ri-eye-line"></i>
-                  </button>
-                  <th:block th:if="${feedback.feedbackStatus.name() != 'REJECT'}">
-                    <form th:action="@{'/approve-feedback/' + ${feedback.feedbackId}}" method="post" style="display: inline;">
-                      <input type="hidden" name="canteenId" th:value="${canteenId}"/>
-                      <button type="submit" class="btn btn-success">
-                        <i class="ri-check-line"></i>
-                      </button>
-                    </form>
-                    <form th:action="@{'/reject-feedback/' + ${feedback.feedbackId}}" method="post" style="display: inline;">
-                      <input type="hidden" name="canteenId" th:value="${canteenId}"/>
-                      <button type="submit" class="btn btn-danger">
-                        <i class="ri-close-line"></i>
-                      </button>
-                    </form>
-                  </th:block>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+
+            <form>
+              <table class="w-full min-w-[540px]">
+                <thead>
+                <tr>
+                  <th th:if="${status.name() == 'PENDING'}" class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+                    <input type="checkbox" id="selectAll" onclick="selectAllFeedbacks(this)">
+                  </th>
+                  <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
+                  <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Người dùng</th>
+                  <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Bình luận</th>
+                  <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
+                  <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Thời gian tạo</th>
+                  <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(feedbacks.content)}">
+                  <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="6">Không có phản hồi nào</td>
+                </tr>
+                <tr th:each="feedback, iterStat : ${feedbacks.content}">
+                  <td th:if="${status.name() == 'PENDING'}" class="py-2 px-4 border-b border-b-gray-50">
+                    <input type="checkbox" name="selectedFeedbacks" th:value="${feedback.feedbackId}">
+                  </td>
+                  <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedbacks.number * feedbacks.size + iterStat.index + 1}">STT</td>
+                  <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.user.fullName}">Người dùng</td>
+                  <td class="py-2 px-4 border-b border-b-gray-50 truncate" th:text="${feedback.comment}">Bình luận</td>
+                  <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackStatus.displayName}">Trạng thái</td>
+                  <td class="py-2 px-4 border-b border-b-gray-50 feedback-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
+                  <td class="py-2 px-4 border-b border-b-gray-50">
+                    <button class="btn btn-info" data-toggle="modal" th:data-target="'#commentModal' + ${feedback.feedbackId}">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                    <th:block th:if="${status.name() == 'PENDING'}">
+                      <form th:action="@{'/approve-feedback/' + ${feedback.feedbackId}}" method="post" style="display: inline;">
+                        <input type="hidden" name="canteenId" th:value="${canteenId}"/>
+                        <button type="submit" class="btn btn-success">
+                          <i class="ri-check-line"></i>
+                        </button>
+                      </form>
+                      <form th:action="@{'/reject-feedback/' + ${feedback.feedbackId}}" method="post" style="display: inline;">
+                        <input type="hidden" name="canteenId" th:value="${canteenId}"/>
+                        <button type="submit" class="btn btn-danger">
+                          <i class="ri-close-line"></i>
+                        </button>
+                      </form>
+                    </th:block>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+
             <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                            <span th:if="${feedbacks.hasPrevious()}">
-                                <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number - 1}, size=${feedbacks.size})}" class="page-link">&laquo;</a>
-                            </span>
+              <span th:if="${feedbacks.hasPrevious()}">
+                <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number - 1}, size=${feedbacks.size})}" class="page-link">&laquo;</a>
+              </span>
               <span th:each="i : ${#numbers.sequence(0, feedbacks.totalPages - 1)}">
-                                <a th:classappend="${i} == ${feedbacks.number} ? 'active' : ''"
-                                   th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${i}, size=${feedbacks.size})}" class="page-link">
-                                    <span th:text="${i + 1}">1</span>
-                                </a>
-                            </span>
+                <a th:classappend="${i} == ${feedbacks.number} ? 'active' : ''"
+                   th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${i}, size=${feedbacks.size})}" class="page-link">
+                  <span th:text="${i + 1}">1</span>
+                </a>
+              </span>
               <span th:if="${feedbacks.hasNext()}">
-                                <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number + 1}, size=${feedbacks.size})}" class="page-link">&raquo;</a>
-                            </span>
+                <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number + 1}, size=${feedbacks.size})}" class="page-link">&raquo;</a>
+              </span>
             </div>
           </div>
         </div>
@@ -191,6 +215,12 @@
 
   // Call the function to hide the alert
   hideAlert();
+
+  function selectAllFeedbacks(source) {
+    checkboxes = document.getElementsByName('selectedFeedbacks');
+    for (var i in checkboxes)
+      checkboxes[i].checked = source.checked;
+  }
 </script>
 </body>
 </html>
