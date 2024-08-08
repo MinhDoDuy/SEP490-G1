@@ -158,4 +158,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.deliveryRoleId = :deliveryRoleId AND o.orderStatus = 'PROGRESS'")
     long countActiveOrdersByDeliveryRoleId(@Param("deliveryRoleId") Integer deliveryRoleId);
+
+    @Query("SELECT o FROM Order o WHERE o.orderType = :orderType AND DATE(o.orderDate) = CURRENT_DATE")
+    List<Order> findByOrderTypeAndCurrentDate(OrderType orderType);
 }

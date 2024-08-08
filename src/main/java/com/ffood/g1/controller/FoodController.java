@@ -57,8 +57,26 @@ public class FoodController {
     }
     @GetMapping("/food_details")
     public String viewFoodDetails(@RequestParam("id") Integer foodId, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            user = userService.findByEmail(email);
+            if (Objects.nonNull(user)) {
+                if (!user.getIsActive()) {
+                    // Đăng xuất người dùng
+                    SecurityContextHolder.clearContext();
+                    // Thêm thông báo lỗi vào RedirectAttributes
+                    redirectAttributes.addFlashAttribute("errorMessage", "Tài khoản của bạn đã bị khóa.");
+                    return "redirect:/login";
+                }
+                model.addAttribute("user", user);
+                Integer finalTotalQuantity = cartService.getTotalQuantityByUser(user);
+                int totalQuantity = finalTotalQuantity != null ? finalTotalQuantity : 0;
+                session.setAttribute("totalQuantity", totalQuantity);
+            }
+        }
         Optional<Food> foodOptional = foodService.getFoodByIdFoodDetails(foodId);
-
         if (foodOptional.isPresent()) {
             Food food = foodOptional.get();
             model.addAttribute("food", food);

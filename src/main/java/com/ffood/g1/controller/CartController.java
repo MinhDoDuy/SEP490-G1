@@ -1,12 +1,14 @@
 package com.ffood.g1.controller;
 
-import antlr.BaseAST;
 import com.ffood.g1.entity.*;
+import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.repository.CartItemRepository;
 import com.ffood.g1.repository.CartRepository;
+import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -52,6 +54,11 @@ public class CartController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Qualifier("orderService")
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private OrderRepository orderRepository;
 
     @GetMapping("/add_to_cart")
     public String addToCart(@RequestParam("foodId") Integer foodId,
@@ -120,7 +127,6 @@ public class CartController {
         return "redirect:/cart_items";
     }
 
-
     @PostMapping("/update_cart_quantity")
     public ResponseEntity<String> updateCartQuantity(@RequestParam("cartItemId") Integer cartItemId,
                                                      @RequestParam("quantity") int quantity,
@@ -146,9 +152,7 @@ public class CartController {
 
     @GetMapping("/create-order-at-couter")
     public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId, HttpSession session) {
-        System.out.println("diu mh");
         // Delete existing provisional cart for user with ID 1
-
         if (cartService.getCartByUserId(1) != null) {
             cartItemRepository.deleteAll(cartService.getCartByUserId(1).getCartItems());
             cartRepository.delete(cartService.getCartByUserId(1));
@@ -168,6 +172,12 @@ public class CartController {
         Canteen canteen = canteenService.getCanteenById(canteenId);
         model.addAttribute("canteenName", canteen.getCanteenName());
         session.setAttribute("cartProvisional", cartProvisional);
+
+
+        //list billing
+//        OrderType orderType=OrderType.AT_COUNTER;
+//        List<Order> orderListInDay= orderRepository.findByOrderTypeAndCurrentDate(orderType);
+//        System.out.println(orderListInDay);
         return "cart/pos-screen";
     }
 
@@ -261,9 +271,6 @@ public class CartController {
         model.addAttribute("userProvisional", user);
         return "cart/payment :: user-info";
     }
-
-
-
 
 }
 

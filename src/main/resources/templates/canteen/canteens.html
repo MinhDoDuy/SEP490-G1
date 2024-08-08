@@ -154,7 +154,7 @@
                                     của bạn</h6>
                             </div>
 
-                            <div class="col-md-6 col-lg-6 col-xl-4" th:each="food : ${items_home}">
+                            <div class="col-md-6 col-lg-6 col-xl-4" th:each="food : ${items_home}" th:if="${food.foodStatusActive}">
                                 <div th:if="${food.canteen.isActive}" class="rounded position-relative fruite-item border border-orange">
                                     <div class="fruite-img">
                                         <img th:src="${food.imageFood}" class="img-fluid w-100 rounded-top" alt=""
