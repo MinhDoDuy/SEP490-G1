@@ -54,7 +54,8 @@ public class CartController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-    @Qualifier("orderService")
+
+
     @Autowired
     private OrderService orderService;
     @Autowired
