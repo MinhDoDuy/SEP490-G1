@@ -271,5 +271,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.countActiveOrdersByDeliveryRoleId(deliveryRoleId) > 0;
     }
 
+    @Override
+    public List<Order> findByOrderTypeAndCurrentDate(OrderType orderType) {
+        return orderRepository.findByOrderTypeAndCurrentDate(orderType);
+    }
+
 
 }

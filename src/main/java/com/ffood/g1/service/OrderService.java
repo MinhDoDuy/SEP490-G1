@@ -57,4 +57,6 @@ public interface OrderService {
     Order createOrder(User user, String address, String note, OrderType orderType, PaymentMethod paymentMethod, List<Integer> cartItemIds);
 
     boolean hasActiveOrders(Integer deliveryRoleId);
+
+    List<Order> findByOrderTypeAndCurrentDate(OrderType orderType);
 }

@@ -54,7 +54,7 @@ public class CartController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-    @Qualifier("orderService")
+
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -175,9 +175,10 @@ public class CartController {
 
 
         //list billing
-//        OrderType orderType=OrderType.AT_COUNTER;
-//        List<Order> orderListInDay= orderRepository.findByOrderTypeAndCurrentDate(orderType);
-//        System.out.println(orderListInDay);
+        OrderType orderType=OrderType.AT_COUNTER;
+        List<Order> orderListInDay= orderService.findByOrderTypeAndCurrentDate(orderType);
+        model.addAttribute("orderListInDay", orderListInDay);
+
         return "cart/pos-screen";
     }
 
