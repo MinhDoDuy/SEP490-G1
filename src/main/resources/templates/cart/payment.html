@@ -38,11 +38,19 @@
             background-color: #fff8f0;
         }
 
-        .btn-success {
+        .btn-primary,
+        .btn-success,
+        .btn-primary:focus,
+        .btn-primary:active,
+        .btn-success:focus,
+        .btn-success:active {
             background-color: #ff6600;
             border-color: #ff6600;
+            outline: none;
+            box-shadow: none;
         }
 
+        .btn-primary:hover,
         .btn-success:hover {
             background-color: #e65c00;
             border-color: #e65c00;
@@ -87,6 +95,15 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        .form-control:focus {
+            border-color: #ff6600;
+            box-shadow: 0 0 8px rgba(255, 102, 0, 0.3);
+        }
+
+        .text-danger.mt-3 {
+            margin-top: 1rem !important; /* Add margin-top to separate the text */
+        }
     </style>
 </head>
 <body>
@@ -106,7 +123,7 @@
                     <div th:each="cartItem : ${cartItems}" class="cart-item">
                         <div class="cart-item-info">
                             <p th:text="${cartItem.food.foodName}">Food Name</p>
-                            <p class="text-danger" th:text="${cartItem.totalFoodPrice} + ' VND'">Price</p>
+                            <p class="text-danger formatted-price" data-price="${cartItem.totalFoodPrice}" th:text="${cartItem.totalFoodPrice}">Price</p>
                         </div>
                         <div class="cart-item-quantity">
                             <label>
@@ -117,7 +134,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="cart-summary">
-                        <p>Tổng tiền: <span id="totalOrderPrice" th:text="${totalOrderPrice} + ' VND'">0 VND</span></p>
+                        <p>Tổng tiền: <span id="totalOrderPrice" class="formatted-price" th:data-price="${totalOrderPrice}" th:text="${totalOrderPrice}">0 ₫</span></p>
                         <div>
                             <label for="paymentMethod">Phương thức thanh toán:</label>
                             <select id="paymentMethod" class="form-control">
@@ -140,25 +157,25 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="form-group">
-                    <div class="card-header" style="border: 1px solid #0c0202;">
-                        <label for="searchPhone">Người dùng</label>
-                        <button class="btn btn-primary" id="openRegisterModal" style="margin-left: 20px;">Thêm khách hàng</button>
+                    <div class="card-header d-flex justify-content-between align-items-center" style="border: 1px solid #0c0202;">
+                        <label for="searchPhone" class="mb-0">Người dùng</label>
+                        <button class="btn btn-primary" id="openRegisterModal">Thêm khách hàng</button>
                     </div>
-                    <div class="input-group">
+                    <div class="input-group mt-3">
                         <input type="text" id="searchPhone" class="form-control" placeholder="Nhập số điện thoại .....">
                         <div class="input-group-append">
                             <button class="btn btn-primary" id="searchUserButton">Tìm kiếm</button>
                         </div>
                     </div>
                 </div>
-                <div id="searchResult" class="search-result" th:fragment="user-info">
+                <div id="searchResult" class="search-result mt-3" th:fragment="user-info">
                     <p th:if="${userProvisional != null}">
                         <label>
                             <input type="hidden" name="userId" th:value="${userProvisional.userId}">
                         </label>
-                        Name: <span th:text="${userProvisional.fullName}"></span>, Phone: <span th:text="${userProvisional.phone}"></span>
+                        <span class="font-weight-bold">Tên:</span> <span th:text="${userProvisional.fullName}"></span>, <span class="font-weight-bold">Số Điện Thoại:</span> <span th:text="${userProvisional.phone}"></span>
                     </p>
-                    <p th:if="${userProvisional == null}">Hiện tại là khách chưa có tài khoản</p>
+                    <p th:if="${userProvisional == null}" class="text-danger mt-3">Hiện tại là khách chưa có tài khoản</p>
                 </div>
             </div>
         </div>
@@ -217,19 +234,18 @@
 
     document.getElementById('cashReceived').addEventListener('input', function () {
         const cashReceived = parseFloat(this.value);
-        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').innerText.replace(/\D/g, ''));
+        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').getAttribute('data-price'));
         const changeDue = cashReceived - totalOrderPrice;
-        document.getElementById('changeDue').innerText = `Tiền thối lại: ${changeDue.toLocaleString('vi-VN')} VND`;
+        document.getElementById('changeDue').innerText = `Tiền Trả lại: ${formatCurrencyVND(changeDue)}`;
     });
 
     document.getElementById('submitPayment').addEventListener('click', function () {
         const paymentMethod = document.getElementById('paymentMethod').value;
         const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
-        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').innerText.replace(/\D/g, ''));
+        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').getAttribute('data-price'));
         const userProvisionalElement = document.querySelector('input[name="userId"]');
         const userId = userProvisionalElement ? userProvisionalElement.value : 1;
         const canteenId = document.getElementById('canteenId').value;
-        console.log(canteenId);
 
         if (paymentMethod === 'cash' && cashReceived < totalOrderPrice) {
             alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng tổng tiền hóa đơn.');
@@ -291,6 +307,29 @@
                 modal.style.display = "none";
             })
             .catch(error => console.error('Error:', error));
+    });
+
+    function formatCurrencyVND(amount) {
+        amount = parseFloat(amount);  // Ensure the amount is a number
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0  // Ensure there are no decimal places
+        }).format(amount);
+    }
+
+    function formatPrices() {
+        document.querySelectorAll('.formatted-price').forEach(function (element) {
+            let price = element.getAttribute('data-price');
+            if (!isNaN(price)) {
+                element.innerText = formatCurrencyVND(price);
+            }
+        });
+    }
+
+    // Format prices on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        formatPrices();
     });
 </script>
 
