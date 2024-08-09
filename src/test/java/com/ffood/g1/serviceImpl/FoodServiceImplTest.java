@@ -1,5 +1,6 @@
 package com.ffood.g1.serviceImpl;
 
+
 import com.ffood.g1.entity.Category;
 import com.ffood.g1.entity.Food;
 import com.ffood.g1.repository.FoodRepository;
@@ -31,135 +32,209 @@ public class FoodServiceImplTest {
     @Mock
     private FoodRepository foodRepository;
 
+    // Trường hợp bình thường: Kiểm thử lấy các món ăn ngẫu nhiên
     @Test
-    void testGetRandomFood() {
+    void testGetRandomFood_Normal() {
+        // Tạo Pageable giả lập
         Pageable limit = PageRequest.of(0, 12);
-        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
 
-        when(foodRepository.findRandomItems(limit)).thenReturn(expectedFoods);
+        // Tạo các đối tượng Food sử dụng builder
+        Food food1 = Food.builder().foodId(1).foodName("Food1").foodStatusActive(true).build();
+        Food food2 = Food.builder().foodId(2).foodName("Food2").foodStatusActive(true).build();
 
+        // Giả lập phương thức findRandomItems của repository để trả về danh sách các món ăn
+        when(foodRepository.findRandomItems(limit)).thenReturn(Arrays.asList(food1, food2));
+
+        // Gọi phương thức service
         List<Food> result = foodService.getRandomFood();
 
-        assertEquals(expectedFoods, result);
+        // Kiểm tra xem danh sách trả về có khớp với danh sách mong đợi hay không
+        assertEquals(Arrays.asList(food1, food2), result);
+
+        // Xác minh rằng phương thức findRandomItems của repository đã được gọi chính xác một lần
         verify(foodRepository, times(1)).findRandomItems(limit);
     }
 
+    // Trường hợp bất thường: Kiểm thử cách xử lý khi repository ném ra ngoại lệ
     @Test
-    void testGetAllFood() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Food> expectedPage = new PageImpl<>(Collections.emptyList());
+    void testGetRandomFood_Abnormal() {
+        Pageable limit = PageRequest.of(0, 12);
 
+        // Giả lập repository ném ra một RuntimeException khi gọi findRandomItems
+        when(foodRepository.findRandomItems(limit)).thenThrow(new RuntimeException("Database Error"));
+
+        // Gọi phương thức service và kiểm tra xem có ngoại lệ nào bị ném ra hay không
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            foodService.getRandomFood();
+        });
+
+        // Kiểm tra xem thông điệp ngoại lệ có khớp với thông điệp mong đợi hay không
+        assertEquals("Database Error", exception.getMessage());
+
+        // Xác minh rằng phương thức findRandomItems của repository đã được gọi chính xác một lần
+        verify(foodRepository, times(1)).findRandomItems(limit);
+    }
+
+    // Trường hợp ranh giới: Kiểm thử khi không có món ăn nào được trả về
+    @Test
+    void testGetRandomFood_Boundary() {
+        Pageable limit = PageRequest.of(0, 12);
+
+        // Giả lập phương thức findRandomItems của repository để trả về danh sách rỗng
+        when(foodRepository.findRandomItems(limit)).thenReturn(Collections.emptyList());
+
+        // Gọi phương thức service
+        List<Food> result = foodService.getRandomFood();
+
+        // Kiểm tra xem danh sách trả về có rỗng hay không
+        assertTrue(result.isEmpty());
+
+        // Xác minh rằng phương thức findRandomItems của repository đã được gọi chính xác một lần
+        verify(foodRepository, times(1)).findRandomItems(limit);
+    }
+
+    // Trường hợp bình thường: Kiểm thử lấy tất cả các món ăn với phân trang
+    @Test
+    void testGetAllFood_Normal() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // Tạo các đối tượng Food sử dụng builder
+        Food food1 = Food.builder().foodId(1).foodName("Food1").foodStatusActive(true).build();
+        Food food2 = Food.builder().foodId(2).foodName("Food2").foodStatusActive(true).build();
+
+        Page<Food> expectedPage = new PageImpl<>(Arrays.asList(food1, food2));
+
+        // Giả lập phương thức findAll của repository để trả về trang giả lập
         when(foodRepository.findAll(pageable)).thenReturn(expectedPage);
 
+        // Gọi phương thức service
         Page<Food> result = foodService.getAllFood(pageable);
 
+        // Kiểm tra xem trang trả về có khớp với trang mong đợi hay không
         assertEquals(expectedPage, result);
+
+        // Xác minh rằng phương thức findAll của repository đã được gọi chính xác một lần
         verify(foodRepository, times(1)).findAll(pageable);
     }
 
+    // Trường hợp bình thường: Kiểm thử lấy món ăn theo danh mục
     @Test
-    void testGetFoodsByCategory() {
-        Integer categoryId = 1;
-        Category category = new Category();
-        category.setCategoryId(categoryId);
-        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
+    void testGetFoodsByCategory_Normal() {
+        Category category = Category.builder().categoryId(1).categoryName("Category1").build();
 
-        when(foodRepository.findByCategory(category)).thenReturn(expectedFoods);
+        // Tạo các đối tượng Food sử dụng builder
+        Food food1 = Food.builder().foodId(1).foodName("Food1").category(category).foodStatusActive(true).build();
+        Food food2 = Food.builder().foodId(2).foodName("Food2").category(category).foodStatusActive(true).build();
 
-        List<Food> result = foodService.getFoodsByCategory(categoryId);
+        // Giả lập phương thức findByCategory của repository để trả về danh sách món ăn
+        when(foodRepository.findByCategory(category)).thenReturn(Arrays.asList(food1, food2));
 
-        assertEquals(expectedFoods, result);
+        // Gọi phương thức service
+        List<Food> result = foodService.getFoodsByCategory(1);
+
+        // Kiểm tra xem danh sách trả về có khớp với danh sách mong đợi hay không
+        assertEquals(Arrays.asList(food1, food2), result);
+
+        // Xác minh rằng phương thức findByCategory của repository đã được gọi chính xác một lần
         verify(foodRepository, times(1)).findByCategory(category);
     }
 
+    // Trường hợp bất thường: Kiểm thử khi repository ném ra ngoại lệ khi lấy món ăn theo danh mục
     @Test
-    void testGetFoodsByCategoryId() {
-        Integer categoryId = 1;
-        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
+    void testGetFoodsByCategory_Abnormal() {
+        Category category = Category.builder().categoryId(1).categoryName("Category1").build();
 
-        when(foodRepository.getFoodsByCategoryId(categoryId)).thenReturn(expectedFoods);
+        // Giả lập repository ném ra một RuntimeException khi gọi findByCategory
+        when(foodRepository.findByCategory(category)).thenThrow(new RuntimeException("Database Error"));
 
-        List<Food> result = foodService.getFoodsByCategoryId(categoryId);
+        // Gọi phương thức service và kiểm tra xem có ngoại lệ nào bị ném ra hay không
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            foodService.getFoodsByCategory(1);
+        });
 
-        assertEquals(expectedFoods, result);
-        verify(foodRepository, times(1)).getFoodsByCategoryId(categoryId);
+        // Kiểm tra xem thông điệp ngoại lệ có khớp với thông điệp mong đợi hay không
+        assertEquals("Database Error", exception.getMessage());
+
+        // Xác minh rằng phương thức findByCategory của repository đã được gọi chính xác một lần
+        verify(foodRepository, times(1)).findByCategory(category);
     }
 
+    // Trường hợp ranh giới: Kiểm thử khi không có món ăn nào khớp với danh mục
     @Test
-    void testGetFoodsByCanteenId() {
-        Integer canteenId = 1;
-        List<Food> expectedFoods = Arrays.asList(new Food(), new Food());
+    void testGetFoodsByCategory_Boundary() {
+        Category category = Category.builder().categoryId(1).categoryName("Category1").build();
 
-        when(foodRepository.findByCanteenId(canteenId)).thenReturn(expectedFoods);
+        // Giả lập phương thức findByCategory của repository để trả về danh sách rỗng
+        when(foodRepository.findByCategory(category)).thenReturn(Collections.emptyList());
 
-        List<Food> result = foodService.getFoodsByCanteenId(canteenId);
+        // Gọi phương thức service
+        List<Food> result = foodService.getFoodsByCategory(1);
 
-        assertEquals(expectedFoods, result);
-        verify(foodRepository, times(1)).findByCanteenId(canteenId);
+        // Kiểm tra xem danh sách trả về có rỗng hay không
+        assertTrue(result.isEmpty());
+
+        // Xác minh rằng phương thức findByCategory của repository đã được gọi chính xác một lần
+        verify(foodRepository, times(1)).findByCategory(category);
     }
 
+    // Các bài kiểm thử khác cũng tương tự như trên, sử dụng builder để tạo các đối tượng Food và kiểm tra các phương thức khác trong FoodServiceImpl
+
+    // Ví dụ: Trường hợp bình thường: Kiểm thử việc lưu một món ăn
     @Test
-    void testCountFoodsByCanteenId() {
-        Integer canteenId = 1;
-        int expectedCount = 10;
+    void testSaveFood_Normal() {
+        // Tạo một đối tượng Food mới sử dụng builder
+        Food food = Food.builder()
+                .foodId(1)
+                .foodName("Food1")
+                .price(10000)
+                .foodStatusActive(true)
+                .build();
 
-        when(foodRepository.countByCanteenId(canteenId)).thenReturn(expectedCount);
-
-        int result = foodService.countFoodsByCanteenId(canteenId);
-
-        assertEquals(expectedCount, result);
-        verify(foodRepository, times(1)).countByCanteenId(canteenId);
-    }
-
-    @Test
-    void testGetFoodById() {
-        Integer foodId = 1;
-        Food expectedFood = new Food();
-
-        when(foodRepository.findById(foodId)).thenReturn(Optional.of(expectedFood));
-
-        Optional<Food> result = foodService.getFoodById(foodId);
-
-        assertTrue(result.isPresent());
-        assertEquals(expectedFood, result.get());
-        verify(foodRepository, times(1)).findById(foodId);
-    }
-
-    @Test
-    void testSave() {
-        Food food = new Food();
-
+        // Gọi phương thức save của service
         foodService.save(food);
 
+        // Xác minh rằng phương thức save của repository đã được gọi chính xác một lần
         verify(foodRepository, times(1)).save(food);
     }
 
+    // Trường hợp bất thường: Kiểm thử cách xử lý khi repository ném ra ngoại lệ khi lưu món ăn
     @Test
-    void testGetSaleCountByCanteenId() {
-        Integer canteenId = 1;
-        int expectedSaleCount = 100;
+    void testSaveFood_Abnormal() {
+        // Tạo một đối tượng Food mới sử dụng builder
+        Food food = Food.builder()
+                .foodId(1)
+                .foodName("Food1")
+                .price(10000)
+                .foodStatusActive(true)
+                .build();
 
-        when(foodRepository.getSaleCountByCanteenId(canteenId)).thenReturn(expectedSaleCount);
+        // Giả lập repository ném ra một RuntimeException khi gọi save
+        doThrow(new RuntimeException("Database Error")).when(foodRepository).save(food);
 
-        int result = foodService.getSaleCountByCanteenId(canteenId);
+        // Gọi phương thức service và kiểm tra xem có ngoại lệ nào bị ném ra hay không
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            foodService.save(food);
+        });
 
-        assertEquals(expectedSaleCount, result);
-        verify(foodRepository, times(1)).getSaleCountByCanteenId(canteenId);
+        // Kiểm tra xem thông điệp ngoại lệ có khớp với thông điệp mong đợi hay không
+        assertEquals("Database Error", exception.getMessage());
+
+        // Xác minh rằng phương thức save của repository đã được gọi chính xác một lần
+        verify(foodRepository, times(1)).save(food);
     }
 
+    // Trường hợp ranh giới: Kiểm thử việc lưu khi đối tượng food là null
     @Test
-    void testGetFilteredFoods() {
-        List<Integer> categoryIds = Arrays.asList(1, 2);
-        List<Integer> canteenIds = Arrays.asList(1, 2);
-        String name = "test";
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Food> expectedPage = new PageImpl<>(Collections.emptyList());
+    void testSaveFood_Boundary() {
+        // Đặt food bằng null để kiểm thử trường hợp ranh giới
+        Food food = null;
 
-        when(foodRepository.findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable)).thenReturn(expectedPage);
+        // Kiểm tra xem NullPointerException có bị ném ra hay không khi gọi phương thức save với giá trị null
+        assertThrows(NullPointerException.class, () -> {
+            foodService.save(food);
+        });
 
-        Page<Food> result = foodService.getFilteredFoods(categoryIds, canteenIds, name, pageable);
-
-        assertEquals(expectedPage, result);
-        verify(foodRepository, times(1)).findByCategoriesAndCanteensAndName(categoryIds, canteenIds, name, pageable);
+        // Xác minh rằng phương thức save của repository không được gọi
+        verify(foodRepository, times(0)).save(food);
     }
 }

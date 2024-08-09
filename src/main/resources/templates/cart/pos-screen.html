@@ -116,14 +116,69 @@
             background-color: #fff8f0;
             border-color: #ffcc99;
         }
+
+        .larger-text {
+            font-size: 1.2em; /* Tăng kích thước font chữ */
+        }
+
+        .order-label {
+            color: red;
+        }
+        .larger-text {
+            font-size: 1.2em; /* Tăng kích thước font chữ */
+        }
+        .total-price-box {
+            text-align: center; /* Căn giữa nội dung */
+            padding: 10px 0; /* Thêm khoảng cách trên và dưới */
+        }
+        .order-label {
+            color: red;
+        }
+        .larger-text {
+            font-size: 1.2em; /* Tăng kích thước font chữ */
+        }
+        .total-price-box {
+            text-align: center; /* Căn giữa nội dung */
+            padding: 10px 0; /* Thêm khoảng cách trên và dưới */
+        }
+        .centered-content {
+            text-align: center;
+        }
+
+        .order-label {
+            color: red;
+        }
+        .larger-text {
+            font-size: 1.2em; /* Tăng kích thước font chữ */
+        }
+        .total-price-box {
+            text-align: center; /* Căn giữa nội dung */
+            padding: 10px 0; /* Thêm khoảng cách trên và dưới */
+        }
+        .order-history-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .order-history-body {
+            flex: 1;
+        }
+
+        .larger-text {
+            font-size: 1.4em;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="container mt-5">
     <input type="hidden" name="deliveryRoleId" id="deliveryRoleId" th:value="${deliveryRoleId}">
-    <h2 style="color: #ff6600;" th:text="${canteens.canteenName}"></h2>
-
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 style="color: #ff6600;" th:text="${canteens.canteenName}"></h2>
+        <button class="btn btn-secondary" onclick="goBack()">Quay lại</button>
+    </div>
     <!-- Tab Navigation -->
     <ul class="nav nav-tabs" id="posTabs" role="tablist">
         <li class="nav-item">
@@ -132,9 +187,9 @@
         <li class="nav-item">
             <a class="nav-link" id="features-tab" data-toggle="tab" href="#features" role="tab" aria-controls="features" aria-selected="false">Lịch sử trong ngày</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" id="pricing-tab" data-toggle="tab" href="#pricing" role="tab" aria-controls="pricing" aria-selected="false">Pricing</a>
-        </li>
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link" id="pricing-tab" data-toggle="tab" href="#pricing" role="tab" aria-controls="pricing" aria-selected="false">Pricing</a>-->
+<!--        </li>-->
     </ul>
 
     <!-- Tab Content -->
@@ -146,14 +201,14 @@
                     <input type="text" class="form-control mb-3" id="search" placeholder="Nhập tên món ăn cần tìm kiếm...">
                     <div class="row" id="productList">
                         <!-- Products will be displayed here -->
-                        <div class="col-md-4" th:each="food : ${foods}" th:if="${food.foodQuantity}>0">
+                        <div class="col-md-4" th:each="food : ${foods}" th:if="${food.foodQuantity}>0 and ${food.foodStatusActive}">
                             <div class="product-card">
                                 <img class="product-img" th:src="${food.imageFood}" alt="Product Image">
                                 <div class="product-info">
                                     <h5 th:text="${food.foodName}">Product Name</h5>
                                     <span th:text="'Đang còn: ' + ${food.foodQuantity}"></span>
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <p class="text-danger" th:text="${food.price} + ' VND'">25,000 VND</p>
+                                        <p class="text-danger price-value" th:text="${food.price}"></p>
                                         <button class="btn btn-success btn-add" th:data-id="${food.foodId}"
                                                 th:data-name="${food.foodName}" th:data-price="${food.price}"
                                                 th:data-quantity="${food.foodQuantity}">+
@@ -167,7 +222,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-header">
-                            Cart
+                            Giỏ Hàng
                         </div>
                         <div class="card-body" id="cartItems">
                             <!-- Cart Items will be displayed here -->
@@ -176,7 +231,7 @@
                             <div class="cart-summary">
                                 <p>Món: <span id="totalItems">0</span></p>
                                 <p>Tổng tiền: <span id="totalPrice">0 VND</span></p>
-                                <button class="btn btn-success" id="proceedToPayment" style="display: none;">Proceed to Payment</button>
+                                <button class="btn btn-success" id="proceedToPayment" style="display: none;">Thanh Toán</button>
                             </div>
                         </div>
                     </div>
@@ -184,34 +239,75 @@
             </div>
         </div>
         <div class="tab-pane fade" id="features" role="tabpanel" aria-labelledby="features-tab">
-            <div class="tab-pane fade show active"  role="tabpanel" aria-labelledby="home-tab">
+            <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="home-tab">
                 <div class="row mt-3">
-                    <div class="col-md-12" style="border: 2px solid #cccccc; border-radius: 5px;">
-                        <div class="row" >
+                    <div class="col-md-12 p-3" style="border: 2px solid #cccccc; border-radius: 5px;">
+                        <div class="row">
                             <!-- Products will be displayed here -->
-                            <div class="col-md-4" th:each="orderInDay : ${orderListInDay}" >
-                                <div class="product-card">
-                                    Mã đơn hàng : <span th:text="${orderInDay.orderCode}"></span>
-                                    Khách Hàng : <span th:text="${orderInDay.user.userName}"></span>
-
-                                    <div  th:each="orderItem : ${orderInDay.orderDetails}" >
-                                        <span th:text="${orderItem.order.orderDate}"></span>
-                                        <span th:text="${orderItem.food.foodName}"></span>
-                                        <span th:text="${orderItem.quantity}"></span>
+                            <div class="col-md-6 mb-4" th:each="orderInDay, iterStat : ${orderListInDay}">
+                                <div class="card order-history-card h-100">
+                                    <div class="card-body order-history-body">
+                                        <h6 class="card-title larger-text">#<span th:text="${iterStat.count}"></span> - <span class="order-time" th:text="${orderInDay.orderDate}"></span></h6>
+                                        <h5 class="card-title"><span class="order-label">Mã:</span> <span th:text="${orderInDay.orderCode}"></span></h5>
+                                        <p class="card-text larger-text"><span class="order-label">Khách Hàng:</span> <span th:text="${orderInDay.user.userName}"></span></p>
+                                        <ul class="list-group list-group-flush">
+                                            <!-- Hàng tiêu đề -->
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <!-- Tiêu đề Món Ăn -->
+                                                    <div class="col-md-4">
+                                                        <strong>Món Ăn</strong>
+                                                    </div>
+                                                    <!-- Tiêu đề Số Lượng -->
+                                                    <div class="col-md-4 text-center">
+                                                        <strong>Số Lượng</strong>
+                                                    </div>
+                                                    <!-- Tiêu đề Giá Tiền -->
+                                                    <div class="col-md-4 text-right">
+                                                        <strong>Giá Tiền (VNĐ)</strong>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <!-- Bắt đầu một hàng mới -->
+                                            <li class="list-group-item">
+                                                <div class="row" th:each="orderItem, itemStat : ${orderInDay.orderDetails}">
+                                                    <!-- Tên món ăn, căn trái (mặc định) -->
+                                                    <div class="col-md-4">
+                                                        <span class="larger-text" th:text="${orderItem.food.foodName}"></span>
+                                                    </div>
+                                                    <!-- Số lượng, căn giữa -->
+                                                    <div class="col-md-4 text-center">
+                                                        <span class="larger-text" th:text="${orderItem.quantity}"></span>
+                                                    </div>
+                                                    <!-- Giá tiền, căn phải -->
+                                                    <div class="col-md-4 text-right">
+                                                        <span class="larger-text price-format" th:text="${orderItem.getPrice()}"></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="total-price-box">
+                                        <p class="card-text larger-text"><strong>Tổng số tiền:</strong> <span class="total-price" th:text="${orderInDay.totalOrderPrice}"></span></p>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="pricing" role="tabpanel" aria-labelledby="pricing-tab">
-            <div class="container mt-3">
-                <h4>Pricing</h4>
-                <p>This is the pricing tab content.</p>
-                <p>Here you can provide information about the pricing plans of the POS system.</p>
-            </div>
+
+
+
+
+
+            <!--            <div class="tab-pane fade" id="pricing" role="tabpanel" aria-labelledby="pricing-tab">-->
+<!--            <div class="container mt-3">-->
+<!--                <h4>Pricing</h4>-->
+<!--                <p>This is the pricing tab content.</p>-->
+<!--                <p>Here you can provide information about the pricing plans of the POS system.</p>-->
+<!--            </div>-->
         </div>
     </div>
 </div>
@@ -225,6 +321,55 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+    function formatCurrencyVND(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0
+        }).format(amount);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        // Tìm tất cả các phần tử có class 'price-value'
+        const priceElements = document.querySelectorAll('.price-value');
+
+        // Duyệt qua từng phần tử và định dạng lại giá trị
+        priceElements.forEach(function(priceElement) {
+            // Lấy giá trị số từ thẻ p
+            const amount = parseInt(priceElement.textContent.trim(), 10);
+            // Gọi hàm formatCurrencyVND và cập nhật giá trị
+            priceElement.textContent = formatCurrencyVND(amount);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const prices = document.querySelectorAll('.price-format');
+        prices.forEach(function(price) {
+            const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
+            price.textContent = amount.toLocaleString('vi-VN'); // Định dạng theo locale Vietnamese
+        });
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const prices = document.querySelectorAll('.total-price');
+        prices.forEach(function(price) {
+            const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
+            price.textContent = amount.toLocaleString('vi-VN') + ' VNĐ'; // Định dạng theo locale Vietnamese
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const orderTimes = document.querySelectorAll('.order-time');
+        orderTimes.forEach(function(orderTime) {
+            const dateTime = new Date(orderTime.textContent);
+            const time = dateTime.toTimeString().split(' ')[0]; // Get only the time part
+            orderTime.textContent = time;
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         const productList = document.getElementById('productList');
         const cartItems = document.getElementById('cartItems');
@@ -406,13 +551,6 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        function formatCurrencyVND(amount) {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                minimumFractionDigits: 0
-            }).format(amount);
-        }
 
         document.getElementById('search').addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase();
