@@ -123,7 +123,7 @@
                     <div th:each="cartItem : ${cartItems}" class="cart-item">
                         <div class="cart-item-info">
                             <p th:text="${cartItem.food.foodName}">Food Name</p>
-                            <p class="text-danger formatted-price" data-price="${cartItem.totalFoodPrice}" th:text="${cartItem.totalFoodPrice}">Price</p>
+                            <p class="text-danger price-value" data-price="${cartItem.totalFoodPrice}" th:text="${cartItem.totalFoodPrice}">Price</p>
                         </div>
                         <div class="cart-item-quantity">
                             <label>
@@ -317,6 +317,20 @@
             minimumFractionDigits: 0  // Ensure there are no decimal places
         }).format(amount);
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Tìm tất cả các phần tử có class 'price-value'
+        const priceElements = document.querySelectorAll('.price-value');
+
+        // Duyệt qua từng phần tử và định dạng lại giá trị
+        priceElements.forEach(function(priceElement) {
+            // Lấy giá trị số từ thẻ p
+            const amount = parseInt(priceElement.textContent.trim(), 10);
+            // Gọi hàm formatCurrencyVND và cập nhật giá trị
+            priceElement.textContent = formatCurrencyVND(amount);
+        });
+    });
+
 
     function formatPrices() {
         document.querySelectorAll('.formatted-price').forEach(function (element) {

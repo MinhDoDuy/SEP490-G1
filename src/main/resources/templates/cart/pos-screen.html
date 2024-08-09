@@ -156,13 +156,20 @@
             flex: 1;
         }
 
+        .larger-text {
+            font-size: 1.4em;
+        }
 
     </style>
 </head>
 <body>
 
 <div class="container mt-5">
-    <h2 style="color: #ff6600;" th:text="${canteens.canteenName}"></h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 style="color: #ff6600;" th:text="${canteens.canteenName}"></h2>
+        <button class="btn btn-secondary" onclick="goBack()">Quay lại</button>
+    </div>
+
 
     <!-- Tab Navigation -->
     <ul class="nav nav-tabs" id="posTabs" role="tablist">
@@ -193,7 +200,7 @@
                                     <h5 th:text="${food.foodName}">Product Name</h5>
                                     <span th:text="'Đang còn: ' + ${food.foodQuantity}"></span>
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <p class="text-danger" th:text="${food.price} + ' VND'">25,000 VND</p>
+                                        <p class="text-danger price-value" th:text="${food.price}"></p>
                                         <button class="btn btn-success btn-add" th:data-id="${food.foodId}"
                                                 th:data-name="${food.foodName}" th:data-price="${food.price}"
                                                 th:data-quantity="${food.foodQuantity}">+
@@ -229,16 +236,46 @@
                     <div class="col-md-12 p-3" style="border: 2px solid #cccccc; border-radius: 5px;">
                         <div class="row">
                             <!-- Products will be displayed here -->
-                            <div class="col-md-4 mb-4" th:each="orderInDay, iterStat : ${orderListInDay}">
+                            <div class="col-md-6 mb-4" th:each="orderInDay, iterStat : ${orderListInDay}">
                                 <div class="card order-history-card h-100">
                                     <div class="card-body order-history-body">
                                         <h6 class="card-title larger-text">#<span th:text="${iterStat.count}"></span> - <span class="order-time" th:text="${orderInDay.orderDate}"></span></h6>
                                         <h5 class="card-title"><span class="order-label">Mã:</span> <span th:text="${orderInDay.orderCode}"></span></h5>
-                                        <p class="card-text larger-text">Khách Hàng: <span th:text="${orderInDay.user.userName}"></span></p>
+                                        <p class="card-text larger-text"><span class="order-label">Khách Hàng:</span> <span th:text="${orderInDay.user.userName}"></span></p>
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item centered-content" th:each="orderItem, itemStat : ${orderInDay.orderDetails}">
-                                                <div class="larger-text"><strong>Món ăn <span th:text="${itemStat.count}"></span>:</strong> <span th:text="${orderItem.food.foodName}"></span></div>
-                                                <div class="larger-text"><strong>Số lượng:</strong> <span th:text="${orderItem.quantity}"></span></div>
+                                            <!-- Hàng tiêu đề -->
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <!-- Tiêu đề Món Ăn -->
+                                                    <div class="col-md-4">
+                                                        <strong>Món Ăn</strong>
+                                                    </div>
+                                                    <!-- Tiêu đề Số Lượng -->
+                                                    <div class="col-md-4 text-center">
+                                                        <strong>Số Lượng</strong>
+                                                    </div>
+                                                    <!-- Tiêu đề Giá Tiền -->
+                                                    <div class="col-md-4 text-right">
+                                                        <strong>Giá Tiền (VNĐ)</strong>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <!-- Bắt đầu một hàng mới -->
+                                            <li class="list-group-item">
+                                                <div class="row" th:each="orderItem, itemStat : ${orderInDay.orderDetails}">
+                                                    <!-- Tên món ăn, căn trái (mặc định) -->
+                                                    <div class="col-md-4">
+                                                        <span class="larger-text" th:text="${orderItem.food.foodName}"></span>
+                                                    </div>
+                                                    <!-- Số lượng, căn giữa -->
+                                                    <div class="col-md-4 text-center">
+                                                        <span class="larger-text" th:text="${orderItem.quantity}"></span>
+                                                    </div>
+                                                    <!-- Giá tiền, căn phải -->
+                                                    <div class="col-md-4 text-right">
+                                                        <span class="larger-text price-format" th:text="${orderItem.getPrice()}"></span>
+                                                    </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -247,15 +284,11 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
-
-
 
 
 
@@ -279,12 +312,43 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+    function formatCurrencyVND(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0
+        }).format(amount);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        // Tìm tất cả các phần tử có class 'price-value'
+        const priceElements = document.querySelectorAll('.price-value');
+
+        // Duyệt qua từng phần tử và định dạng lại giá trị
+        priceElements.forEach(function(priceElement) {
+            // Lấy giá trị số từ thẻ p
+            const amount = parseInt(priceElement.textContent.trim(), 10);
+            // Gọi hàm formatCurrencyVND và cập nhật giá trị
+            priceElement.textContent = formatCurrencyVND(amount);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const prices = document.querySelectorAll('.price-format');
+        prices.forEach(function(price) {
+            const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
+            price.textContent = amount.toLocaleString('vi-VN'); // Định dạng theo locale Vietnamese
+        });
+    });
+
+    function goBack() {
+        window.history.back();
+    }
 
     document.addEventListener("DOMContentLoaded", function() {
         const prices = document.querySelectorAll('.total-price');
         prices.forEach(function(price) {
             const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
-            price.textContent = amount.toLocaleString('vi-VN') + ' VND'; // Định dạng theo locale Vietnamese
+            price.textContent = amount.toLocaleString('vi-VN') + ' VNĐ'; // Định dạng theo locale Vietnamese
         });
     });
 
@@ -474,13 +538,6 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        function formatCurrencyVND(amount) {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                minimumFractionDigits: 0
-            }).format(amount);
-        }
 
         document.getElementById('search').addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase();
