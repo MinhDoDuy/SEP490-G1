@@ -121,6 +121,7 @@
 <body>
 
 <div class="container mt-5">
+    <input type="hidden" name="deliveryRoleId" id="deliveryRoleId" th:value="${deliveryRoleId}">
     <h2 style="color: #ff6600;" th:text="${canteens.canteenName}"></h2>
 
     <!-- Tab Navigation -->
@@ -216,6 +217,7 @@
 </div>
 
 <form id="cartForm" method="get" action="/cart/payment" style="display: none;">
+    <input type="hidden" name="deliveryRoleId"  th:value="${deliveryRoleId}">
     <input type="hidden" name="cartData" id="cartData">
 </form>
 
@@ -226,6 +228,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const productList = document.getElementById('productList');
         const cartItems = document.getElementById('cartItems');
+        const deliveryRoleId = document.getElementById('deliveryRoleId').value;
         const addButtons = document.querySelectorAll('.btn-add');
         const proceedToPaymentButton = document.getElementById('proceedToPayment');
         const cartForm = document.getElementById('cartForm');
@@ -247,11 +250,11 @@
                         quantity: 1,
                         maxQuantity: productQuantity
                     };
-                    saveCartItem(productId, 1);
+                    saveCartItem(productId, 1,deliveryRoleId);
                 } else {
                     if (cart[productId].quantity < cart[productId].maxQuantity) {
                         cart[productId].quantity += 1;
-                        updateCartItem(productId, cart[productId].quantity);
+                        updateCartItem(productId, cart[productId].quantity,deliveryRoleId);
                     } else {
                         alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
                     }
@@ -310,9 +313,9 @@
                     const productId = this.getAttribute('data-id');
                     if (cart[productId].quantity > 1) {
                         cart[productId].quantity -= 1;
-                        updateCartItem(productId, cart[productId].quantity);
+                        updateCartItem(productId, cart[productId].quantity,deliveryRoleId);
                     } else {
-                        removeCartItem(productId);
+                        removeCartItem(productId,deliveryRoleId);
                         delete cart[productId];
                     }
                     updateCartDisplay();
@@ -324,7 +327,7 @@
                     const productId = this.getAttribute('data-id');
                     if (cart[productId].quantity < cart[productId].maxQuantity) {
                         cart[productId].quantity += 1;
-                        updateCartItem(productId, cart[productId].quantity);
+                        updateCartItem(productId, cart[productId].quantity,deliveryRoleId);
                     } else {
                         alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
                     }
@@ -335,14 +338,14 @@
             document.querySelectorAll('.btn-remove').forEach(button => {
                 button.addEventListener('click', function () {
                     const productId = this.getAttribute('data-id');
-                    removeCartItem(productId);
+                    removeCartItem(productId,deliveryRoleId);
                     delete cart[productId];
                     updateCartDisplay();
                 });
             });
         }
 
-        function saveCartItem(productId, quantity) {
+        function saveCartItem(productId, quantity, deliveryRoleId) {
             fetch('/cart/add-to-cart-provisional', {
                 method: 'POST',
                 headers: {
@@ -350,7 +353,8 @@
                 },
                 body: new URLSearchParams({
                     'foodId': productId,
-                    'quantity': quantity
+                    'quantity': quantity,
+                    'deliveryRoleId': deliveryRoleId
                 })
             })
                 .then(response => {
@@ -361,7 +365,7 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        function updateCartItem(productId, quantity) {
+        function updateCartItem(productId, quantity, deliveryRoleId ) {
             console.log('Updating cart item:', productId, quantity);
             fetch('/cart/update-cart-item-provisional', {
                 method: 'POST',
@@ -370,7 +374,8 @@
                 },
                 body: new URLSearchParams({
                     'cartItemId': productId,
-                    'quantity': quantity
+                    'quantity': quantity,
+                    'deliveryRoleId': deliveryRoleId
                 })
             })
                 .then(response => {
@@ -381,7 +386,7 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        function removeCartItem(productId) {
+        function removeCartItem(productId,deliveryRoleId) {
             console.log('Removing from cart:', productId);
             fetch('/cart/remove-from-cart-provisional', {
                 method: 'POST',
@@ -389,7 +394,8 @@
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: new URLSearchParams({
-                    'cartItemId': productId
+                    'cartItemId': productId,
+                    'deliveryRoleId': deliveryRoleId
                 })
             })
                 .then(response => {

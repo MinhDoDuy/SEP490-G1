@@ -28,4 +28,5 @@ public interface CartService {
     void clearCart(Cart cart);
 
 
+    Cart getCartProvisionalByDeliveryRoleId(Integer deliveryRoleId);
 }

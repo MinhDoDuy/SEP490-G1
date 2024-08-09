@@ -116,6 +116,12 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
+    @Override
+    public Cart getCartProvisionalByDeliveryRoleId(Integer deliveryRoleId) {
+        return cartRepository.findCartsByDeliveryRoleIdAndStatusProvisional(deliveryRoleId);
+
+    }
+
 
     public List<Food> findByCategoryId(Integer categoryId) {
         return foodRepository.findByCategoryId(categoryId);

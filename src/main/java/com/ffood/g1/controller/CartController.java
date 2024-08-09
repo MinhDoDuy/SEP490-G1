@@ -8,7 +8,6 @@ import com.ffood.g1.repository.OrderRepository;
 import com.ffood.g1.repository.UserRepository;
 import com.ffood.g1.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -144,22 +143,22 @@ public class CartController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error updating quantity");
         }
-
-
     }
 
-
     @GetMapping("/create-order-at-couter")
-    public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId, HttpSession session) {
-        // Delete existing provisional cart for user with ID 1
-        if (cartService.getCartByUserId(1) != null) {
-            cartItemRepository.deleteAll(cartService.getCartByUserId(1).getCartItems());
-            cartRepository.delete(cartService.getCartByUserId(1));
+    public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId,@RequestParam("deliveryRoleId") Integer deliveryRoleId, HttpSession session) {
+
+//        // Delete existing provisional cart for user with ID 1
+        Cart cartCurent = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
+        if (cartCurent != null) {
+            cartItemRepository.deleteAll(cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId).getCartItems());
+            cartRepository.delete(cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId));
         }
-        // Create a new provisional cart for user with ID 1
-//        User user = userService.getUserById(1);
+//        // Create a new provisional cart for user with ID 1
+
+        //User user = userService.getUserById(1);
         Cart cartProvisional = new Cart();
-        cartProvisional.setUser(userService.getUserById(1));
+        cartProvisional.setUser(userService.getUserById(deliveryRoleId));
         cartProvisional.setCreatedAt(LocalDateTime.now());
         cartProvisional.setTransactionDate(LocalDateTime.now());
         cartProvisional.setTotalAmount(0);
@@ -171,6 +170,7 @@ public class CartController {
         Canteen canteen = canteenService.getCanteenById(canteenId);
         model.addAttribute("canteenName", canteen.getCanteenName());
         session.setAttribute("cartProvisional", cartProvisional);
+        model.addAttribute("deliveryRoleId", deliveryRoleId);
 
 
         //list billing
@@ -182,18 +182,18 @@ public class CartController {
     }
 
     @PostMapping("/cart/add-to-cart-provisional")
-    public ResponseEntity<Void> addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity, HttpSession session) {
-        System.out.println("Cos thuc hien chuc nang add");
+    public ResponseEntity<Void> addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity,@RequestParam("deliveryRoleId") Integer deliveryRoleId, HttpSession session) {
         Optional<Food> foodProvisional = foodService.getFoodById(foodId);
-        Cart cartProvisional = cartService.getCartByUserId(1);
+        Cart cartProvisional = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
+        System.out.println(cartProvisional);
         cartService.addToCart(cartProvisional, foodId, quantity, LocalDateTime.now(), foodProvisional.get().getPrice());
         return ResponseEntity.ok().build();
     }
 
 
     @PostMapping("/cart/update-cart-item-provisional")
-    public ResponseEntity<Void> updateCartItemProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("quantity") Integer quantity) {
-        Cart cartProvisional = cartService.getCartByUserId(1);
+    public ResponseEntity<Void> updateCartItemProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("quantity") Integer quantity,@RequestParam("deliveryRoleId") Integer deliveryRoleId) {
+        Cart cartProvisional = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
         for (CartItem cartItem : cartProvisional.getCartItems()) {
             if (Objects.equals(cartItem.getFood().getFoodId(), foodId)) {
                 cartItem.setQuantity(quantity);
@@ -205,8 +205,8 @@ public class CartController {
     }
 
     @PostMapping("/cart/remove-from-cart-provisional")
-    public ResponseEntity<Void> removeFromCartProvisional(@RequestParam("cartItemId") Integer foodId) {
-        Cart cartProvisional = cartService.getCartByUserId(1);
+    public ResponseEntity<Void> removeFromCartProvisional(@RequestParam("cartItemId") Integer foodId,@RequestParam("deliveryRoleId") Integer deliveryRoleId) {
+        Cart cartProvisional = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
         for (CartItem cartItem : cartProvisional.getCartItems()) {
             if (Objects.equals(cartItem.getFood().getFoodId(), foodId)) {
                 cartItemRepository.deleteById(cartItem.getCartItemId());
@@ -218,8 +218,9 @@ public class CartController {
 
 
     @GetMapping("/cart/payment")
-    public String showPaymentScreen(Model model, @RequestParam(value = "phone", required = false) String phone) {
-        List<CartItem> cartItems = cartItemService.getCartItemsByUserId(1);
+    public String showPaymentScreen(Model model,@RequestParam("deliveryRoleId") Integer deliveryRoleId,    @RequestParam(value = "phone", required = false) String phone) {
+
+        List<CartItem> cartItems = cartItemService.getCartItemsByDeliveryRoleId(deliveryRoleId);
         model.addAttribute("cartItems", cartItems);
         int totalOrderPrice = 0;
         int canteenId=0;
@@ -227,9 +228,10 @@ public class CartController {
             totalOrderPrice += cartItem.getQuantity() * cartItem.getFood().getPrice();
             canteenId=cartItem.getFood().getCanteen().getCanteenId();
         }
-        cartRepository.save(cartService.getCartByUserId(1));
+        cartRepository.save(cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId));
         model.addAttribute("totalOrderPrice", totalOrderPrice);
         model.addAttribute("canteenId", canteenId);
+        model.addAttribute("deliveryRoleId", deliveryRoleId);
         return "cart/payment";
     }
 

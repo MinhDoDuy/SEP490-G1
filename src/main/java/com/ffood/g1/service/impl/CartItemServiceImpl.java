@@ -85,4 +85,10 @@ public class CartItemServiceImpl implements CartItemService {
         return cartItem;
     }
 
+    @Override
+    public List<CartItem> getCartItemsByDeliveryRoleId(Integer deliveryRoleId) {
+        return cartItemRepository.findCartItemsByDeliveryRoleIdAndStatusProvisional(deliveryRoleId);
+
+    }
+
 }

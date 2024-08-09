@@ -19,4 +19,6 @@ public interface CartItemService {
     void removeCartItemsByIds(List<Integer> cartItemIds);
 
     CartItem addOrUpdateCartItem(Cart cartProvisional, Optional<Food> food, Integer quantity);
+
+    List<CartItem> getCartItemsByDeliveryRoleId(Integer deliveryRoleId);
 }
