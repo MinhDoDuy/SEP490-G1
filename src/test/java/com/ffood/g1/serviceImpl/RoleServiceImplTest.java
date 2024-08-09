@@ -26,54 +26,159 @@ public class RoleServiceImplTest {
     @Mock
     private RoleRepository roleRepository;
 
+    // Trường hợp bình thường: Kiểm thử lấy tất cả các vai trò
     @Test
-    void testGetAllRoles() {
-        List<Role> expectedRoles = Arrays.asList(new Role(), new Role());
+    void testGetAllRoles_Normal() {
+        // Tạo đối tượng Role sử dụng builder
+        Role role1 = Role.builder().roleId(1).roleName("ROLE_USER").build();
+        Role role2 = Role.builder().roleId(2).roleName("ROLE_ADMIN").build();
 
-        when(roleRepository.findAll()).thenReturn(expectedRoles);
+        // Giả lập phương thức findAll của roleRepository để trả về danh sách các vai trò
+        when(roleRepository.findAll()).thenReturn(Arrays.asList(role1, role2));
 
+        // Gọi phương thức service
         List<Role> result = roleService.getAllRoles();
 
-        assertEquals(expectedRoles, result);
+        // Kiểm tra xem kết quả trả về có khớp với mong đợi hay không
+        assertEquals(Arrays.asList(role1, role2), result);
+
+        // Xác minh rằng phương thức findAll của repository đã được gọi chính xác một lần
         verify(roleRepository, times(1)).findAll();
     }
 
+    // Trường hợp bất thường: Kiểm thử lấy tất cả các vai trò khi không có vai trò nào
     @Test
-    void testFindRoleById() {
-        Integer roleId = 1;
-        Role expectedRole = new Role();
+    void testGetAllRoles_Abnormal() {
+        // Giả lập phương thức findAll của roleRepository để trả về danh sách rỗng
+        when(roleRepository.findAll()).thenReturn(Collections.emptyList());
 
-        when(roleRepository.findById(roleId)).thenReturn(Optional.of(expectedRole));
+        // Gọi phương thức service
+        List<Role> result = roleService.getAllRoles();
 
-        Role result = roleService.findRoleById(roleId);
+        // Kiểm tra xem kết quả trả về có rỗng hay không
+        assertTrue(result.isEmpty());
 
-        assertEquals(expectedRole, result);
-        verify(roleRepository, times(1)).findById(roleId);
+        // Xác minh rằng phương thức findAll của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findAll();
     }
 
+    // Trường hợp ranh giới: Kiểm thử lấy tất cả các vai trò khi roleRepository trả về null
     @Test
-    void testGetRoleByName() {
-        String roleName = "ROLE_USER";
-        Role expectedRole = new Role();
+    void testGetAllRoles_Boundary() {
+        // Giả lập phương thức findAll của roleRepository để trả về null
+        when(roleRepository.findAll()).thenReturn(null);
 
-        when(roleRepository.findByName(roleName)).thenReturn(expectedRole);
+        // Gọi phương thức service
+        List<Role> result = roleService.getAllRoles();
 
-        Role result = roleService.getRoleByName(roleName);
+        // Kiểm tra xem kết quả trả về có phải là null hay không
+        assertNull(result);
 
-        assertEquals(expectedRole, result);
-        verify(roleRepository, times(1)).findByName(roleName);
+        // Xác minh rằng phương thức findAll của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findAll();
     }
 
+    // Trường hợp bình thường: Kiểm thử tìm vai trò theo roleId
     @Test
-    void testGetRoleById() {
-        Integer roleId = 1;
-        Role expectedRole = new Role();
+    void testFindRoleById_Normal() {
+        // Tạo đối tượng Role sử dụng builder
+        Role role = Role.builder().roleId(1).roleName("ROLE_USER").build();
 
-        when(roleRepository.findById(roleId)).thenReturn(Optional.of(expectedRole));
+        // Giả lập phương thức findById của roleRepository để trả về đối tượng Role
+        when(roleRepository.findById(1)).thenReturn(Optional.of(role));
 
-        Role result = roleService.getRoleById(roleId);
+        // Gọi phương thức service
+        Role result = roleService.findRoleById(1);
 
-        assertEquals(expectedRole, result);
-        verify(roleRepository, times(1)).findById(roleId);
+        // Kiểm tra xem kết quả trả về có khớp với mong đợi hay không
+        assertEquals(role, result);
+
+        // Xác minh rằng phương thức findById của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findById(1);
     }
+
+    // Trường hợp bất thường: Kiểm thử tìm vai trò theo roleId khi không tìm thấy vai trò
+    @Test
+    void testFindRoleById_Abnormal() {
+        // Giả lập phương thức findById của roleRepository để trả về Optional rỗng
+        when(roleRepository.findById(1)).thenReturn(Optional.empty());
+
+        // Gọi phương thức service
+        Role result = roleService.findRoleById(1);
+
+        // Kiểm tra xem kết quả trả về có phải là null hay không
+        assertNull(result);
+
+        // Xác minh rằng phương thức findById của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findById(1);
+    }
+
+    // Trường hợp ranh giới: Kiểm thử tìm vai trò theo roleId với roleId không hợp lệ
+    @Test
+    void testFindRoleById_Boundary() {
+        // Giả lập phương thức findById của roleRepository để trả về Optional rỗng
+        when(roleRepository.findById(null)).thenReturn(Optional.empty());
+
+        // Gọi phương thức service
+        Role result = roleService.findRoleById(null);
+
+        // Kiểm tra xem kết quả trả về có phải là null hay không
+        assertNull(result);
+
+        // Xác minh rằng phương thức findById của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findById(null);
+    }
+
+    // Trường hợp bình thường: Kiểm thử tìm vai trò theo tên
+    @Test
+    void testGetRoleByName_Normal() {
+        // Tạo đối tượng Role sử dụng builder
+        Role role = Role.builder().roleId(1).roleName("ROLE_USER").build();
+
+        // Giả lập phương thức findByName của roleRepository để trả về đối tượng Role
+        when(roleRepository.findByName("ROLE_USER")).thenReturn(role);
+
+        // Gọi phương thức service
+        Role result = roleService.getRoleByName("ROLE_USER");
+
+        // Kiểm tra xem kết quả trả về có khớp với mong đợi hay không
+        assertEquals(role, result);
+
+        // Xác minh rằng phương thức findByName của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findByName("ROLE_USER");
+    }
+
+    // Trường hợp bất thường: Kiểm thử tìm vai trò theo tên khi không tìm thấy vai trò
+    @Test
+    void testGetRoleByName_Abnormal() {
+        // Giả lập phương thức findByName của roleRepository để trả về null
+        when(roleRepository.findByName("ROLE_UNKNOWN")).thenReturn(null);
+
+        // Gọi phương thức service
+        Role result = roleService.getRoleByName("ROLE_UNKNOWN");
+
+        // Kiểm tra xem kết quả trả về có phải là null hay không
+        assertNull(result);
+
+        // Xác minh rằng phương thức findByName của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findByName("ROLE_UNKNOWN");
+    }
+
+    // Trường hợp ranh giới: Kiểm thử tìm vai trò theo tên với tên rỗng
+    @Test
+    void testGetRoleByName_Boundary() {
+        // Giả lập phương thức findByName của roleRepository để trả về null
+        when(roleRepository.findByName("")).thenReturn(null);
+
+        // Gọi phương thức service
+        Role result = roleService.getRoleByName("");
+
+        // Kiểm tra xem kết quả trả về có phải là null hay không
+        assertNull(result);
+
+        // Xác minh rằng phương thức findByName của repository đã được gọi chính xác một lần
+        verify(roleRepository, times(1)).findByName("");
+    }
+
+    // Các bài kiểm thử khác cũng tương tự như trên, sử dụng builder để tạo các đối tượng Role và kiểm tra các phương thức khác trong RoleServiceImpl
 }
