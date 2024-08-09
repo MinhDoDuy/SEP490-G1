@@ -140,28 +140,24 @@ public class OrderController {
         User user = userService.findByEmail(username);
         List<Order> orders = orderService.getOrdersByUserId(user.getUserId());
         model.addAttribute("orders", orders);
-
         List<Food> foods = foodService.getRandomFood();
         model.addAttribute("foods", foods);
-//        return "order/order-history";
         return "order/order-history";
     }
 
     @PostMapping("/cart/submit-payment")
     public ResponseEntity<String> submitPayment(
             @RequestParam("paymentMethod") String paymentMethod,
-            @RequestParam("userId") Integer userId) {
+            @RequestParam("userId") Integer userId,
+            @RequestParam("deliveryRoleId") Integer deliveryRoleId) {
         OrderType orderType = OrderType.AT_COUNTER;
         List<Integer> cartItemIds = new ArrayList<>();
-        System.out.println("paymentMethod: " + paymentMethod);
-        System.out.println("userId: " + userId);
         // Giả sử bạn có dịch vụ để tạo đơn hàng
         User user = userRepository.getOne(userId);
-        List<CartItem> listCartItems = cartItemService.getCartItemsByUserId(1);
+        List<CartItem> listCartItems = cartItemService.getCartItemsByDeliveryRoleId(deliveryRoleId);
         for (CartItem item : listCartItems) {
             cartItemIds.add(item.getCartItemId());
         }
-        System.out.println(cartItemIds);
         PaymentMethod paymentMethodDone = null;
         if (paymentMethod.equals("qr")) {
             paymentMethodDone = PaymentMethod.VNPAY;
