@@ -1,106 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
-  <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
-  <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
-  <title>Croak Order</title>
-  <!-- Icon Font Stylesheet -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
-  <!-- Libraries Stylesheet -->
-  <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
-  <!-- Customized Bootstrap Stylesheet -->
-  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
-  <!-- Template Stylesheet -->
-  <link href="/css/style_test.css" th:href="@{/css/style_test.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/flaticon.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/barfiller.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/magnific-popup.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/elegant-icons.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/nice-select.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+    <link th:href="@{/css/style1.css}" rel="stylesheet" type="text/css">
+    <title>Croak Order</title>
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <!-- Template Stylesheet -->
+    <link href="/css/style_test.css" th:href="@{/css/style_test.css}" rel="stylesheet">
 
 </head>
 <body>
 <div th:replace="header :: header"></div>
 <main>
-  <div class="container-fluid contact py-5">
-    <div class="container py-5">
-      <div class="p-5 bg-light rounded">
-        <div class="row g-4">
-          <div class="col-12">
-            <div class="text-center mx-auto" style="max-width: 700px;">
-              <h1 class="text-primary">Phản Hồi Về Hệ Thống</h1>
-              <p class="mb-4">Chúng tôi đánh giá cao ý kiến phản hồi của bạn. Vui lòng cho chúng tôi biết suy nghĩ và đề xuất của bạn để cải thiện hệ thống của chúng tôi.</p>
-              <div th:if="${successMessage}" class="alert alert-success" id="Alert" role="alert">
-                <span th:text="${successMessage}"></span>
-              </div>
-              <div th:if="${errorMessage}" class="alert alert-danger" id="Alert" role="alert">
-                <span th:text="${errorMessage}" style="color: red"></span>
-              </div>
-            </div>
-          </div>
+    <div class="container-fluid contact py-5">
+        <div class="container py-5">
+            <div class="p-5 bg-light rounded">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="text-center mx-auto" style="max-width: 700px;">
+                            <h1 class="text-primary">Phản Hồi Về Hệ Thống</h1>
+                            <p class="mb-4">Chúng tôi đánh giá cao ý kiến phản hồi của bạn. Vui lòng cho chúng tôi biết
+                                suy nghĩ và đề xuất của bạn để cải thiện hệ thống của chúng tôi.</p>
+                            <div th:if="${successMessage}" class="alert alert-success" id="Alert" role="alert">
+                                <span th:text="${successMessage}"></span>
+                            </div>
+                            <div th:if="${errorMessage}" class="alert alert-danger" id="Alert" role="alert">
+                                <span th:text="${errorMessage}" style="color: red"></span>
+                            </div>
+                        </div>
+                    </div>
 
-          <div class="col-lg-7">
-            <form th:action="@{/submit-feedback/{userId}(userId=${user.userId})}" method="POST">
-              <div class="mb-4">
-                <textarea class="w-100 form-control border-0" name="comment" rows="5" placeholder="Ý kiến của bạn về hệ thống" required style="height: 200px;"></textarea>
-              </div>
-              <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" type="submit">Gửi</button>
-            </form>
+                    <div class="col-lg-7">
+                        <form th:action="@{/submit-feedback/{userId}(userId=${user.userId})}" method="POST">
+                            <div class="mb-4">
+        <textarea class="form-control border-0" name="comment" rows="5"
+                  placeholder="Ý kiến của bạn về hệ thống" required
+                  style="height: 178px; resize: none;"></textarea>
+                            </div>
+                            <button class="w-100 btn btn-outline-secondary btn-lg py-3 bg-white text-primary"
+                                    type="submit">Gửi
+                            </button>
+                        </form>
 
-          </div>
-          <div class="col-lg-5">
-            <div class="d-flex p-4 rounded mb-4 bg-white">
-              <i class="fas fa-envelope fa-2x text-primary me-4"></i>
-              <div>
-                <h4>Mail Liên Hệ</h4>
-                <p class="mb-2">chuvuz04112001@gmail.com</p>
-              </div>
-            </div>
-            <div class="d-flex p-4 rounded bg-white">
-              <i class="fa fa-phone-alt fa-2x text-primary me-4"></i>
-              <div>
-                <h4>Số Điện Thoại</h4>
-                <p class="mb-2">0916502101</p>
-              </div>
-            </div>
-          </div>
-            <div class="col-lg-12">
-              <div class="h-100 rounded">
-                <iframe class="rounded w-100"
-                        style="height: 400px;" src="https://www.google.com/maps/embed/v1/place?q=đại+học+fpt&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
-                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-              </div>
+
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="d-flex p-4 rounded mb-4 bg-white">
+                            <i class="fas fa-envelope fa-2x text-primary me-4"></i>
+                            <div>
+                                <h4>Mail Liên Hệ</h4>
+                                <p class="mb-2">chuvuz04112001@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="d-flex p-4 rounded bg-white">
+                            <i class="fa fa-phone-alt fa-2x text-primary me-4"></i>
+                            <div>
+                                <h4>Số Điện Thoại</h4>
+                                <p class="mb-2">0916502101</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="h-100 rounded">
+                            <iframe class="rounded w-100"
+                                    style="height: 400px;"
+                                    src="https://www.google.com/maps/embed/v1/place?q=đại+học+fpt&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
+                                    loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
     </div>
-  </div>
 </main>
 
 <div th:replace="footer :: footer"></div>
 
 <script>
-  function hideAlert() {
-    var alert = document.getElementById('Alert');
-    if (alert) {
-      setTimeout(function () {
-        alert.style.display = 'none';
-      }, 3000);
+    function hideAlert() {
+        var alert = document.getElementById('Alert');
+        if (alert) {
+            setTimeout(function () {
+                alert.style.display = 'none';
+            }, 3000);
+        }
     }
-  }
 
-  window.onload = function () {
-    hideAlert();
-  }
+    window.onload = function () {
+        hideAlert();
+    }
 </script>
 </body>
 </html>
