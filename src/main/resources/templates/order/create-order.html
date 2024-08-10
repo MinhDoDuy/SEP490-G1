@@ -20,12 +20,12 @@
             <div class="form-group">
               <label for="amount">Số tiền:</label>
 
-              <input type="number" class="form-control" id="amount" name="totalOrderPrice"
-                     th:value="${order.totalOrderPrice}"  readonly>
+              <input type="number" class="form-control formatted-price" id="amount" name="totalOrderPrice"
+                     th:value="${order.totalOrderPrice}" th:text="${order.totalOrderPrice}" readonly>
             </div>
             <div class="form-group">
-              <label for="orderInfo">Thông tin đơn hàng:</label>
-              <input type="text" class="form-control" id="orderInfo" name="orderInfo" required th:value="${' Thanh toán đơn hàng '+order.orderCode}" readonly>
+              <label for="orderInfo">Mã đơn hàng:</label>
+              <input type="text" class="form-control" id="orderInfo" name="orderInfo" required th:value="${order.orderCode}" readonly>
             </div>
             <button type="submit" class="btn btn-primary">Thanh toán</button>
           </form>
@@ -35,6 +35,23 @@
   </div>
 </div>
 
+<script>
+  // Function to format currency in VND
+  function formatCurrencyVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Format all prices on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.formatted-price').forEach(function (element) {
+      let price = element.innerText;
+      element.innerText = formatCurrencyVND(price);
+    });
+  });
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
