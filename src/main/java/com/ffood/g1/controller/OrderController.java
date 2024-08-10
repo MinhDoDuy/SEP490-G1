@@ -1,9 +1,6 @@
 package com.ffood.g1.controller;
 
-import com.ffood.g1.entity.CartItem;
-import com.ffood.g1.entity.Food;
-import com.ffood.g1.entity.Order;
-import com.ffood.g1.entity.User;
+import com.ffood.g1.entity.*;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.FoodRepository;
@@ -91,24 +88,34 @@ public class OrderController {
                                   @RequestParam("paymentMethod") PaymentMethod paymentMethod,
                                   @RequestParam("orderType") OrderType orderType,
                                   @RequestParam("cartItemIdsString") String cartItemIdsString,
-                                  Model model) {
+                                  Model model, HttpSession session) {
         //Hãy thêm hàm đổi từ string sang List<Integer>
         List<Integer> cartItemIds = Arrays.stream(cartItemIdsString.replaceAll("\\[|\\]", "").split(","))
                 .map(String::trim)
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
-
+        int totalOrderPrice = 0;
+        for (Integer cartItemId : cartItemIds) {
+            CartItem cartItem = cartItemService.getCartItemById(cartItemId);
+            if (cartItem != null) {
+                totalOrderPrice += cartItem.getPrice() * cartItem.getQuantity();
+            }
+        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             String email = authentication.getName();
             User user = userService.findByEmail(email);
             if (user != null) {
-                // Create and save the order
-                Order order = orderService.createOrder(user, address, note, orderType, paymentMethod, cartItemIds);
-                // Remove the selected cart items
-                cartItemService.removeCartItemsByIds(cartItemIds);
 
-                model.addAttribute("order", order);
+                //Luu session cac phan tu cửa order:
+                session.setAttribute("userOrderOn", user);
+                session.setAttribute("addressOrderOn", address);
+                session.setAttribute("noteOrderOn", note);
+                session.setAttribute("orderTypeOrderOn", orderType);
+                session.setAttribute("paymentMethodOrderOn", paymentMethod);
+                session.setAttribute("cartItemIdsOrderOn", cartItemIds);
+
+                model.addAttribute("totalOrderPrice", totalOrderPrice);
                 return "order/create-order";
             }
         }

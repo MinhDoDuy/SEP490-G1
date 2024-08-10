@@ -19,13 +19,11 @@
           <form th:action="@{/submitOrder}" method="post">
             <div class="form-group">
               <label for="amount">Số tiền:</label>
-
               <input type="number" class="form-control formatted-price" id="amount" name="totalOrderPrice"
-                     th:value="${order.totalOrderPrice}" th:text="${order.totalOrderPrice}" readonly>
+                     th:value="${totalOrderPrice}"  readonly>
             </div>
             <div class="form-group">
-              <label for="orderInfo">Mã đơn hàng:</label>
-              <input type="text" class="form-control" id="orderInfo" name="orderInfo" required th:value="${order.orderCode}" readonly>
+              <input type="hidden" class="form-control" id="orderInfo" name="orderInfo"  value="0" required  readonly>
             </div>
             <button type="submit" class="btn btn-primary">Thanh toán</button>
           </form>

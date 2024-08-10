@@ -261,10 +261,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="item : ${canteenEntry.value}">
+                    <tr th:each="item : ${canteenEntry.value}" >
                         <td class="align-middle">
                             <label>
-                                <input type="checkbox" th:id="${'product' + item.cartItemId}" class="product-checkbox"
+                                <input th:if="${item.food.foodQuantity}>0" type="checkbox" th:id="${'product' + item.cartItemId}" class="product-checkbox"
                                        th:data-canteen="${'canteen' + canteenEntry.key.canteenId}"/>
                             </label>
                         </td>
@@ -273,7 +273,8 @@
                                    style="width: 100px">Product Name</label>
                         </td>
                         <td class="formatted-price align-middle" th:text="${item.food.price}"></td>
-                        <td class="align-middle" th:text="${item.food.foodQuantity}"></td>
+                        <td class="align-middle" th:text="${item.food.foodQuantity}" th:if="${item.food.foodQuantity}>0"></td>
+                        <td class="align-middle" th:if="${item.food.foodQuantity}<1" style="color: red">Hết hàng</td>
                         <td class="align-middle">
                             <div class="quantity-control">
                                 <button class="custom-btn btn-minus btn-info" th:attr="data-id=${item.cartItemId}">-

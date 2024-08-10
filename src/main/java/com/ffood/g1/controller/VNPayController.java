@@ -3,8 +3,12 @@ package com.ffood.g1.controller;
 
 import com.ffood.g1.entity.Cart;
 import com.ffood.g1.entity.Order;
+import com.ffood.g1.entity.User;
+import com.ffood.g1.enum_pay.OrderType;
+import com.ffood.g1.enum_pay.PaymentMethod;
 import com.ffood.g1.repository.CartRepository;
 import com.ffood.g1.repository.OrderRepository;
+import com.ffood.g1.service.CartItemService;
 import com.ffood.g1.service.CartService;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.impl.VNPayService;
@@ -21,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 @Controller
@@ -30,9 +35,8 @@ public class VNPayController {
 
     @Autowired
     private OrderService orderService;
-
     @Autowired
-    private CartService cartService;
+    private CartItemService cartItemService;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -67,28 +71,30 @@ public class VNPayController {
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
-        String totalOrderPrice = request.getParameter("vnp_Amount");
+//        String totalOrderPrice = request.getParameter("vnp_Amount");
         model.addAttribute("orderId",  orderInfo);
-        model.addAttribute("totalOrderPrice",  totalOrderPrice);
+
         model.addAttribute("paymentTime",  paymentTime);
         model.addAttribute("transactionId",  transactionId);
 
+        User user= (User) session.getAttribute("userOrderOn");
+        String address=(String) session.getAttribute("addressOrderOn");
+        String note=(String) session.getAttribute("noteOrderOn");
+        OrderType orderType= (OrderType) session.getAttribute("orderTypeOrderOn");
+        PaymentMethod paymentMethod=(PaymentMethod) session.getAttribute("paymentMethodOrderOn");
+        List<Integer> cartItemIds  = (List<Integer>) session.getAttribute("cartItemIdsOrderOn");
         if (paymentStatus == 1) {
-            Order order = (Order) session.getAttribute("order");
-            Cart cart = (Cart) session.getAttribute("cart");
+            Order order = orderService.createOrder(user, address, note, orderType, paymentMethod, cartItemIds);
             if (order == null) {
                 return "error";
             }
             try {
-                // Cập nhật trạng thái giỏ hàng
-                cart.setStatus("deactive");
-                cartRepository.save(cart); // Save cart
-
-                orderRepository.save(order);
-                cartService.clearCart(cart);
-                session.removeAttribute("orders");
-                session.removeAttribute("cart");
-                session.removeAttribute("totalItems");
+                // Remove the selected cart items
+                cartItemService.removeCartItemsByIds(cartItemIds);
+                String orderCode= order.getOrderCode();
+                int totalOrderPrice= order.getTotalOrderPrice();
+                model.addAttribute("orderCode", orderCode);
+                model.addAttribute("totalOrderPrice",  totalOrderPrice);
                 return "order/order-success";
             } catch (Exception e) {
                 return "error";
