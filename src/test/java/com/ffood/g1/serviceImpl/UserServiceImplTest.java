@@ -289,6 +289,7 @@ public class UserServiceImplTest {
     // Trường hợp bình thường: Kiểm thử việc tìm kiếm người dùng với phân trang
     @Test
     void testGetAllUsers_Normal() {
+        //tạo đối tượng pageable của thư viện domain
         Pageable pageable = PageRequest.of(0, 10);
 
         // Tạo các đối tượng User sử dụng builder
