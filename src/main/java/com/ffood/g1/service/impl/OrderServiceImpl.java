@@ -85,10 +85,10 @@ public class OrderServiceImpl implements OrderService {
         //tại sao get 0
         details.append("Căn tin: ").append(order.getOrderDetails().get(0).getFood().getCanteen().getCanteenName()).append("\n");
         for (OrderDetail detail : order.getOrderDetails()) {
-            details.append("Món ăn: ").append(detail.getFood().getFoodName())
-                    .append(", Mã đơn hàng: ").append(detail.getOrder().getOrderCode())
-                    .append(", Số lượng: ").append(detail.getQuantity())
-                    .append(", Giá: ").append(detail.getPrice())
+            details.append("Món ăn: \n").append(detail.getFood().getFoodName())
+                    .append(", Mã đơn hàng: \n").append(detail.getOrder().getOrderCode())
+                    .append(", Số lượng: \n").append(detail.getQuantity())
+                    .append(", Tổng Giá: ").append(detail.getOrder().getTotalOrderPrice())
                     .append("\n");
         }
         return details.toString();
