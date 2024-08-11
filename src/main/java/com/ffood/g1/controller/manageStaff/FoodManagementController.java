@@ -86,7 +86,7 @@ public class FoodManagementController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedCategoryId", categoryId);
 
-        return "./staff-management/manage-food";
+        return "staff-management/manage-food";
     }
 
     @GetMapping("/add-food-form")
