@@ -28,8 +28,8 @@
   </div>
 
   <div class="p-6">
-    <div th:if="${successMessage}" class="alert alert-success hidden" th:text="${successMessage}" id="successMessage"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger hidden" th:text="${errorMessage}" id="errorMessage"></div>
+    <div th:if="${successMessage}" class="alert alert-success " th:text="${successMessage}" id="successMessage"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger " th:text="${errorMessage}" id="errorMessage"></div>
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Đơn ship của bạn</div>
@@ -39,6 +39,7 @@
         <table class="table w-full min-w-[540px]">
           <thead>
           <tr>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
@@ -55,8 +56,9 @@
           <tr th:if="${#lists.isEmpty(orders.content)}">
             <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="10">Không có đơn nào</td>
           </tr>
-          <tr th:each="order : ${orders.content}">
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng</td>
+          <tr th:each="order ,iterStat : ${orders.content}">
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${orders.number * orders.size + iterStat.index + 1}">Mã đơn hàng</td>
+            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderCode}">Mã Đơn Hàng</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.fullName}">Tên khách hàng</td>
             <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">Ngày đặt hàng</td>
             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus.displayName}">Trạng thái</td>
@@ -75,12 +77,6 @@
                 <input type="hidden" name="userId" th:value="${deliveryRoleId}"/> <!-- Add userId -->
                 <button type="submit" class="btn btn-success">
                   <i class="ri-check-line"></i>
-                </button>
-              </form>
-              <form th:action="@{'/reject-order/' + ${order.orderId}}" method="post" style="display: inline;">
-                <input type="hidden" name="canteenId" th:value="${canteenId}"/>
-                <button class="btn btn-danger" type="submit">
-                  <i class="ri-close-line"></i>
                 </button>
               </form>
             </td>

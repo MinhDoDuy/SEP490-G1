@@ -25,26 +25,30 @@
                 </button>
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
-                        <a th:href="@{/homepage}" class="nav-item nav-link active">Trang Chủ</a>
-                        <a th:href="@{/canteen_details}" class="nav-item nav-link">Món ăn</a>
-                        <!--                        <a th:href="@{/order-history}" class="nav-item nav-link">Shop</a>-->
+                        <a th:href="@{/homepage}" class="nav-item nav-link active" style="font-size: 1.2rem;">Trang
+                            Chủ</a>
+                        <a th:href="@{/canteen_details}" class="nav-item nav-link" style="font-size: 1.2rem;">Món ăn</a>
                         <div class="nav-item dropdown">
-                            <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Cửa hàng</span>
+                            <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="font-size: 1.2rem;">Cửa hàng</span>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
                                 <div th:each="canteen : ${session.canteens}">
                                     <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}"
-                                       th:text="${canteen.canteenName}" class="dropdown-item" style="color: black"></a>
+                                       th:text="${canteen.canteenName}" class="dropdown-item"
+                                       style="color: black; font-size: 1.2rem;"></a>
                                 </div>
                             </div>
                         </div>
                         <th:block th:if="${session.user != null}">
-                            <a th:href="@{/feedback-system-form/{userId}(userId=${session.user.userId})}" class="nav-item nav-link">Gửi phản hồi</a>
+                            <a th:href="@{/feedback-system-form/{userId}(userId=${session.user.userId})}"
+                               class="nav-item nav-link" style="font-size: 1.2rem;">Gửi phản hồi</a>
                         </th:block>
                     </div>
+
                     <div class="d-flex m-3 me-0">
                         <!--                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>-->
                         <a th:href="@{/cart_items}" class="position-relative me-4 my-auto">
-                            <i class="fa fa-shopping-bag fa-2x"></i>
+                            <i class="fa fa-shopping-cart fa-2x"></i>
+
                             <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                                   style="top: -5px; left: 15px; height: 20px; min-width: 20px; "
                                   th:text="${session.totalQuantity}">0</span>
@@ -56,28 +60,30 @@
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle fas fa-user fa-2x" th:if="${session.user != null}"></a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0" th:if="${session.user != null}">
-                                <a th:href="@{/order-history}" class="dropdown-item"  style="color: black">Lịch sử mua hàng</a>
+                                <a th:href="@{/order-history}" class="dropdown-item" style="color: black">Lịch sử mua
+                                    hàng</a>
                                 <a th:href="@{/view-profile/{userId}(userId=${session.user.userId})}"
-                                   class="dropdown-item"  style="color: black">Xem hồ sơ</a>
+                                   class="dropdown-item" style="color: black">Xem hồ sơ</a>
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_ADMIN'}">
 
-                                    <a th:href="@{/dashboard-admin}" class="dropdown-item"  style="color: black">Quản Lý</a>
+                                    <a th:href="@{/dashboard-admin}" class="dropdown-item" style="color: black">Quản
+                                        Lý</a>
 
                                 </div>
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_MANAGER'}">
 
                                     <a th:href="@{/dashboard-manager(canteenId=${session.user.canteen.canteenId})}"
-                                       class="dropdown-item"  style="color: black">Quản Lý</a>
+                                       class="dropdown-item" style="color: black">Quản Lý</a>
                                 </div>
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_STAFF'}">
                                     <a th:href="@{/order-list-ship/{canteenId}(canteenId=${session.user.canteen.canteenId} , deliveryRoleId=${session.user.userId})}"
-                                       class="dropdown-item"  style="color: black">Danh Sách Đặt hàng</a>
+                                       class="dropdown-item" style="color: black">Danh Sách Đặt hàng</a>
                                 </div>
 
-                                <a th:href="@{/logout}" class="dropdown-item"  style="color: black">Đăng Xuất</a>
+                                <a th:href="@{/logout}" class="dropdown-item" style="color: black">Đăng Xuất</a>
                             </div>
                         </div>
                     </div>

@@ -82,11 +82,13 @@ public class OrderServiceImpl implements OrderService {
     private String getOrderDetails(Order order) {
         StringBuilder details = new StringBuilder();
         details.append("Chi tiết đơn hàng:\n");
+        //tại sao get 0
         details.append("Căn tin: ").append(order.getOrderDetails().get(0).getFood().getCanteen().getCanteenName()).append("\n");
         for (OrderDetail detail : order.getOrderDetails()) {
-            details.append("Món ăn: ").append(detail.getFood().getFoodName())
-                    .append(", Số lượng: ").append(detail.getQuantity())
-                    .append(", Giá: ").append(detail.getPrice())
+            details.append("Món ăn: \n").append(detail.getFood().getFoodName())
+                    .append(", Mã đơn hàng: \n").append(detail.getOrder().getOrderCode())
+                    .append(", Số lượng: \n").append(detail.getQuantity())
+                    .append(", Tổng Giá: ").append(detail.getOrder().getTotalOrderPrice())
                     .append("\n");
         }
         return details.toString();
@@ -106,11 +108,7 @@ public class OrderServiceImpl implements OrderService {
         // Gửi email thông cho người dùng
         if (newStatus == OrderStatus.PROGRESS) {
             String subject = "Đơn hàng của bạn đã được chuẩn bị";
-            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được chuẩn bị và sẵn sàng để lấy. Mời bạn xuống lấy hàng.\n\n" + orderDetails;
-            sendEmail(order.getUser().getEmail(), subject, text);
-        } else if (newStatus == OrderStatus.COMPLETE) {
-            String subject = "Đơn hàng của bạn đã hoàn thành";
-            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được giao thành công.\n\n" + orderDetails;
+            String text = "Đơn hàng đang được làm đã được chuẩn bị.\n\n" + orderDetails;
             sendEmail(order.getUser().getEmail(), subject, text);
         }
     }
@@ -165,9 +163,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void completeOrder(Integer orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        // Retrieve the order by its ID, or throw an exception if not found
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+
+        // cập nhật trạng thái đơn hàng thành  COMPLETE
         order.setOrderStatus(OrderStatus.COMPLETE);
+
+        // lưu trạng thái mới cho order dùng jpa repository
         orderRepository.save(order);
+
+        // Generate order details as a string
+        String orderDetails = getOrderDetails(order);
+
+        // Send email notification if the order status is COMPLETE
+        if (order.getOrderStatus() == OrderStatus.COMPLETE) {
+            String subject = "Đơn hàng của bạn đã hoàn thành";
+            String text = "Đơn hàng của bạn với mã số " + orderId + " đã được giao thành công.\n\n" + orderDetails;
+            sendEmail(order.getUser().getEmail(), subject, text);
+        }
     }
 
     @Override

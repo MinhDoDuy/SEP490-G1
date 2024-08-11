@@ -140,25 +140,19 @@
                                     <input type="checkbox" id="selectAll" onclick="selectAllOrders(this)">
                                 </th>
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Mã đơn hàng
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Tên khách hàng
+                                    STT
                                 </th>
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                                     Ngày đặt hàng
                                 </th>
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
+                                    Tên khách hàng
+                                </th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                                     Trạng thái
                                 </th>
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Tổng giá
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                                     Địa chỉ giao hàng
-                                </th>
-                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
-                                    Ghi chú
                                 </th>
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">
                                     Loại đơn hàng
@@ -180,29 +174,25 @@
                                     nào
                                 </td>
                             </tr>
-                            <tr th:each="order : ${orders.content}">
+                            <tr th:each="order ,iterStat : ${orders.content}">
                                 <td th:if="${orderStatus.name() == 'PENDING'}"
                                     class="py-2 px-4 border-b border-b-gray-50">
                                     <input type="checkbox" name="selectedOrders" th:value="${order.orderId}"
                                            form="bulk-assign-form">
                                 </td>
-                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderId}">Mã đơn hàng
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${orders.number * orders.size + iterStat.index + 1}">
+                                    STT</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">
+                                    Ngày đặt hàng
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.fullName}">Tên
                                     khách hàng
                                 </td>
-                                <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">
-                                    Ngày đặt hàng
-                                </td>
                                 <!-- Sử dụng phương thức getDisplayName() của enum -->
                                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus.displayName}">Trạng thái</td>
-                                <td class="py-2 px-4 border-b border-b-gray-50 formatted-price"
-                                    th:text="${order.totalOrderPrice}">Tổng giá
-                                </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Địa chỉ
                                     giao hàng
                                 </td>
-                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Ghi chú</td>
                                 <!-- Sử dụng phương thức getDisplayName() của enum -->
                                 <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType.displayName}">Loại đơn hàng</td>
                                 <!-- Sử dụng phương thức getDisplayName() của enum cho phương thức thanh toán -->
@@ -325,10 +315,25 @@
             </div>
             <div class="modal-body">
                 <ul>
+                    <li class="mb-2">
+                        <strong>Mã đơn hàng:</strong> <span th:text="${order.orderCode}">Mã đơn hàng</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Khách Hàng:</strong> <span th:text="${order.user.fullName}">Khác Hàng</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Số Điện Thoại:</strong> <span th:text="${order.user.phone}">Số Điện Thoại</span>
+                    </li>
                     <li th:each="detail : ${order.orderDetails}" class="mb-2">
                         <strong>Tên món ăn:</strong> <span th:text="${detail.food.foodName}">Tên món ăn</span><br>
                         <strong>Số lượng:</strong> <span th:text="${detail.quantity}">Số lượng</span><br>
                         <strong>Giá:</strong> <span class="formatted-price" th:text="${detail.price}">Giá</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Ghi chú:</strong> <span th:text="${order.note}">Ghi chú</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Tổng giá:</strong> <span class="formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</span>
                     </li>
                 </ul>
             </div>
@@ -338,6 +343,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     $('#rejectModal').on('show.bs.modal', function (event) {

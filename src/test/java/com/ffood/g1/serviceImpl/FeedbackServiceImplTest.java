@@ -105,21 +105,27 @@ public class FeedbackServiceImplTest {
     // Trường hợp bình thường: Kiểm thử lấy phản hồi theo canteenId và trạng thái
     @Test
     void testGetFeedbacksByCanteenIdAndStatus_Normal() {
-        // Tạo đối tượng Feedback sử dụng builder
-        Feedback feedback1 = Feedback.builder().feedbackId(1).canteenId(1).feedbackStatus(FeedbackStatus.PENDING).build();
-        Feedback feedback2 = Feedback.builder().feedbackId(2).canteenId(1).feedbackStatus(FeedbackStatus.PENDING).build();
+        //Tạo đối tượng Feedback sử dụng builder
+        Feedback feedback1 = Feedback.builder().feedbackId(1).canteenId(1)
+                .feedbackStatus(FeedbackStatus.PENDING).build();
 
-        // Giả lập phương thức findFeedbackByCanteenIdAndStatus của feedbackRepository để trả về danh sách Feedback
-        when(feedbackRepository.findFeedbackByCanteenIdAndStatus(1, FeedbackStatus.PENDING)).thenReturn(Arrays.asList(feedback1, feedback2));
+        Feedback feedback2 = Feedback.builder().feedbackId(2).canteenId(1)
+                .feedbackStatus(FeedbackStatus.PENDING).build();
+
+        //Giả lập phương thức findFeedbackByCanteenIdAndStatus của feedbackRepository để trả về danh sách Feedback
+        when(feedbackRepository.findFeedbackByCanteenIdAndStatus(1, FeedbackStatus.PENDING))
+                .thenReturn(Arrays.asList(feedback1, feedback2));
 
         // Gọi phương thức service
-        List<Feedback> result = feedbackService.getFeedbacksByCanteenIdAndStatus(1, FeedbackStatus.PENDING);
+        List<Feedback> result = feedbackService.getFeedbacksByCanteenIdAndStatus(1,
+                FeedbackStatus.PENDING);
 
-        // Kiểm tra xem kết quả trả về có khớp với mong đợi hay không
+        //Kiểm tra xem kết quả trả về có khớp với mong đợi hay không
         assertEquals(Arrays.asList(feedback1, feedback2), result);
 
-        // Xác minh rằng phương thức findFeedbackByCanteenIdAndStatus của repository đã được gọi chính xác một lần
-        verify(feedbackRepository, times(1)).findFeedbackByCanteenIdAndStatus(1, FeedbackStatus.PENDING);
+        //Xác minh rằng phương thức findFeedbackByCanteenIdAndStatus của repository đã được gọi chính xác một lần
+        verify(feedbackRepository, times(1)).findFeedbackByCanteenIdAndStatus(1,
+                FeedbackStatus.PENDING);
     }
 
     // Trường hợp bất thường: Kiểm thử lấy phản hồi khi không có phản hồi nào khớp với canteenId và trạng thái

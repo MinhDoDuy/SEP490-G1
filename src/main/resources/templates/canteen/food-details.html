@@ -10,7 +10,8 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+          rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
@@ -48,6 +49,7 @@
         .comment {
             display: none;
         }
+
         .comment.show {
             display: flex;
         }
@@ -81,7 +83,8 @@
                     <div class="col-lg-6">
                         <div class="border rounded">
                             <a href="">
-                                <img th:src="${food.imageFood}" class="img-fluid rounded" alt="Image" style=" width: 500px;height: 300px;object-fit: cover;">
+                                <img th:src="${food.imageFood}" class="img-fluid rounded" alt="Image"
+                                     style=" width: 500px;height: 300px;object-fit: cover;">
                             </a>
                         </div>
                     </div>
@@ -89,9 +92,11 @@
                         <form id="addToCartForm" th:action="@{/add_to_cart}" method="GET" class="mb-3">
                             <h4 class="fw-bold mb-3"><span th:text="${food.foodName}"> </span></h4>
                             <span th:if="${food.salesCount == null}" th:text="'Đã bán : 0 sản phẩm'"></span>
-                            <span th:if="${food.salesCount != null }" th:text="'Đã bán : '+${food.salesCount}  +' sản phẩm'"></span>
-                            <p class="mb-3">Category: <span th:text="${food.category.categoryName}"></span></p>
-                            <span class="fw-bold mb-3">Giá: <span class="formatted-price" th:text="${food.price}"></span> </span>
+                            <span th:if="${food.salesCount != null }"
+                                  th:text="'Đã bán : '+${food.salesCount}  +' sản phẩm'"></span>
+                            <p class="mb-3">Danh Mục: <span th:text="${food.category.categoryName}"></span></p>
+                            <span class="fw-bold mb-3">Giá: <span class="formatted-price"
+                                                                  th:text="${food.price}"></span> </span>
                             <input type="hidden" class="formatted-price" name="price" th:value="${food.price}"/>
 
                             <p class="mb-4">Mô tả về món ăn : <span th:text="${food.description}"></span></p>
@@ -99,17 +104,25 @@
                             <input type="hidden" name="foodId" th:value="${food.foodId}"/>
                             <div class="input-group mb-3" th:if="${food.foodQuantity}>0">
                                 <div class="input-group-prepend">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity('${food.foodId}')">-</button>
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="decreaseQuantity('${food.foodId}')">-
+                                    </button>
                                 </div>
                                 <label for="quantity-${food.foodId}">
-                                    <input type="number" id="quantity-${food.foodId}" name="quantity" class="form-control text-center quantity-input" value="1" min="1" th:max="${food.foodQuantity}" required>
+                                    <input type="number" id="quantity-${food.foodId}" name="quantity"
+                                           class="form-control text-center quantity-input" value="1" min="1"
+                                           th:max="${food.foodQuantity}" required>
                                 </label>
                                 <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity('${food.foodId}')">+</button>
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="increaseQuantity('${food.foodId}')">+
+                                    </button>
                                 </div>
                             </div>
-                            <p class="mb-4" th:if="${food.foodQuantity}>0">Số lượng sản phẩm còn lại : <span th:text="${food.foodQuantity}"></span></p>
-                            <p class="mb-4" th:if="${food.foodQuantity}==0" style="color: #cc3030">Sản phẩm tạm thời hết hàng !!! </p>
+                            <p class="mb-4" th:if="${food.foodQuantity}>0">Số lượng sản phẩm còn lại : <span
+                                    th:text="${food.foodQuantity}"></span></p>
+                            <p class="mb-4" th:if="${food.foodQuantity}==0" style="color: #cc3030">Sản phẩm tạm thời hết
+                                hàng !!! </p>
                             <input name="url" value="3" type="hidden">
                             <button type="submit" class="btn btn-primary" th:if="${food.foodQuantity}>0">
                                 <i class="fa fa-shopping-bag me-2"></i> Thêm Vào Giỏ Hàng
@@ -123,17 +136,23 @@
                 <div class="col-lg-12">
                     <nav>
                         <div class="nav nav-tabs mb-3">
-                            <button class="nav-link border-white border-bottom-0" type="button" role="tab" id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission" aria-controls="nav-mission" aria-selected="false">Đánh Giá</button>
+                            <button class="nav-link border-white border-bottom-0" type="button" role="tab"
+                                    id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
+                                    aria-controls="nav-mission" aria-selected="false">Đánh Giá
+                            </button>
                         </div>
                     </nav>
                     <div class="tab-content mb-5">
                         <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
                             <div class="d-flex flex-column" id="feedback-container">
-                                <div class="comment" th:each="feedback, iterStat : ${feedbacksFood}" th:classappend="${iterStat.index < 5} ? 'show' : ''">
-                                    <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                <div class="comment" th:each="feedback, iterStat : ${feedbacksFood}"
+                                     th:classappend="${iterStat.index < 5} ? 'show' : ''">
+                                    <img th:src="${feedback.user.userImage}" class="img-fluid rounded-circle p-3"
+                                         style="width: 100px; height: 100px;" alt="">
                                     <div class="ms-3">
                                         <p class="mb-1" style="font-size: 12px;">
-                                            <span class="order-date" th:text="${feedback.timeCreated}">April 12, 2024</span>
+                                            <span class="order-date"
+                                                  th:text="${feedback.timeCreated}">April 12, 2024</span>
                                         </p>
                                         <h6 class="mb-1" th:text="${feedback.user.userName}">Sam Peters</h6>
                                         <p class="mb-0" th:text="${feedback.comment}"></p>
@@ -141,7 +160,9 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center mt-4">
-                                <button id="show-more-btn" class="btn btn-primary" onclick="showMoreComments()">Xem thêm</button>
+                                <button id="show-more-btn" class="btn btn-primary" onclick="showMoreComments()">Xem
+                                    thêm
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -156,13 +177,19 @@
                     <div class="row g-4">
                         <div class="col-lg-12">
                             <div class="border-bottom rounded my-4">
-                                <label for="comment"></label><textarea name="comment" id="comment" class="form-control border-2" cols="30" rows="8" placeholder="Ý kiến của bạn về cửa hàng *" spellcheck="false" maxlength="400" required></textarea>
+                                <label for="comment"></label><textarea name="comment" id="comment"
+                                                                       class="form-control border-2" cols="30" rows="8"
+                                                                       placeholder="Ý kiến của bạn về cửa hàng *"
+                                                                       spellcheck="false" maxlength="400"
+                                                                       required></textarea>
                             </div>
                         </div>
 
                         <div class="col-lg-12">
                             <div class="d-flex justify-content-between py-3 mb-5">
-                                <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3">Gửi</button>
+                                <button type="submit"
+                                        class="btn border border-secondary text-primary rounded-pill px-4 py-3">Gửi
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -173,10 +200,12 @@
                     <h4 class="mb-4">Sản phẩm bán chạy</h4>
                     <div class="d-flex align-items-center justify-content-start" th:each="food : ${items_home}">
                         <div class="rounded" style="width: 100px; height: 100px;">
-                            <img th:src="${food.imageFood}" class="img-fluid rounded" style="width: 80px;height: 80px" alt="Image">
+                            <img th:src="${food.imageFood}" class="img-fluid rounded" style="width: 80px;height: 80px"
+                                 alt="Image">
                         </div>
                         <div>
-                            <h6 class="mb-2"><a th:href="@{/food_details(id=${food.foodId})}"><span th:text="${food.foodName}"></span></a></h6>
+                            <h6 class="mb-2"><a th:href="@{/food_details(id=${food.foodId})}"><span
+                                    th:text="${food.foodName}"></span></a></h6>
                             <div class="d-flex mb-2">
                                 <span class=" fw-bold me-2" th:value="${food.price}"></span>
                             </div>
@@ -190,13 +219,14 @@
 </div>
 <!-- Single Product End -->
 <!-- Success Modal -->
-<div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" >
+<div th:if="${messageAddFood}" class="modal fade" id="successModal" tabindex="-1" role="dialog"
+     aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
             </div>
-            <div class="modal-body" >
+            <div class="modal-body">
                 <span th:text="${messageAddFood}"></span>
             </div>
         </div>
@@ -208,7 +238,8 @@
 <!-- Footer End -->
 
 <!-- Back to Top -->
-<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+        class="fa fa-arrow-up"></i></a>
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -246,7 +277,7 @@
         const message = /*[[${messageAddFood}]]*/ 'Food item added to the cart successfully!';
         if (message) {
             $('#successModal').modal('show');
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#successModal').modal('hide');
             }, 2000); // Hide the modal after 3 seconds
         }

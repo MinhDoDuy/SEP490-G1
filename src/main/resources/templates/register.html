@@ -126,21 +126,39 @@
         const emailInput = document.getElementById('email');
         const emailValue = emailInput.value.trim();
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const validDomains = ['gmail.com', 'fpt.edu.vn', 'outlook.com', 'fpt.com'];
+        const disposableUsernames = [
+            '10minutemail', 'tempmail', 'guerrillamail', 'mailinator', 'yopmail',
+            'trashmail', 'dispostable', 'maildrop', 'fakeinbox', 'sharklasers',
+            'throwawaymail', 'getnada', 'fakeemail', 'invalidmail', 'noexist',
+            'nonexistent', 'nowhere', 'noemail', 'unknown', 'abcdefg', '123456789'
+        ];
         const emailError = document.getElementById('emailError');
 
         if (emailValue === '') {
-            emailError.innerText = 'Email không được để trống.';
-            emailError.style.display = 'block';
-            return false;
-        } else if (!emailPattern.test(emailValue)) {
-            emailError.innerText = 'Định dạng Email không hợp lệ.';
+            emailError.innerText = 'Vui lòng nhập email.';
             emailError.style.display = 'block';
             return false;
         } else {
-            emailError.style.display = 'none';
-            return true;
+            const emailDomain = emailValue.substring(emailValue.lastIndexOf('@') + 1);
+            const emailUsername = emailValue.substring(0, emailValue.lastIndexOf('@'));
+
+            if (!validDomains.includes(emailDomain)) {
+                emailError.innerText = 'Email phải có đuôi @gmail.com, @fpt.edu.vn, @outlook.com hoặc @fpt.com.';
+                emailError.style.display = 'block';
+                return false;
+            } else if (disposableUsernames.includes(emailUsername)) {
+                emailError.innerText = 'Tên người dùng email không hợp lệ.';
+                emailError.style.display = 'block';
+                return false;
+            } else {
+                emailError.style.display = 'none';
+                return true;
+            }
         }
     }
+
+
 
     function validatePassword() {
         const passwordInput = document.getElementById('password');

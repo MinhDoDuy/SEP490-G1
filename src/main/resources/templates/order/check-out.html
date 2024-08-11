@@ -11,7 +11,8 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+          rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
@@ -54,23 +55,25 @@
 <body>
 
 
-
 <!-- Page Preloder -->
 <div id="preloder">
     <div class="loader"></div>
 </div>
 
 <div th:replace="header :: header"></div>
+<div class="container-fluid page-header py-5">
+    <ol class="breadcrumb justify-content-center mb-0">
 
+    </ol>
+</div>
 
 
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Cart</h1>
+    <h1 class="text-center text-white display-6">Thanh Toán</h1>
     <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Pages</a></li>
-        <li class="breadcrumb-item active text-white">Cart</li>
+        <li class="breadcrumb-item"><a href="/homepage">Trang Chủ</a></li>
+        <li class="breadcrumb-item active text-white">Thanh Toán</li>
     </ol>
 </div>
 <!-- Single Page Header End -->
@@ -87,75 +90,85 @@
 
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-muted">Thanh toán</span>
-<!--                    <span class="badge badge-secondary badge-pill formatted-price" th:text="${totalQuantity}">0</span>-->
+                    <!--                    <span class="badge badge-secondary badge-pill formatted-price" th:text="${totalQuantity}">0</span>-->
                 </h4>
                 <ul class="list-group mb-3">
                     <!-- Example item, loop through actual items -->
-                    <li class="list-group-item d-flex align-items-center justify-content-between" th:each="cartItem : ${cartItems}">
+                    <li class="list-group-item d-flex align-items-center justify-content-between"
+                        th:each="cartItem : ${cartItems}">
                         <div class="product-details flex-grow-1">
                             <h6 class="my-0"><span th:text="${cartItem.food.foodName}"></span></h6>
-                            <small class="text-muted">Giá : <span class="formatted-price" th:text="${cartItem.food.price}"></span></small>
+                            <small class="text-muted">Giá : <span class="formatted-price"
+                                                                  th:text="${cartItem.food.price}"></span></small>
                         </div>
                         <div class="quantity mx-3">
                             <span class="text-muted" th:text="${cartItem.quantity}"></span>
                         </div>
                         <div class="total-price">
-                            <span class="text-muted"><span class="formatted-price" th:text="${cartItem.totalFoodPrice}"></span></span>
+                            <span class="text-muted"><span class="formatted-price"
+                                                           th:text="${cartItem.totalFoodPrice}"></span></span>
                         </div>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Tổng tiền </span>
-                        <strong class="formatted-price"  th:text="${totalOrderPrice}"></strong>
+                        <strong class="formatted-price" th:text="${totalOrderPrice}"></strong>
                     </li>
                 </ul>
             </div>
             <div class="col-md-8 order-md-1">
                 <h4 class="mb-3">Thông tin khách hàng</h4>
-                <form  class="needs-validation" th:action="@{/checkout}" method="post" >
+                <form class="needs-validation" th:action="@{/checkout}" method="post">
                     <input type="hidden" name="cartItemIdsString" th:value="${cartItemIds}">
                     <input type="hidden" name="totalOrderPrice" th:value="${totalOrderPrice}">
                     <div class="mb-3">
                         <label for="email">Tên khách hàng <span class="text-muted"></span></label>
-                        <input type="email" class="form-control" id="" placeholder="you@example.com" th:value="${user.fullName}" readonly >
+                        <input type="email" class="form-control" id="" placeholder="you@example.com"
+                               th:value="${user.fullName}" readonly>
                         <div class="invalid-feedback">
-                            Please enter a valid email address for shipping updates.
+                            Vui lòng nhập địa chỉ email hợp lệ để cập nhật thông tin vận chuyển.
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="email">Email <span class="text-muted"></span></label>
-                        <input type="email" class="form-control" id="email" placeholder="you@example.com" th:value="${user.email}" readonly>
+                        <input type="email" class="form-control" id="email" placeholder="you@example.com"
+                               th:value="${user.email}" readonly>
                         <div class="invalid-feedback">
-                            Please enter a valid email address for shipping updates.
+                            Vui lòng nhập địa chỉ email hợp lệ để cập nhật thông tin vận chuyển.
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="phone">Số Điện Thoại</label>
-                        <input type="text" class="form-control" id="phone" placeholder="1234 Main St" th:value="${user.phone}" readonly>
+                        <input type="text" class="form-control" id="phone" placeholder="1234 Main St"
+                               th:value="${user.phone}" readonly>
                         <div class="invalid-feedback">
-                            Please enter your shipping address.
+                            Vui lòng nhập địa chỉ giao hàng của bạn.
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="address">Địa chỉ nhận hàng <span class="text-muted">(Optional)</span></label>
-                        <input type="text" class="form-control" id="address" placeholder="Địa chỉ nhận hàng" name="address" required>
+                        <label for="address">Địa chỉ nhận hàng <span
+                                class="text-muted">( Pham Vị Trong Trường)</span></label>
+                        <input type="text" class="form-control" id="address"
+                               placeholder="Các Dom ( Dom A , Dom B ,..) hoặc các tòa ( Alpha , Beta ,..)"
+                               name="address" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="address">Ghi chứ <span class="text-muted"></span></label>
-                        <input type="text" class="form-control" id="note" placeholder="Thời gian mong muốn nhận hàng, lưu ý về đơn hàng" name="note">
+                        <label for="address">Ghi chú <span class="text-muted"></span></label>
+                        <input type="text" class="form-control" id="note"
+                               placeholder="Thời gian mong muốn nhận hàng, lưu ý về đơn hàng" name="note">
                     </div>
                     <hr class="mb-4">
 
                     <h4 class="mb-3">Phương thức thanh toán</h4>
 
-                    <div class="d-block my-3 mb-3" >
+                    <div class="d-block my-3 mb-3">
                         <label for="orderType">Chọn loại đặt hàng:</label>
                         <select id="orderType" name="orderType" class="form-control" onchange="showPaymentOptions()">
                             <option value="ONLINE_ORDER" selected>Đặt hàng online</option>
-<!--                            <option value="AT_COUNTER">Nhận tại quầy</option>-->
+                            <!--                            <option value="AT_COUNTER">Nhận tại quầy</option>-->
                         </select>
 
                         <div id="paymentOptions" class="mt-3">
@@ -207,6 +220,7 @@
         // Show payment options div
         document.getElementById('paymentOptions').style.display = 'block';
     }
+
     // Function to format currency in VND
     function formatCurrencyVND(amount) {
         return new Intl.NumberFormat('vi-VN', {
@@ -230,12 +244,9 @@
 <!-- Footer End -->
 
 
-
-
-
 <!-- Back to Top -->
-<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
-
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+        class="fa fa-arrow-up"></i></a>
 
 
 <!-- JavaScript Libraries -->

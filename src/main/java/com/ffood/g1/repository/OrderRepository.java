@@ -147,7 +147,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "JOIN od.food f " +
             "WHERE f.canteen.canteenId = :canteenId " +
             "AND o.deliveryRoleId = :deliveryRoleId " +
-            "AND o.orderStatus = 'PROGRESS'")
+            "AND o.orderStatus = 'PROGRESS'"+
+            "ORDER BY o.orderDate DESC ")
     Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusProgress(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
 
 

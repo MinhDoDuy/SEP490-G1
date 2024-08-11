@@ -11,7 +11,8 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+          rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
@@ -117,21 +118,31 @@
         <div th:each="order : ${orders}" class="order-card">
             <div class="order-header">
                 <div>
-                    <h6><i class="fa fa-store" th:text="${order.orderDetails.get(0).food.canteen.canteenName}"></i>
-                        <button class="btn btn-primary btn-sm"><a th:href="@{/canteen_info(canteenId=${order.canteenId})}"><h6>Xem cửa hàng</h6></a></button>
+                    <h6>
+                        <button class="btn btn-sm" style="background-color: #FF914D; border: none;">
+                            <a th:href="@{/canteen_info(canteenId=${order.canteenId})}"
+                               style="color: black; font-size: 18px;">
+                                <i class="fa fa-store" style="font-size: 20px;"></i>
+                                <span th:text="${order.orderDetails.get(0).food.canteen.canteenName}"></span>
+                            </a>
+                        </button>
                     </h6>
                 </div>
                 <div class="order-status">
                     <span th:text="${order.orderStatus.displayName}"></span>
                 </div>
             </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 50px; margin-left: 50px;">
                 <p>Mã đơn hàng: <span th:text="${order.orderCode}"></span></p>
-                <p th:if="${order.deliveryRoleId}">Nhân viên giao hàng: <span th:text="${order.deliveryRoleName}"></span></p>
+                <p th:if="${order.deliveryRoleId}">Nhân viên giao hàng: <span
+                        th:text="${order.deliveryRoleName}"></span></p>
             </div>
 
-            <p style="margin-right: 50px; margin-left: 50px;">Ngày đặt hàng: <span class="order-date" th:text="${order.orderDate}"></span></p>
-            <p style="margin-right: 50px; margin-left: 50px;">Note: <span  th:text="${order.note}"></span></p>
+            <p style="margin-right: 50px; margin-left: 50px;">Ngày đặt hàng: <span class="order-date"
+                                                                                   th:text="${order.orderDate}"></span>
+            </p>
+            <p style="margin-right: 50px; margin-left: 50px;">Note: <span th:text="${order.note}"></span></p>
             <hr>
             <div th:each="detail : ${order.orderDetails}" class="order-details bordered-div">
                 <img th:src="${detail.food.imageFood}" alt="Product Image">
@@ -148,10 +159,12 @@
             <div class="order-footer">
                 <div>
                     <button class="btn btn-outline-danger btn-sm" th:text="${order.orderType.displayName}"></button>
-                    <button class="btn btn-outline-success btn-sm" th:text="${order.paymentMethod.displayName}"></button>
+                    <button class="btn btn-outline-success btn-sm"
+                            th:text="${order.paymentMethod.displayName}"></button>
                 </div>
                 <div>
-                    <p>Thành tiền: <span class="order-price formatted-price" th:text="${order.totalOrderPrice}"></span></p>
+                    <p>Thành tiền: <span class="order-price formatted-price" th:text="${order.totalOrderPrice}"></span>
+                    </p>
                 </div>
             </div>
             <div class="order-status" style="display: flex; justify-content: flex-end;">
@@ -170,7 +183,8 @@
 <!-- Footer End -->
 
 <!-- Back to Top -->
-<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+        class="fa fa-arrow-up"></i></a>
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
