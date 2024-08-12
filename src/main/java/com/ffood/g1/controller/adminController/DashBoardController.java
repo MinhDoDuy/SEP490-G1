@@ -36,6 +36,9 @@ public class DashBoardController {
     @Autowired
     private FeedbackService feedbackService;
 
+    @Autowired
+    private OrderService orderService;
+
     @GetMapping("/dashboard-admin")
     public String showDashboard(@RequestParam(value = "status", defaultValue = "VIEWABLE") FeedbackStatus status,
                                 @RequestParam(value = "page", defaultValue = "0") int page,
@@ -43,8 +46,10 @@ public class DashBoardController {
                                 @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
                                 @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endDate,
                                 Model model) {
+
         Integer userCount = userService.countUsers();
         Integer canteenCount = canteenService.countCanteens();
+        Long totalCompletedOrders = orderService.findTotalCompletedOrders(); // Lấy tổng số đơn hàng hoàn thành
         Pageable pageable = PageRequest.of(page, size);
         Page<Feedback> feedbacks;
 
@@ -69,11 +74,13 @@ public class DashBoardController {
         model.addAttribute("status", status);
         model.addAttribute("userCount", userCount);
         model.addAttribute("canteenCount", canteenCount);
+        model.addAttribute("totalCompletedOrders", totalCompletedOrders); // Thêm dữ liệu tổng đơn hàng hoàn thành vào model
         model.addAttribute("startDate", startDate.orElse(null));
         model.addAttribute("endDate", endDate.orElse(null));
 
         return "admin-management/dashboard";
     }
+
 
 
 }

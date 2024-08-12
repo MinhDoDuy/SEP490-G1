@@ -45,6 +45,11 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
+    public Long findTotalCompletedOrders() {
+        return orderRepository.findTotalCompletedOrders();
+    }
+
+    @Override
     public Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable) {
         return orderRepository.findOrdersByCanteenIdAndStatuses(canteenId, statuses, pageable);
     }

@@ -20,6 +20,8 @@ import java.util.Optional;
 @Service
 public interface OrderService {
 
+    Long findTotalCompletedOrders();
+
 
     Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable);
 
