@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
-    <title>Edit Canteen</title>
+    <title>Chỉnh Sửa Căng Tin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="colorlib.com">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/style-profile.css}">
     <style>
         .form-container {
-            width: 75%; /* Increase width to 70% */
+            width: 60%;
             margin: auto;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
         }
 
         .form-group label {
@@ -30,11 +31,24 @@
             border: 2px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
-            width: 100%;
+        }
+
+        .form-group select {
+            width: auto;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
         }
 
         .error-message {
-            color: red;
+            color: red; /* Hiển thị thông báo lỗi màu đỏ */
             font-size: 12px;
         }
 
@@ -45,7 +59,6 @@
             border-radius: 4px;
             position: relative;
             animation: fadeIn 0.5s;
-            font-family: 'Arial', sans-serif; /* Đảm bảo phông chữ */
         }
 
         .alert-success {
@@ -101,24 +114,9 @@
         .back-link:hover {
             text-decoration: underline;
         }
-
-        .inline-group {
-            display: flex;
-            gap: 20px;
-        }
-
-        .inline-group .form-group {
-            flex: 1;
-        }
-
-        .inline-group .form-group img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
     </style>
 </head>
+
 <body class="text-gray-800 font-inter">
 <!-- start: Sidebar -->
 <div th:replace="sidebar-manage :: sidebar-manage(${canteenId})"></div>
@@ -141,93 +139,113 @@
 
     <div class="p-6 flex justify-center">
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md form-container">
+            <!-- Success message -->
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}" id="successMessage">
+                <button type="button" class="close" aria-label="Close"
+                        onclick="this.parentElement.style.display='none';">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Error message -->
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}" id="errorMessage"></div>
+
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Chỉnh Sửa Căng Tin</div>
             </div>
             <div class="overflow-x-auto">
-                <div th:if="${successMessage}" class="alert alert-success" role="alert">
-                    <span th:text="${successMessage}"></span>
-                </div>
+                <form th:action="@{/canteen/update-profile-canteen}" th:object="${canteen}" method="post"
+                      enctype="multipart/form-data" id="canteenForm">
+                    <input type="hidden" id="canteenId" name="canteenId" th:value="${canteen.canteenId}"/>
 
-                <!-- Hiển thị thông báo lỗi -->
-                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                    <span th:text="${errorMessage}"></span>
-                </div>
-                <form id="canteenForm" th:action="@{/canteen/update-profile-canteen}" method="post" th:object="${canteen}" enctype="multipart/form-data" class="w-full">
-                    <input type="hidden" id="canteenId" name="canteenId" th:value="${canteen.canteenId}" />
-                    <div class="card-body media align-items-center mb-4">
-                        <img id="displayImage" alt="" th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}" style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
-                        <div class="media-body ml-4">
-                            <label class="btn btn-primary">
-                                Thêm Ảnh
-                                <input type="file" id="image-upload" class="account-settings-fileinput" accept="image/*, .png, .jpg, .jpeg" name="imageProfileInput" onchange="onChangeFileTrigger()" style="display: none;">
-                            </label>
-                            <div class="text-light small mt-1">Cho phép JPG, GIF hoặc PNG. Kích thước tối đa 800K</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="canteenName">Tên Căng Tin:</label>
+                            <input type="text" id="canteenName" th:field="*{canteenName}" required
+                                   class="form-control"/>
+                            <div th:if="${canteenNameError != null}" class="error-message"
+                                 th:text="${canteenNameError}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="canteenLocation">Địa Điểm:</label>
+                            <input type="text" id="canteenLocation" th:field="*{location}" required
+                                   class="form-control"/>
+                            <div th:if="${locationError != null}" class="error-message"
+                                 th:text="${locationError}"></div>
                         </div>
                     </div>
-                    <div class="inline-group">
-                        <div class="form-group mb-4">
-                            <label class="form-label">Tên</label>
-                            <input type="text" class="form-control" th:field="*{canteenName}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="canteenPhone">Số Điện Thoại:</label>
+                            <input type="text" id="canteenPhone" th:field="*{canteenPhone}" required
+                                   class="form-control"/>
+                            <div th:if="${phoneError != null}" class="error-message" th:text="${phoneError}"></div>
                         </div>
-                        <div class="form-group mb-4">
-                            <label class="form-label">Vị Trí</label>
-                            <input type="text" class="form-control" th:field="*{location}">
-                        </div>
-                    </div>
-                    <div class="inline-group">
-                        <div class="form-group mb-4">
-                            <label class="form-label">Số Điện Thoại</label>
-                            <input type="text" class="form-control" th:field="*{canteenPhone}">
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="isActive" class="form-label">Hành Động:</label>
+                        <div class="form-group">
+                            <label for="isActive">Trạng Thái:</label>
                             <select id="isActive" name="isActive" class="form-control">
-                                <option th:value="true" th:text="'Hoạt Động'" th:selected="${canteen.isActive} == true"></option>
-                                <option th:value="false" th:text="'Không Hoạt Động'" th:selected="${canteen.isActive} == false"></option>
+                                <option th:value="true" th:text="'Hoạt Động'"
+                                        th:selected="${canteen.isActive} == true"></option>
+                                <option th:value="false" th:text="'Không Hoạt Động'"
+                                        th:selected="${canteen.isActive} == false"></option>
                             </select>
                         </div>
                     </div>
-                    <div class="inline-group">
-                        <div class="form-group mb-4">
-                            <label class="form-label">Giờ Mở Cửa</label>
-                            <select id="openingHoursStart" class="form-control"></select>
-                        </div>
-                        <div class="form-group mb-4">
-                            <label class="form-label">Giờ Đóng Cửa</label>
-                            <select id="openingHoursEnd" class="form-control"></select>
-                        </div>
-                    </div>
-                    <input type="hidden" id="openingHours" name="openingHours" th:field="*{openingHours}">
-
-                    <div class="inline-group">
-                        <div class="form-group mb-4">
-                            <label class="form-label">Ngày Mở</label>
-                            <select id="openingDayStart" class="form-control">
-                                <option value="Thứ 2">Thứ 2</option>
-                                <option value="Thứ 3">Thứ 3</option>
-                                <option value="Thứ 4">Thứ 4</option>
-                                <option value="Thứ 5">Thứ 5</option>
-                                <option value="Thứ 6">Thứ 6</option>
-                                <option value="Thứ 7">Thứ 7</option>
-                                <option value="Chủ Nhật">Chủ Nhật</option>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="openingHoursStart">Giờ Mở Cửa:</label>
+                            <select id="openingHoursStart" class="form-control">
+                                <!-- Add options for start time -->
                             </select>
                         </div>
-                        <div class="form-group mb-4">
-                            <label class="form-label">Ngày Đóng</label>
-                            <select id="openingDayEnd" class="form-control">
-                                <option value="Thứ 2">Thứ 2</option>
-                                <option value="Thứ 3">Thứ 3</option>
-                                <option value="Thứ 4">Thứ 4</option>
-                                <option value="Thứ 5">Thứ 5</option>
-                                <option value="Thứ 6">Thứ 6</option>
-                                <option value="Thứ 7">Thứ 7</option>
-                                <option value="Chủ Nhật">Chủ Nhật</option>
+                        <div class="form-group">
+                            <label for="openingHoursEnd">Giờ Đóng Cửa:</label>
+                            <select id="openingHoursEnd" class="form-control">
+                                <!-- Add options for end time -->
                             </select>
                         </div>
+                        <input type="hidden" id="openingHours" th:field="*{openingHours}">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="openingDayStart">Ngày Mở:</label>
+                                <select id="openingDayStart" class="form-control">
+                                    <option value="Thứ 2">Thứ 2</option>
+                                    <option value="Thứ 3">Thứ 3</option>
+                                    <option value="Thứ 4">Thứ 4</option>
+                                    <option value="Thứ 5">Thứ 5</option>
+                                    <option value="Thứ 6">Thứ 6</option>
+                                    <option value="Thứ 7">Thứ 7</option>
+                                    <option value="Chủ Nhật">Chủ Nhật</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="openingDayEnd">Ngày Đóng:</label>
+                                <select id="openingDayEnd" class="form-control">
+                                    <option value="Thứ 2">Thứ 2</option>
+                                    <option value="Thứ 3">Thứ 3</option>
+                                    <option value="Thứ 4">Thứ 4</option>
+                                    <option value="Thứ 5">Thứ 5</option>
+                                    <option value="Thứ 6">Thứ 6</option>
+                                    <option value="Thứ 7">Thứ 7</option>
+                                    <option value="Chủ Nhật">Chủ Nhật</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" id="openingDay" th:field="*{openingDay}">
                     </div>
-                    <input type="hidden" id="openingDay" name="openingDay" th:field="*{openingDay}">
-                    <div id="error-message" class="text-danger mt-2"></div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="imageCanteenInput">Hình Ảnh Căng Tin:</label>
+                            <input type="file" id="imageCanteenInput" name="imageProfileInput" class="form-control"
+                                   accept="image/*" onchange="onChangeFileTrigger()"/>
+                        </div>
+                        <div class="form-group">
+                            <img id="displayImage"
+                                 th:src="${canteen?.canteenImg != null ? canteen.canteenImg : 'https://bootdey.com/img/Content/avatar/avatar1.png'}"
+                                 style="border-radius: 100%; width: 100px; height: 100px; object-fit: cover;">
+                        </div>
+                    </div>
+                    <div class="error-message" id="error-message"></div>
                     <div class="text-right mt-3">
                         <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>&nbsp;
                         <button type="button" class="btn btn-default" onclick="window.history.back();">Hủy</button>
@@ -237,19 +255,11 @@
         </div>
     </div>
 </main>
-<script>
-    function onChangeFileTrigger() {
-        const input = document.getElementById('image-upload');
-        if (input && input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('displayImage').src = e.target.result;
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+<!-- end: Main -->
 
-    // Generate time options for opening hours
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
     function generateTimeOptions() {
         const selectStart = document.getElementById('openingHoursStart');
         const selectEnd = document.getElementById('openingHoursEnd');
@@ -269,14 +279,12 @@
         }
     }
 
-    // Validate time selection
     function validateTime(start, end) {
         const [startHour, startMinute] = start.split(':').map(Number);
         const [endHour, endMinute] = end.split(':').map(Number);
         return (endHour > startHour) || (endHour === startHour && endMinute > startMinute);
     }
 
-    // Validate day selection
     function validateDay(startDay, endDay) {
         const daysOfWeek = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
         return daysOfWeek.indexOf(startDay) <= daysOfWeek.indexOf(endDay);
@@ -291,13 +299,13 @@
 
         if (!validateTime(start, end)) {
             event.preventDefault();
-            errorMessage.textContent = 'Giờ kết thúc phải sau giờ bắt đầu.';
+            errorMessage.textContent = 'Giờ Mở Cửa Kết Thúc phải sau Giờ Mở Cửa Bắt Đầu.';
             return;
         }
 
         if (!validateDay(openingDayStart, openingDayEnd)) {
             event.preventDefault();
-            errorMessage.textContent = 'Ngày đóng phải sau hoặc cùng ngày với ngày mở.';
+            errorMessage.textContent = 'Ngày Đóng phải sau hoặc cùng ngày với Ngày Mở.';
             return;
         }
 
@@ -308,40 +316,38 @@
         errorMessage.textContent = '';
     });
 
-    // Call generateTimeOptions on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         generateTimeOptions();
-        // Set the start and end times if they are already set
-        const openingHours = document.getElementById('openingHours').value;
-        if (openingHours) {
-            const [start, end] = openingHours.split(' - ');
+        // Điền sẵn giá trị cho giờ bắt đầu và giờ kết thúc khi chỉnh sửa
+        const canteenOpeningHours = document.getElementById('openingHours').value;
+        if (canteenOpeningHours) {
+            const [start, end] = canteenOpeningHours.split(' - ');
             document.getElementById('openingHoursStart').value = start;
             document.getElementById('openingHoursEnd').value = end;
         }
 
-        // Set the start and end days if they are already set
-        const openingDay = document.getElementById('openingDay').value;
-        if (openingDay) {
-            const [openingDayStart, openingDayEnd] = openingDay.split(' - ');
+        // Điền sẵn giá trị cho ngày mở và ngày đóng khi chỉnh sửa
+        const canteenOpeningDay = document.getElementById('openingDay').value;
+        if (canteenOpeningDay) {
+            const [openingDayStart, openingDayEnd] = canteenOpeningDay.split(' - ');
             document.getElementById('openingDayStart').value = openingDayStart;
             document.getElementById('openingDayEnd').value = openingDayEnd;
         }
     });
 
-    window.onload = function () {
-        var successMessageElement = document.getElementById("successMessage");
-        var errorMessageElement = document.getElementById("errorMessage");
-
-        if (successMessageElement && successMessageElement.textContent.trim() !== "") {
-            myFunction(successMessageElement.textContent);
-        } else if (errorMessageElement && errorMessageElement.textContent.trim() !== "") {
-            myFunction(errorMessageElement.textContent);
+    function onChangeFileTrigger() {
+        const input = document.getElementById('imageCanteenInput');
+        if (input && input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('displayImage').src = e.target.result;
+                document.getElementById('currentImageUrl').value = ''; // Clear the current image URL
+            }
+            reader.readAsDataURL(input.files[0]);
         }
     }
+    
 </script>
-
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/manage.js}"></script>
 </body>
+
 </html>
