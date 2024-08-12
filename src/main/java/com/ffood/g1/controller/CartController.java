@@ -146,19 +146,38 @@ public class CartController {
     }
 
     @GetMapping("/create-order-at-couter")
-    public String showCreateOrderForm(Model model, @RequestParam("canteenId") Integer canteenId,@RequestParam("deliveryRoleId") Integer deliveryRoleId, HttpSession session) {
+    public String showCreateOrderForm(Model model,
+                                      @RequestParam("canteenId") Integer canteenId,
+                                      @RequestParam("deliveryRoleId") Integer deliveryRoleId,
+                                      HttpSession session,
+                                      Principal principal,
+                                      RedirectAttributes redirectAttributes) {
 
-//        // Delete existing provisional cart for user with ID 1
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra `canteenId` và `deliveryRoleId` để đảm bảo chúng hợp lệ
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập để tạo đơn hàng cho canteen khác.");
+            return "redirect:/create-order-at-couter?canteenId=" + currentUser.getCanteen().getCanteenId() + "&deliveryRoleId=" + currentUser.getUserId();
+        }
+
+        User deliveryUser = userService.getUserById(deliveryRoleId);
+        if (deliveryUser == null || !deliveryUser.getCanteen().getCanteenId().equals(canteenId) || deliveryUser.getRole().getRoleId() != 2 || !deliveryUser.getUserId().equals(currentUser.getUserId())) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền tạo đơn hàng cho người khác trong cùng canteen.");
+            return "redirect:/create-order-at-couter?canteenId=" + currentUser.getCanteen().getCanteenId() + "&deliveryRoleId=" + currentUser.getUserId();
+        }
+
+        // Xóa cart provisional hiện tại nếu có
         Cart cartCurent = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
         if (cartCurent != null) {
-            cartItemRepository.deleteAll(cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId).getCartItems());
-            cartRepository.delete(cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId));
+            cartItemRepository.deleteAll(cartCurent.getCartItems());
+            cartRepository.delete(cartCurent);
         }
-//        // Create a new provisional cart for user with ID 1
 
-        //User user = userService.getUserById(1);
+        // Tạo cart provisional mới
         Cart cartProvisional = new Cart();
-        cartProvisional.setUser(userService.getUserById(deliveryRoleId));
+        cartProvisional.setUser(deliveryUser);
         cartProvisional.setCreatedAt(LocalDateTime.now());
         cartProvisional.setTransactionDate(LocalDateTime.now());
         cartProvisional.setTotalAmount(0);
@@ -172,14 +191,14 @@ public class CartController {
         session.setAttribute("cartProvisional", cartProvisional);
         model.addAttribute("deliveryRoleId", deliveryRoleId);
 
-
-        //list billing
-        OrderType orderType=OrderType.AT_COUNTER;
-        List<Order> orderListInDay= orderService.findByOrderTypeAndCurrentDate(orderType);
+        // Danh sách order trong ngày
+        OrderType orderType = OrderType.AT_COUNTER;
+        List<Order> orderListInDay = orderService.findByOrderTypeAndCurrentDate(orderType);
         model.addAttribute("orderListInDay", orderListInDay);
 
         return "cart/pos-screen";
     }
+
 
     @PostMapping("/cart/add-to-cart-provisional")
     public ResponseEntity<Void> addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity,@RequestParam("deliveryRoleId") Integer deliveryRoleId, HttpSession session) {
