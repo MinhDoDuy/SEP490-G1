@@ -127,6 +127,7 @@
             </div>
             <div th:if="${not #lists.isEmpty(error)}" class="alert alert-danger">
                 <span th:text="${error}"></span>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             </div>
 
             <div class="tab-content" id="orderTabsContent">

@@ -1,5 +1,6 @@
 package com.ffood.g1.controller.manageStaff;
 
+import com.ffood.g1.entity.User;
 import com.ffood.g1.service.FoodService;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.UserService;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +26,18 @@ public class DashboardManagerController {
 
     @Autowired
     private FoodService foodService;
+
     @GetMapping("/dashboard-manager")
-    public String showDashboard(@RequestParam("canteenId") Integer canteenId, Model model) {
+    public String showDashboard(@RequestParam("canteenId") Integer canteenId, Model model, Principal principal, RedirectAttributes redirectAttributes) {
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra xem `canteenId` có khớp với `canteenId` của `currentUser`
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập dashboard của canteen khác.");
+            return "redirect:/dashboard-manager?canteenId=" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về dashboard của canteen mà người dùng quản lý
+        }
+
         Integer staffCount = userService.countStaffByCanteenId(canteenId);
         Integer foodCount = foodService.countFoodByCanteenId(canteenId);
         Integer completedOrdersCount = orderService.countCompletedOrdersByCanteenId(canteenId);

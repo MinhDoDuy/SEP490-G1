@@ -10,4 +10,10 @@ public class ErrorController {
     public String accessDenied() {
         return "403";
     }
+
+
+    @RequestMapping("/404")
+    public String pageNoFound() {
+        return "404";
+    }
 }

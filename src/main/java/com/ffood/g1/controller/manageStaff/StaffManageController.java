@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Console;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -41,25 +42,36 @@ public class StaffManageController {
                             @RequestParam(value = "page", defaultValue = "0") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,
                             @RequestParam(value = "canteenId") Integer canteenId,
-                            @RequestParam(value = "success", required = false) String success) {
+                            @RequestParam(value = "success", required = false) String success,
+                            Principal principal, RedirectAttributes redirectAttributes) {
+
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập nhân viên của canteen khác.");
+            return "redirect:/manage-staff?canteenId=" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách nhân viên của canteen mà người dùng thuộc về
+        }
+
         page = Math.max(page, 0);
         Page<User> staffPage = userService.getAllStaff(page, size, canteenId);
-        Canteen canteen = canteenService.getCanteenById(canteenId); // Retrieve the canteen object
+        Canteen canteen = canteenService.getCanteenById(canteenId); // Lấy đối tượng canteen
+
         model.addAttribute("staffPage", staffPage);
         model.addAttribute("canteenId", canteenId);
-        model.addAttribute("canteen", canteen); // Add canteen to the model
-
-        // Get canteen name
+        model.addAttribute("canteen", canteen); // Thêm đối tượng canteen vào model
         model.addAttribute("canteenName", canteen.getCanteenName());
-        model.addAttribute("canteenId", canteenId);
 
         if ("add".equals(success)) {
             model.addAttribute("successMessage", "Nhân viên đã được thêm thành công!");
         } else if ("edit".equals(success)) {
             model.addAttribute("successMessage", "Nhân viên đã được chỉnh sửa thành công!");
         }
+
         return "staff-management/manage-staff";
     }
+
     @GetMapping("/search-staff")
     public String searchStaff(Model model,
                               @RequestParam(value = "page", defaultValue = "0") int page,

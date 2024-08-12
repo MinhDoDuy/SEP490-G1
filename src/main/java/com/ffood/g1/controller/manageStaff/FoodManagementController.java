@@ -51,7 +51,17 @@ public class FoodManagementController {
     public String manageFood(@RequestParam("canteenId") Integer canteenId,
                              @RequestParam(value = "page", defaultValue = "0") int page,
                              @RequestParam(value = "size", defaultValue = "10") int size,
-                             Model model) {
+                             Model model, Principal principal, RedirectAttributes redirectAttributes) {
+
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập quản lý món ăn của canteen khác.");
+            return "redirect:/manage-food?canteenId=" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách món ăn của canteen mà người dùng thuộc về
+        }
+
         Pageable pageable = PageRequest.of(page, size);
         Page<Food> foodPage = foodService.findFoodByCanteenId(canteenId, pageable);
 
@@ -64,6 +74,7 @@ public class FoodManagementController {
 
         return "staff-management/manage-food";
     }
+
 
 
     @GetMapping("/search-food")

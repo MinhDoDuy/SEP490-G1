@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -48,13 +49,22 @@ public class OrderManagementController {
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
                                @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endDate,
-                               Model model) {
+                               Model model, Principal principal, RedirectAttributes redirectAttributes) {
+
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của canteen khác.");
+            return "redirect:/order-list/" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách đơn hàng của canteen mà người dùng thuộc về
+        }
+
         Pageable pageable = PageRequest.of(page, size);
         Page<Order> orders;
 
         List<User> staffList = userService.getStaffByCanteenToShip(canteenId);
         Canteen canteen = canteenService.getCanteenById(canteenId);
-
 
         LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
         LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
@@ -95,6 +105,7 @@ public class OrderManagementController {
 
         return "staff-management/order-list";
     }
+
 
 
 
@@ -147,18 +158,32 @@ public class OrderManagementController {
         return "redirect:/order-list/" + canteenId;
     }
 
-
-
     @GetMapping("/order-list-ship/{canteenId}")
     public String getOrdersForShipper(@PathVariable Integer canteenId,
                                       @RequestParam(value = "deliveryRoleId", required = false) Integer deliveryRoleId,
                                       @RequestParam(value = "page", defaultValue = "0") int page,
                                       @RequestParam(value = "size", defaultValue = "10") int size,
-                                      Model model, RedirectAttributes redirectAttributes) {
+                                      Model model, Principal principal, RedirectAttributes redirectAttributes) {
 
         if (deliveryRoleId == null) {
             redirectAttributes.addFlashAttribute("error", "Delivery Role ID is required.");
-            return "redirect:/error-page"; // Replace with your actual error page
+            return "redirect:/404"; // Thay bằng trang lỗi phù hợp
+        }
+
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra xem `canteenId` có khớp với `canteenId` của `currentUser`
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của canteen khác.");
+            return "redirect:/order-list-ship/" + currentUser.getCanteen().getCanteenId() + "?deliveryRoleId=" + currentUser.getUserId();
+        }
+
+        // Kiểm tra xem `deliveryRoleId` có thuộc về `canteenId` hiện tại và có phải là chính `currentUser`
+        User deliveryUser = userService.loadUserById(deliveryRoleId);
+        if (deliveryUser == null || !deliveryUser.getCanteen().getCanteenId().equals(canteenId) || deliveryUser.getRole().getRoleId() != 2 || !deliveryUser.getUserId().equals(currentUser.getUserId())) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của người khác trong cùng canteen.");
+            return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + currentUser.getUserId();
         }
 
         Pageable pageable = PageRequest.of(page, size);
@@ -169,6 +194,9 @@ public class OrderManagementController {
         model.addAttribute("deliveryRoleId", deliveryRoleId);
         return "shipper/order-list";
     }
+
+
+
 
     @PostMapping("/complete-order/{orderId}")
     public String completeOrder(@PathVariable Integer orderId,

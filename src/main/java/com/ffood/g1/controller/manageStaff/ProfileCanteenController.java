@@ -1,9 +1,11 @@
 package com.ffood.g1.controller.manageStaff;
 
 import com.ffood.g1.entity.Canteen;
+import com.ffood.g1.entity.User;
 import com.ffood.g1.exception.SpringBootFileUploadException;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FileS3Service;
+import com.ffood.g1.service.UserService;
 import com.ffood.g1.utils.PhoneUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/canteen")
@@ -23,12 +26,26 @@ public class ProfileCanteenController {
     private CanteenService canteenService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private FileS3Service fileS3Service;
 
     @GetMapping("/edit-profile-canteen/{canteenId}")
     public String editProfileCanteen(@PathVariable Integer canteenId, Model model,
                                      @RequestParam(value = "success", required = false) String success,
-                                     @RequestParam(value = "error", required = false) String error) {
+                                     @RequestParam(value = "error", required = false) String error,
+                                     Principal principal, RedirectAttributes redirectAttributes) {
+
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Bạn không có quyền chỉnh sửa hồ sơ của canteen khác.");
+            return "redirect:/edit-profile-canteen/" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về trang chỉnh sửa hồ sơ của canteen mà người dùng thuộc về
+        }
+
         Canteen canteen = canteenService.loadCanteenId(canteenId);
         if (canteen != null) {
             model.addAttribute("canteen", canteen);
@@ -44,6 +61,7 @@ public class ProfileCanteenController {
             return "error"; // Template trang lỗi
         }
     }
+
 
     @PostMapping("/update-profile-canteen")
     public String updateProfileCanteen(@ModelAttribute("canteen") Canteen canteen, BindingResult result,

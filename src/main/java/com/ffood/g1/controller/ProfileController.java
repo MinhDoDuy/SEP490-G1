@@ -39,7 +39,12 @@ public class ProfileController {
     }
 
     @GetMapping("/view-profile/{userId}")
-    public String viewProfile(@PathVariable Integer userId, Model model, Principal principal, RedirectAttributes redirectAttributes) {
+    public String viewProfile(@PathVariable(required = false) Integer userId, Model model, Principal principal, RedirectAttributes redirectAttributes) {
+        if (userId == null) {
+            redirectAttributes.addFlashAttribute("error", "user ID is required.");
+            return "redirect:/404"; // Chuyển hướng về trang 404 nếu userId là null
+        }
+
         User currentUser = userService.findByEmail(principal.getName());
 
         // Nếu `userId` không trùng với `userId` của người dùng hiện tại
@@ -57,6 +62,7 @@ public class ProfileController {
             return "redirect:/view-profile/" + currentUser.getUserId(); // Chuyển hướng về trang profile của người dùng hiện tại
         }
     }
+
 
 
 

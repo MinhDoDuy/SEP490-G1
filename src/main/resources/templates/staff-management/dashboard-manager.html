@@ -73,7 +73,10 @@
         </div>
       </div>
     </div>
-
+    <div th:if="${error}" class="alert danger"  >
+      <span th:text="${error}" ></span>
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    </div>
     <div class="grid-2-col mb-6">
       <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
         <h4>Biểu Đồ Doanh Thu</h4>

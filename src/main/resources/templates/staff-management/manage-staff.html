@@ -57,6 +57,10 @@
             <div th:if="${errorMessage}" class="alert alert-danger" id="Alert">
                 <span th:text="${errorMessage}"></span>
             </div>
+            <div th:if="${error}" class="alert alert-danger" >
+                <span th:text="${error}"></span>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            </div>
             <div class="overflow-x-auto">
                 <table class="custom-striped w-full min-w-[540px]">
                     <thead>

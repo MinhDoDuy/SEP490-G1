@@ -2,9 +2,11 @@ package com.ffood.g1.controller.manageStaff;
 
 import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Feedback;
+import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.FeedbackStatus;
 import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FeedbackService;
+import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -25,12 +28,25 @@ public class FeedbackManagementController {
     @Autowired
     private CanteenService canteenService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/manage-feedback")
     public String getFeedbacks(@RequestParam Integer canteenId,
                                @RequestParam(value = "status", defaultValue = "PENDING") FeedbackStatus status,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
-                               Model model) {
+                               Model model, Principal principal, RedirectAttributes redirectAttributes) {
+
+        // Lấy thông tin người dùng hiện tại từ Principal
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
+        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập quản lý phản hồi của canteen khác.");
+            return "redirect:/manage-feedback?canteenId=" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách phản hồi của canteen mà người dùng thuộc về
+        }
+
         Pageable pageable = PageRequest.of(page, size);
         Page<Feedback> feedbacks;
 
@@ -51,8 +67,10 @@ public class FeedbackManagementController {
         model.addAttribute("feedbacks", feedbacks);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("status", status);
+
         return "staff-management/feedback-list";
     }
+
 
 
     @PostMapping("/approve-feedback/{feedbackId}")
