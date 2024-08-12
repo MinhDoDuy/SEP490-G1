@@ -43,7 +43,7 @@ public class ProfileCanteenController {
         // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
         if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Bạn không có quyền chỉnh sửa hồ sơ của canteen khác.");
-            return "redirect:/edit-profile-canteen/" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về trang chỉnh sửa hồ sơ của canteen mà người dùng thuộc về
+            return "redirect:/canteen/edit-profile-canteen/" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về trang chỉnh sửa hồ sơ của canteen mà người dùng thuộc về
         }
 
         Canteen canteen = canteenService.loadCanteenId(canteenId);
