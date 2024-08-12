@@ -39,16 +39,26 @@ public class ProfileController {
     }
 
     @GetMapping("/view-profile/{userId}")
-    public String viewProfile(@PathVariable Integer userId, Model model) {
+    public String viewProfile(@PathVariable Integer userId, Model model, Principal principal, RedirectAttributes redirectAttributes) {
+        User currentUser = userService.findByEmail(principal.getName());
+
+        // Nếu `userId` không trùng với `userId` của người dùng hiện tại
+        if (!currentUser.getUserId().equals(userId)) {
+            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập thông tin của người khác.");
+            return "redirect:/view-profile/" + currentUser.getUserId(); // Chuyển hướng về trang profile của người dùng hiện tại
+        }
+
         User user = userService.loadUserById(userId);
         if (user != null) {
             model.addAttribute("user", user);
             return "profile"; // Thymeleaf template name
         } else {
-            model.addAttribute("error", "User not found");
-            return "error"; // Error page template
+            redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại.");
+            return "redirect:/view-profile/" + currentUser.getUserId(); // Chuyển hướng về trang profile của người dùng hiện tại
         }
     }
+
+
 
     @PostMapping("/update-profile")
     public String updateProfile(@ModelAttribute @Valid User user, BindingResult result,
