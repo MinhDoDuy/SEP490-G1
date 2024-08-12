@@ -1,12 +1,8 @@
 package com.ffood.g1.controller.manageStaff;
 
-import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.Feedback;
-import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.FeedbackStatus;
-import com.ffood.g1.service.CanteenService;
 import com.ffood.g1.service.FeedbackService;
-import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,123 +12,42 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
-import java.util.List;
-
 @Controller
 public class FeedbackManagementController {
 
     @Autowired
     private FeedbackService feedbackService;
 
-    @Autowired
-    private CanteenService canteenService;
-
-    @Autowired
-    private UserService userService;
-
     @GetMapping("/manage-feedback")
     public String getFeedbacks(@RequestParam Integer canteenId,
                                @RequestParam(value = "status", defaultValue = "PENDING") FeedbackStatus status,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
-                               Model model, Principal principal, RedirectAttributes redirectAttributes) {
-
-        // Lấy thông tin người dùng hiện tại từ Principal
-        User currentUser = userService.findByEmail(principal.getName());
-
-        // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
-        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
-            redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập quản lý phản hồi của canteen khác.");
-            return "redirect:/manage-feedback?canteenId=" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách phản hồi của canteen mà người dùng thuộc về
-        }
-
+                               Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Feedback> feedbacks;
+        Page<Feedback> feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, status, pageable);
 
-        switch (status) {
-            case PENDING:
-                feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, FeedbackStatus.PENDING, pageable);
-                break;
-            case REJECT:
-                feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, FeedbackStatus.REJECT, pageable);
-                break;
-            default:
-                feedbacks = Page.empty();
-                break;
-        }
-
-        Canteen canteen = canteenService.getCanteenById(canteenId);
-        model.addAttribute("canteenName", canteen.getCanteenName());
         model.addAttribute("feedbacks", feedbacks);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("status", status);
-
         return "staff-management/feedback-list";
     }
-
-
 
     @PostMapping("/approve-feedback/{feedbackId}")
     public String approveFeedback(@PathVariable Integer feedbackId,
                                   @RequestParam Integer canteenId,
                                   RedirectAttributes redirectAttributes) {
         feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.COMPLETE);
-        redirectAttributes.addFlashAttribute("message", "Phản hồi phê duyệt thành công .");
+        redirectAttributes.addFlashAttribute("message", "Phản hồi phê duyệt thành công.");
         return "redirect:/manage-feedback?canteenId=" + canteenId;
     }
-
-    @PostMapping("/bulk-approve-feedback")
-    public String bulkApproveFeedback(@RequestParam(value = "selectedFeedbacks", required = false) List<Integer> feedbackIds,
-                                      @RequestParam Integer canteenId,
-                                      RedirectAttributes redirectAttributes) {
-        if (feedbackIds == null || feedbackIds.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Không có phản hồi nào được chọn");
-            return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
-        }
-
-        try {
-            for (Integer feedbackId : feedbackIds) {
-                feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.COMPLETE);
-            }
-            redirectAttributes.addFlashAttribute("message", "Phê duyệt phản hồi thành công cho các phản hồi đã chọn");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-        }
-
-        return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
-    }
-
-
 
     @PostMapping("/reject-feedback/{feedbackId}")
     public String rejectFeedback(@PathVariable Integer feedbackId,
                                  @RequestParam Integer canteenId,
                                  RedirectAttributes redirectAttributes) {
         feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.REJECT);
-        redirectAttributes.addFlashAttribute("message", "Phản hồi bị từ chối.");
+        redirectAttributes.addFlashAttribute("message", "Từ chối phản hồi.");
         return "redirect:/manage-feedback?canteenId=" + canteenId;
     }
-
-    @PostMapping("/bulk-reject-feedback")
-    public String bulkRejectFeedback(@RequestParam(value = "selectedFeedbacks", required = false) List<Integer> feedbackIds,
-                                     @RequestParam Integer canteenId,
-                                     RedirectAttributes redirectAttributes) {
-        if (feedbackIds == null || feedbackIds.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Không có phản hồi nào được chọn");
-            return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
-        }
-
-        try {
-            for (Integer feedbackId : feedbackIds) {
-                feedbackService.updateFeedbackStatus(feedbackId, FeedbackStatus.REJECT);
-            }
-            redirectAttributes.addFlashAttribute("message", "Từ chối phản hồi thành công cho các phản hồi đã chọn");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-        }
-
-        return "redirect:/manage-feedback?canteenId=" + canteenId + "&status=PENDING";
-    }
-
 }
