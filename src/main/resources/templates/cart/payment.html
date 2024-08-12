@@ -126,9 +126,9 @@
                             <p class="text-danger price-value" data-price="${cartItem.totalFoodPrice}" th:text="${cartItem.totalFoodPrice}">Price</p>
                         </div>
                         <div class="cart-item-quantity">
-                            <label>
-                                <input type="text" th:value="${cartItem.quantity}" readonly>
-                            </label>
+
+                           Số lượng :  <span th:value="${cartItem.quantity}" th:text="${cartItem.quantity}" readonly></span>
+
                         </div>
                     </div>
                 </div>
