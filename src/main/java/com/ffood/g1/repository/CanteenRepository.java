@@ -15,8 +15,8 @@ public interface CanteenRepository extends JpaRepository<Canteen, Integer> {
 
     Canteen findByCanteenPhone(String phone);
     Canteen findByCanteenName(String canteenName);
-    Page<Canteen> findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-    String canteenName, String location, String canteenPhone, Pageable pageable);
+    Page<Canteen> findByCanteenNameContainingIgnoreCase(
+    String canteenName, Pageable pageable);
 
 }
 
