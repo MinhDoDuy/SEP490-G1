@@ -246,8 +246,8 @@ public class CanteenServiceImplTest {
         Page<Canteen> expectedPage = new PageImpl<>(Arrays.asList(canteen1, canteen2));
 
         // Giả lập phương thức tìm kiếm của repository để trả về trang giả lập
-        when(canteenRepository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                "keyword", "keyword", "keyword", pageable)).thenReturn(expectedPage);
+        when(canteenRepository.findByCanteenNameContainingIgnoreCase(
+                "keyword", pageable)).thenReturn(expectedPage);
 
         // Gọi phương thức service
         Page<Canteen> result = canteenService.searchCanteens("keyword", 0, 10);
@@ -256,8 +256,8 @@ public class CanteenServiceImplTest {
         assertEquals(expectedPage, result);
 
         // Xác minh rằng phương thức tìm kiếm của repository đã được gọi chính xác một lần
-        verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                "keyword", "keyword", "keyword", pageable);
+        verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCase(
+                "keyword",pageable);
     }
 
     // Trường hợp bất thường: Kiểm thử cách xử lý khi repository ném ra ngoại lệ khi tìm kiếm
@@ -267,8 +267,8 @@ public class CanteenServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // Giả lập repository ném ra một RuntimeException khi gọi phương thức tìm kiếm
-        when(canteenRepository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                "keyword", "keyword", "keyword", pageable)).thenThrow(new RuntimeException("Database Error"));
+        when(canteenRepository.findByCanteenNameContainingIgnoreCase(
+                "keyword", pageable)).thenThrow(new RuntimeException("Database Error"));
 
         // Gọi phương thức service và kiểm tra xem có ngoại lệ nào bị ném ra hay không
         Exception exception = assertThrows(RuntimeException.class, () -> {
@@ -279,8 +279,8 @@ public class CanteenServiceImplTest {
         assertEquals("Database Error", exception.getMessage());
 
         // Xác minh rằng phương thức tìm kiếm của repository đã được gọi chính xác một lần
-        verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                "keyword", "keyword", "keyword", pageable);
+        verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCase(
+                "keyword", pageable);
     }
 
     // Trường hợp ranh giới: Kiểm thử việc tìm kiếm khi không có canteen nào khớp với từ khóa
@@ -291,8 +291,8 @@ public class CanteenServiceImplTest {
         Page<Canteen> expectedPage = new PageImpl<>(Collections.emptyList());
 
         // Giả lập phương thức tìm kiếm của repository để trả về trang rỗng
-        when(canteenRepository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                "keyword", "keyword", "keyword", pageable)).thenReturn(expectedPage);
+        when(canteenRepository.findByCanteenNameContainingIgnoreCase(
+                "keyword", pageable)).thenReturn(expectedPage);
 
         // Gọi phương thức service
         Page<Canteen> result = canteenService.searchCanteens("keyword", 0, 10);
@@ -301,8 +301,8 @@ public class CanteenServiceImplTest {
         assertTrue(result.isEmpty());
 
         // Xác minh rằng phương thức tìm kiếm của repository đã được gọi chính xác một lần
-        verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                "keyword", "keyword", "keyword", pageable);
+        verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCase(
+                "keyword",  pageable);
     }
 
     // Trường hợp bình thường: Kiểm thử việc lấy canteen theo ID
