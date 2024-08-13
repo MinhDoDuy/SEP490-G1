@@ -119,21 +119,24 @@
         </table>
 
 
-        <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                    <span th:if="${canteenPage.hasPrevious()}">
-                        <a th:href="@{/manage-canteen(page=${canteenPage.number - 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&laquo;</a>
-                    </span>
-          <span th:each="i : ${#numbers.sequence(0, canteenPage.totalPages - 1)}">
-                        <a th:classappend="${i} == ${canteenPage.number} ? 'active' : ''"
-                           th:href="@{/manage-canteen(page=${i}, size=${canteenPage.size}, keyword=${keyword})}"
-                           class="page-link">
-                            <span th:text="${i + 1}">1</span>
-                        </a>
-                    </span>
-          <span th:if="${canteenPage.hasNext()}">
-                        <a th:href="@{/manage-canteen(page=${canteenPage.number + 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&raquo;</a>
-                    </span>
+        <div th:if="${canteenPage.hasContent()}">
+          <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
+        <span th:if="${canteenPage.hasPrevious()}">
+            <a th:href="@{/manage-canteen(page=${canteenPage.number - 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&laquo;</a>
+        </span>
+            <span th:each="i : ${#numbers.sequence(0, canteenPage.totalPages - 1)}">
+            <a th:classappend="${i} == ${canteenPage.number} ? 'active' : ''"
+               th:href="@{/manage-canteen(page=${i}, size=${canteenPage.size}, keyword=${keyword})}"
+               class="page-link">
+                <span th:text="${i + 1}">1</span>
+            </a>
+        </span>
+            <span th:if="${canteenPage.hasNext()}">
+            <a th:href="@{/manage-canteen(page=${canteenPage.number + 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&raquo;</a>
+        </span>
+          </div>
         </div>
+
       </div>
     </div>
   </div>

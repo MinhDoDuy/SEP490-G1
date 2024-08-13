@@ -93,19 +93,22 @@
                     </tbody>
                 </table>
 
-                <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                    <span th:if="${staffPage.hasPrevious()}">
-                        <a th:href="@{/manage-staff(page=${staffPage.number - 1}, size=${staffPage.size}, canteenId=${canteenId})}" class="page-link">&laquo;</a>
-                    </span>
-                    <span th:each="i : ${#numbers.sequence(0, staffPage.totalPages - 1)}">
-                        <a th:classappend="${i} == ${staffPage.number} ? 'active' : ''" th:href="@{/manage-staff(page=${i}, size=${staffPage.size}, canteenId=${canteenId})}" class="page-link">
-                            <span th:text="${i + 1}">1</span>
-                        </a>
-                    </span>
-                    <span th:if="${staffPage.hasNext()}">
-                        <a th:href="@{/manage-staff(page=${staffPage.number + 1}, size=${staffPage.size}, canteenId=${canteenId})}" class="page-link">&raquo;</a>
-                    </span>
+                <div th:if="${staffPage.hasContent()}">
+                    <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
+        <span th:if="${staffPage.hasPrevious()}">
+            <a th:href="@{/manage-staff(page=${staffPage.number - 1}, size=${staffPage.size}, canteenId=${canteenId})}" class="page-link">&laquo;</a>
+        </span>
+                        <span th:each="i : ${#numbers.sequence(0, staffPage.totalPages - 1)}">
+            <a th:classappend="${i} == ${staffPage.number} ? 'active' : ''" th:href="@{/manage-staff(page=${i}, size=${staffPage.size}, canteenId=${canteenId})}" class="page-link">
+                <span th:text="${i + 1}">1</span>
+            </a>
+        </span>
+                        <span th:if="${staffPage.hasNext()}">
+            <a th:href="@{/manage-staff(page=${staffPage.number + 1}, size=${staffPage.size}, canteenId=${canteenId})}" class="page-link">&raquo;</a>
+        </span>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
