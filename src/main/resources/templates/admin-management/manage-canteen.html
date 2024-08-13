@@ -40,7 +40,7 @@
           <div class="relative w-64 mr-2">
             <input type="text"
                    class="py-2 pr-4 pl-10 bg-gray-50 w-full outline-none border border-gray-100 rounded-md text-sm focus:border-blue-500"
-                   placeholder="Search by canteen name, location, or phone"
+                   placeholder="Search by canteen name"
                    name="keyword" th:value="${keyword}">
             <i class="ri-search-line absolute top-1/2 left-4 -translate-y-1/2 text-gray-400"></i>
           </div>
@@ -119,21 +119,24 @@
         </table>
 
 
-        <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                    <span th:if="${canteenPage.hasPrevious()}">
-                        <a th:href="@{/manage-canteen(page=${canteenPage.number - 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&laquo;</a>
-                    </span>
-          <span th:each="i : ${#numbers.sequence(0, canteenPage.totalPages - 1)}">
-                        <a th:classappend="${i} == ${canteenPage.number} ? 'active' : ''"
-                           th:href="@{/manage-canteen(page=${i}, size=${canteenPage.size}, keyword=${keyword})}"
-                           class="page-link">
-                            <span th:text="${i + 1}">1</span>
-                        </a>
-                    </span>
-          <span th:if="${canteenPage.hasNext()}">
-                        <a th:href="@{/manage-canteen(page=${canteenPage.number + 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&raquo;</a>
-                    </span>
+        <div th:if="${canteenPage.hasContent()}">
+          <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
+        <span th:if="${canteenPage.hasPrevious()}">
+            <a th:href="@{/manage-canteen(page=${canteenPage.number - 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&laquo;</a>
+        </span>
+            <span th:each="i : ${#numbers.sequence(0, canteenPage.totalPages - 1)}">
+            <a th:classappend="${i} == ${canteenPage.number} ? 'active' : ''"
+               th:href="@{/manage-canteen(page=${i}, size=${canteenPage.size}, keyword=${keyword})}"
+               class="page-link">
+                <span th:text="${i + 1}">1</span>
+            </a>
+        </span>
+            <span th:if="${canteenPage.hasNext()}">
+            <a th:href="@{/manage-canteen(page=${canteenPage.number + 1}, size=${canteenPage.size}, keyword=${keyword})}" class="page-link">&raquo;</a>
+        </span>
+          </div>
         </div>
+
       </div>
     </div>
   </div>

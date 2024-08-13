@@ -18,20 +18,20 @@ public class FeedbackManagementController {
     @Autowired
     private FeedbackService feedbackService;
 
-    @GetMapping("/manage-feedback")
-    public String getFeedbacks(@RequestParam Integer canteenId,
-                               @RequestParam(value = "status", defaultValue = "PENDING") FeedbackStatus status,
-                               @RequestParam(value = "page", defaultValue = "0") int page,
-                               @RequestParam(value = "size", defaultValue = "10") int size,
-                               Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Feedback> feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, status, pageable);
+        @GetMapping("/manage-feedback")
+        public String getFeedbacks(@RequestParam Integer canteenId,
+                                   @RequestParam(value = "status", defaultValue = "PENDING") FeedbackStatus status,
+                                   @RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "size", defaultValue = "10") int size,
+                                   Model model) {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Feedback> feedbacks = feedbackService.getFeedbacksByCanteen(canteenId, status, pageable);
 
-        model.addAttribute("feedbacks", feedbacks);
-        model.addAttribute("canteenId", canteenId);
-        model.addAttribute("status", status);
-        return "staff-management/feedback-list";
-    }
+            model.addAttribute("feedbacks", feedbacks);
+            model.addAttribute("canteenId", canteenId);
+            model.addAttribute("status", status);
+            return "staff-management/feedback-list";
+        }
 
     @PostMapping("/approve-feedback/{feedbackId}")
     public String approveFeedback(@PathVariable Integer feedbackId,

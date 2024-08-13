@@ -37,8 +37,8 @@ public class CanteenServiceImpl implements CanteenService {
     @Override
     public Page<Canteen> searchCanteens(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return canteenRepository.findByCanteenNameContainingIgnoreCaseOrLocationContainingIgnoreCaseOrCanteenPhoneContainingIgnoreCase(
-                keyword, keyword, keyword, pageable);
+        return canteenRepository.findByCanteenNameContainingIgnoreCase(
+                keyword, pageable);
     }
 
 

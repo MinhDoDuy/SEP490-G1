@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Payment</title>
+    <title>Thanh Toán Tại Quầy</title>
     <style>
         body {
             font-family: 'Open Sans', sans-serif;
@@ -12,7 +12,7 @@
 
         .cart-item {
             border-bottom: 1px solid #ffcc99;
-            padding: 10px;
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -20,20 +20,20 @@
         }
 
         .cart-item img {
-            width: 50px;
-            height: 50px;
+            width: 70px;
+            height: 70px;
             object-fit: cover;
             border-radius: 5px;
         }
 
         .cart-item-info {
             flex-grow: 1;
-            margin-left: 10px;
+            margin-left: 20px;
         }
 
         .cart-summary {
-            margin-top: 10px;
-            padding: 10px;
+            margin-top: 20px;
+            padding: 15px;
             border-top: 1px solid #ffcc99;
             background-color: #fff8f0;
         }
@@ -57,13 +57,13 @@
         }
 
         .search-result {
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .modal {
             display: none;
             position: fixed;
-            z-index: 1050; /* Ensure modal is on top */
+            z-index: 1050;
             left: 0;
             top: 0;
             width: 100%;
@@ -76,10 +76,10 @@
         .modal-content {
             background-color: #fefefe;
             margin: 5% auto;
-            padding: 20px;
+            padding: 30px;
             border: 1px solid #888;
-            width: 80%;
-            z-index: 1051; /* Ensure modal content is on top */
+            width: 90%;
+            z-index: 1051;
         }
 
         .close {
@@ -102,14 +102,70 @@
         }
 
         .text-danger.mt-3 {
-            margin-top: 1rem !important; /* Add margin-top to separate the text */
+            margin-top: 1rem !important;
+        }
+
+        .card {
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card-header {
+            font-size: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        #clearSearchIcon {
+            font-size: 1.5rem;
+            color: #ccc;
+            padding-right: 20px;
+            pointer-events: auto;
+        }
+
+        #clearSearchIcon:hover {
+            color: #ff6600;
+        }
+
+        .modal-content {
+            position: relative;
+            padding: 20px;
+        }
+
+        .d-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close {
+            font-size: 40px;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .invalid-feedback {
+            display: none;
+            color: #dc3545;
+        }
+
+        .is-invalid + .invalid-feedback {
+            display: block;
         }
     </style>
 </head>
 <body>
 
 <div class="container mt-5">
-    <h2 style="color: #ff6600;">Payment</h2>
+    <h2 style="color: #ff6600;">Thanh Toán</h2>
     <input id="canteenId" type="hidden" th:value="${canteenId}">
     <input id="deliveryRoleId" type="hidden" th:value="${deliveryRoleId}">
     <div class="row">
@@ -117,24 +173,27 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    Cart
+                    Giỏ Hàng
                 </div>
                 <div class="card-body">
-                    <div th:each="cartItem : ${cartItems}" class="cart-item">
+                    <div th:each="cartItem : ${cartItems}" style="font-size: 1.2rem;" class="cart-item">
                         <div class="cart-item-info">
                             <p th:text="${cartItem.food.foodName}">Food Name</p>
-                            <p class="text-danger price-value" data-price="${cartItem.totalFoodPrice}" th:text="${cartItem.totalFoodPrice}">Price</p>
+                            <p class="text-danger price-value" data-price="${cartItem.totalFoodPrice}"
+                               th:text="${cartItem.totalFoodPrice}">Price</p>
                         </div>
                         <div class="cart-item-quantity">
-
-                           Số lượng :  <span th:value="${cartItem.quantity}" th:text="${cartItem.quantity}" readonly></span>
-
+                            Số lượng : <span th:value="${cartItem.quantity}" th:text="${cartItem.quantity}"
+                                             readonly></span>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="cart-summary">
-                        <p>Tổng tiền: <span id="totalOrderPrice" class="formatted-price" th:data-price="${totalOrderPrice}" th:text="${totalOrderPrice}">0 ₫</span></p>
+                    <div class="cart-summary" style="font-size: 1.25rem;">
+                        <p>Tổng tiền: <span id="totalOrderPrice" class="formatted-price"
+                                            th:data-price="${totalOrderPrice}"
+                                            th:text="${totalOrderPrice}">0 ₫</span>
+                        </p>
                         <div>
                             <label for="paymentMethod">Phương thức thanh toán:</label>
                             <select id="paymentMethod" class="form-control">
@@ -144,10 +203,13 @@
                         </div>
                         <div id="cashPayment" style="display: none;">
                             <label for="cashReceived">Tiền nhận từ khách:</label>
-                            <input type="number" id="cashReceived" class="form-control" placeholder="Nhập số tiền nhận từ khách">
+                            <input type="number" id="cashReceived" class="form-control"
+                                   placeholder="Nhập số tiền nhận từ khách">
                             <p id="changeDue"></p>
                         </div>
-                        <button class="btn btn-success mt-3" id="submitPayment">Thanh toán</button>
+                        <button class="btn btn-success mt-3" style="font-size: 1.2rem;" id="submitPayment">Thanh
+                            toán
+                        </button>
                     </div>
                 </div>
             </div>
@@ -157,51 +219,68 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="form-group">
-                    <div class="card-header d-flex justify-content-between align-items-center" style="border: 1px solid #0c0202;">
+                    <div class="card-header d-flex justify-content-between align-items-center"
+                         style="border: 1px solid #0c0202;">
                         <label for="searchPhone" class="mb-0">Người dùng</label>
                         <button class="btn btn-primary" id="openRegisterModal">Thêm khách hàng</button>
                     </div>
-                    <div class="input-group mt-3">
-                        <input type="text" id="searchPhone" class="form-control" placeholder="Nhập số điện thoại .....">
+                    <div class="input-group mt-3 position-relative">
+                        <input type="text" id="searchPhone" class="form-control"
+                               placeholder="Nhập số điện thoại .....">
+                        <span id="clearSearchIcon" class="position-absolute"
+                              style="right: 80px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                            &times;
+                        </span>
                         <div class="input-group-append">
                             <button class="btn btn-primary" id="searchUserButton">Tìm kiếm</button>
                         </div>
                     </div>
                 </div>
                 <div id="searchResult" class="search-result mt-3" th:fragment="user-info">
-                    <p th:if="${userProvisional != null}">
+                    <p th:if="${userProvisional != null}" style="font-size: 1.2rem;">
                         <label>
                             <input type="hidden" name="userId" th:value="${userProvisional.userId}">
                         </label>
-                        <span class="font-weight-bold">Tên:</span> <span th:text="${userProvisional.fullName}"></span>, <span class="font-weight-bold">Số Điện Thoại:</span> <span th:text="${userProvisional.phone}"></span>
+                        <span class="font-weight-bold">Tên:</span> <span
+                            th:text="${userProvisional.fullName}"></span>,
+                        <span class="font-weight-bold">Số Điện Thoại:</span> <span
+                            th:text="${userProvisional.phone}"></span>
                     </p>
-                    <p th:if="${userProvisional == null}" class="text-danger mt-3">Hiện tại là khách chưa có tài khoản</p>
+                    <p th:if="${userProvisional == null}" style="font-size: 1.2rem;" class="text-danger mt-3">Hiện
+                        tại là khách chưa có tài khoản</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Register Modal -->
 <div id="registerModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Thêm khách hàng</h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Thêm khách hàng</h2>
+            <span class="close">&times;</span>
+        </div>
         <form id="registerForm">
             <div class="form-group">
                 <label for="fullName">Họ và tên:</label>
                 <input type="text" id="fullName" name="fullName" class="form-control" required>
+                <div class="invalid-feedback">Họ và tên không được để trống.</div>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" class="form-control" required>
+                <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
             </div>
             <div class="form-group">
                 <label for="phone">Số điện thoại:</label>
-                <input type="text" id="phone" name="phone" class="form-control" required>
+                <input type="text" id="phone" name="phone" class="form-control" inputmode="numeric" required>
+                <div class="invalid-feedback">Số điện thoại phải là 10 đến 11 chữ số.</div>
             </div>
             <div class="form-group">
                 <label for="password">Mật khẩu:</label>
                 <input type="password" id="password" name="password" class="form-control" required>
+                <div class="invalid-feedback">Mật khẩu phải có ít nhất 6 ký tự.</div>
             </div>
             <button type="button" class="btn btn-success" id="registerButton">Đăng ký</button>
         </form>
@@ -277,15 +356,15 @@
     const btn = document.getElementById("openRegisterModal");
     const span = document.getElementsByClassName("close")[0];
 
-    btn.onclick = function() {
+    btn.onclick = function () {
         modal.style.display = "block";
     }
 
-    span.onclick = function() {
+    span.onclick = function () {
         modal.style.display = "none";
     }
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
@@ -319,19 +398,18 @@
         }).format(amount);
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         // Tìm tất cả các phần tử có class 'price-value'
         const priceElements = document.querySelectorAll('.price-value');
 
         // Duyệt qua từng phần tử và định dạng lại giá trị
-        priceElements.forEach(function(priceElement) {
+        priceElements.forEach(function (priceElement) {
             // Lấy giá trị số từ thẻ p
             const amount = parseInt(priceElement.textContent.trim(), 10);
             // Gọi hàm formatCurrencyVND và cập nhật giá trị
             priceElement.textContent = formatCurrencyVND(amount);
         });
     });
-
 
     function formatPrices() {
         document.querySelectorAll('.formatted-price').forEach(function (element) {
@@ -343,9 +421,106 @@
     }
 
     // Format prices on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         formatPrices();
     });
+
+    // Khi nhấn nút tìm kiếm
+    document.getElementById('searchUserButton').addEventListener('click', function () {
+        const phoneInput = document.getElementById('searchPhone');
+        const phone = phoneInput.value.trim();
+        const searchResult = document.getElementById('searchResult');
+
+        // Kiểm tra nếu trường nhập liệu trống
+        if (phone === '') {
+            searchResult.innerHTML = '<p class="text-danger mt-3" style="font-size: 1.2rem;">Vui lòng nhập số điện thoại để tìm kiếm.</p>';
+            return;
+        }
+
+        fetch(`/cart/search-user?phone=${phone}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const userInfo = doc.querySelector('#searchResult');
+
+                // Kiểm tra nếu tìm thấy người dùng hoặc không
+                if (userInfo && userInfo.textContent.trim()) {
+                    searchResult.innerHTML = userInfo.innerHTML;
+                } else {
+                    searchResult.innerHTML = '<p class="text-danger mt-3">Không tìm thấy người dùng.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                searchResult.innerHTML = '<p class="text-danger mt-3">Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại sau.</p>';
+            });
+    });
+
+    // Xóa lỗi khi người dùng bắt đầu nhập lại
+    document.getElementById('searchPhone').addEventListener('input', function () {
+        const searchResult = document.getElementById('searchResult');
+        searchResult.innerHTML = '';
+    });
+
+    // Icon xóa
+    const searchPhoneInput = document.getElementById('searchPhone');
+    const clearSearchIcon = document.getElementById('clearSearchIcon');
+
+    // Xóa nội dung trong ô tìm kiếm khi nhấn vào icon "Xóa"
+    clearSearchIcon.addEventListener('click', function () {
+        searchPhoneInput.value = '';
+        document.getElementById('searchResult').innerHTML = ''; // Xóa kết quả tìm kiếm nếu có
+        searchPhoneInput.focus(); // Trả lại focus cho ô tìm kiếm sau khi xóa
+    });
+    const deliveryRoleId = document.getElementById('deliveryRoleId').value;
+
+    document.getElementById('registerButton').addEventListener('click', function () {
+        let isValid = true;
+        let errorMessage = "Vui lòng điền đầy đủ tất cả các trường.";
+
+        // Validate full name
+        var fullName = document.getElementById('fullName');
+        if (fullName.value.trim() === '') {
+            fullName.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            fullName.classList.remove('is-invalid');
+        }
+
+        // Validate email
+        var email = document.getElementById('email');
+        if (email.value.trim() === '') {
+            email.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            email.classList.remove('is-invalid');
+        }
+
+        // Validate phone number
+        var phone = document.getElementById('phone');
+        if (phone.value.trim() === '') {
+            phone.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            phone.classList.remove('is-invalid');
+        }
+
+        // Validate password
+        var password = document.getElementById('password');
+        if (password.value.trim() === '') {
+            password.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            password.classList.remove('is-invalid');
+        }
+
+        // If any field is empty, show a general alert message
+        if (isValid) {
+            document.getElementById('registerForm').submit();
+        }
+    });
+
 </script>
 
 </body>

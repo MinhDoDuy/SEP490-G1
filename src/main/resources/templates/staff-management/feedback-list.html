@@ -23,6 +23,12 @@
       text-overflow: ellipsis;
       max-width: 200px; /* Điều chỉnh kích thước tùy ý */
     }
+
+    .modal-body {
+      max-height: 400px; /* Adjust as needed */
+      overflow-y: auto;
+      word-wrap: break-word;
+    }
   </style>
 </head>
 
@@ -97,20 +103,20 @@
               </tr>
               </tbody>
             </table>
-            <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-              <span th:if="${feedbacks.hasPrevious()}">
-                <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number - 1}, size=${feedbacks.size})}" class="page-link">&laquo;</a>
-              </span>
-              <span th:each="i : ${#numbers.sequence(0, feedbacks.totalPages - 1)}">
-                <a th:classappend="${i} == ${feedbacks.number} ? 'active' : ''"
-                   th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${i}, size=${feedbacks.size})}" class="page-link">
-                  <span th:text="${i + 1}">1</span>
-                </a>
-              </span>
-              <span th:if="${feedbacks.hasNext()}">
-                <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number + 1}, size=${feedbacks.size})}" class="page-link">&raquo;</a>
-              </span>
-            </div>
+              <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;" th:if="${feedbacks.totalElements > 0}">
+                     <span th:if="${feedbacks.hasPrevious()}">
+                             <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number - 1}, size=${feedbacks.size})}" class="page-link">&laquo;</a>
+                     </span>
+                  <span th:each="i : ${#numbers.sequence(0, feedbacks.totalPages - 1)}">
+                                 <a th:classappend="${i} == ${feedbacks.number} ? 'active' : ''"
+                            th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${i}, size=${feedbacks.size})}" class="page-link">
+                        <span th:text="${i + 1}">1</span>
+                                </a>
+                  </span>
+                  <span th:if="${feedbacks.hasNext()}">
+                        <a th:href="@{/manage-feedback(canteenId=${canteenId}, status=${status}, page=${feedbacks.number + 1}, size=${feedbacks.size})}" class="page-link">&raquo;</a>
+                    </span>
+              </div>
           </div>
         </div>
       </div>

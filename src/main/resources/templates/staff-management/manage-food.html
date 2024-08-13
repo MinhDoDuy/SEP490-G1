@@ -72,7 +72,7 @@
                 <div th:if="${errorMessage}" class="alert alert-danger">
                     <span th:text="${errorMessage}"></span>
                 </div>
-                <div th:if="${error}" class="alert alert-danger" >
+                <div th:if="${error}" class="alert alert-danger">
                     <span th:text="${error}"></span>
                     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                 </div>
@@ -108,7 +108,9 @@
                         </thead>
                         <tbody>
                         <tr th:if="${#lists.isEmpty(foodPage.content)}">
-                            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không Có Đồ ăn Nào Được Tìm Thấy</td>
+                            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không Có Đồ ăn Nào
+                                Được Tìm Thấy
+                            </td>
                         </tr>
                         <tr th:each="food, iterStat : ${foodPage.content}">
                             <td class="py-2 px-4 border-b border-b-gray-50"
@@ -118,7 +120,9 @@
                                 Tên Danh Mục
                             </td>
                             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodName}">Tên Đồ Ăn</td>
-                            <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${food.price}">100.0</td>
+                            <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${food.price}">
+                                100.0
+                            </td>
                             <td class="py-2 px-4 border-b border-b-gray-50" th:text="${food.foodQuantity}">
                                 Số Lượng Thực Phẩm
                             </td>
@@ -143,22 +147,25 @@
                     </table>
                 </div>
 
-                <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-                    <span th:if="${foodPage.hasPrevious()}">
-                        <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number - 1}, size=${foodPage.size})}"
-                           class="page-link">&laquo;</a>
-                    </span>
-                    <span th:each="i : ${#numbers.sequence(0, foodPage.totalPages - 1)}">
-                        <a th:classappend="${i} == ${foodPage.number} ? 'active' : ''"
-                           th:href="@{/manage-food(canteenId=${canteenId}, page=${i}, size=${foodPage.size})}" class="page-link">
-                            <span th:text="${i + 1}">1</span>
-                        </a>
-                    </span>
-                    <span th:if="${foodPage.hasNext()}">
-                        <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number + 1}, size=${foodPage.size})}"
-                           class="page-link">&raquo;</a>
-                    </span>
+                <div th:if="${foodPage.hasContent()}">
+                    <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
+        <span th:if="${foodPage.hasPrevious()}">
+            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number - 1}, size=${foodPage.size})}"
+               class="page-link">&laquo;</a>
+        </span>
+                        <span th:each="i : ${#numbers.sequence(0, foodPage.totalPages - 1)}">
+            <a th:classappend="${i} == ${foodPage.number} ? 'active' : ''"
+               th:href="@{/manage-food(canteenId=${canteenId}, page=${i}, size=${foodPage.size})}" class="page-link">
+                <span th:text="${i + 1}">1</span>
+            </a>
+        </span>
+                        <span th:if="${foodPage.hasNext()}">
+            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number + 1}, size=${foodPage.size})}"
+               class="page-link">&raquo;</a>
+        </span>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -35,8 +35,7 @@
         <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
             <div class="flex justify-between mb-4 items-start">
                 <div class="font-medium">Quản Lý Sản Phẩm của: <span th:text="${canteenName}"></span></div>
-                <a th:href="@{/add-category-form(canteenId=${canteenId})}" class="btn btn-primary"
-                   style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">Thêm Danh mục đồ ăn</a>
+
             </div>
             <div th:if="${successMessage}" class="alert alert-success" id="successAlert">
                 <span th:text="${successMessage}"></span>
@@ -53,7 +52,6 @@
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên Sản Phẩm</th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mô tả</th>
                         <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ảnh</th>
-                        <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Hành Động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -64,9 +62,6 @@
                         <td class="py-2 px-4 border-b border-b-gray-50">
                             <img th:src="@{${category.categoryImage}}" alt="Category Image" style="width: 100px; height: auto;"/>
                         </td>
-                        <td class="py-2 px-4 border-b border-b-gray-50">
-                            <a th:href="@{/edit-category/{categoryId}(categoryId=${category.categoryId}, canteenId=${canteenId})}" class="btn-icon" title="Sửa"
-                               style="padding: 5px 10px; background-color:#007bff; color: white; text-decoration: none; border-radius: 2px;"><i class="ri-edit-2-line icon"></i></a>
                     </tr>
                     </tbody>
                 </table>
