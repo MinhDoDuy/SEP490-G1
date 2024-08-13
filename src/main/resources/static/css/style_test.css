@@ -186,6 +186,8 @@
 
 .carousel-item {
     position: relative;
+    background-size: cover;
+    height: 100%;
 }
 
 .carousel-item a {
