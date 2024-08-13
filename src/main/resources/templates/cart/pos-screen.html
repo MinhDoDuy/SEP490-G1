@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>POS Screen</title>
+    <title>Thanh Toán Tại Quầy</title>
     <style>
         body {
             font-family: 'Open Sans', sans-serif;
@@ -173,15 +173,12 @@
     <ul class="nav nav-tabs" id="posTabs" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-               aria-selected="true">Trang chủ</a>
+               aria-selected="true" style="font-size: 1.2rem;">Trang chủ</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="features-tab" data-toggle="tab" href="#features" role="tab" aria-controls="features"
-               aria-selected="false">Lịch sử trong ngày</a>
+               aria-selected="false" style="font-size: 1.2rem;">Lịch sử trong ngày</a>
         </li>
-        <!--        <li class="nav-item">-->
-        <!--            <a class="nav-link" id="pricing-tab" data-toggle="tab" href="#pricing" role="tab" aria-controls="pricing" aria-selected="false">Pricing</a>-->
-        <!--        </li>-->
     </ul>
 
     <!-- Tab Content -->
@@ -215,17 +212,18 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header" style="font-size: 1.25rem;">
                             Giỏ Hàng
                         </div>
-                        <div class="card-body" id="cartItems">
+                        <div class="card-body" id="cartItems" style="font-size: 1.2rem;">
                             <!-- Cart Items will be displayed here -->
                         </div>
                         <div class="card-footer">
-                            <div class="cart-summary">
+                            <div class="cart-summary" style="font-size: 1.2rem;">
                                 <p>Tổng Món: <span id="totalItems">0</span></p>
                                 <p>Tổng Tiền: <span id="totalPrice">0 VND</span></p>
-                                <button class="btn btn-success" id="proceedToPayment" style="display: none;">Thanh
+                                <button class="btn btn-success" id="proceedToPayment"
+                                        style="display: none; font-size: 1.2rem;">Thanh
                                     Toán
                                 </button>
                             </div>
