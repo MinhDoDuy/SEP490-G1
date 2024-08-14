@@ -45,6 +45,7 @@ public class OrderManagementController {
     @GetMapping("/order-list/{canteenId}")
     public String manageOrders(@PathVariable Integer canteenId,
                                @RequestParam(value = "orderStatus", defaultValue = "PENDING") OrderStatus orderStatus,
+                               @RequestParam(value = "keyword", required = false) String keyword,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
@@ -69,6 +70,7 @@ public class OrderManagementController {
         LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
         LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
 
+        // Handling COMPLETE status with date filtering
         if (orderStatus == OrderStatus.COMPLETE && (startDate.isPresent() || endDate.isPresent())) {
             if (start.isAfter(end)) {
                 model.addAttribute("error", "Ngày bắt đầu không thể sau ngày kết thúc");
@@ -76,7 +78,17 @@ public class OrderManagementController {
             } else {
                 orders = orderService.getCompletedOrdersByCanteenAndDateRange(canteenId, start, end, pageable);
             }
-        } else {
+        }
+        // Handling REJECT status with keyword search
+        else if (orderStatus == OrderStatus.REJECT && keyword != null && !keyword.isEmpty()) {
+            orders = orderService.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
+        }
+        // Handling REJECT status without search
+        else if (orderStatus == OrderStatus.REJECT) {
+            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
+        }
+        // Handling other statuses (PENDING, PROGRESS)
+        else {
             switch (orderStatus) {
                 case PENDING:
                     orders = orderService.getOrdersByCanteenAndType(canteenId, List.of(OrderStatus.PENDING), OrderType.ONLINE_ORDER, pageable);
@@ -86,9 +98,6 @@ public class OrderManagementController {
                     break;
                 case COMPLETE:
                     orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.COMPLETE), pageable);
-                    break;
-                case REJECT:
-                    orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
                     break;
                 default:
                     orders = Page.empty();
@@ -102,9 +111,36 @@ public class OrderManagementController {
         model.addAttribute("startDate", startDate.orElse(null));
         model.addAttribute("endDate", endDate.orElse(null));
         model.addAttribute("canteenName", canteen.getCanteenName());
+        model.addAttribute("keyword", keyword);
 
         return "staff-management/order-list";
     }
+
+
+
+    @GetMapping("/order-list-reject/{canteenId}")
+    public String manageRejectedOrders(@PathVariable Integer canteenId,
+                                       @RequestParam(value = "keyword", required = false) String keyword,
+                                       @RequestParam(value = "page", defaultValue = "0") int page,
+                                       @RequestParam(value = "size", defaultValue = "10") int size,
+                                       Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orders;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            orders = orderService.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
+        } else {
+            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
+        }
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("keyword", keyword);
+        return "staff-management/order-list";
+    }
+
+
 
 
     @PostMapping("/update-order-status/{orderId}")

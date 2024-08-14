@@ -65,5 +65,7 @@ public interface OrderService {
 
     List<Order> findByOrderTypeAndCurrentDate(OrderType orderType);
 
+    Page<Order> searchRejectedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable);
+
 
 }

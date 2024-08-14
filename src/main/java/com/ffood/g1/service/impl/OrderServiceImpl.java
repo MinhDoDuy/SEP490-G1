@@ -306,5 +306,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByOrderTypeAndCurrentDate(orderType);
     }
 
+    @Override
+    public Page<Order> searchRejectedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable) {
+        return orderRepository.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
+    }
+
 
 }

@@ -92,6 +92,18 @@
                 <span id="error-text"></span>
             </div>
 
+            <!-- Conditional search bar for REJECT status -->
+            <form th:if="${orderStatus.name() == 'REJECT'}"
+                  th:action="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()})}"
+                  method="get" class="form-inline mb-4">
+                <div class="form-group mr-2">
+                    <label for="keyword" class="mr-2"></label>
+                    <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Nhập Mã Đơn Hàng" th:value="${keyword}">
+                </div>
+                <input type="hidden" name="orderStatus" th:value="${orderStatus.name()}"/>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
             <!-- Form lọc ngày bắt đầu và ngày kết thúc cho trạng thái COMPLETE -->
             <form th:if="${orderStatus.name() == 'COMPLETE'}"
                   th:action="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()})}"
