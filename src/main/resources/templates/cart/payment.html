@@ -183,8 +183,8 @@
                                th:text="${cartItem.totalFoodPrice}">Price</p>
                         </div>
                         <div class="cart-item-quantity">
-                            Số lượng : <span th:value="${cartItem.quantity}" th:text="${cartItem.quantity}"
-                                             readonly></span>
+                            Số lượng: <span th:value="${cartItem.quantity}" th:text="${cartItem.quantity}"
+                                            readonly></span>
                         </div>
                     </div>
                 </div>
@@ -197,7 +197,7 @@
                         <div>
                             <label for="paymentMethod">Phương thức thanh toán:</label>
                             <select id="paymentMethod" class="form-control">
-                                <option value="qr">QR Code</option>
+                                <option value="qr">Chuyển Khoản</option>
                                 <option value="cash">Tiền mặt</option>
                             </select>
                         </div>
@@ -207,8 +207,7 @@
                                    placeholder="Nhập số tiền nhận từ khách">
                             <p id="changeDue"></p>
                         </div>
-                        <button class="btn btn-success mt-3" style="font-size: 1.2rem;" id="submitPayment">Thanh
-                            toán
+                        <button class="btn btn-success mt-3" style="font-size: 1.2rem;" id="submitPayment">Thanh toán
                         </button>
                     </div>
                 </div>
@@ -226,7 +225,7 @@
                     </div>
                     <div class="input-group mt-3 position-relative">
                         <input type="text" id="searchPhone" class="form-control"
-                               placeholder="Nhập số điện thoại .....">
+                               placeholder="Nhập số điện thoại ...">
                         <span id="clearSearchIcon" class="position-absolute"
                               style="right: 80px; top: 50%; transform: translateY(-50%); cursor: pointer;">
                             &times;

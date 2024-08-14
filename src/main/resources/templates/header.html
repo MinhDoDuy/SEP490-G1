@@ -72,7 +72,8 @@
                                   style="top: -5px; left: 15px; height: 20px; min-width: 20px; "
                                   th:text="${session.totalQuantity}">0</span>
                         </a>
-                        <button type="button" class="btn btn-danger" style="background-color: #f6ba4d" th:if="${session.user == null}"><a
+                        <button type="button" class="btn btn-danger" style="background-color: #f6ba4d"
+                                th:if="${session.user == null}"><a
                                 th:href="@{/login}"
                                 style="color: #0c0202">Đăng Nhập</a>
                         </button>
