@@ -4,7 +4,6 @@ import com.ffood.g1.entity.*;
 import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.OrderType;
 import com.ffood.g1.enum_pay.PaymentMethod;
-import com.ffood.g1.enum_pay.PaymentStatus;
 import com.ffood.g1.repository.FoodRepository;
 import com.ffood.g1.repository.OrderDetailRepository;
 import com.ffood.g1.repository.OrderRepository;
@@ -55,187 +54,235 @@ public class OrderServiceImplTest {
     @Mock
     private CartItemService cartItemService;
 
-    // Trường hợp bình thường: Kiểm thử lấy các đơn hàng theo canteen và trạng thái
+    // Kiểm thử chức năng tìm tổng số đơn hàng đã hoàn thành
+    @Test
+    void testFindTotalCompletedOrders_Normal() {
+        when(orderRepository.findTotalCompletedOrders()).thenReturn(100L);
+
+        Long result = orderService.findTotalCompletedOrders();
+
+        assertEquals(100L, result);
+        verify(orderRepository, times(1)).findTotalCompletedOrders();
+    }
+
+    // Kiểm thử chức năng lấy danh sách đơn hàng theo căn tin và trạng thái
     @Test
     void testGetOrdersByCanteen_Normal() {
         Pageable pageable = PageRequest.of(0, 10);
+        Order order1 = new Order();
+        Order order2 = new Order();
 
-        // Tạo các đối tượng Order sử dụng builder
-        Order order1 = Order.builder().orderId(1).orderStatus(OrderStatus.COMPLETE).canteenId(1).build();
-        Order order2 = Order.builder().orderId(2).orderStatus(OrderStatus.PENDING).canteenId(1).build();
+        Page<Order> page = new PageImpl<>(Arrays.asList(order1, order2), pageable, 2);
 
-        Page<Order> expectedPage = new PageImpl<>(Arrays.asList(order1, order2));
+        when(orderRepository.findOrdersByCanteenIdAndStatuses(1, Collections.singletonList(OrderStatus.COMPLETE), pageable)).thenReturn(page);
 
-        // Giả lập phương thức findOrdersByCanteenIdAndStatuses của repository để trả về trang giả lập
-        when(orderRepository.findOrdersByCanteenIdAndStatuses(eq(1), anyList(), eq(pageable))).thenReturn(expectedPage);
+        Page<Order> result = orderService.getOrdersByCanteen(1, Collections.singletonList(OrderStatus.COMPLETE), pageable);
 
-        // Gọi phương thức service
-        Page<Order> result = orderService.getOrdersByCanteen(1, Arrays.asList(OrderStatus.COMPLETE, OrderStatus.PENDING), pageable);
-
-        // Kiểm tra xem trang trả về có khớp với trang mong đợi hay không
-        assertEquals(expectedPage, result);
-
-        // Xác minh rằng phương thức findOrdersByCanteenIdAndStatuses của repository đã được gọi chính xác một lần
-        verify(orderRepository, times(1)).findOrdersByCanteenIdAndStatuses(eq(1), anyList(), eq(pageable));
+        assertEquals(2, result.getTotalElements());
+        assertEquals(2, result.getContent().size());
+        verify(orderRepository, times(1)).findOrdersByCanteenIdAndStatuses(1, Collections.singletonList(OrderStatus.COMPLETE), pageable);
     }
 
-    // Trường hợp bất thường: Kiểm thử khi repository ném ra ngoại lệ khi lấy các đơn hàng theo canteen
     @Test
-    void testGetOrdersByCanteen_Abnormal() {
-        Pageable pageable = PageRequest.of(0, 10);
+    void testAssignShipperAndUpdateStatus_Normal() {
+        // Tạo đối tượng User
+        User user = new User();
+        user.setEmail("user@example.com");
 
-        // Giả lập repository ném ra một RuntimeException khi gọi findOrdersByCanteenIdAndStatuses
-        when(orderRepository.findOrdersByCanteenIdAndStatuses(eq(1), anyList(), eq(pageable))).thenThrow(new RuntimeException("Database Error"));
+        // Tạo đối tượng Food và Canteen
+        Canteen canteen = new Canteen();
+        canteen.setCanteenName("Canteen 1");
 
-        // Gọi phương thức service và kiểm tra xem có ngoại lệ nào bị ném ra hay không
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            orderService.getOrdersByCanteen(1, Arrays.asList(OrderStatus.COMPLETE, OrderStatus.PENDING), pageable);
-        });
+        Food food = new Food();
+        food.setCanteen(canteen);
 
-        // Kiểm tra xem thông điệp ngoại lệ có khớp với thông điệp mong đợi hay không
-        assertEquals("Database Error", exception.getMessage());
+        // Tạo đối tượng OrderDetail và Order
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderCode("ORD123");
 
-        // Xác minh rằng phương thức findOrdersByCanteenIdAndStatuses của repository đã được gọi chính xác một lần
-        verify(orderRepository, times(1)).findOrdersByCanteenIdAndStatuses(eq(1), anyList(), eq(pageable));
-    }
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setFood(food);
+        orderDetail.setOrder(order);  // Liên kết OrderDetail với Order
 
-    // Trường hợp ranh giới: Kiểm thử khi không có đơn hàng nào khớp với canteen và trạng thái
-    @Test
-    void testGetOrdersByCanteen_Boundary() {
-        Pageable pageable = PageRequest.of(0, 10);
+        // Thêm OrderDetail vào danh sách trong Order
+        order.setOrderDetails(Collections.singletonList(orderDetail));
 
-        // Giả lập phương thức findOrdersByCanteenIdAndStatuses của repository để trả về trang rỗng
-        when(orderRepository.findOrdersByCanteenIdAndStatuses(eq(1), anyList(), eq(pageable))).thenReturn(Page.empty());
-
-        // Gọi phương thức service
-        Page<Order> result = orderService.getOrdersByCanteen(1, Arrays.asList(OrderStatus.COMPLETE, OrderStatus.PENDING), pageable);
-
-        // Kiểm tra xem trang trả về có rỗng hay không
-        assertTrue(result.isEmpty());
-
-        // Xác minh rằng phương thức findOrdersByCanteenIdAndStatuses của repository đã được gọi chính xác một lần
-        verify(orderRepository, times(1)).findOrdersByCanteenIdAndStatuses(eq(1), anyList(), eq(pageable));
-    }
-
-    // Trường hợp bình thường: Kiểm thử việc tạo đơn hàng tại quầy (createOrderAtCounter)
-    @Test
-    void testCreateOrderAtCounter_Normal() {
-        List<Integer> foodIds = Arrays.asList(1, 2);
-        List<Integer> quantities = Arrays.asList(2, 3);
-        String paymentMethod = "CASH";
-        Integer totalOrderPrice = 50000;
-
-        // Tạo đối tượng Food sử dụng builder
-        Food food1 = Food.builder().foodId(1).foodName("Food1").foodQuantity(10).price(10000).salesCount(0).build();
-        Food food2 = Food.builder().foodId(2).foodName("Food2").foodQuantity(15).price(15000).salesCount(0).build();
-
-        // Giả lập phương thức findById của foodRepository để trả về các đối tượng Food
-        when(foodRepository.findById(1)).thenReturn(Optional.of(food1));
-        when(foodRepository.findById(2)).thenReturn(Optional.of(food2));
-
-        // Giả lập phương thức findByEmail của userRepository để trả về một đối tượng User ẩn danh
-        User userAnonymous = User.builder().email("anonymous@gmail.com").userId(999).build();
-        when(userRepository.findByEmail("anonymous@gmail.com")).thenReturn(userAnonymous);
-
-        // Gọi phương thức service
-        orderService.createOrderAtCouter(1, foodIds, quantities, paymentMethod, totalOrderPrice);
-
-        // Kiểm tra xem số lượng món ăn đã được cập nhật đúng hay không
-        assertEquals(8, food1.getFoodQuantity());
-        assertEquals(12, food2.getFoodQuantity());
-
-        // Kiểm tra xem số lượng bán ra đã được cập nhật đúng hay không
-        assertEquals(2, food1.getSalesCount());
-        assertEquals(3, food2.getSalesCount());
-
-        // Xác minh rằng phương thức save của orderRepository và foodRepository đã được gọi chính xác
-        verify(orderRepository, times(1)).save(any(Order.class));
-        verify(foodRepository, times(1)).save(food1);
-        verify(foodRepository, times(1)).save(food2);
-        verify(orderDetailRepository, times(2)).save(any(OrderDetail.class));
-    }
-
-    // Trường hợp bất thường: Kiểm thử khi số lượng món ăn không đủ trong phương thức createOrderAtCounter
-    @Test
-    void testCreateOrderAtCounter_Abnormal() {
-        List<Integer> foodIds = Arrays.asList(1);
-        List<Integer> quantities = Arrays.asList(20);
-        String paymentMethod = "CASH";
-        Integer totalOrderPrice = 50000;
-
-        // Tạo đối tượng Food sử dụng builder với số lượng ít hơn yêu cầu
-        Food food1 = Food.builder().foodId(1).foodName("Food1").foodQuantity(5).price(10000).salesCount(0).build();
-
-        // Giả lập phương thức findById của foodRepository để trả về đối tượng Food
-        when(foodRepository.findById(1)).thenReturn(Optional.of(food1));
-
-        // Gọi phương thức service và kiểm tra xem có ngoại lệ nào bị ném ra hay không
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            orderService.createOrderAtCouter(1, foodIds, quantities, paymentMethod, totalOrderPrice);
-        });
-
-        // Kiểm tra xem thông điệp ngoại lệ có khớp với thông điệp mong đợi hay không
-        assertEquals("Insufficient quantity for food: Food1", exception.getMessage());
-
-        // Xác minh rằng phương thức save của orderRepository và foodRepository không được gọi
-        verify(orderRepository, times(0)).save(any(Order.class));
-        verify(foodRepository, times(0)).save(any(Food.class));
-        verify(orderDetailRepository, times(0)).save(any(OrderDetail.class));
-    }
-
-    // Trường hợp ranh giới: Kiểm thử khi danh sách món ăn hoặc số lượng rỗng trong phương thức createOrderAtCounter
-    @Test
-    void testCreateOrderAtCounter_Boundary() {
-        List<Integer> foodIds = Collections.emptyList();
-        List<Integer> quantities = Collections.emptyList();
-        String paymentMethod = "CASH";
-        Integer totalOrderPrice = 50000;
-
-        // Gọi phương thức service và kiểm tra xem không có ngoại lệ nào bị ném ra
-        orderService.createOrderAtCouter(1, foodIds, quantities, paymentMethod, totalOrderPrice);
-
-        // Xác minh rằng phương thức save của orderRepository và foodRepository không được gọi
-        verify(orderRepository, times(1)).save(any(Order.class));
-        verify(foodRepository, times(0)).save(any(Food.class));
-        verify(orderDetailRepository, times(0)).save(any(OrderDetail.class));
-    }
-
-    // Các bài kiểm thử khác cũng tương tự như trên, sử dụng builder để tạo các đối tượng Order, Food, User và kiểm tra các phương thức khác trong OrderServiceImpl
-
-    // Ví dụ: Trường hợp bình thường: Kiểm thử việc hoàn thành đơn hàng (completeOrder)
-    @Test
-    void testCompleteOrder_Normal() {
-        // Tạo đối tượng Order sử dụng builder
-        Order order = Order.builder().orderId(1).orderStatus(OrderStatus.PENDING).build();
-
-        // Giả lập phương thức findById của orderRepository để trả về đối tượng Order
+        // Giả lập hành vi của orderRepository
         when(orderRepository.findById(1)).thenReturn(Optional.of(order));
 
-        // Gọi phương thức service
-        orderService.completeOrder(1);
+        // Gọi phương thức và kiểm tra kết quả
+        orderService.assignShipperAndUpdateStatus(1, 2, OrderStatus.PROGRESS, "Shipper Name");
 
-        // Kiểm tra xem trạng thái đơn hàng đã được cập nhật đúng hay không
-        assertEquals(OrderStatus.COMPLETE, order.getOrderStatus());
+        // Kiểm tra các giá trị sau khi cập nhật
+        assertEquals(2, order.getDeliveryRoleId());
+        assertEquals(OrderStatus.PROGRESS, order.getOrderStatus());
+        assertEquals("Shipper Name", order.getDeliveryRoleName());
 
-        // Xác minh rằng phương thức save của orderRepository đã được gọi chính xác một lần
+        // Kiểm tra xem phương thức save có được gọi không
         verify(orderRepository, times(1)).save(order);
     }
 
-    // Trường hợp bất thường: Kiểm thử khi orderId không hợp lệ trong phương thức completeOrder
+
+    // Kiểm thử chức năng từ chối đơn hàng
     @Test
-    void testCompleteOrder_Abnormal() {
-        // Giả lập repository ném ra một IllegalArgumentException khi gọi findById
-        when(orderRepository.findById(1)).thenThrow(new IllegalArgumentException("Invalid order ID"));
+    void testRejectOrder_Normal() {
+        // Tạo đối tượng User
+        User user = new User();
+        user.setEmail("user@example.com");
 
-        // Gọi phương thức service và kiểm tra xem có ngoại lệ nào bị ném ra hay không
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            orderService.completeOrder(1);
-        });
+        // Tạo đối tượng Food và Canteen
+        Canteen canteen = new Canteen();
+        canteen.setCanteenName("Canteen 1");
 
-        // Kiểm tra xem thông điệp ngoại lệ có khớp với thông điệp mong đợi hay không
-        assertEquals("Invalid order ID", exception.getMessage());
+        Food food = new Food();
+        food.setCanteen(canteen);
 
-        // Xác minh rằng phương thức save của orderRepository không được gọi
-        verify(orderRepository, times(0)).save(any(Order.class));
+        // Tạo đối tượng OrderDetail và Order
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderCode("ORD123");
+
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setFood(food);
+        orderDetail.setOrder(order);  // Liên kết OrderDetail với Order
+
+        // Thêm OrderDetail vào danh sách trong Order
+        order.setOrderDetails(Collections.singletonList(orderDetail));
+
+        // Giả lập hành vi của orderRepository
+        when(orderRepository.findById(1)).thenReturn(Optional.of(order));
+
+        // Gọi phương thức rejectOrder và kiểm tra kết quả
+        orderService.rejectOrder(1, "Out of stock");
+
+        // Kiểm tra các giá trị sau khi cập nhật
+        assertEquals(OrderStatus.REJECT, order.getOrderStatus());
+        assertTrue(order.getNote().contains("Out of stock"));
+
+        // Kiểm tra xem phương thức save có được gọi không
+        verify(orderRepository, times(1)).save(order);
+    }
+
+
+    // Kiểm thử chức năng tạo đơn hàng tại quầy
+    @Test
+    void testCreateOrderAtCounter_Normal() {
+        // Tạo đối tượng User giả lập
+        User anonymousUser = new User();
+        when(userRepository.findByEmail("anonymous@gmail.com")).thenReturn(anonymousUser);
+
+        // Tạo đối tượng Food với các giá trị cần thiết
+        Food food = new Food();
+        food.setFoodQuantity(10);
+        food.setSalesCount(0);
+        food.setPrice(100);  // Đặt giá trị cho price
+
+        when(foodRepository.findById(1)).thenReturn(Optional.of(food));
+
+        // Thực hiện kiểm thử phương thức createOrderAtCouter
+        orderService.createOrderAtCouter(1, Collections.singletonList(1), Collections.singletonList(2), "CASH", 200);
+
+        // Kiểm tra xem các phương thức save có được gọi đúng cách hay không
+        verify(orderRepository, times(1)).save(any(Order.class));
+        verify(orderDetailRepository, times(1)).save(any(OrderDetail.class));
+        verify(foodRepository, times(1)).save(any(Food.class));
+    }
+
+
+    // Kiểm thử chức năng lấy đơn hàng theo loại và ngày hiện tại
+    @Test
+    void testFindByOrderTypeAndCurrentDate_Normal() {
+        Order order1 = new Order();
+        Order order2 = new Order();
+
+        when(orderRepository.findByOrderTypeAndCurrentDate(OrderType.ONLINE_ORDER)).thenReturn(Arrays.asList(order1, order2));
+
+        List<Order> result = orderService.findByOrderTypeAndCurrentDate(OrderType.ONLINE_ORDER);
+
+        assertEquals(2, result.size());
+        verify(orderRepository, times(1)).findByOrderTypeAndCurrentDate(OrderType.ONLINE_ORDER);
+    }
+
+    // Kiểm thử chức năng tìm kiếm đơn hàng bị từ chối theo mã đơn hàng
+    @Test
+    void testSearchRejectedOrdersByOrderCode_Normal() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Order order1 = new Order();
+        Order order2 = new Order();
+
+        Page<Order> page = new PageImpl<>(Arrays.asList(order1, order2), pageable, 2);
+
+        when(orderRepository.searchRejectedOrdersByOrderCode(1, "ORDER123", pageable)).thenReturn(page);
+
+        Page<Order> result = orderService.searchRejectedOrdersByOrderCode(1, "ORDER123", pageable);
+
+        assertEquals(2, result.getTotalElements());
+        verify(orderRepository, times(1)).searchRejectedOrdersByOrderCode(1, "ORDER123", pageable);
+    }
+
+    // Kiểm thử chức năng hoàn tất đơn hàng
+    @Test
+    void testCompleteOrder_Normal() {
+        // Tạo đối tượng User giả lập
+        User user = new User();
+
+        // Tạo đối tượng Food và Canteen giả lập
+        Canteen canteen = new Canteen();
+        canteen.setCanteenName("Test Canteen");
+
+        Food food = new Food();
+        food.setFoodName("Test Food");
+        food.setCanteen(canteen);
+
+        // Tạo đối tượng OrderDetail với Food hợp lệ
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setFood(food);
+
+        // Tạo đối tượng Order với OrderDetail hợp lệ
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDetails(Arrays.asList(orderDetail));
+
+        // Thiết lập order cho orderDetail để tránh lỗi NullPointerException
+        orderDetail.setOrder(order);
+
+        // Thiết lập hành vi giả lập của orderRepository
+        when(orderRepository.findById(1)).thenReturn(Optional.of(order));
+
+        // Thực hiện kiểm thử phương thức completeOrder
+        orderService.completeOrder(1);
+
+        // Kiểm tra trạng thái đơn hàng
+        assertEquals(OrderStatus.COMPLETE, order.getOrderStatus());
+
+        // Kiểm tra xem phương thức save có được gọi đúng cách hay không
+        verify(orderRepository, times(1)).save(order);
+    }
+
+
+
+    // Kiểm thử chức năng kiểm tra xem shipper có đơn hàng đang hoạt động hay không
+    @Test
+    void testHasActiveOrders_Normal() {
+        when(orderRepository.countActiveOrdersByDeliveryRoleId(2)).thenReturn(3L);
+
+        boolean result = orderService.hasActiveOrders(2);
+
+        assertTrue(result);
+        verify(orderRepository, times(1)).countActiveOrdersByDeliveryRoleId(2);
+    }
+
+    // Kiểm thử chức năng lấy các mặt hàng bán chạy nhất theo căn tin
+    @Test
+    void testGetBestSellingItemsByCanteen_Normal() {
+        when(orderRepository.findBestSellingItemsByCanteen(1)).thenReturn(Arrays.asList(new Object[]{"Item 1", 100}, new Object[]{"Item 2", 50}));
+
+        List<Object[]> result = orderService.getBestSellingItemsByCanteen(1);
+
+        assertEquals(2, result.size());
+        assertEquals("Item 1", result.get(0)[0]);
+        assertEquals(100, result.get(0)[1]);
+        verify(orderRepository, times(1)).findBestSellingItemsByCanteen(1);
     }
 }
