@@ -28,14 +28,19 @@
   </div>
 
   <div class="p-6">
-    <div th:if="${successMessage}" class="alert alert-success " th:text="${successMessage}" id="successMessage"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger " th:text="${errorMessage}" id="errorMessage"></div>
+
     <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
       <div class="flex justify-between mb-4 items-start">
         <div class="font-medium">Đơn ship của bạn</div>
       </div>
 
       <div th:if="${not #lists.isEmpty(orders.content)}">
+        <div th:if="${successMessage}" class="alert alert-success "  id="successMessage">
+          <span th:text="${successMessage}"></span>
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger " th:text="${errorMessage}" id="errorMessage">
+        </div>
         <table class="table w-full min-w-[540px]">
           <thead>
           <tr>
@@ -79,6 +84,9 @@
                   <i class="ri-check-line"></i>
                 </button>
               </form>
+              <button class="btn btn-danger" data-toggle="modal" th:data-target="'#rejectModal'" th:data-order-id="${order.orderId}" th:data-canteen-id="${canteenId}">
+                <i class="ri-close-line"></i>
+              </button>
             </td>
           </tr>
           </tbody>
@@ -91,7 +99,36 @@
   </div>
 </main>
 <!-- end: Main -->
+<!-- Modal for Reject Reason -->
+<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rejectModalLabel">Lý do từ chối</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="rejectForm" method="post" th:action="@{/reject-order-ship}">
+          <input type="hidden" id="rejectOrderId" name="orderId">
+          <input type="hidden" id="rejectCanteenId" name="canteenId">
+          <input type="hidden" name="userId" th:value="${deliveryRoleId}"/>
+          <div class="form-group">
+            <label for="rejectNote">Lý do từ chối:</label>
+            <textarea class="form-control" id="rejectNote" name="note" required></textarea>
+          </div>
 
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-danger" onclick="submitRejectForm()">Từ chối</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal for Order Details -->
 <div class="modal fade" th:each="order : ${orders.content}" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -117,10 +154,25 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+<script>
+  $('#rejectModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var orderId = button.data('order-id');
+    var canteenId = button.data('canteen-id');
+
+    var modal = $(this);
+    modal.find('#rejectOrderId').val(orderId);
+    modal.find('#rejectCanteenId').val(canteenId);
+  });
+
+  function submitRejectForm() {
+    document.getElementById("rejectForm").submit();
+  }
+</script>
+
 <script>
   // Function to format currency in VND
   function formatCurrencyVND(amount) {

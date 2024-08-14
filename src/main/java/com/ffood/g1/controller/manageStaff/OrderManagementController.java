@@ -107,8 +107,6 @@ public class OrderManagementController {
     }
 
 
-
-
     @PostMapping("/update-order-status/{orderId}")
     public String assignShipperAndUpdateStatus(@PathVariable Integer orderId,
                                                @RequestParam Integer deliveryRoleId,
@@ -196,8 +194,6 @@ public class OrderManagementController {
     }
 
 
-
-
     @PostMapping("/complete-order/{orderId}")
     public String completeOrder(@PathVariable Integer orderId,
                                 @RequestParam Integer canteenId,
@@ -208,6 +204,16 @@ public class OrderManagementController {
         return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
     }
 
+    @PostMapping("/reject-order-ship")
+    public String cancelOrderShip(@RequestParam Integer orderId,
+                                  @RequestParam Integer canteenId,
+                                  @RequestParam String note,
+                                  @RequestParam Integer userId,
+                                  RedirectAttributes redirectAttributes) {
+        orderService.rejectOrder(orderId, note);
+        redirectAttributes.addFlashAttribute("successMessage", "Đơn đã bị hủy với lý do: " + note);
+        return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
+    }
 
 
 }
