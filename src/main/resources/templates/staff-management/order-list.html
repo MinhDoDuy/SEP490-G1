@@ -66,7 +66,7 @@
 
             <ul class="nav nav-tabs" id="orderTabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${orderStatus.name() == 'PENDING'} ? 'active'"
+                    <a class="nav-link" th:classappend="${orderStatus != null and orderStatus.name() == 'PENDING'} ? 'active' : ''"
                        th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus='PENDING', startDate=${param.startDate}, endDate=${param.endDate})}"
                        role="tab">Đơn hàng chờ xử lý</a>
                 </li>
@@ -267,26 +267,20 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div th:if="${orders.hasContent()}">
-                            <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
-        <span th:if="${orders.hasPrevious()}">
-            <a th:href="@{/order-list-reject/{canteenId}(canteenId=${canteenId}, keyword=${keyword}, page=${orders.number - 1}, size=${orders.size})}"
-               class="page-link">&laquo;</a>
-        </span>
-                                <span th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}">
-            <a th:classappend="${i} == ${orders.number} ? 'active' : ''"
-               th:href="@{/order-list-reject/{canteenId}(canteenId=${canteenId}, keyword=${keyword}, page=${i}, size=${orders.size})}" class="page-link">
-                <span th:text="${i + 1}">1</span>
-            </a>
-        </span>
-                                <span th:if="${orders.hasNext()}">
-            <a th:href="@{/order-list-reject/{canteenId}(canteenId=${canteenId}, keyword=${keyword}, page=${orders.number + 1}, size=${orders.size})}"
-               class="page-link">&raquo;</a>
-        </span>
-                            </div>
+                        <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;" th:if="${orders.totalElements > 0}">
+    <span th:if="${orders.hasPrevious()}">
+        <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()}, page=${orders.number - 1}, size=${orders.size}, startDate=${startDate}, endDate=${endDate})}" class="page-link">&laquo;</a>
+    </span>
+                            <span th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}">
+        <a th:classappend="${i} == ${orders.number} ? 'active' : ''"
+           th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()}, page=${i}, size=${orders.size}, startDate=${startDate}, endDate=${endDate})}" class="page-link">
+            <span th:text="${i + 1}">1</span>
+        </a>
+    </span>
+                            <span th:if="${orders.hasNext()}">
+        <a th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()}, page=${orders.number + 1}, size=${orders.size}, startDate=${startDate}, endDate=${endDate})}" class="page-link">&raquo;</a>
+    </span>
                         </div>
-
-
                     </div>
                 </div>
             </div>

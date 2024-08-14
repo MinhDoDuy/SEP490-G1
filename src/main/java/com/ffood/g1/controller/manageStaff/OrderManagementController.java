@@ -61,6 +61,13 @@ public class OrderManagementController {
             return "redirect:/order-list/" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách đơn hàng của canteen mà người dùng thuộc về
         }
 
+
+        // Ensure orderStatus is not null
+        if (orderStatus == null) {
+            orderStatus = OrderStatus.PENDING; // Set a default value or handle appropriately
+        }
+        model.addAttribute("orderStatus", orderStatus);
+
         Pageable pageable = PageRequest.of(page, size);
         Page<Order> orders;
 
