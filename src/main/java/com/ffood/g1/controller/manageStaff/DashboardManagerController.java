@@ -42,25 +42,44 @@ public class DashboardManagerController {
         Integer foodCount = foodService.countFoodByCanteenId(canteenId);
         Integer completedOrdersCount = orderService.countCompletedOrdersByCanteenId(canteenId);
 
-        List<Object[]> revenueDataByMonth = orderService.findRevenueDataCanteenByMonth(canteenId);
-        List<Object[]> revenueDataByYear = orderService.findRevenueDataCanteenByYear(canteenId);
+        // Doanh thu online
+        List<Object[]> revenueDataByMonthOnline = orderService.findRevenueDataCanteenByMonthOnline(canteenId);
+        List<Object[]> revenueDataByYearOnline = orderService.findRevenueDataCanteenByYearOnline(canteenId);
 
-        List<String> revenueLabelsByMonth = new ArrayList<>();
-        List<Double> revenueDataByMonthList = new ArrayList<>();
-        for (Object[] data : revenueDataByMonth) {
-            revenueLabelsByMonth.add((String) data[0]);
-            revenueDataByMonthList.add((Double) data[1]);
+        List<String> revenueLabelsByMonthOnline = new ArrayList<>();
+        List<Double> revenueDataByMonthOnlineList = new ArrayList<>();
+        for (Object[] data : revenueDataByMonthOnline) {
+            revenueLabelsByMonthOnline.add((String) data[0]);
+            revenueDataByMonthOnlineList.add((Double) data[1]);
         }
 
-        List<String> revenueLabelsByYear = new ArrayList<>();
-        List<Double> revenueDataByYearList = new ArrayList<>();
-        for (Object[] data : revenueDataByYear) {
-            revenueLabelsByYear.add((String) data[0]);
-            revenueDataByYearList.add((Double) data[1]);
+        List<String> revenueLabelsByYearOnline = new ArrayList<>();
+        List<Double> revenueDataByYearOnlineList = new ArrayList<>();
+        for (Object[] data : revenueDataByYearOnline) {
+            revenueLabelsByYearOnline.add((String) data[0]);
+            revenueDataByYearOnlineList.add((Double) data[1]);
+        }
+
+        // Doanh thu tại quầy
+        List<Object[]> revenueDataByMonthAtCounter = orderService.findRevenueDataCanteenByMonthAtCounter(canteenId);
+        List<Object[]> revenueDataByYearAtCounter = orderService.findRevenueDataCanteenByYearAtCounter(canteenId);
+
+        List<String> revenueLabelsByMonthAtCounter = new ArrayList<>();
+        List<Double> revenueDataByMonthAtCounterList = new ArrayList<>();
+        for (Object[] data : revenueDataByMonthAtCounter) {
+            revenueLabelsByMonthAtCounter.add((String) data[0]);
+            revenueDataByMonthAtCounterList.add((Double) data[1]);
+        }
+
+        List<String> revenueLabelsByYearAtCounter = new ArrayList<>();
+        List<Double> revenueDataByYearAtCounterList = new ArrayList<>();
+        for (Object[] data : revenueDataByYearAtCounter) {
+            revenueLabelsByYearAtCounter.add((String) data[0]);
+            revenueDataByYearAtCounterList.add((Double) data[1]);
         }
 
         List<Object[]> orderStatsByMonth = orderService.getOrderStatsByCanteenAndMonth(canteenId);
-        List<Object[]> orderStatsByYear = orderService.getOrderStatsByCanteenAndYear(canteenId); // Thêm hàm này vào Service
+        List<Object[]> orderStatsByYear = orderService.getOrderStatsByCanteenAndYear(canteenId);
 
         List<String> orderLabelsByMonth = new ArrayList<>();
         List<Long> orderDataByMonth = new ArrayList<>();
@@ -88,10 +107,14 @@ public class DashboardManagerController {
         model.addAttribute("staffCount", staffCount);
         model.addAttribute("foodCount", foodCount);
         model.addAttribute("completedOrdersCount", completedOrdersCount);
-        model.addAttribute("revenueLabelsByMonth", revenueLabelsByMonth);
-        model.addAttribute("revenueDataByMonth", revenueDataByMonthList);
-        model.addAttribute("revenueLabelsByYear", revenueLabelsByYear);
-        model.addAttribute("revenueDataByYear", revenueDataByYearList);
+        model.addAttribute("revenueLabelsByMonthOnline", revenueLabelsByMonthOnline);
+        model.addAttribute("revenueDataByMonthOnline", revenueDataByMonthOnlineList);
+        model.addAttribute("revenueLabelsByYearOnline", revenueLabelsByYearOnline);
+        model.addAttribute("revenueDataByYearOnline", revenueDataByYearOnlineList);
+        model.addAttribute("revenueLabelsByMonthAtCounter", revenueLabelsByMonthAtCounter);
+        model.addAttribute("revenueDataByMonthAtCounter", revenueDataByMonthAtCounterList);
+        model.addAttribute("revenueLabelsByYearAtCounter", revenueLabelsByYearAtCounter);
+        model.addAttribute("revenueDataByYearAtCounter", revenueDataByYearAtCounterList);
         model.addAttribute("orderLabelsByMonth", orderLabelsByMonth);
         model.addAttribute("orderDataByMonth", orderDataByMonth);
         model.addAttribute("orderLabelsByYear", orderLabelsByYear);

@@ -79,7 +79,7 @@
     </div>
     <div class="grid-2-col mb-6">
       <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
-        <h4>Biểu Đồ Doanh Thu</h4>
+        <h4>Biểu Đồ Doanh Thu Online</h4>
         <select id="revenue-chart-type" class="form-control mb-3">
           <option value="month">Theo Tháng</option>
           <option value="year">Theo Năm</option>
@@ -87,7 +87,7 @@
         <canvas id="revenueChart"></canvas>
       </div>
       <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
-        <h4>Biểu Đồ Đơn</h4>
+        <h4>Biểu Đồ Đơn Hàng Online</h4>
         <select id="order-chart-type" class="form-control mb-3">
           <option value="month">Theo Tháng</option>
           <option value="year">Theo Năm</option>
@@ -96,7 +96,15 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 mb-6">
+    <div class="grid-2-col mb-6">
+      <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+        <h4>Biểu Đồ Doanh Thu Tại Quầy</h4>
+        <select id="counter-revenue-chart-type" class="form-control mb-3">
+          <option value="month">Theo Tháng</option>
+          <option value="year">Theo Năm</option>
+        </select>
+        <canvas id="counterRevenueChart"></canvas>
+      </div>
       <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
         <h4>Biểu Đồ Các Món Ăn Bán Chạy Nhất</h4>
         <canvas id="bestSellingItemsChart"></canvas>
@@ -110,12 +118,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{./js/manage.js}"></script>
 <script th:inline="javascript">
-  // Dữ liệu Revenue Chart
-  const revenueLabelsByMonth = /*[[${revenueLabelsByMonth}]]*/ [];
-  const revenueDataByMonth = /*[[${revenueDataByMonth}]]*/ [];
+  // Dữ liệu Revenue Chart Online
+  const revenueLabelsByMonth = /*[[${revenueLabelsByMonthOnline}]]*/ [];
+  const revenueDataByMonth = /*[[${revenueDataByMonthOnline}]]*/ [];
 
-  const revenueLabelsByYear = /*[[${revenueLabelsByYear}]]*/ [];
-  const revenueDataByYear = /*[[${revenueDataByYear}]]*/ [];
+  const revenueLabelsByYear = /*[[${revenueLabelsByYearOnline}]]*/ [];
+  const revenueDataByYear = /*[[${revenueDataByYearOnline}]]*/ [];
 
   document.getElementById('revenue-chart-type').addEventListener('change', function() {
     const value = this.value;
@@ -132,14 +140,14 @@
     revenueChart.update();
   });
 
-  // Biểu đồ Revenue
+  // Biểu đồ Revenue Online
   const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
   let revenueChart = new Chart(ctxRevenue, {
     type: 'line',
     data: {
       labels: revenueLabelsByMonth,
       datasets: [{
-        label: 'Doanh Thu',
+        label: 'Doanh Thu Online',
         data: revenueDataByMonth,
         borderColor: 'rgba(75, 192, 192, 1)',
         fill: false
@@ -147,7 +155,7 @@
     }
   });
 
-  // Data for Order Stats
+  // Data for Order Stats Online
   const orderLabelsByMonth = /*[[${orderLabelsByMonth}]]*/ [];
   const orderDataByMonth = /*[[${orderDataByMonth}]]*/ [];
 
@@ -175,9 +183,46 @@
     data: {
       labels: orderLabelsByMonth,
       datasets: [{
-        label: 'Số Đơn Hàng Hoàn Thành',
+        label: 'Số Đơn Hàng Online Hoàn Thành',
         data: orderDataByMonth,
         borderColor: 'rgba(75, 192, 192, 1)',
+        fill: false
+      }]
+    }
+  });
+
+  // Dữ liệu Revenue Chart Tại Quầy
+  const counterRevenueLabelsByMonth = /*[[${revenueLabelsByMonthAtCounter}]]*/ [];
+  const counterRevenueDataByMonth = /*[[${revenueDataByMonthAtCounter}]]*/ [];
+
+  const counterRevenueLabelsByYear = /*[[${revenueLabelsByYearAtCounter}]]*/ [];
+  const counterRevenueDataByYear = /*[[${revenueDataByYearAtCounter}]]*/ [];
+
+  document.getElementById('counter-revenue-chart-type').addEventListener('change', function() {
+    const value = this.value;
+    let labels, data;
+    if (value === 'month') {
+      labels = counterRevenueLabelsByMonth;
+      data = counterRevenueDataByMonth;
+    } else if (value === 'year') {
+      labels = counterRevenueLabelsByYear;
+      data = counterRevenueDataByYear;
+    }
+    counterRevenueChart.data.labels = labels;
+    counterRevenueChart.data.datasets[0].data = data;
+    counterRevenueChart.update();
+  });
+
+  // Biểu đồ Revenue Tại Quầy
+  const ctxCounterRevenue = document.getElementById('counterRevenueChart').getContext('2d');
+  let counterRevenueChart = new Chart(ctxCounterRevenue, {
+    type: 'line',
+    data: {
+      labels: counterRevenueLabelsByMonth,
+      datasets: [{
+        label: 'Doanh Thu Tại Quầy',
+        data: counterRevenueDataByMonth,
+        borderColor: 'rgba(255, 159, 64, 1)',
         fill: false
       }]
     }

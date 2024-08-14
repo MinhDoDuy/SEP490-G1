@@ -51,19 +51,38 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM'), SUM(CAST(od.price * od.quantity AS double)) " +
             "FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
             "JOIN Food f ON od.food.foodId = f.foodId " +
-            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId AND o.orderType ='ONLINE_ORDER'" +
             "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM') " +
             "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM')")
-    List<Object[]> findRevenueCanteenDataByMonth(@Param("canteenId") Integer canteenId);
+    List<Object[]> findRevenueCanteenDataByMonthOnline(@Param("canteenId") Integer canteenId);
 
     //doanh thu theo năm của canteen cụ thể
     @Query("SELECT TO_CHAR(o.orderDate, 'YYYY'), SUM(CAST(od.price * od.quantity AS double)) " +
             "FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
             "JOIN Food f ON od.food.foodId = f.foodId " +
-            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId AND o.orderType ='ONLINE_ORDER'" +
             "GROUP BY TO_CHAR(o.orderDate, 'YYYY') " +
             "ORDER BY TO_CHAR(o.orderDate, 'YYYY')")
-    List<Object[]> findRevenueDataCanteenByYear(@Param("canteenId") Integer canteenId);
+    List<Object[]> findRevenueDataCanteenByYearOnline(@Param("canteenId") Integer canteenId);
+
+    // Doanh thu theo tháng của canteen cụ thể tại quầy
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM'), SUM(CAST(od.price * od.quantity AS double)) " +
+            "FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
+            "JOIN Food f ON od.food.foodId = f.foodId " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId AND o.orderType = 'AT_COUNTER' " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM')")
+    List<Object[]> findRevenueCanteenDataByMonthAtCounter(@Param("canteenId") Integer canteenId);
+
+    // Doanh thu theo năm của canteen cụ thể tại quầy
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY'), SUM(CAST(od.price * od.quantity AS double)) " +
+            "FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +
+            "JOIN Food f ON od.food.foodId = f.foodId " +
+            "WHERE o.orderStatus = 'COMPLETE' AND f.canteen.canteenId = :canteenId AND o.orderType = 'AT_COUNTER' " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY')")
+    List<Object[]> findRevenueDataCanteenByYearAtCounter(@Param("canteenId") Integer canteenId);
+
 
     //tính lượt order thành công của từng canteen
     @Query("SELECT COUNT(o) FROM Order o JOIN o.orderDetails od ON o.orderId = od.order.orderId " +

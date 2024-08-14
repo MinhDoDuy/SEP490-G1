@@ -61,14 +61,25 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<Object[]> findRevenueDataCanteenByMonth(Integer canteenId) {
-        return orderRepository.findRevenueCanteenDataByMonth(canteenId);
+    public List<Object[]> findRevenueDataCanteenByMonthOnline(Integer canteenId) {
+        return orderRepository.findRevenueCanteenDataByMonthOnline(canteenId);
     }
 
     @Override
-    public List<Object[]> findRevenueDataCanteenByYear(Integer canteenId) {
-        return orderRepository.findRevenueDataCanteenByYear(canteenId);
+    public List<Object[]> findRevenueDataCanteenByYearOnline(Integer canteenId) {
+        return orderRepository.findRevenueDataCanteenByYearOnline(canteenId);
     }
+
+    @Override
+    public List<Object[]> findRevenueDataCanteenByMonthAtCounter(Integer canteenId) {
+        return orderRepository.findRevenueCanteenDataByMonthAtCounter(canteenId);
+    }
+
+    @Override
+    public List<Object[]> findRevenueDataCanteenByYearAtCounter(Integer canteenId) {
+        return orderRepository.findRevenueDataCanteenByYearAtCounter(canteenId);
+    }
+
 
     @Override
     public Integer countCompletedOrdersByCanteenId(Integer canteenId) {

@@ -25,8 +25,11 @@ public interface OrderService {
 
     Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable);
 
-    List<Object[]> findRevenueDataCanteenByMonth(Integer canteenId);
-    List<Object[]> findRevenueDataCanteenByYear(Integer canteenId);
+    List<Object[]> findRevenueDataCanteenByMonthOnline(Integer canteenId);
+    List<Object[]> findRevenueDataCanteenByYearOnline(Integer canteenId);
+    List<Object[]> findRevenueDataCanteenByMonthAtCounter(Integer canteenId);
+    List<Object[]> findRevenueDataCanteenByYearAtCounter(Integer canteenId);
+
 
     Integer countCompletedOrdersByCanteenId(Integer canteenId);
 
@@ -61,4 +64,6 @@ public interface OrderService {
     boolean hasActiveOrders(Integer deliveryRoleId);
 
     List<Order> findByOrderTypeAndCurrentDate(OrderType orderType);
+
+
 }
