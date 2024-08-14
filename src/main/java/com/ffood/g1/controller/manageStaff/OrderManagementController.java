@@ -66,7 +66,6 @@ public class OrderManagementController {
         if (orderStatus == null) {
             orderStatus = OrderStatus.PENDING; // Set a default value or handle appropriately
         }
-        model.addAttribute("orderStatus", orderStatus);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Order> orders;
