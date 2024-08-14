@@ -149,22 +149,22 @@
                 <div th:if="${userPage.hasContent()}">
                     <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
         <span th:if="${userPage.hasPrevious()}">
-            <a th:href="@{/manage-user(page=${userPage.number - 1}, size=${userPage.size})}"
+            <a th:href="@{/search(page=${userPage.number - 1}, size=${userPage.size}, keyword=${keyword}, role=${roleId}, canteen=${canteenId})}"
                class="page-link">&laquo;</a>
         </span>
                         <span th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
             <a th:classappend="${i} == ${userPage.number} ? 'active' : ''"
-               th:href="@{/manage-user(page=${i}, size=${userPage.size})}" class="page-link">
+               th:href="@{/search(page=${i}, size=${userPage.size}, keyword=${keyword}, role=${roleId}, canteen=${canteenId})}"
+               class="page-link">
                 <span th:text="${i + 1}">1</span>
             </a>
         </span>
                         <span th:if="${userPage.hasNext()}">
-            <a th:href="@{/manage-user(page=${userPage.number + 1}, size=${userPage.size})}"
+            <a th:href="@{/search(page=${userPage.number + 1}, size=${userPage.size}, keyword=${keyword}, role=${roleId}, canteen=${canteenId})}"
                class="page-link">&raquo;</a>
         </span>
                     </div>
                 </div>
-
             </div>
 
         </div>

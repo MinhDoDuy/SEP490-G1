@@ -8,6 +8,8 @@ import com.ffood.g1.service.RoleService;
 import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,29 +42,30 @@ public class UserManageController {
     }
 
     @GetMapping("/search")
-    public String searchUsers(Model model,
+    public String searchUsers(@RequestParam(value = "keyword", required = false) String keyword,
+                              @RequestParam(value = "role", required = false) Integer roleId,
+                              @RequestParam(value = "canteen", required = false) Integer canteenId,
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size,
-                              @RequestParam(value = "keyword", required = false) String keyword,
-                              @RequestParam(value = "role", required = false) Integer roleId,
-                              @RequestParam(value = "canteen", required = false) Integer canteenId) {
-        Page<User> userPage;
+                              Model model) {
+        Pageable pageable = PageRequest.of(page, size);
 
-        if ((keyword == null || keyword.isEmpty()) && roleId == null && canteenId == null) {
-            userPage = userService.getAllUsers(page, size);
-        } else {
-            userPage = userService.searchUsersFilter(keyword, roleId, canteenId, page, size);
-        }
+        // Search users with the provided filters
+        Page<User> userPage = userService.searchUsersFilter(keyword, roleId, canteenId, page, size);
 
         model.addAttribute("userPage", userPage);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("roleId", roleId);
-        model.addAttribute("canteenId", canteenId);
         model.addAttribute("roles", roleService.getAllRoles());
         model.addAttribute("canteens", canteenService.getAllCanteens());
 
+        // Preserve search parameters for pagination links
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("roleId", roleId);
+        model.addAttribute("canteenId", canteenId);
+
         return "admin-management/manage-user";
     }
+
+
 
 
     @GetMapping("/edit-user/{userId}")

@@ -146,25 +146,25 @@
                         </tbody>
                     </table>
                 </div>
-
                 <div th:if="${foodPage.hasContent()}">
                     <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;">
         <span th:if="${foodPage.hasPrevious()}">
-            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number - 1}, size=${foodPage.size})}"
+            <a th:href="@{/search-food(canteenId=${canteenId}, keyword=${keyword}, categoryId=${selectedCategoryId}, page=${foodPage.number - 1}, size=${foodPage.size})}"
                class="page-link">&laquo;</a>
         </span>
                         <span th:each="i : ${#numbers.sequence(0, foodPage.totalPages - 1)}">
             <a th:classappend="${i} == ${foodPage.number} ? 'active' : ''"
-               th:href="@{/manage-food(canteenId=${canteenId}, page=${i}, size=${foodPage.size})}" class="page-link">
+               th:href="@{/search-food(canteenId=${canteenId}, keyword=${keyword}, categoryId=${selectedCategoryId}, page=${i}, size=${foodPage.size})}" class="page-link">
                 <span th:text="${i + 1}">1</span>
             </a>
         </span>
                         <span th:if="${foodPage.hasNext()}">
-            <a th:href="@{/manage-food(canteenId=${canteenId}, page=${foodPage.number + 1}, size=${foodPage.size})}"
+            <a th:href="@{/search-food(canteenId=${canteenId}, keyword=${keyword}, categoryId=${selectedCategoryId}, page=${foodPage.number + 1}, size=${foodPage.size})}"
                class="page-link">&raquo;</a>
         </span>
                     </div>
                 </div>
+
 
             </div>
         </div>
