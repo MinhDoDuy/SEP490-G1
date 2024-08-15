@@ -67,5 +67,5 @@ public interface OrderService {
 
     Page<Order> searchRejectedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable);
 
-
+    Page<Order> searchRefundedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable);
 }

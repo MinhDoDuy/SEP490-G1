@@ -311,5 +311,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
     }
 
+    @Override
+    public Page<Order> searchRefundedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable) {
+        return orderRepository.searchRefundedOrdersByOrderCode(canteenId, keyword, pageable);
+    }
+
 
 }

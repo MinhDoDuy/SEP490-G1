@@ -85,6 +85,11 @@
                        th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus='REJECT', startDate=${param.startDate}, endDate=${param.endDate})}"
                        role="tab">Đơn hàng bị hủy</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${orderStatus.name() == 'REFUND'} ? 'active'"
+                       th:href="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus='REFUND', startDate=${param.startDate}, endDate=${param.endDate})}"
+                       role="tab">Đơn hàng hoàn tiền</a>
+                </li>
             </ul>
 
             <!-- Hiển thị thông báo lỗi nếu có -->
@@ -94,6 +99,18 @@
 
             <!-- Conditional search bar for REJECT status -->
             <form th:if="${orderStatus.name() == 'REJECT'}"
+                  th:action="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()})}"
+                  method="get" class="form-inline mb-4">
+                <div class="form-group mr-2">
+                    <label for="keyword" class="mr-2"></label>
+                    <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Nhập Mã Đơn Hàng" th:value="${keyword}">
+                </div>
+                <input type="hidden" name="orderStatus" th:value="${orderStatus.name()}"/>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
+            <!-- Conditional search bar for REFUND status -->
+            <form th:if="${orderStatus.name() == 'REFUND'}"
                   th:action="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()})}"
                   method="get" class="form-inline mb-4">
                 <div class="form-group mr-2">
