@@ -27,11 +27,8 @@ public interface OrderService {
     Page<Order> getOrdersByCanteen(Integer canteenId, List<OrderStatus> statuses, Pageable pageable);
 
     List<Object[]> findRevenueDataCanteenByMonthOnline(Integer canteenId);
-
     List<Object[]> findRevenueDataCanteenByYearOnline(Integer canteenId);
-
     List<Object[]> findRevenueDataCanteenByMonthAtCounter(Integer canteenId);
-
     List<Object[]> findRevenueDataCanteenByYearAtCounter(Integer canteenId);
 
 
@@ -42,11 +39,10 @@ public interface OrderService {
 
     void assignShipperAndUpdateStatus(Integer orderId, Integer shipperId, OrderStatus newStatus, String staffName);
 
-    void rejectOrder(Integer orderId, String note);
+    void rejectOrder(Integer orderId , String note);
 
     //đơn thành công theo Tháng của canteen màn hình dashboard
     List<Object[]> getOrderStatsByCanteenAndMonth(Integer canteenId);
-
     //đơn thành công theo Năm của canteen màn hình dashboard
     List<Object[]> getOrderStatsByCanteenAndYear(Integer canteenId);
 
@@ -62,7 +58,7 @@ public interface OrderService {
 
     List<Order> getOrdersByUserId(Integer userId);
 
-    void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod, Integer totalOrderPrice);
+    void createOrderAtCouter(Integer canteenId, List<Integer> foodIds, List<Integer> quantities, String paymentMethod,Integer totalOrderPrice);
 
     Order createOrder(User user, String address, String note, OrderType orderType, PaymentMethod paymentMethod, List<Integer> cartItemIds, Integer deliveryRoleId, String deliveryRoleName);
 
@@ -72,8 +68,10 @@ public interface OrderService {
 
     Page<Order> searchRejectedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable);
 
+    Page<Order> searchRefundedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable);
 
     List<Map<String, Object>> getSalesDataForTodayByOrderType(OrderType orderType);
 
     byte[] generatePdfFromOrder(Integer orderId) throws Exception;
+    void refundOrder(Integer orderId, String refundReason);
 }

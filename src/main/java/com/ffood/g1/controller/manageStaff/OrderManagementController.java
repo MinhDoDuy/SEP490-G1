@@ -61,7 +61,6 @@ public class OrderManagementController {
             return "redirect:/order-list/" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách đơn hàng của canteen mà người dùng thuộc về
         }
 
-
         // Ensure orderStatus is not null
         if (orderStatus == null) {
             orderStatus = OrderStatus.PENDING; // Set a default value or handle appropriately
@@ -92,6 +91,14 @@ public class OrderManagementController {
         // Handling REJECT status without search
         else if (orderStatus == OrderStatus.REJECT) {
             orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
+        }
+        // Handling REFUND status with keyword search
+        else if (orderStatus == OrderStatus.REFUND && keyword != null && !keyword.isEmpty()) {
+            orders = orderService.searchRefundedOrdersByOrderCode(canteenId, keyword, pageable);
+        }
+        // Handling REFUND status without search
+        else if (orderStatus == OrderStatus.REFUND) {
+            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REFUND), pageable);
         }
         // Handling other statuses (PENDING, PROGRESS)
         else {
@@ -124,6 +131,7 @@ public class OrderManagementController {
 
 
 
+
     @GetMapping("/order-list-reject/{canteenId}")
     public String manageRejectedOrders(@PathVariable Integer canteenId,
                                        @RequestParam(value = "keyword", required = false) String keyword,
@@ -145,6 +153,29 @@ public class OrderManagementController {
         model.addAttribute("keyword", keyword);
         return "staff-management/order-list";
     }
+
+    @GetMapping("/order-list-refund/{canteenId}")
+    public String manageRefundedOrders(@PathVariable Integer canteenId,
+                                       @RequestParam(value = "keyword", required = false) String keyword,
+                                       @RequestParam(value = "page", defaultValue = "0") int page,
+                                       @RequestParam(value = "size", defaultValue = "10") int size,
+                                       Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orders;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            orders = orderService.searchRefundedOrdersByOrderCode(canteenId, keyword, pageable);
+        } else {
+            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REFUND), pageable);
+        }
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("keyword", keyword);
+        return "staff-management/order-list";
+    }
+
 
 
 
@@ -197,6 +228,18 @@ public class OrderManagementController {
         redirectAttributes.addFlashAttribute("message", "Đơn đã bị hủy với lý do: " + note);
         return "redirect:/order-list/" + canteenId;
     }
+
+    @PostMapping("/refund-order/{orderId}")
+    public String refundOrder(@PathVariable Integer orderId,
+                              @RequestParam Integer canteenId,
+                              @RequestParam String refundReason,
+                              RedirectAttributes redirectAttributes) {
+        orderService.refundOrder(orderId, refundReason);
+        redirectAttributes.addFlashAttribute("message", "Đơn hàng đã được hoàn tiền với lý do: " + refundReason);
+        return "redirect:/order-list/" + canteenId + "?orderStatus=REJECT";
+    }
+
+
 
     @GetMapping("/order-list-ship/{canteenId}")
     public String getOrdersForShipper(@PathVariable Integer canteenId,

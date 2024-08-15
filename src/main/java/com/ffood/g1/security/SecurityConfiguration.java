@@ -82,7 +82,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/manage-feedback","/approve-feedback/**","/reject-feedback/**","/bulk-approve-feedback/**","/bulk-reject-feedback/**",
                         "/search-food/**","/add-food-form/**","/add-food","/edit-food/**",
                         "/add-quantity/**","/order-list/**","/update-order-status/**",
-                        "/bulk-assign-orders/**","/reject-order/**","/order-list-reject/**"
+                        "/bulk-assign-orders/**","/reject-order/**","/order-list-reject/**","/order-list-refund/**",
+                        "/refund-order/**"
                         )
                 .hasRole("MANAGER")
                 // Quyền cho STAFF

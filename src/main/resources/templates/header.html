@@ -3,45 +3,43 @@
 <header>
     <!-- Navbar start -->
     <div class="container-fluid fixed-top">
-        <div class="container topbar bg-primary d-none d-lg-block">
+        <div class="container-fluid topbar bg-primary d-none d-lg-block">
             <div class="d-flex justify-content-between">
                 <div class="top-info ps-2">
-                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a
-                            class="text-white">Trường
-                        Đại Học FPT</a></small>
-                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a
-                            class="text-white">dichvusinhvien@fe.edu.vn</a></small>
+                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i>
+                        <a class="text-white">Trường Đại Học FPT</a>
+                    </small>
+                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i>
+                        <a class="text-white">dichvusinhvien@fe.edu.vn</a>
+                    </small>
                 </div>
-
             </div>
         </div>
-        <div class="container px-0">
+        <div class="container-fluid px-0">
             <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a th:href="@{/homepage}" class="navbar-brand"><h1 class="text-primary " style="font-size: 2.5rem">Chợ
-                    Cóc</h1></a>
+                <a th:href="@{/homepage}" class="navbar-brand"><h1 class="text-primary " style="font-size: 2.5rem; padding-left: 150px;">Chợ Cóc</h1></a>
                 <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars text-primary"></span>
                 </button>
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
-                        <a th:href="@{/homepage}" class="nav-item nav-link active" style="font-size: 1.2rem;">Trang
-                            Chủ</a>
-                        <a th:href="@{/canteen_details}" class="nav-item nav-link" style="font-size: 1.2rem;">Món ăn</a>
+                        <a th:href="@{/homepage}" class="nav-item nav-link active" style="font-size: 1.2rem; font-weight: bold;">Trang Chủ</a>
+                        <a th:href="@{/canteen_details}" class="nav-item nav-link" style="font-size: 1.2rem; font-weight: bold;">Món ăn</a>
 
                         <div class="nav-item dropdown">
-                            <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="font-size: 1.2rem;">Cửa hàng</span>
+                            <span class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="font-size: 1.2rem; font-weight: bold;">Cửa hàng</span>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
                                 <div th:each="canteen : ${session.canteens}">
                                     <a th:href="@{/canteen_info(canteenId=${canteen.canteenId})}"
                                        th:text="${canteen.canteenName}" class="dropdown-item"
-                                       style="color: black; font-size: 1.2rem;"></a>
+                                       style="color: black; font-size: 1.2rem; font-weight: bold;"></a>
                                 </div>
                             </div>
                         </div>
                         <th:block th:if="${session.user != null}">
                             <a th:href="@{/feedback-system-form/{userId}(userId=${session.user.userId})}"
-                               class="nav-item nav-link" style="font-size: 1.2rem;">Gửi phản hồi</a>
+                               class="nav-item nav-link" style="font-size: 1.2rem; font-weight: bold;">Gửi phản hồi</a>
                         </th:block>
                         <div>
                             <form id="categoryForm" action="/canteen_details" method="get">
@@ -56,18 +54,16 @@
                                     <button type="submit"
                                             class="btn btn-primary border-2 border-secondary py-3 px-4 rounded-pill text-white"
                                             style="height: 20px; width: 30px; display: flex; justify-content: center; align-items: center;">
-                                        <i class="fas fa-search"></i> <!-- Nếu muốn có biểu tượng tìm kiếm -->
+                                        <i class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </form>
                         </div>
                     </div>
 
-                    <div class="d-flex m-3 me-0">
-                        <!--                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>-->
+                    <div class="d-flex m-3 me-0" style="padding-right: 150px;">
                         <a th:href="@{/cart_items}" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-cart fa-2x"></i>
-
                             <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                                   style="top: -5px; left: 15px; height: 20px; min-width: 20px; "
                                   th:text="${session.totalQuantity}">0</span>
@@ -80,15 +76,13 @@
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle fas fa-user fa-2x" th:if="${session.user != null}"></a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0" th:if="${session.user != null}">
-                                <a th:href="@{/order-history}" class="dropdown-item" style="color: black">Lịch sử mua
-                                    hàng</a>
+                                <a th:href="@{/order-history}" class="dropdown-item" style="color: black;">Lịch sử mua hàng</a>
                                 <a th:href="@{/view-profile/{userId}(userId=${session.user.userId})}"
                                    class="dropdown-item" style="color: black">Xem hồ sơ</a>
 
                                 <div th:if="${session.user != null and session.user.role != null and session.user.role.roleName == 'ROLE_ADMIN'}">
 
-                                    <a th:href="@{/dashboard-admin}" class="dropdown-item" style="color: black">Quản
-                                        Lý</a>
+                                    <a th:href="@{/dashboard-admin}" class="dropdown-item" style="color: black">Quản Lý</a>
 
                                 </div>
 
@@ -110,6 +104,7 @@
                 </div>
             </nav>
         </div>
+
     </div>
 </header>
 </html>

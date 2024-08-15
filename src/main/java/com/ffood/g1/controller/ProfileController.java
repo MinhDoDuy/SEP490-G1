@@ -105,9 +105,13 @@ public class ProfileController {
     }
 
     @GetMapping("/change-password")
-    public String showChangePasswordForm() {
+    public String showChangePasswordForm(Principal principal, Model model) {
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
+        model.addAttribute("userId", user.getUserId());
         return "change-password";
     }
+
 
     @PostMapping("/change-password")
     public String changePassword(@RequestParam("oldPassword") String oldPassword,

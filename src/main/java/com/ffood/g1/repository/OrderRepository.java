@@ -47,16 +47,27 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             Pageable pageable
     );
 
-    //tìm kiếm order reject để hoàn tiền
+    // Tìm kiếm order bị từ chối (REJECT)
     @Query("SELECT o FROM Order o " +
             "WHERE o.canteenId = :canteenId " +
             "AND o.orderStatus = 'REJECT' " +
-            "AND o.orderCode LIKE %:keyword% " +
+            "AND LOWER(o.orderCode) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "ORDER BY o.orderDate DESC")
     Page<Order> searchRejectedOrdersByOrderCode(
             @Param("canteenId") Integer canteenId,
             @Param("keyword") String keyword,
             Pageable pageable);
+
+    // Tìm kiếm order cần hoàn tiền (REFUND)
+    @Query("SELECT o FROM Order o " +
+            "WHERE o.canteenId = :canteenId " +
+            "AND o.orderStatus = 'REFUND' " +
+            "AND LOWER(o.orderCode) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "ORDER BY o.orderDate DESC")
+    Page<Order> searchRefundedOrdersByOrderCode(@Param("canteenId") Integer canteenId,
+                                                @Param("keyword") String keyword,
+                                                Pageable pageable);
+
 
 
     //doanh thu theo tháng của canteen cụ thể
