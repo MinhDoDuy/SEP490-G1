@@ -238,6 +238,18 @@
                                 </td>
 
                                 <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <th:block th:if="${order.orderStatus.name() == 'REJECT'}">
+                                        <form th:action="@{/refund-order/{orderId}(orderId=${order.orderId})}"
+                                              method="post" style="display: inline;">
+                                            <div class="form-group">
+                                                <input type="text" name="refundReason" class="form-control" placeholder="Lý do hoàn tiền" required>
+                                                <input type="hidden" name="canteenId" th:value="${canteenId}">
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">
+                                                <i class="ri-refund-line"></i> Hoàn tiền
+                                            </button>
+                                        </form>
+                                    </th:block>
                                     <!-- Chỉ hiển thị select cho đơn hàng PENDING -->
                                     <th:block th:if="${orderStatus.name() == 'PENDING'}">
                                         <select class="form-control" name="deliveryRoleId"

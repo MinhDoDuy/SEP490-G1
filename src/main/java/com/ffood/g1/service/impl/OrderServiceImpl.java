@@ -316,5 +316,31 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.searchRefundedOrdersByOrderCode(canteenId, keyword, pageable);
     }
 
+    @Override
+    public void refundOrder(Integer orderId, String refundReason) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+
+        // Update order status to REFUND
+        order.setOrderStatus(OrderStatus.REFUND);
+
+        // Update the note with the refund reason
+        String currentNote = order.getNote();
+        String updatedNote = (currentNote != null ? currentNote + " - " : "") + "Lý do hoàn tiền: " + refundReason;
+        order.setNote(updatedNote);
+
+        // Save the updated order
+        orderRepository.save(order);
+
+        // Retrieve order details
+        String orderDetails = getOrderDetails(order);
+
+        // Send an email notification for the refund
+        String subject = "Đơn hàng của bạn đã được hoàn tiền";
+        String text = "Đơn hàng của bạn với mã số " + order.getOrderCode() + " đã được hoàn tiền.\n\n" + orderDetails + "\n\nLý do hoàn tiền: " + refundReason;
+        sendEmail(order.getUser().getEmail(), subject, text);
+    }
+
+
 
 }

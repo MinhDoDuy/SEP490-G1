@@ -229,6 +229,18 @@ public class OrderManagementController {
         return "redirect:/order-list/" + canteenId;
     }
 
+    @PostMapping("/refund-order/{orderId}")
+    public String refundOrder(@PathVariable Integer orderId,
+                              @RequestParam Integer canteenId,
+                              @RequestParam String refundReason,
+                              RedirectAttributes redirectAttributes) {
+        orderService.refundOrder(orderId, refundReason);
+        redirectAttributes.addFlashAttribute("message", "Đơn hàng đã được hoàn tiền với lý do: " + refundReason);
+        return "redirect:/order-list/" + canteenId + "?orderStatus=REJECT";
+    }
+
+
+
     @GetMapping("/order-list-ship/{canteenId}")
     public String getOrdersForShipper(@PathVariable Integer canteenId,
                                       @RequestParam(value = "deliveryRoleId", required = false) Integer deliveryRoleId,
