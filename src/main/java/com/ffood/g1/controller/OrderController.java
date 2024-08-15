@@ -12,6 +12,9 @@ import com.ffood.g1.service.FoodService;
 import com.ffood.g1.service.OrderService;
 import com.ffood.g1.service.impl.VNPayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +52,7 @@ public class OrderController {
     private OrderRepository orderRepository;
     @Autowired
     private FoodRepository foodRepository;
-    ;
+
 
     @Autowired
     private VNPayService vnpayService;
@@ -171,11 +175,34 @@ public class OrderController {
         } else if (paymentMethod.equals("cash")) {
             paymentMethodDone = PaymentMethod.CASH;
         }
-
-        Order order = orderService.createOrder(user, null, null, orderType, paymentMethodDone, cartItemIds);
+        User deUser=userService.getOne(deliveryRoleId);
+        int deId=deUser.getUserId();
+        String deName=deUser.getUserName();
+        Order order = orderService.createOrder(user, null, null, orderType, paymentMethodDone, cartItemIds,deId,deName);
         cartItemService.removeCartItemsByIds(cartItemIds);
         // Xử lý logic liên quan đến thanh toán, ví dụ lưu thông tin đơn hàng vào cơ sở dữ liệu
 
         return ResponseEntity.ok("Thanh toán thành công!");
+    }
+
+
+    @GetMapping("/print-order-pdf")
+    public ResponseEntity<InputStreamResource> printOrderPdf(@RequestParam("orderId") Integer orderId) {
+        try {
+            byte[] pdfBytes = orderService.generatePdfFromOrder(orderId);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("inline", "Order_" + orderId + ".pdf");
+
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .body(new InputStreamResource(new ByteArrayInputStream(pdfBytes)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
     }
 }

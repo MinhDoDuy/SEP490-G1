@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chi tiết đơn hàng</title>
+<!--    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap&subset=vietnamese" rel="stylesheet">-->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .order-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-header {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .order-header .order-code {
+            color: red;
+        }
+
+        .order-details {
+            margin-bottom: 10px;
+        }
+
+        .order-details p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .order-details p span {
+            font-weight: bold;
+        }
+
+        .order-items table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .order-items th, .order-items td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .order-items th {
+            text-align: center;
+        }
+
+        .order-items td {
+            text-align: right;
+        }
+
+        .order-items td:first-child {
+            text-align: left;
+        }
+
+        .total-price {
+            font-weight: bold;
+            font-size: 16px;
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        .total-price span {
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="order-card">
+    <div class="order-header">
+        <span>#1-<span class="order-time" th:text="${order.orderDate}"></span></span>
+        <span>Nhân viên: <span th:text="${order.deliveryRoleName}"></span></span>
+    </div>
+
+    <div class="order-details">
+        <p>Mã: <span class="order-code" th:text="${order.orderCode}"></span></p>
+        <p>Khách Hàng: <span th:text="${order.user.userName}"></span></p>
+    </div>
+
+    <div class="order-items">
+        <table>
+            <thead>
+            <tr>
+                <th>Mon An</th>
+                <th>So Luong</th>
+                <th>Gia Tien</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${order.orderDetails}">
+                <td th:text="${item.food.foodName}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.price} + ' VND'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="total-price">
+        Tổng số tiền: <span th:text="${order.totalOrderPrice} + ' VND'"></span>
+    </div>
+
+</div>
+
+
+<!--<script>-->
+<!--    document.addEventListener("DOMContentLoaded", function () {-->
+<!--        const orderTimes = document.querySelectorAll('.order-time');-->
+<!--        orderTimes.forEach(function (orderTime) {-->
+<!--            const dateTime = new Date(orderTime.textContent);-->
+<!--            const time = dateTime.toTimeString().split(' ')[0]; // Get only the time part-->
+<!--            orderTime.textContent = time;-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+</body>
+</html>

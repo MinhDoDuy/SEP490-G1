@@ -18,12 +18,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.thymeleaf.context.Context;
 
+import org.xhtmlrenderer.pdf.ITextRenderer;
+import java.io.ByteArrayOutputStream;
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -249,7 +257,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public Order createOrder(User user, String address, String note, OrderType orderType, PaymentMethod paymentMethod, List<Integer> cartItemIds) {
+    public Order createOrder(User user, String address, String note, OrderType orderType, PaymentMethod paymentMethod, List<Integer> cartItemIds,Integer deliveryRoleId,String deliveryRoleName) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
@@ -257,6 +265,8 @@ public class OrderServiceImpl implements OrderService {
         order.setNote(note);
         order.setOrderType(orderType);
         order.setPaymentMethod(paymentMethod);
+        order.setDeliveryRoleId(deliveryRoleId);
+        order.setDeliveryRoleName(deliveryRoleName);
         if (orderType == OrderType.ONLINE_ORDER) {
             order.setOrderStatus(OrderStatus.PENDING);
         }else if (orderType == OrderType.AT_COUNTER) {
@@ -311,5 +321,46 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
     }
 
+    @Override
+    public List<Map<String, Object>> getSalesDataForTodayByOrderType(OrderType orderType) {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        List<Object[]> results = orderRepository.calculateSalesDataForTodayByOrderType(startOfDay, endOfDay, orderType);
+
+        return results.stream()
+                .map(result -> Map.of(
+                        "deliveryRoleId", result[0],
+                        "totalOrders", result[1],
+                        "totalSalesAmount", result[2]
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Autowired
+    private SpringTemplateEngine templateEngine;
+
+    public byte[] generatePdfFromOrder(Integer orderId) throws Exception {
+        Order order = findOrderById(orderId);
+
+        Context context = new Context();
+        context.setVariable("order", order);
+
+        // Render HTML từ template Thymeleaf
+        String htmlContent = templateEngine.process("order/order-pdf-template", context);
+
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.setDocumentFromString(htmlContent);
+            renderer.layout();
+            renderer.createPDF(outputStream);
+            return outputStream.toByteArray();
+        }
+    }
+    public Order findOrderById(Integer orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
 
 }

@@ -84,7 +84,7 @@ public class VNPayController {
         PaymentMethod paymentMethod=(PaymentMethod) session.getAttribute("paymentMethodOrderOn");
         List<Integer> cartItemIds  = (List<Integer>) session.getAttribute("cartItemIdsOrderOn");
         if (paymentStatus == 1) {
-            Order order = orderService.createOrder(user, address, note, orderType, paymentMethod, cartItemIds);
+            Order order = orderService.createOrder(user, address, note, orderType, paymentMethod, cartItemIds,null,null);
             if (order == null) {
                 return "error";
             }

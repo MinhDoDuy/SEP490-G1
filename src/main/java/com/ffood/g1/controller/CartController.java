@@ -126,6 +126,7 @@ public class CartController {
         return "redirect:/cart_items";
     }
 
+
     @PostMapping("/update_cart_quantity")
     public ResponseEntity<String> updateCartQuantity(@RequestParam("cartItemId") Integer cartItemId,
                                                      @RequestParam("quantity") int quantity,
@@ -196,6 +197,11 @@ public class CartController {
         OrderType orderType = OrderType.AT_COUNTER;
         List<Order> orderListInDay = orderService.findByOrderTypeAndCurrentDate(orderType);
         model.addAttribute("orderListInDay", orderListInDay);
+
+        //Doanh thu ngày
+//        List<Map<String, Object>> salesData = orderService.getSalesDataForTodayByOrderType(orderType);
+//        System.out.println(salesData);
+//        model.addAttribute("salesData", salesData);
 
         return "cart/pos-screen";
     }

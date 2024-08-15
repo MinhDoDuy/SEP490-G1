@@ -160,6 +160,17 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT COUNT(o) FROM Order o WHERE o.deliveryRoleId = :deliveryRoleId AND o.orderStatus = 'PROGRESS'")
     long countActiveOrdersByDeliveryRoleId(@Param("deliveryRoleId") Integer deliveryRoleId);
 
-    @Query("SELECT o FROM Order o WHERE o.orderType = :orderType AND DATE(o.orderDate) = CURRENT_DATE")
+    @Query("SELECT o FROM Order o WHERE o.orderType = :orderType AND DATE(o.orderDate) = CURRENT_DATE ORDER BY o.orderDate DESC" )
     List<Order> findByOrderTypeAndCurrentDate(OrderType orderType);
+
+    @Query("SELECT o.deliveryRoleId, COUNT(o.deliveryRoleId), SUM(o.totalOrderPrice)" +
+            "FROM Order o " +
+            "WHERE o.orderDate BETWEEN :startOfDay AND :endOfDay " +
+            "AND o.orderType = :orderType " +
+            "GROUP BY o.deliveryRoleId")
+    List<Object[]> calculateSalesDataForTodayByOrderType(
+            @Param("startOfDay") LocalDateTime startOfDay,
+            @Param("endOfDay") LocalDateTime endOfDay,
+            @Param("orderType") OrderType orderType);
+
 }
