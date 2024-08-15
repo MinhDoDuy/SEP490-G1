@@ -238,18 +238,7 @@
                                 </td>
 
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <th:block th:if="${order.orderStatus.name() == 'REJECT'}">
-                                        <form th:action="@{/refund-order/{orderId}(orderId=${order.orderId})}"
-                                              method="post" style="display: inline;">
-                                            <div class="form-group">
-                                                <input type="text" name="refundReason" class="form-control" placeholder="Lý do hoàn tiền" required>
-                                                <input type="hidden" name="canteenId" th:value="${canteenId}">
-                                            </div>
-                                            <button type="submit" class="btn btn-warning">
-                                                <i class="ri-refund-line"></i> Hoàn tiền
-                                            </button>
-                                        </form>
-                                    </th:block>
+
                                     <!-- Chỉ hiển thị select cho đơn hàng PENDING -->
                                     <th:block th:if="${orderStatus.name() == 'PENDING'}">
                                         <select class="form-control" name="deliveryRoleId"
@@ -269,7 +258,13 @@
                                             th:data-target="'#orderDetailsModal' + ${order.orderId}">
                                         <i class="ri-eye-line"></i>
                                     </button>
-
+                                    <!-- Chỉ hiển thị nút hoàn tiền và hoàn tiền cho đơn hàng REJECT -->
+                                    <th:block th:if="${order.orderStatus.name() == 'REJECT'}">
+                                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                                th:data-target="'#refundModal' + ${order.orderId}">
+                                            <i class="ri-refund-line"></i> Hoàn tiền
+                                        </button>
+                                    </th:block>
                                     <!-- Chỉ hiển thị nút xác nhận và từ chối cho đơn hàng PENDING -->
                                     <th:block th:if="${orderStatus.name() == 'PENDING'}">
                                         <form th:action="@{'/update-order-status/' + ${order.orderId}}" method="post"
@@ -349,6 +344,34 @@
         </div>
     </div>
 </div>
+<!-- Modal for Refund Reason -->
+<div class="modal fade" th:each="order : ${orders.content}" th:id="'refundModal' + ${order.orderId}" tabindex="-1"
+     role="dialog" aria-labelledby="refundModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="refundModalLabel">Lý do hoàn tiền cho đơn hàng <span th:text="${order.orderCode}"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="refundForm" method="post" th:action="@{/refund-order/{orderId}(orderId=${order.orderId})}">
+                    <input type="hidden" id="refundOrderId" name="orderId" th:value="${order.orderId}">
+                    <input type="hidden" id="refundCanteenId" name="canteenId" th:value="${canteenId}">
+                    <div class="form-group">
+                        <label for="refundNote">Lý do hoàn tiền:</label>
+                        <textarea class="form-control" id="refundNote" name="refundReason" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-warning">Hoàn tiền</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Modal for Order Details -->
@@ -395,6 +418,21 @@
 
 
 <script>
+    $('#refundModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var orderId = button.data('order-id'); // Extract info from data-* attributes
+        var canteenId = button.data('canteen-id');
+
+        var modal = $(this);
+        modal.find('#refundOrderId').val(orderId);
+        modal.find('#refundOrderId').val(canteenId);
+    });
+
+    function submitRejectForm() {
+        document.getElementById('rejectForm').submit();
+    }
+
+
     $('#rejectModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var orderId = button.data('order-id'); // Extract info from data-* attributes
