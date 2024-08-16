@@ -53,28 +53,28 @@ public class DashboardManagerController {
         List<Double> revenueDataByMonthOnlineList = new ArrayList<>();
         for (Object[] data : revenueDataByMonthOnline) {
             revenueLabelsByMonthOnline.add((String) data[0]);
-            revenueDataByMonthOnlineList.add((Double) data[1]);
+            revenueDataByMonthOnlineList.add(((Number) data[1]).doubleValue());
         }
 
         List<String> revenueLabelsByYearOnline = new ArrayList<>();
         List<Double> revenueDataByYearOnlineList = new ArrayList<>();
         for (Object[] data : revenueDataByYearOnline) {
             revenueLabelsByYearOnline.add((String) data[0]);
-            revenueDataByYearOnlineList.add((Double) data[1]);
+            revenueDataByYearOnlineList.add(((Number) data[1]).doubleValue());
         }
 
         List<String> revenueLabelsByMonthAtCounter = new ArrayList<>();
         List<Double> revenueDataByMonthAtCounterList = new ArrayList<>();
         for (Object[] data : revenueDataByMonthAtCounter) {
             revenueLabelsByMonthAtCounter.add((String) data[0]);
-            revenueDataByMonthAtCounterList.add((Double) data[1]);
+            revenueDataByMonthAtCounterList.add(((Number) data[1]).doubleValue());
         }
 
         List<String> revenueLabelsByYearAtCounter = new ArrayList<>();
         List<Double> revenueDataByYearAtCounterList = new ArrayList<>();
         for (Object[] data : revenueDataByYearAtCounter) {
             revenueLabelsByYearAtCounter.add((String) data[0]);
-            revenueDataByYearAtCounterList.add((Double) data[1]);
+            revenueDataByYearAtCounterList.add(((Number) data[1]).doubleValue());
         }
 
         // Doanh thu theo ngày
@@ -83,7 +83,7 @@ public class DashboardManagerController {
         List<Double> onlineRevenueDataByDay = new ArrayList<>();
         for (Object[] data : onlineRevenueByDay) {
             onlineRevenueLabelsByDay.add((String) data[0]);
-            onlineRevenueDataByDay.add((Double) data[1]);
+            onlineRevenueDataByDay.add(((Number) data[1]).doubleValue());
         }
 
         List<Object[]> offlineRevenueByDay = orderService.getRevenueDataCanteenByDayAtCounter(canteenId);
@@ -91,7 +91,7 @@ public class DashboardManagerController {
         List<Double> offlineRevenueDataByDay = new ArrayList<>();
         for (Object[] data : offlineRevenueByDay) {
             offlineRevenueLabelsByDay.add((String) data[0]);
-            offlineRevenueDataByDay.add((Double) data[1]);
+            offlineRevenueDataByDay.add(((Number) data[1]).doubleValue());
         }
 
         // Order Stats

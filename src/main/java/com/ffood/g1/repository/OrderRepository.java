@@ -205,7 +205,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM-DD'), SUM(o.totalOrderPrice) " +
             "FROM Order o " +
-            "WHERE o.orderStatus = 'COMPLETE' AND o.canteenId = :canteenId AND o.orderType = 'ONLINE' " +
+            "WHERE o.orderStatus = 'COMPLETE' AND o.canteenId = :canteenId AND o.orderType = 'ONLINE_ORDER' " +
             "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM-DD') " +
             "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM-DD')")
     List<Object[]> findRevenueDataCanteenByDayOnline(@Param("canteenId") Integer canteenId);
