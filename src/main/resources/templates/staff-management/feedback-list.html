@@ -78,10 +78,10 @@
               <tr th:if="${#lists.isEmpty(feedbacks.content)}">
                 <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="5">Không có phản hồi nào</td>
               </tr>
-              <tr th:each="feedback : ${feedbacks.content}">
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackId}">Mã phản hồi</td>
+              <tr th:each="feedback, iterStat : ${feedbacks.content}">
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedbacks.number * feedbacks.size + iterStat.index + 1}">STT</td>
                 <td class="py-2 px-4 border-b border-b-gray-50 truncate" th:text="${feedback.comment}">Bình luận</td>
-                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackStatus}">Trạng thái</td>
+                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${feedback.feedbackStatus.displayName}">Trạng thái</td>
                 <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${feedback.timeCreated}">Thời gian tạo</td>
                 <td class="py-2 px-4 border-b border-b-gray-50">
                   <button class="btn btn-info" data-toggle="modal" th:data-target="'#commentModal' + ${feedback.feedbackId}">
