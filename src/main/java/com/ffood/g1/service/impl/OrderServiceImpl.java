@@ -21,11 +21,14 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.transaction.Transactional;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.thymeleaf.context.Context;
@@ -88,11 +91,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findRevenueDataCanteenByYearAtCounter(canteenId);
     }
 
-
-    @Override
-    public Integer countCompletedOrdersByCanteenId(Integer canteenId) {
-        return orderRepository.countCompletedOrdersByCanteenId(canteenId);
-    }
 
 
     private void sendEmail(String email, String subject, String text) {
@@ -183,6 +181,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> getOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable) {
         return orderRepository.findByCanteenIdAndDeliveryRoleIdAndStatusProgress(canteenId, deliveryRoleId, pageable);
+    }
+
+    @Override
+    public Page<Order> getCompleteOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable) {
+        return orderRepository.findByCanteenIdAndDeliveryRoleIdAndStatusComplete(canteenId, deliveryRoleId, pageable);
     }
 
     @Override
@@ -349,6 +352,60 @@ public class OrderServiceImpl implements OrderService {
         String subject = "Đơn hàng của bạn đã được hoàn tiền";
         String text = "Đơn hàng của bạn với mã số " + order.getOrderCode() + " đã được hoàn tiền.\n\n" + orderDetails + "\n\nLý do hoàn tiền: " + refundReason;
         sendEmail(order.getUser().getEmail(), subject, text);
+    }
+
+    @Override
+    public String getTotalRevenueForCurrentMonthFormatted(Integer canteenId) {
+        // Lấy tháng và năm hiện tại
+        YearMonth currentMonth = YearMonth.now();
+        // Ngày 1 của tháng hiện tại
+        LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
+        // Ngày giờ hiện tại
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        // Truy vấn tổng doanh thu
+        Double totalRevenue = orderRepository.findTotalRevenueForCurrentMonth(canteenId, startOfMonth, currentDate);
+        totalRevenue = totalRevenue != null ? totalRevenue : 0.0;
+
+        // Định dạng số theo kiểu Việt Nam (dấu phân cách hàng nghìn)
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(totalRevenue);
+    }
+
+    @Override
+    public List<Object[]> getRevenueDataCanteenByDayAtCounter(Integer canteenId) {
+        return orderRepository.findRevenueDataCanteenByDayAtCounter(canteenId);
+    }
+
+    @Override
+    @Transactional
+    public void bulkAssignAndUpdateOrders(List<Integer> orderIds, Integer deliveryRoleId, String staffName) {
+        // Lấy tất cả các đơn hàng trước trong một lần truy vấn
+        List<Order> orders = orderRepository.findAllById(orderIds);
+
+        // Duyệt qua từng đơn hàng để cập nhật thông tin
+        for (Order order : orders) {
+            order.setDeliveryRoleId(deliveryRoleId);
+            order.setDeliveryRoleName(staffName);
+            order.setOrderStatus(OrderStatus.PROGRESS);
+        }
+
+        // Lưu tất cả các thay đổi trong một lần
+        orderRepository.saveAll(orders);
+
+        // Gửi email cho khách hàng nếu cần
+        for (Order order : orders) {
+            String orderDetails = getOrderDetails(order);
+            String subject = "Đơn hàng của bạn đã được chuẩn bị";
+            String text = "Đơn hàng đang được làm đã được chuẩn bị.\n\n" + orderDetails;
+            sendEmail(order.getUser().getEmail(), subject, text);
+        }
+    }
+
+
+    @Override
+    public List<Object[]> getRevenueDataCanteenByDayOnline(Integer canteenId) {
+        return orderRepository.findRevenueDataCanteenByDayOnline(canteenId);
     }
 
 

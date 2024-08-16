@@ -130,8 +130,6 @@ public class OrderManagementController {
     }
 
 
-
-
     @GetMapping("/order-list-reject/{canteenId}")
     public String manageRejectedOrders(@PathVariable Integer canteenId,
                                        @RequestParam(value = "keyword", required = false) String keyword,
@@ -177,9 +175,6 @@ public class OrderManagementController {
     }
 
 
-
-
-
     @PostMapping("/update-order-status/{orderId}")
     public String assignShipperAndUpdateStatus(@PathVariable Integer orderId,
                                                @RequestParam Integer deliveryRoleId,
@@ -208,9 +203,10 @@ public class OrderManagementController {
 
         try {
             User staffShip = userService.getUserById(deliveryRoleId);
-            for (Integer orderId : selectedOrders) {
-                orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, OrderStatus.PROGRESS, staffShip.getFullName());
-            }
+
+            // Sử dụng transaction để đảm bảo tính nhất quán
+            orderService.bulkAssignAndUpdateOrders(selectedOrders, deliveryRoleId, staffShip.getFullName());
+
             redirectAttributes.addFlashAttribute("message", "Chuyển Đơn hàng cho Shipper thành công cho các đơn hàng đã chọn");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
@@ -218,6 +214,7 @@ public class OrderManagementController {
 
         return "redirect:/order-list/" + canteenId + "?orderStatus=PENDING";
     }
+
 
     @PostMapping("/reject-order")
     public String cancelOrder(@RequestParam Integer orderId,
@@ -244,39 +241,53 @@ public class OrderManagementController {
     @GetMapping("/order-list-ship/{canteenId}")
     public String getOrdersForShipper(@PathVariable Integer canteenId,
                                       @RequestParam(value = "deliveryRoleId", required = false) Integer deliveryRoleId,
+                                      @RequestParam(value = "status", defaultValue = "PROGRESS") String status,
                                       @RequestParam(value = "page", defaultValue = "0") int page,
                                       @RequestParam(value = "size", defaultValue = "10") int size,
                                       Model model, Principal principal, RedirectAttributes redirectAttributes) {
 
+        // Kiểm tra nếu deliveryRoleId bị thiếu
         if (deliveryRoleId == null) {
             redirectAttributes.addFlashAttribute("error", "Delivery Role ID is required.");
-            return "redirect:/404"; // Thay bằng trang lỗi phù hợp
+            return "redirect:/404";
         }
 
-        // Lấy thông tin người dùng hiện tại từ Principal
+        // Lấy người dùng hiện tại từ Principal
         User currentUser = userService.findByEmail(principal.getName());
 
-        // Kiểm tra xem `canteenId` có khớp với `canteenId` của `currentUser`
+        // Kiểm tra nếu người dùng hiện tại không có quyền truy cập canteen này
         if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
             redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của canteen khác.");
             return "redirect:/order-list-ship/" + currentUser.getCanteen().getCanteenId() + "?deliveryRoleId=" + currentUser.getUserId();
         }
 
-        // Kiểm tra xem `deliveryRoleId` có thuộc về `canteenId` hiện tại và có phải là chính `currentUser`
+        // Kiểm tra nếu deliveryRoleId là hợp lệ
         User deliveryUser = userService.loadUserById(deliveryRoleId);
         if (deliveryUser == null || !deliveryUser.getCanteen().getCanteenId().equals(canteenId) || deliveryUser.getRole().getRoleId() != 2 || !deliveryUser.getUserId().equals(currentUser.getUserId())) {
             redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của người khác trong cùng canteen.");
             return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + currentUser.getUserId();
         }
 
+        // Tạo Pageable để phân trang
         Pageable pageable = PageRequest.of(page, size);
-        Page<Order> orders = orderService.getOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable);
+        Page<Order> orders;
 
+        // Xử lý lấy đơn hàng theo trạng thái
+        if ("COMPLETE".equalsIgnoreCase(status)) {
+            orders = orderService.getCompleteOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable);
+        } else {
+            orders = orderService.getOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable);
+        }
+
+        // Thêm các thuộc tính vào model để gửi về view
         model.addAttribute("orders", orders);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("deliveryRoleId", deliveryRoleId);
+        model.addAttribute("status", status);
         return "shipper/order-list";
     }
+
+
 
 
     @PostMapping("/complete-order/{orderId}")

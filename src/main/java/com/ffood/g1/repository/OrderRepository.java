@@ -154,7 +154,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             Pageable pageable
     );
 
-
+    //List đơn hàng trạng thái progress của nhân viên ship
     @Query("SELECT DISTINCT o FROM Order o " +
             "JOIN o.orderDetails od " +
             "JOIN od.food f " +
@@ -163,6 +163,17 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "AND o.orderStatus = 'PROGRESS'"+
             "ORDER BY o.orderDate DESC ")
     Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusProgress(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
+
+    //List đơn hàng trạng thái complete của nhân viên ship
+    @Query("SELECT DISTINCT o FROM Order o " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.food f " +
+            "WHERE f.canteen.canteenId = :canteenId " +
+            "AND o.deliveryRoleId = :deliveryRoleId " +
+            "AND o.orderStatus = 'COMPLETE' " +
+            "ORDER BY o.orderDate DESC ")
+    Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusComplete(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
+
 
 
     @Query("SELECT o FROM Order o WHERE o.user.userId = :userId ORDER BY o.orderDate DESC")
@@ -183,5 +194,29 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay,
             @Param("orderType") OrderType orderType);
+
+    @Query("SELECT SUM(o.totalOrderPrice) FROM Order o WHERE o.canteenId = :canteenId " +
+            "AND o.orderStatus = 'COMPLETE' " +
+            "AND o.orderDate BETWEEN :startOfMonth AND :currentDate")
+    Double findTotalRevenueForCurrentMonth(@Param("canteenId") Integer canteenId,
+                                           @Param("startOfMonth") LocalDateTime startOfMonth,
+                                           @Param("currentDate") LocalDateTime currentDate);
+
+
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM-DD'), SUM(o.totalOrderPrice) " +
+            "FROM Order o " +
+            "WHERE o.orderStatus = 'COMPLETE' AND o.canteenId = :canteenId AND o.orderType = 'ONLINE_ORDER' " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM-DD') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM-DD')")
+    List<Object[]> findRevenueDataCanteenByDayOnline(@Param("canteenId") Integer canteenId);
+
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM-DD'), SUM(o.totalOrderPrice) " +
+            "FROM Order o " +
+            "WHERE o.orderStatus = 'COMPLETE' AND o.canteenId = :canteenId AND o.orderType = 'AT_COUNTER' " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM-DD') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM-DD')")
+    List<Object[]> findRevenueDataCanteenByDayAtCounter(@Param("canteenId") Integer canteenId);
+
+
 
 }

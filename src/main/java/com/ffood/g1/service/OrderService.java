@@ -32,7 +32,6 @@ public interface OrderService {
     List<Object[]> findRevenueDataCanteenByYearAtCounter(Integer canteenId);
 
 
-    Integer countCompletedOrdersByCanteenId(Integer canteenId);
 
     Page<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType, Pageable pageable);
 
@@ -51,7 +50,10 @@ public interface OrderService {
 
     Page<Order> getCompletedOrdersByCanteenAndDateRange(Integer canteenId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 
+    //lấy order trạng thái progress
     Page<Order> getOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable);
+    //lấy order trạng thái complete
+    Page<Order> getCompleteOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable);
 
     void completeOrder(Integer orderId);
 
@@ -74,4 +76,11 @@ public interface OrderService {
 
     byte[] generatePdfFromOrder(Integer orderId) throws Exception;
     void refundOrder(Integer orderId, String refundReason);
+
+    String getTotalRevenueForCurrentMonthFormatted(Integer canteenId);
+
+    List<Object[]> getRevenueDataCanteenByDayOnline(Integer canteenId);
+    List<Object[]> getRevenueDataCanteenByDayAtCounter(Integer canteenId);
+
+    void bulkAssignAndUpdateOrders(List<Integer> selectedOrders, Integer deliveryRoleId, String fullName);
 }

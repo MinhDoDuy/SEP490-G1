@@ -1,5 +1,6 @@
 package com.ffood.g1.serviceImpl;
 
+import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.ResetToken;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
@@ -78,6 +79,40 @@ public class UserServiceImplTest {
         assertEquals(user, result);
         verify(userRepository, times(1)).findByEmail("test@example.com");
     }
+
+
+    @Test
+    void testGetAllStaff_Normal() {
+        // Khởi tạo tham số cho hàm
+        int page = 0;
+        int size = 10;
+        Integer canteenId = 1;
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Tạo các đối tượng User giả lập chỉ với các trường cần thiết
+        User user1 = User.builder().userId(1).fullName("user1").build();
+        User user2 = User.builder().userId(2).fullName("user2").build();
+
+        // Tạo đối tượng Page<User> chứa danh sách các user
+        Page<User> pageUsers = new PageImpl<>(Arrays.asList(user1, user2), pageable, 2);
+
+        // Giả lập hành vi của userRepository
+        when(userRepository.findAllStaffByCanteenId(canteenId, pageable)).thenReturn(pageUsers);
+
+        // Gọi phương thức cần test
+        Page<User> result = userService.getAllStaff(page, size, canteenId);
+
+        // Kiểm tra kết quả
+        assertEquals(2, result.getTotalElements());
+        assertEquals(2, result.getContent().size());
+        assertTrue(result.getContent().contains(user1));
+        assertTrue(result.getContent().contains(user2));
+
+        // Xác minh phương thức findAllStaffByCanteenId được gọi đúng một lần với tham số cụ thể
+        verify(userRepository, times(1)).findAllStaffByCanteenId(canteenId, pageable);
+    }
+
 
     // Kiểm thử load User bằng ID
     @Test
