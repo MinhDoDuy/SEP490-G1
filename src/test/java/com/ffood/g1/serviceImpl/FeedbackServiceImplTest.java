@@ -58,19 +58,27 @@ public class FeedbackServiceImplTest {
     // Trường hợp bình thường: Kiểm thử lấy Feedback theo CanteenId và Status
     @Test
     void testGetFeedbacksByCanteenIdAndStatus_Normal() {
-        Feedback feedback1 = Feedback.builder().canteenId(1).feedbackStatus(FeedbackStatus.VIEWABLE).build();
-        Feedback feedback2 = Feedback.builder().canteenId(1).feedbackStatus(FeedbackStatus.VIEWABLE).build();
+        Feedback feedback1 = Feedback.builder()
+                                        .canteenId(1)
+                                        .feedbackStatus(FeedbackStatus.VIEWABLE)
+                                        .build();
+        Feedback feedback2 = Feedback.builder()
+                                        .canteenId(1)
+                                        .feedbackStatus(FeedbackStatus.VIEWABLE)
+                                        .build();
 
         when(feedbackRepository.findFeedbackByCanteenIdAndStatus(1, FeedbackStatus.VIEWABLE))
                 .thenReturn(Arrays.asList(feedback1, feedback2));
 
-        List<Feedback> result = feedbackService.getFeedbacksByCanteenIdAndStatus(1, FeedbackStatus.VIEWABLE);
+        List<Feedback> result = feedbackService
+                                .getFeedbacksByCanteenIdAndStatus(1, FeedbackStatus.VIEWABLE);
 
         assertEquals(2, result.size());
         assertTrue(result.contains(feedback1));
         assertTrue(result.contains(feedback2));
 
-        verify(feedbackRepository, times(1)).findFeedbackByCanteenIdAndStatus(1, FeedbackStatus.VIEWABLE);
+        verify(feedbackRepository, times(1))
+                .findFeedbackByCanteenIdAndStatus(1, FeedbackStatus.VIEWABLE);
     }
 
     // Trường hợp bình thường: Kiểm thử cập nhật trạng thái Feedback

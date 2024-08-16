@@ -1,7 +1,8 @@
-package com.ffood.g1.service.impl;
+package com.ffood.g1.serviceImpl;
 
 import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.repository.CanteenRepository;
+import com.ffood.g1.service.impl.CanteenServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
