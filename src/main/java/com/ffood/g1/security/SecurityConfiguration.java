@@ -83,11 +83,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                         "/search-food/**","/add-food-form/**","/add-food","/edit-food/**",
                         "/add-quantity/**","/order-list/**","/update-order-status/**",
                         "/bulk-assign-orders/**","/reject-order/**","/order-list-reject/**","/order-list-refund/**",
-                        "/refund-order/**"
+                        "/refund-order/**", "/create-order-at-couter"
                         )
                 .hasRole("MANAGER")
                 // Quyền cho STAFF
-                .antMatchers("/order-list-ship/**","/complete-order/**", "/create-order-at-couter","/reject-order-ship/**")
+                .antMatchers("/order-list-ship/**","/complete-order/**", "/reject-order-ship/**")
                 .hasRole("STAFF")
                 .anyRequest().authenticated()
                 .and()

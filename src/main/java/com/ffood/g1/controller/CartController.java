@@ -165,7 +165,7 @@ public class CartController {
         }
 
         User deliveryUser = userService.getUserById(deliveryRoleId);
-        if (deliveryUser == null || !deliveryUser.getCanteen().getCanteenId().equals(canteenId) || deliveryUser.getRole().getRoleId() != 2 || !deliveryUser.getUserId().equals(currentUser.getUserId())) {
+        if (deliveryUser == null || !deliveryUser.getCanteen().getCanteenId().equals(canteenId) || deliveryUser.getRole().getRoleId() != 3 || !deliveryUser.getUserId().equals(currentUser.getUserId())) {
             redirectAttributes.addFlashAttribute("error", "Bạn không có quyền tạo đơn hàng cho người khác trong cùng canteen.");
             return "redirect:/create-order-at-couter?canteenId=" + currentUser.getCanteen().getCanteenId() + "&deliveryRoleId=" + currentUser.getUserId();
         }
@@ -197,12 +197,6 @@ public class CartController {
         OrderType orderType = OrderType.AT_COUNTER;
         List<Order> orderListInDay = orderService.findByOrderTypeAndCurrentDate(orderType);
         model.addAttribute("orderListInDay", orderListInDay);
-
-        //Doanh thu ngày
-//        List<Map<String, Object>> salesData = orderService.getSalesDataForTodayByOrderType(orderType);
-//        System.out.println(salesData);
-//        model.addAttribute("salesData", salesData);
-
         return "cart/pos-screen";
     }
 
