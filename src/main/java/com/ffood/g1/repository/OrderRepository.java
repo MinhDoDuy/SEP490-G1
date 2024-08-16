@@ -154,7 +154,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             Pageable pageable
     );
 
-
+    //List đơn hàng trạng thái progress của nhân viên ship
     @Query("SELECT DISTINCT o FROM Order o " +
             "JOIN o.orderDetails od " +
             "JOIN od.food f " +
@@ -163,6 +163,17 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "AND o.orderStatus = 'PROGRESS'"+
             "ORDER BY o.orderDate DESC ")
     Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusProgress(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
+
+    //List đơn hàng trạng thái complete của nhân viên ship
+    @Query("SELECT DISTINCT o FROM Order o " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.food f " +
+            "WHERE f.canteen.canteenId = :canteenId " +
+            "AND o.deliveryRoleId = :deliveryRoleId " +
+            "AND o.orderStatus = 'COMPLETE' " +
+            "ORDER BY o.orderDate DESC ")
+    Page<Order> findByCanteenIdAndDeliveryRoleIdAndStatusComplete(@Param("canteenId") Integer canteenId, @Param("deliveryRoleId") Integer deliveryRoleId, Pageable pageable);
+
 
 
     @Query("SELECT o FROM Order o WHERE o.user.userId = :userId ORDER BY o.orderDate DESC")

@@ -40,7 +40,7 @@ public class DashboardManagerController {
 
         Integer staffCount = userService.countStaffByCanteenId(canteenId);
         Integer foodCount = foodService.countFoodByCanteenId(canteenId);
-        Integer completedOrdersCount = orderService.countCompletedOrdersByCanteenId(canteenId);
+
 
         // Doanh thu online
         List<Object[]> revenueDataByMonthOnline = orderService.findRevenueDataCanteenByMonthOnline(canteenId);
@@ -106,7 +106,6 @@ public class DashboardManagerController {
 
         model.addAttribute("staffCount", staffCount);
         model.addAttribute("foodCount", foodCount);
-        model.addAttribute("completedOrdersCount", completedOrdersCount);
         model.addAttribute("revenueLabelsByMonthOnline", revenueLabelsByMonthOnline);
         model.addAttribute("revenueDataByMonthOnline", revenueDataByMonthOnlineList);
         model.addAttribute("revenueLabelsByYearOnline", revenueLabelsByYearOnline);

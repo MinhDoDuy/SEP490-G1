@@ -186,6 +186,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<Order> getCompleteOrdersByCanteenAndDeliveryRole(Integer canteenId, Integer deliveryRoleId, Pageable pageable) {
+        return orderRepository.findByCanteenIdAndDeliveryRoleIdAndStatusComplete(canteenId, deliveryRoleId, pageable);
+    }
+
+    @Override
     public void completeOrder(Integer orderId) {
         // Retrieve the order by its ID, or throw an exception if not found
         Order order = orderRepository.findById(orderId)

@@ -1,223 +1,269 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <title>Đơn cho shipper</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Đơn hàng của nhân viên</title>
+    <style>
+        .nav-tabs {
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-content {
+            padding-top: 20px;
+        }
+
+        .tab-pane .table {
+            margin-bottom: 0;
+        }
+    </style>
 </head>
+
 <body class="text-gray-800 font-inter">
+
 <div th:replace="sidebar-staff :: sidebar-staff(${canteenId})"></div>
-<!-- start: Main -->
+
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
-  <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}"/>
-
-  <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
-    <button type="button" class="text-lg text-gray-600 sidebar-toggle">
-      <i class="ri-menu-line"></i>
-    </button>
-    <ul class="flex items-center text-sm ml-4">
-      <li class="mr-2">
-        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
-      </li>
-      <li class="text-gray-600 mr-2 font-medium">/</li>
-      <li class="text-gray-600 mr-2 font-medium">Đặt Hàng</li>
-    </ul>
-  </div>
-
-  <div class="p-6">
-
-    <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
-      <div class="flex justify-between mb-4 items-start">
-        <div class="font-medium">Đơn ship của bạn</div>
-      </div>
-
-      <div th:if="${not #lists.isEmpty(orders.content)}">
-        <div th:if="${successMessage}" class="alert alert-success "  id="successMessage">
-          <span th:text="${successMessage}"></span>
-          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-        </div>
-        <div th:if="${errorMessage}" class="alert alert-danger " th:text="${errorMessage}" id="errorMessage">
-        </div>
-        <table class="table w-full min-w-[540px]">
-          <thead>
-          <tr>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tổng giá</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Địa chỉ giao hàng</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ghi chú</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Loại đơn hàng</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Phương thức thanh toán</th>
-            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:if="${#lists.isEmpty(orders.content)}">
-            <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="10">Không có đơn nào</td>
-          </tr>
-          <tr th:each="order ,iterStat : ${orders.content}">
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${orders.number * orders.size + iterStat.index + 1}">Mã đơn hàng</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderCode}">Mã Đơn Hàng</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.fullName}">Tên khách hàng</td>
-            <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">Ngày đặt hàng</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus.displayName}">Trạng thái</td>
-            <td class="py-2 px-4 border-b border-b-gray-50 formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Địa chỉ giao hàng</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.note}">Ghi chú</td>
-            <!-- Sử dụng phương thức getDisplayName() của enum -->
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType.displayName}">Loại đơn hàng</td>
-            <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.paymentMethod}">Phương thức thanh toán</td>
-            <td class="py-2 px-4 border-b border-b-gray-50">
-              <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
-                <i class="ri-eye-line"></i>
-              </button>
-              <form th:action="@{'/complete-order/' + ${order.orderId}}" method="post" style="display: inline;">
-                <input type="hidden" name="canteenId" th:value="${canteenId}"/>
-                <input type="hidden" name="userId" th:value="${deliveryRoleId}"/> <!-- Add userId -->
-                <button type="submit" class="btn btn-success">
-                  <i class="ri-check-line"></i>
-                </button>
-              </form>
-              <button class="btn btn-danger" data-toggle="modal" th:data-target="'#rejectModal'" th:data-order-id="${order.orderId}" th:data-canteen-id="${canteenId}">
-                <i class="ri-close-line"></i>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div th:if="${#lists.isEmpty(orders.content)}">
-        <p>Không có đơn hàng nào.</p>
-      </div>
-    </div>
-  </div>
-</main>
-<!-- end: Main -->
-<!-- Modal for Reject Reason -->
-<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="rejectModalLabel">Lý do từ chối</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+    <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+        <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+            <i class="ri-menu-line"></i>
         </button>
-      </div>
-      <div class="modal-body">
-        <form id="rejectForm" method="post" th:action="@{/reject-order-ship}">
-          <input type="hidden" id="rejectOrderId" name="orderId">
-          <input type="hidden" id="rejectCanteenId" name="canteenId">
-          <input type="hidden" name="userId" th:value="${deliveryRoleId}"/>
-          <div class="form-group">
-            <label for="rejectNote">Lý do từ chối:</label>
-            <textarea class="form-control" id="rejectNote" name="note" required></textarea>
-          </div>
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-danger" onclick="submitRejectForm()">Từ chối</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal for Order Details -->
-<div class="modal fade" th:each="order : ${orders.content}" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul>
-          <li th:each="detail : ${order.orderDetails}" class="mb-2">
-            <strong>Tên món ăn:</strong> <span th:text="${detail.food.foodName}">Tên món ăn</span><br>
-            <strong>Số lượng:</strong> <span th:text="${detail.quantity}">Số lượng</span><br>
-            <strong>Giá:</strong> <span class="formatted-price" th:text="${detail.price}">Giá</span>
-          </li>
+        <ul class="flex items-center text-sm ml-4">
+            <li class="mr-2">
+                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+            </li>
+            <li class="text-gray-600 mr-2 font-medium">/</li>
+            <li class="text-gray-600 mr-2 font-medium">Đơn hàng của bạn</li>
         </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-      </div>
     </div>
-  </div>
-</div>
+
+    <div class="p-6">
+        <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+            <div class="flex justify-between mb-4 items-start">
+                <div class="font-medium">Đơn hàng của bạn</div>
+            </div>
+
+            <ul class="nav nav-tabs" id="orderTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${status != null and status == 'PROGRESS'} ? 'active' : ''"
+                       th:href="@{/order-list-ship/{canteenId}(canteenId=${canteenId}, deliveryRoleId=${deliveryRoleId}, status='PROGRESS', page=0)}"
+                       role="tab">Đơn hàng đang xử lý</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${status == 'COMPLETE'} ? 'active' : ''"
+                       th:href="@{/order-list-ship/{canteenId}(canteenId=${canteenId}, deliveryRoleId=${deliveryRoleId}, status='COMPLETE', page=0)}"
+                       role="tab">Đơn hàng hoàn thành</a>
+                </li>
+            </ul>
+
+            <!-- Hiển thị thông báo lỗi nếu có -->
+            <div id="error-message" class="alert alert-danger" style="display: none;">
+                <span id="error-text"></span>
+            </div>
+
+            <div class="tab-content" id="orderTabsContent">
+                <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[540px]">
+                            <thead>
+                            <tr>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STT</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Ngày đặt hàng</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Tên khách hàng</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Trạng thái</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Địa chỉ giao hàng</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Loại đơn hàng</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Mã đơn hàng</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(orders.content)}">
+                                <td class="py-2 px-4 border-b border-b-gray-50 text-center" colspan="8">Không có đơn nào</td>
+                            </tr>
+                            <tr th:each="order, iterStat : ${orders.content}">
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${orders.number * orders.size + iterStat.index + 1}">STT</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50 order-date" th:text="${order.orderDate}">Ngày đặt hàng</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.user.fullName}">Tên khách hàng</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderStatus.displayName}">Trạng thái</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderAddress}">Địa chỉ giao hàng</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderType.displayName}">Loại đơn hàng</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50" th:text="${order.orderCode}">Phương thức thanh toán</td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <button class="btn btn-primary" data-toggle="modal" th:data-target="'#orderDetailsModal' + ${order.orderId}">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                    <!-- Chỉ hiển thị nút cho trạng thái PROGRESS -->
+                                    <th:block th:if="${status == 'PROGRESS'}">
+                                        <form th:action="@{'/complete-order/' + ${order.orderId}}" method="post" style="display: inline;">
+                                            <input type="hidden" name="canteenId" th:value="${canteenId}"/>
+                                            <input type="hidden" name="userId" th:value="${deliveryRoleId}"/>
+                                            <button class="btn btn-success" type="submit">
+                                                <i class="ri-check-line"></i>
+                                            </button>
+                                        </form>
+                                        <button class="btn btn-danger" data-toggle="modal" th:data-target="'#rejectModal'" th:data-order-id="${order.orderId}" th:data-canteen-id="${canteenId}">
+                                            <i class="ri-close-line"></i>
+                                        </button>
+                                    </th:block>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- Pagination -->
+                        <div class="pagination" style="margin-top: 10px; display: flex; gap: 5px; align-items: center;" th:if="${orders.totalElements > 0}">
+                            <span th:if="${orders.hasPrevious()}">
+                                <a th:href="@{/order-list-ship/{canteenId}(canteenId=${canteenId}, deliveryRoleId=${deliveryRoleId}, status=${status}, page=${orders.number - 1}, size=${orders.size})}" class="page-link">&laquo;</a>
+                            </span>
+                            <span th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}">
+                                <a th:classappend="${i} == ${orders.number} ? 'active' : ''"
+                                   th:href="@{/order-list-ship/{canteenId}(canteenId=${canteenId}, deliveryRoleId=${deliveryRoleId}, status=${status}, page=${i}, size=${orders.size})}" class="page-link">
+                                    <span th:text="${i + 1}">1</span>
+                                </a>
+                            </span>
+                            <span th:if="${orders.hasNext()}">
+                                <a th:href="@{/order-list-ship/{canteenId}(canteenId=${canteenId}, deliveryRoleId=${deliveryRoleId}, status=${status}, page=${orders.number + 1}, size=${orders.size})}" class="page-link">&raquo;</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/manage.js}"></script>
+
+<!-- Modal for Reject Reason -->
+<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModalLabel">Lý do từ chối</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="rejectForm" method="post" th:action="@{/reject-order-ship}">
+                    <input type="hidden" id="rejectOrderId" name="orderId">
+                    <input type="hidden" id="rejectCanteenId" name="canteenId">
+                    <input type="hidden" name="userId" th:value="${deliveryRoleId}"/>
+                    <div class="form-group">
+                        <label for="rejectNote">Lý do từ chối:</label>
+                        <textarea class="form-control" id="rejectNote" name="note" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-danger" onclick="submitRejectForm()">Từ chối</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Order Details -->
+<div class="modal fade" th:each="order : ${orders.content}" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li class="mb-2">
+                        <strong>Mã đơn hàng:</strong> <span th:text="${order.orderCode}">Mã đơn hàng</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Khách Hàng:</strong> <span th:text="${order.user.fullName}">Khác Hàng</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Số Điện Thoại:</strong> <span th:text="${order.user.phone}">Số Điện Thoại</span>
+                    </li>
+                    <li th:each="detail : ${order.orderDetails}" class="mb-2">
+                        <strong>Tên món ăn:</strong> <span th:text="${detail.food.foodName}">Tên món ăn</span><br>
+                        <strong>Số lượng:</strong> <span th:text="${detail.quantity}">Số lượng</span><br>
+                        <strong>Giá:</strong> <span class="formatted-price" th:text="${detail.price}">Giá</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Ghi chú:</strong> <span th:text="${order.note}">Ghi chú</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Tổng giá:</strong> <span class="formatted-price" th:text="${order.totalOrderPrice}">Tổng giá</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-  $('#rejectModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var orderId = button.data('order-id');
-    var canteenId = button.data('canteen-id');
+    $('#rejectModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var orderId = button.data('order-id'); // Extract info from data-* attributes
+        var canteenId = button.data('canteen-id');
 
-    var modal = $(this);
-    modal.find('#rejectOrderId').val(orderId);
-    modal.find('#rejectCanteenId').val(canteenId);
-  });
-
-  function submitRejectForm() {
-    document.getElementById("rejectForm").submit();
-  }
-</script>
-
-<script>
-  // Function to format currency in VND
-  function formatCurrencyVND(amount) {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(amount);
-  }
-
-  // Format all prices on page load
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.formatted-price').forEach(function (element) {
-      let price = element.innerText;
-      element.innerText = formatCurrencyVND(price);
+        var modal = $(this);
+        modal.find('#rejectOrderId').val(orderId);
+        modal.find('#rejectCanteenId').val(canteenId);
     });
-  });
 
-  // Function to format date to a more readable format
-  function formatDate(dateString) {
-    const options = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    };
-    return new Date(dateString).toLocaleDateString('vi-VN', options);
-  }
-
-  // Format all order dates on page load
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.order-date').forEach(function (element) {
-      let dateText = element.innerText;
-      element.innerText = formatDate(dateText);
-    });
-  });
-
-  // Function to select/deselect all orders
-  function selectAllOrders(source) {
-    var checkboxes = document.getElementsByName('selectedOrders');
-    for (var i = 0, n = checkboxes.length; i < n; i++) {
-      checkboxes[i].checked = source.checked;
+    function submitRejectForm() {
+        document.getElementById('rejectForm').submit();
     }
-  }
+
+    // Format all prices on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.formatted-price').forEach(function (element) {
+            let price = element.innerText;
+            element.innerText = formatCurrencyVND(price);
+        });
+    });
+
+    function selectAllOrders(source) {
+        checkboxes = document.getElementsByName('selectedOrders');
+        for (var i in checkboxes)
+            checkboxes[i].checked = source.checked;
+    }
+
+    // Function to format date to a more readable format
+    function formatDate(dateString) {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        return new Date(dateString).toLocaleDateString('vi-VN', options);
+    }
+
+    // Format all order dates on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.order-date').forEach(function (element) {
+            let dateText = element.innerText;
+            element.innerText = formatDate(dateText);
+        });
+    });
+
+    setInterval(function () {
+        location.reload();
+    }, 300000);
 </script>
 </body>
 </html>
