@@ -70,7 +70,7 @@ public interface OrderService {
 
     Page<Order> searchRefundedOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable);
 
-    List<Map<String, Object>> getSalesDataForTodayByOrderType(OrderType orderType);
+
 
     byte[] generatePdfFromOrder(Integer orderId) throws Exception;
     void refundOrder(Integer orderId, String refundReason);

@@ -352,22 +352,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    @Override
-    public List<Map<String, Object>> getSalesDataForTodayByOrderType(OrderType orderType) {
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
 
-        List<Object[]> results = orderRepository.calculateSalesDataForTodayByOrderType(startOfDay, endOfDay, orderType);
-
-        return results.stream()
-                .map(result -> Map.of(
-                        "deliveryRoleId", result[0],
-                        "totalOrders", result[1],
-                        "totalSalesAmount", result[2]
-                ))
-                .collect(Collectors.toList());
-    }
 
     @Autowired
     private SpringTemplateEngine templateEngine;

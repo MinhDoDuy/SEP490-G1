@@ -197,12 +197,6 @@ public class CartController {
         OrderType orderType = OrderType.AT_COUNTER;
         List<Order> orderListInDay = orderService.findByOrderTypeAndCurrentDate(orderType);
         model.addAttribute("orderListInDay", orderListInDay);
-
-        //Doanh thu ngày
-//        List<Map<String, Object>> salesData = orderService.getSalesDataForTodayByOrderType(orderType);
-//        System.out.println(salesData);
-//        model.addAttribute("salesData", salesData);
-
         return "cart/pos-screen";
     }
 
