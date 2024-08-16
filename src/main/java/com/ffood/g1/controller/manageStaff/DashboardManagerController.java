@@ -40,7 +40,8 @@ public class DashboardManagerController {
 
         Integer staffCount = userService.countStaffByCanteenId(canteenId);
         Integer foodCount = foodService.countFoodByCanteenId(canteenId);
-
+        // Lấy tổng doanh thu của tháng hiện tại đã được định dạng
+        String totalRevenueForCurrentMonthFormatted = orderService.getTotalRevenueForCurrentMonthFormatted(canteenId);
 
         // Doanh thu online
         List<Object[]> revenueDataByMonthOnline = orderService.findRevenueDataCanteenByMonthOnline(canteenId);
@@ -104,6 +105,7 @@ public class DashboardManagerController {
             bestSellingData.add(((Number) data[1]).longValue());
         }
 
+        model.addAttribute("totalRevenueForCurrentMonth", totalRevenueForCurrentMonthFormatted);
         model.addAttribute("staffCount", staffCount);
         model.addAttribute("foodCount", foodCount);
         model.addAttribute("revenueLabelsByMonthOnline", revenueLabelsByMonthOnline);

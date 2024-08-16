@@ -195,4 +195,10 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             @Param("endOfDay") LocalDateTime endOfDay,
             @Param("orderType") OrderType orderType);
 
+    @Query("SELECT SUM(o.totalOrderPrice) FROM Order o WHERE o.canteenId = :canteenId " +
+            "AND o.orderStatus = 'COMPLETE' " +
+            "AND o.orderDate BETWEEN :startOfMonth AND :currentDate")
+    Double findTotalRevenueForCurrentMonth(@Param("canteenId") Integer canteenId,
+                                           @Param("startOfMonth") LocalDateTime startOfMonth,
+                                           @Param("currentDate") LocalDateTime currentDate);
 }

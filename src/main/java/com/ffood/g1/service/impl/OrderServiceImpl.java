@@ -21,11 +21,14 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.transaction.Transactional;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.thymeleaf.context.Context;
@@ -354,6 +357,24 @@ public class OrderServiceImpl implements OrderService {
         String subject = "Đơn hàng của bạn đã được hoàn tiền";
         String text = "Đơn hàng của bạn với mã số " + order.getOrderCode() + " đã được hoàn tiền.\n\n" + orderDetails + "\n\nLý do hoàn tiền: " + refundReason;
         sendEmail(order.getUser().getEmail(), subject, text);
+    }
+
+    @Override
+    public String getTotalRevenueForCurrentMonthFormatted(Integer canteenId) {
+        // Lấy tháng và năm hiện tại
+        YearMonth currentMonth = YearMonth.now();
+        // Ngày 1 của tháng hiện tại
+        LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
+        // Ngày giờ hiện tại
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        // Truy vấn tổng doanh thu
+        Double totalRevenue = orderRepository.findTotalRevenueForCurrentMonth(canteenId, startOfMonth, currentDate);
+        totalRevenue = totalRevenue != null ? totalRevenue : 0.0;
+
+        // Định dạng số theo kiểu Việt Nam (dấu phân cách hàng nghìn)
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(totalRevenue);
     }
 
 

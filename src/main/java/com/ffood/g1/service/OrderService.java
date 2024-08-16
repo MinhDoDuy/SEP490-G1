@@ -77,4 +77,6 @@ public interface OrderService {
 
     byte[] generatePdfFromOrder(Integer orderId) throws Exception;
     void refundOrder(Integer orderId, String refundReason);
+
+    String getTotalRevenueForCurrentMonthFormatted(Integer canteenId);
 }
