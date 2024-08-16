@@ -92,11 +92,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    @Override
-    public Integer countCompletedOrdersByCanteenId(Integer canteenId) {
-        return orderRepository.countCompletedOrdersByCanteenId(canteenId);
-    }
-
 
     private void sendEmail(String email, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
