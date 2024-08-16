@@ -130,8 +130,6 @@ public class OrderManagementController {
     }
 
 
-
-
     @GetMapping("/order-list-reject/{canteenId}")
     public String manageRejectedOrders(@PathVariable Integer canteenId,
                                        @RequestParam(value = "keyword", required = false) String keyword,
@@ -177,9 +175,6 @@ public class OrderManagementController {
     }
 
 
-
-
-
     @PostMapping("/update-order-status/{orderId}")
     public String assignShipperAndUpdateStatus(@PathVariable Integer orderId,
                                                @RequestParam Integer deliveryRoleId,
@@ -208,9 +203,10 @@ public class OrderManagementController {
 
         try {
             User staffShip = userService.getUserById(deliveryRoleId);
-            for (Integer orderId : selectedOrders) {
-                orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, OrderStatus.PROGRESS, staffShip.getFullName());
-            }
+
+            // Sử dụng transaction để đảm bảo tính nhất quán
+            orderService.bulkAssignAndUpdateOrders(selectedOrders, deliveryRoleId, staffShip.getFullName());
+
             redirectAttributes.addFlashAttribute("message", "Chuyển Đơn hàng cho Shipper thành công cho các đơn hàng đã chọn");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
@@ -218,6 +214,7 @@ public class OrderManagementController {
 
         return "redirect:/order-list/" + canteenId + "?orderStatus=PENDING";
     }
+
 
     @PostMapping("/reject-order")
     public String cancelOrder(@RequestParam Integer orderId,

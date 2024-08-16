@@ -383,6 +383,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public void bulkAssignAndUpdateOrders(List<Integer> orderIds, Integer deliveryRoleId, String staffName) {
+        // Lấy tất cả các đơn hàng trước trong một lần truy vấn
+        List<Order> orders = orderRepository.findAllById(orderIds);
+
+        // Duyệt qua từng đơn hàng để cập nhật thông tin
+        for (Order order : orders) {
+            order.setDeliveryRoleId(deliveryRoleId);
+            order.setDeliveryRoleName(staffName);
+            order.setOrderStatus(OrderStatus.PROGRESS);
+        }
+
+        // Lưu tất cả các thay đổi trong một lần
+        orderRepository.saveAll(orders);
+
+        // Gửi email cho khách hàng nếu cần
+        for (Order order : orders) {
+            String orderDetails = getOrderDetails(order);
+            String subject = "Đơn hàng của bạn đã được chuẩn bị";
+            String text = "Đơn hàng đang được làm đã được chuẩn bị.\n\n" + orderDetails;
+            sendEmail(order.getUser().getEmail(), subject, text);
+        }
+    }
+
+
+    @Override
     public List<Object[]> getRevenueDataCanteenByDayOnline(Integer canteenId) {
         return orderRepository.findRevenueDataCanteenByDayOnline(canteenId);
     }

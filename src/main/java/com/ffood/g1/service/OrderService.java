@@ -32,7 +32,6 @@ public interface OrderService {
     List<Object[]> findRevenueDataCanteenByYearAtCounter(Integer canteenId);
 
 
-    Integer countCompletedOrdersByCanteenId(Integer canteenId);
 
     Page<Order> getOrdersByCanteenAndType(Integer canteenId, List<OrderStatus> statuses, OrderType orderType, Pageable pageable);
 
@@ -82,4 +81,6 @@ public interface OrderService {
 
     List<Object[]> getRevenueDataCanteenByDayOnline(Integer canteenId);
     List<Object[]> getRevenueDataCanteenByDayAtCounter(Integer canteenId);
+
+    void bulkAssignAndUpdateOrders(List<Integer> selectedOrders, Integer deliveryRoleId, String fullName);
 }
