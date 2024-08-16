@@ -79,4 +79,7 @@ public interface OrderService {
     void refundOrder(Integer orderId, String refundReason);
 
     String getTotalRevenueForCurrentMonthFormatted(Integer canteenId);
+
+    List<Object[]> getRevenueDataCanteenByDayOnline(Integer canteenId);
+    List<Object[]> getRevenueDataCanteenByDayAtCounter(Integer canteenId);
 }

@@ -201,4 +201,22 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     Double findTotalRevenueForCurrentMonth(@Param("canteenId") Integer canteenId,
                                            @Param("startOfMonth") LocalDateTime startOfMonth,
                                            @Param("currentDate") LocalDateTime currentDate);
+
+
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM-DD'), SUM(o.totalOrderPrice) " +
+            "FROM Order o " +
+            "WHERE o.orderStatus = 'COMPLETE' AND o.canteenId = :canteenId AND o.orderType = 'ONLINE' " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM-DD') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM-DD')")
+    List<Object[]> findRevenueDataCanteenByDayOnline(@Param("canteenId") Integer canteenId);
+
+    @Query("SELECT TO_CHAR(o.orderDate, 'YYYY-MM-DD'), SUM(o.totalOrderPrice) " +
+            "FROM Order o " +
+            "WHERE o.orderStatus = 'COMPLETE' AND o.canteenId = :canteenId AND o.orderType = 'AT_COUNTER' " +
+            "GROUP BY TO_CHAR(o.orderDate, 'YYYY-MM-DD') " +
+            "ORDER BY TO_CHAR(o.orderDate, 'YYYY-MM-DD')")
+    List<Object[]> findRevenueDataCanteenByDayAtCounter(@Param("canteenId") Integer canteenId);
+
+
+
 }

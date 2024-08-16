@@ -377,6 +377,16 @@ public class OrderServiceImpl implements OrderService {
         return formatter.format(totalRevenue);
     }
 
+    @Override
+    public List<Object[]> getRevenueDataCanteenByDayAtCounter(Integer canteenId) {
+        return orderRepository.findRevenueDataCanteenByDayAtCounter(canteenId);
+    }
+
+    @Override
+    public List<Object[]> getRevenueDataCanteenByDayOnline(Integer canteenId) {
+        return orderRepository.findRevenueDataCanteenByDayOnline(canteenId);
+    }
+
 
     @Override
     public List<Map<String, Object>> getSalesDataForTodayByOrderType(OrderType orderType) {
