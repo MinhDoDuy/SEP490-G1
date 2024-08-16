@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,6 +122,11 @@ public class DashboardManagerController {
             bestSellingLabels.add((String) data[0]);
             bestSellingData.add(((Number) data[1]).longValue());
         }
+
+        // Thêm tháng hiện tại vào model
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+        String currentMonth = LocalDate.now().format(formatter);
+        model.addAttribute("currentMonth", currentMonth);
 
         model.addAttribute("totalRevenueForCurrentMonth", totalRevenueForCurrentMonthFormatted);
         model.addAttribute("staffCount", staffCount);
