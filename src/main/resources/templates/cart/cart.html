@@ -279,8 +279,10 @@
                             <div class="quantity-control">
                                 <button class="custom-btn btn-minus btn-info" th:attr="data-id=${item.cartItemId}">-
                                 </button>
-                                <input type="number" min="1" th:id="'qty' + ${item.cartItemId}"
-                                       th:value="${item.quantity}" class="form-control qty-input">
+                                <label>
+                                    <input type="number" min="1" th:id="'qty' + ${item.cartItemId}"
+                                           th:value="${item.quantity}" class="form-control qty-input">
+                                </label>
                                 <button class="custom-btn btn-plus btn-info" th:attr="data-id=${item.cartItemId}">+
                                 </button>
                             </div>
@@ -320,16 +322,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="checkoutModalLabel">Thông Báo Thanh Toán</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 Bạn không thể thanh toán các món ăn từ nhiều căng tin cùng một lúc. Vui lòng chỉ chọn các mặt hàng từ
                 một căng tin.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -387,13 +383,28 @@
 
         function validateQuantity(input) {
             const cartItemId = input.attr('id').replace('qty', '');
-            const quantity = parseInt(input.val());
+            let quantity = parseInt(input.val());
             const availableQuantity = parseInt($($(input).closest('tr').find('td')[3]).text());
 
-            if (quantity > availableQuantity) {
-                alert('Số lượng mua không được vượt quá số lượng hiện có.');
-                input.val(availableQuantity);
+            // Nếu giá trị nhập vào nhỏ hơn 1, đặt lại giá trị là 1
+            if (quantity < 1) {
+                quantity = 1;
+                input.val(quantity);
             }
+            // Nếu giá trị nhập vào vượt quá số lượng hiện có, đặt lại giá trị là số lượng hiện có
+            if (quantity > availableQuantity) {
+                quantity = availableQuantity;
+                input.val(quantity);
+                alert('Số lượng mua không được vượt quá số lượng hiện có.');
+            }
+
+            // Cập nhật tổng tiền khi số lượng thay đổi
+            const price = parseFloat($($(input).closest('tr').find('td')[2]).text().replace(/[^\d]/g, ''));
+            const total = quantity * price;
+            $('#total' + cartItemId).text(formatCurrencyVND(total)); // Ensure VND formatting on quantity change
+
+            // Cập nhật số lượng trong cơ sở dữ liệu
+            updateCartQuantity(cartItemId, quantity);
         }
 
         function updateCartQuantity(cartItemId, quantity) {
@@ -429,13 +440,7 @@
         });
 
         $('.qty-input').on('change', function () {
-            const cartItemId = $(this).attr('id').replace('qty', '');
-            const quantity = parseInt($(this).val());
-            const price = parseFloat($($(this).closest('tr').find('td')[2]).text().replace(/[^\d]/g, ''));
-            const total = quantity * price;
-            $('#total' + cartItemId).text(formatCurrencyVND(total)); // Ensure VND formatting on quantity change
             validateQuantity($(this));
-            updateCartQuantity(cartItemId, quantity);
             updateTotal();
         });
 
@@ -486,6 +491,7 @@
         // Kiểm tra và cập nhật footer khi tải trang
         updateTotal();
     });
+
 </script>
 
 </body>
