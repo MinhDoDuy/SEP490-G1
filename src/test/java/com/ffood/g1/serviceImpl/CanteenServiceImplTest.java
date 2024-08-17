@@ -55,19 +55,22 @@ public class CanteenServiceImplTest {
         Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen 1").build();
         Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen 2").build();
 
-        Page<Canteen> page = new PageImpl<>(Arrays.asList(canteen1, canteen2), pageable, 2);
+        // Tạo expectedPage trực tiếp
+        Page<Canteen> expectedPage = new PageImpl<>(Arrays.asList(canteen1, canteen2), pageable, 2);
 
-        when(canteenRepository.findAll(pageable)).thenReturn(page);
+        // Mock repository để trả về expectedPage
+        when(canteenRepository.findAll(pageable)).thenReturn(expectedPage);
 
+        // Gọi phương thức cần kiểm tra
         Page<Canteen> result = canteenService.getAllCanteensPage(0, 10);
 
-        assertEquals(2, result.getTotalElements());
-        assertEquals(2, result.getContent().size());
-        assertTrue(result.getContent().contains(canteen1));
-        assertTrue(result.getContent().contains(canteen2));
+        // Kiểm tra xem kết quả có giống với expectedPage không
+        assertEquals(expectedPage, result);
 
+        // Xác minh rằng phương thức của repository đã được gọi một lần
         verify(canteenRepository, times(1)).findAll(pageable);
     }
+
 
     // Trường hợp bình thường: Kiểm thử lưu canteen
     @Test
@@ -87,19 +90,22 @@ public class CanteenServiceImplTest {
         Canteen canteen1 = Canteen.builder().canteenId(1).canteenName("Canteen 1").build();
         Canteen canteen2 = Canteen.builder().canteenId(2).canteenName("Canteen 2").build();
 
-        Page<Canteen> page = new PageImpl<>(Arrays.asList(canteen1, canteen2), pageable, 2);
+        // Tạo expectedPage trực tiếp
+        Page<Canteen> expectedPage = new PageImpl<>(Arrays.asList(canteen1, canteen2), pageable, 2);
 
-        when(canteenRepository.findByCanteenNameContainingIgnoreCase("Canteen", pageable)).thenReturn(page);
+        // Mock repository để trả về expectedPage
+        when(canteenRepository.findByCanteenNameContainingIgnoreCase("Canteen", pageable)).thenReturn(expectedPage);
 
+        // Gọi phương thức cần kiểm tra
         Page<Canteen> result = canteenService.searchCanteens("Canteen", 0, 10);
 
-        assertEquals(2, result.getTotalElements());
-        assertEquals(2, result.getContent().size());
-        assertTrue(result.getContent().contains(canteen1));
-        assertTrue(result.getContent().contains(canteen2));
+        // Kiểm tra xem kết quả có giống với expectedPage không
+        assertEquals(expectedPage, result);
 
+        // Xác minh rằng phương thức của repository đã được gọi một lần
         verify(canteenRepository, times(1)).findByCanteenNameContainingIgnoreCase("Canteen", pageable);
     }
+
 
     // Trường hợp bình thường: Kiểm thử lấy canteen theo ID
     @Test

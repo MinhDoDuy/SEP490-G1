@@ -60,19 +60,22 @@ public class FoodServiceImplTest {
         Food food1 = Food.builder().foodId(1).foodName("Food1").build();
         Food food2 = Food.builder().foodId(2).foodName("Food2").build();
 
-        Page<Food> page = new PageImpl<>(Arrays.asList(food1, food2), pageable, 2);
+        // Tạo expectedPage trực tiếp
+        Page<Food> expectedPage = new PageImpl<>(Arrays.asList(food1, food2), pageable, 2);
 
-        when(foodRepository.findAll(pageable)).thenReturn(page);
+        // Mock repository để trả về expectedPage
+        when(foodRepository.findAll(pageable)).thenReturn(expectedPage);
 
+        // Gọi phương thức cần kiểm tra
         Page<Food> result = foodService.getAllFood(pageable);
 
-        assertEquals(2, result.getTotalElements());
-        assertEquals(2, result.getContent().size());
-        assertTrue(result.getContent().contains(food1));
-        assertTrue(result.getContent().contains(food2));
+        // Kiểm tra xem kết quả có giống với expectedPage không
+        assertEquals(expectedPage, result);
 
+        // Xác minh rằng phương thức của repository đã được gọi một lần
         verify(foodRepository, times(1)).findAll(pageable);
     }
+
 
     // Trường hợp bình thường: Kiểm thử lấy món ăn theo ID
     @Test
