@@ -287,106 +287,129 @@
 </div>
 
 <script>
-    document.getElementById('searchUserButton').addEventListener('click', function () {
-        const phone = document.getElementById('searchPhone').value;
-        fetch(`/cart/search-user?phone=${phone}`)
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const userInfo = doc.querySelector('#searchResult');
-                document.getElementById('searchResult').innerHTML = userInfo.innerHTML;
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-    document.getElementById('paymentMethod').addEventListener('change', function () {
-        const paymentMethod = this.value;
-        const cashPayment = document.getElementById('cashPayment');
-        if (paymentMethod === 'cash') {
-            cashPayment.style.display = 'block';
-        } else {
-            cashPayment.style.display = 'none';
-        }
-    });
-
-    document.getElementById('cashReceived').addEventListener('input', function () {
-        const cashReceived = parseFloat(this.value);
-        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').getAttribute('data-price'));
-        const changeDue = cashReceived - totalOrderPrice;
-        document.getElementById('changeDue').innerText = `Tiền Trả lại: ${formatCurrencyVND(changeDue)}`;
-    });
-
-    document.getElementById('submitPayment').addEventListener('click', function () {
-        const paymentMethod = document.getElementById('paymentMethod').value;
-        const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
-        const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').getAttribute('data-price'));
-        const userProvisionalElement = document.querySelector('input[name="userId"]');
-        const userId = userProvisionalElement ? userProvisionalElement.value : 1;
-        const canteenId = document.getElementById('canteenId').value;
+    // Đảm bảo lấy giá trị của deliveryRoleId khi DOM đã được tải hoàn toàn
+    document.addEventListener("DOMContentLoaded", function () {
         const deliveryRoleId = document.getElementById('deliveryRoleId').value;
-        if (paymentMethod === 'cash' && cashReceived < totalOrderPrice) {
-            alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng tổng tiền hóa đơn.');
-            return;
+
+        document.getElementById('submitPayment').addEventListener('click', function () {
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
+            const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').getAttribute('data-price'));
+            const userProvisionalElement = document.querySelector('input[name="userId"]');
+            const userId = userProvisionalElement ? userProvisionalElement.value : 1;
+            const canteenId = document.getElementById('canteenId').value;
+
+            // Check if paymentMethod is 'cash' and cashReceived is less than totalOrderPrice
+            if (paymentMethod === 'cash' && cashReceived < totalOrderPrice) {
+                alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng tổng tiền hóa đơn.');
+                return;
+            }
+
+            fetch('/cart/submit-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'paymentMethod': paymentMethod,
+                    'cashReceived': cashReceived,
+                    'userId': userId,
+                    'canteenId': canteenId,
+                    'deliveryRoleId': deliveryRoleId // Sử dụng deliveryRoleId đã lấy được khi DOM load xong
+                })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    window.location.href = `/create-order-at-couter?canteenId=${canteenId}&deliveryRoleId=${deliveryRoleId}`;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Modal functionality
+        const modal = document.getElementById("registerModal");
+        const btn = document.getElementById("openRegisterModal");
+        const span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function () {
+            modal.style.display = "block";
         }
 
-        fetch('/cart/submit-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                'paymentMethod': paymentMethod,
-                'cashReceived': cashReceived,
-                'userId': userId,
-                'deliveryRoleId': deliveryRoleId
-            })
-        })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                window.location.href = `/create-order-at-couter?canteenId=${canteenId}&deliveryRoleId=${deliveryRoleId}`;
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-    // Modal functionality
-    const modal = document.getElementById("registerModal");
-    const btn = document.getElementById("openRegisterModal");
-    const span = document.getElementsByClassName("close")[0];
-
-    btn.onclick = function () {
-        modal.style.display = "block";
-    }
-
-    span.onclick = function () {
-        modal.style.display = "none";
-    }
-
-    window.onclick = function (event) {
-        if (event.target == modal) {
+        span.onclick = function () {
             modal.style.display = "none";
         }
-    }
 
-    document.getElementById('registerButton').addEventListener('click', function () {
-        const form = document.getElementById('registerForm');
-        const formData = new FormData(form);
-
-        fetch('/cart/newUser', {
-            method: 'POST',
-            body: new URLSearchParams(formData)
-        })
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const userInfo = doc.querySelector('#searchResult');
-                document.getElementById('searchResult').innerHTML = userInfo.innerHTML;
+        window.onclick = function (event) {
+            if (event.target == modal) {
                 modal.style.display = "none";
-            })
-            .catch(error => console.error('Error:', error));
+            }
+        }
+
+        document.getElementById('registerButton').addEventListener('click', function () {
+            let isValid = true;
+            // let errorMessage = "Vui lòng điền đầy đủ tất cả các trường.";
+
+            // Validate full name
+            var fullName = document.getElementById('fullName');
+            if (fullName.value.trim() === '') {
+                fullName.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                fullName.classList.remove('is-invalid');
+            }
+
+            // Validate email
+            var email = document.getElementById('email');
+            if (email.value.trim() === '') {
+                email.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                email.classList.remove('is-invalid');
+            }
+
+            // Validate phone number
+            var phone = document.getElementById('phone');
+            if (phone.value.trim() === '') {
+                phone.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                phone.classList.remove('is-invalid');
+            }
+
+            // Validate password
+            var password = document.getElementById('password');
+            if (password.value.trim() === '') {
+                password.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                password.classList.remove('is-invalid');
+            }
+
+            // If all fields are valid, submit the form
+            if (isValid) {
+                const form = document.getElementById('registerForm');
+                const formData = new FormData(form);
+
+                fetch('/cart/newUser', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const userInfo = doc.querySelector('#searchResult');
+                        document.getElementById('searchResult').innerHTML = userInfo.innerHTML;
+                        modal.style.display = "none";
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                alert(errorMessage);
+            }
+        });
     });
+
+    // Các chức năng khác không liên quan đến deliveryRoleId...
 
     function formatCurrencyVND(amount) {
         amount = parseFloat(amount);  // Ensure the amount is a number
@@ -472,54 +495,6 @@
         document.getElementById('searchResult').innerHTML = ''; // Xóa kết quả tìm kiếm nếu có
         searchPhoneInput.focus(); // Trả lại focus cho ô tìm kiếm sau khi xóa
     });
-    const deliveryRoleId = document.getElementById('deliveryRoleId').value;
-
-    document.getElementById('registerButton').addEventListener('click', function () {
-        let isValid = true;
-        let errorMessage = "Vui lòng điền đầy đủ tất cả các trường.";
-
-        // Validate full name
-        var fullName = document.getElementById('fullName');
-        if (fullName.value.trim() === '') {
-            fullName.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            fullName.classList.remove('is-invalid');
-        }
-
-        // Validate email
-        var email = document.getElementById('email');
-        if (email.value.trim() === '') {
-            email.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            email.classList.remove('is-invalid');
-        }
-
-        // Validate phone number
-        var phone = document.getElementById('phone');
-        if (phone.value.trim() === '') {
-            phone.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            phone.classList.remove('is-invalid');
-        }
-
-        // Validate password
-        var password = document.getElementById('password');
-        if (password.value.trim() === '') {
-            password.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            password.classList.remove('is-invalid');
-        }
-
-        // If any field is empty, show a general alert message
-        if (isValid) {
-            document.getElementById('registerForm').submit();
-        }
-    });
-
 </script>
 
 </body>
