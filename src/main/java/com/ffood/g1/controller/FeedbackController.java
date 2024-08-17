@@ -55,22 +55,32 @@ public class FeedbackController {
 
     @PostMapping("/submit-feedback/{userId}")
     public String submitFeedback(@PathVariable("userId") int userId, @RequestParam String comment, RedirectAttributes redirectAttributes) {
-        User user = userService.getUserById(userId);
-        if (user == null) {
-            return "redirect:/login";
-        }
-        if (comment.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Bình luận không được để trống hoặc chỉ chứa khoảng trắng.");
+        try {
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                return "redirect:/login";
+            }
+            if (comment.trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Bình luận không được để trống hoặc chỉ chứa khoảng trắng.");
+                return "redirect:/feedback-system-form/" + userId;
+            }
+            if (comment.length() > 400) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Bình luận không được vượt quá 400 ký tự.");
+                return "redirect:/feedback-system-form/" + userId;
+            }
+            feedbackService.createFeedbackSystem(user, comment, null, null, FeedbackStatus.VIEWABLE);
+            redirectAttributes.addFlashAttribute("successMessage", "Phản Hồi của bạn đã được Gửi đi");
+
+        } catch (Exception e) {
+            // Log lỗi để theo dõi
+            e.printStackTrace();
+            // Gửi thông báo lỗi về giao diện người dùng
+            redirectAttributes.addFlashAttribute("errorMessage", "Đã xảy ra lỗi khi gửi phản hồi của bạn. Vui lòng thử lại sau.");
+            // Điều hướng tới trang form với thông báo lỗi
             return "redirect:/feedback-system-form/" + userId;
         }
 
-        if (comment.length() > 400) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Bình luận không được vượt quá 400 ký tự.");
-            return "redirect:/feedback-system-form/" + userId;
-        }
-
-        feedbackService.createFeedbackSystem(user, comment, null, null, FeedbackStatus.VIEWABLE);
-        redirectAttributes.addFlashAttribute("successMessage", "Phản Hồi của bạn đã được Gửi đi");
         return "redirect:/feedback-system-form/" + userId; // Điều hướng tới trang bạn muốn
     }
+
 }

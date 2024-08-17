@@ -92,11 +92,6 @@
                 </li>
             </ul>
 
-            <!-- Hiển thị thông báo lỗi nếu có -->
-            <div id="error-message" class="alert alert-danger" style="display: none;">
-                <span id="error-text"></span>
-            </div>
-
             <!-- Conditional search bar for REJECT status -->
             <form th:if="${orderStatus.name() == 'REJECT'}"
                   th:action="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()})}"
@@ -152,13 +147,15 @@
             </form>
 
             <!-- Hiển thị thông báo -->
-            <div th:if="${not #lists.isEmpty(message)}" class="alert alert-success">
+            <div id="success-message" th:if="${not #lists.isEmpty(message)}" class="alert alert-success">
                 <span th:text="${message}"></span>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             </div>
-            <div th:if="${not #lists.isEmpty(error)}" class="alert alert-danger">
+            <div id="error-message" th:if="${not #lists.isEmpty(error)}" class="alert alert-danger">
                 <span th:text="${error}"></span>
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             </div>
+
 
             <div class="tab-content" id="orderTabsContent">
                 <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
@@ -262,7 +259,7 @@
                                     <th:block th:if="${order.orderStatus.name() == 'REJECT'}">
                                         <button type="button" class="btn btn-warning" data-toggle="modal"
                                                 th:data-target="'#refundModal' + ${order.orderId}">
-                                            <i class="ri-refund-line"></i> Hoàn tiền
+                                            <i class="ri-refund-line"></i>
                                         </button>
                                     </th:block>
                                     <!-- Chỉ hiển thị nút xác nhận và từ chối cho đơn hàng PENDING -->
@@ -415,9 +412,47 @@
         </div>
     </div>
 </div>
+<!-- Modal Loading -->
+<div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div>Đang xử lý, vui lòng chờ...</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
+
+    // Kích hoạt modal loading khi gửi form
+    function showLoadingModal() {
+        $('#loadingModal').modal('show');
+    }
+
+    // Gắn sự kiện vào tất cả các form có thể cần loading
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function () {
+            showLoadingModal();
+        });
+    });
+
+    // Kiểm tra nếu có message hoặc error thì tắt modal loading
+    document.addEventListener('DOMContentLoaded', function () {
+        // Đảm bảo rằng modal loading đang hiển thị
+        if ($('#loadingModal').hasClass('show')) {
+            // Kiểm tra sự xuất hiện của success hoặc error message
+            if (document.getElementById('success-message') || document.getElementById('error-message')) {
+                // Tắt modal loading
+                $('#loadingModal').modal('hide');
+            }
+        }
+    });
+
     $('#refundModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var orderId = button.data('order-id'); // Extract info from data-* attributes
