@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -60,39 +62,46 @@ public class VNPayController {
     }
 
     @GetMapping("/now")
-    public @ResponseBody String now(){
-        return "Thời gian hiện tại của hệ thống là: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+    public @ResponseBody String now() {
+        ZonedDateTime now = LocalDateTime.now().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return "Thời gian hiện tại của hệ thống là: " + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
+
     @GetMapping("/vnpay-payment")
-    public String GetMapping(HttpServletRequest request, Model model, HttpSession session){
-        int paymentStatus =vnPayService.orderReturn(request);
+    public String GetMapping(HttpServletRequest request, Model model, HttpSession session) {
+        int paymentStatus = vnPayService.orderReturn(request);
 
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
-//        String totalOrderPrice = request.getParameter("vnp_Amount");
-        model.addAttribute("orderId",  orderInfo);
 
-        model.addAttribute("paymentTime",  paymentTime);
+        // Chuyển đổi thời gian từ UTC sang UTC+7
+        ZonedDateTime zonedPaymentTime = ZonedDateTime.parse(paymentTime, DateTimeFormatter.ofPattern("yyyyMMddHHmmss").withZone(ZoneId.of("UTC")))
+                .withZoneSameInstant(ZoneId.of("Asia/Ho_Chi_Minh"));
+        String formattedPaymentTime = zonedPaymentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        model.addAttribute("orderId",  orderInfo);
+        model.addAttribute("paymentTime",  formattedPaymentTime);
         model.addAttribute("transactionId",  transactionId);
 
-        User user= (User) session.getAttribute("userOrderOn");
-        String address=(String) session.getAttribute("addressOrderOn");
-        String note=(String) session.getAttribute("noteOrderOn");
-        OrderType orderType= (OrderType) session.getAttribute("orderTypeOrderOn");
-        PaymentMethod paymentMethod=(PaymentMethod) session.getAttribute("paymentMethodOrderOn");
-        List<Integer> cartItemIds  = (List<Integer>) session.getAttribute("cartItemIdsOrderOn");
+        User user = (User) session.getAttribute("userOrderOn");
+        String address = (String) session.getAttribute("addressOrderOn");
+        String note = (String) session.getAttribute("noteOrderOn");
+        OrderType orderType = (OrderType) session.getAttribute("orderTypeOrderOn");
+        PaymentMethod paymentMethod = (PaymentMethod) session.getAttribute("paymentMethodOrderOn");
+        List<Integer> cartItemIds = (List<Integer>) session.getAttribute("cartItemIdsOrderOn");
+
         if (paymentStatus == 1) {
-            Order order = orderService.createOrder(user, address, note, orderType, paymentMethod, cartItemIds,null,null);
+            Order order = orderService.createOrder(user, address, note, orderType, paymentMethod, cartItemIds, null, null);
             if (order == null) {
                 return "error";
             }
             try {
-                // Remove the selected cart items
+                // Xóa các item trong giỏ hàng đã chọn
                 cartItemService.removeCartItemsByIds(cartItemIds);
-                String orderCode= order.getOrderCode();
-                int totalOrderPrice= order.getTotalOrderPrice();
+                String orderCode = order.getOrderCode();
+                int totalOrderPrice = order.getTotalOrderPrice();
                 model.addAttribute("orderCode", orderCode);
                 model.addAttribute("totalOrderPrice",  totalOrderPrice);
                 return "order/order-success";
@@ -103,5 +112,6 @@ public class VNPayController {
             return "order/order-fail";
         }
     }
+
 
 }
