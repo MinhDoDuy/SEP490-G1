@@ -56,10 +56,10 @@ spring:
             enable: true
 aws:
   bucket:
-    name: croak-order-2024
-  region: ap-southeast-1
-  accessKey: AKIAQEFWAHL2N262OVLQ
-  secretKey: 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
+    name: rentease
+  region: ap-southeast-2
+  accessKey: AKIA6ODU6VDQE6V2VFIR
+  secretKey: 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
 
 logging:
   level:
