@@ -9,9 +9,9 @@ spring:
         enabled: false
 
   datasource:
-    url: jdbc:postgresql://sep490-co.cpaq8iy8010w.ap-southeast-1.rds.amazonaws.com:5432/sep490-co
-    username: postgres
-    password: sep490-co
+    url: jdbc:postgresql://public-vultr-prod-ba6a796c-a712-4072-b9a7-6c1e1a129699-vultr-pr.vultrdb.com:16751/croak-g1
+    username: vultradmin
+    password: AVNS_z8b_xDvkX7bCsumLEQR
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
