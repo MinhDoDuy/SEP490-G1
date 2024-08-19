@@ -260,28 +260,30 @@
             <h2>Thêm khách hàng</h2>
             <span class="close">&times;</span>
         </div>
-        <form id="registerForm">
+        <form id="registerForm" method="post">
             <div class="form-group">
                 <label for="fullName">Họ và tên:</label>
-                <input type="text" id="fullName" name="fullName" class="form-control" required>
-                <div class="invalid-feedback">Họ và tên không được để trống.</div>
+                <input type="text" id="fullName" name="fullName" class="form-control">
+                <div id="fullNameError" class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required>
-                <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
+                <input type="email" id="email" name="email" class="form-control">
+                <div id="emailError" class="invalid-feedback"></div>
+                <div id="emailExistsError" class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <label for="phone">Số điện thoại:</label>
-                <input type="text" id="phone" name="phone" class="form-control" inputmode="numeric" required>
-                <div class="invalid-feedback">Số điện thoại phải là 10 đến 11 chữ số.</div>
+                <input type="text" id="phone" name="phone" class="form-control" inputmode="numeric">
+                <div id="phoneError" class="invalid-feedback"></div>
+                <div id="phoneExistsError" class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <label for="password">Mật khẩu:</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-                <div class="invalid-feedback">Mật khẩu phải có ít nhất 6 ký tự.</div>
+                <input type="password" id="password" name="password" class="form-control">
+                <div id="passwordError" class="invalid-feedback"></div>
             </div>
-            <button type="button" class="btn btn-success" id="registerButton">Đăng ký</button>
+            <button type="submit" class="btn btn-success" id="registerButton">Đăng ký</button>
         </form>
     </div>
 </div>
@@ -345,68 +347,95 @@
             }
         }
 
-        document.getElementById('registerButton').addEventListener('click', function () {
-            let isValid = true;
-            // let errorMessage = "Vui lòng điền đầy đủ tất cả các trường.";
+        const passwordInput = document.getElementById('password');
+        const registerButton = document.getElementById('registerButton');
+        const passwordErrorElement = document.getElementById('passwordError');
 
-            // Validate full name
-            var fullName = document.getElementById('fullName');
-            if (fullName.value.trim() === '') {
-                fullName.classList.add('is-invalid');
-                isValid = false;
+        passwordInput.addEventListener('input', function () {
+            if (passwordInput.value.length < 6) {
+                passwordErrorElement.textContent = 'Mật khẩu phải có ít nhất 6 ký tự.';
+                passwordErrorElement.style.display = 'block';
+                registerButton.disabled = true;
             } else {
-                fullName.classList.remove('is-invalid');
-            }
-
-            // Validate email
-            var email = document.getElementById('email');
-            if (email.value.trim() === '') {
-                email.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                email.classList.remove('is-invalid');
-            }
-
-            // Validate phone number
-            var phone = document.getElementById('phone');
-            if (phone.value.trim() === '') {
-                phone.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                phone.classList.remove('is-invalid');
-            }
-
-            // Validate password
-            var password = document.getElementById('password');
-            if (password.value.trim() === '') {
-                password.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                password.classList.remove('is-invalid');
-            }
-
-            // If all fields are valid, submit the form
-            if (isValid) {
-                const form = document.getElementById('registerForm');
-                const formData = new FormData(form);
-
-                fetch('/cart/newUser', {
-                    method: 'POST',
-                    body: new URLSearchParams(formData)
-                })
-                    .then(response => response.text())
-                    .then(html => {
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-                        const userInfo = doc.querySelector('#searchResult');
-                        document.getElementById('searchResult').innerHTML = userInfo.innerHTML;
-                        modal.style.display = "none";
-                    })
-                    .catch(error => console.error('Error:', error));
-            } else {
-                alert(errorMessage);
+                passwordErrorElement.style.display = 'none';
+                registerButton.disabled = false;
             }
         });
+
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Ngăn gửi biểu mẫu truyền thống
+
+            // Xóa các thông báo lỗi cũ
+            const errorElements = document.querySelectorAll('.invalid-feedback');
+            errorElements.forEach(element => {
+                element.textContent = '';
+                element.style.display = 'none'; // Hide error message containers initially
+            });
+
+            const formData = new FormData(this);
+
+            fetch('/newUser', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.success);
+
+                        // Close the registration modal
+                        document.getElementById('registerModal').style.display = 'none';
+
+                        // Update the user information in the "Customers" section
+                        const customerSection = document.getElementById('searchResult');
+                        customerSection.innerHTML = `
+                <p style="font-size: 1.2rem;">
+                    <span class="font-weight-bold">Tên:</span> ${data.fullName},
+                    <span class="font-weight-bold">Số Điện Thoại:</span> ${data.phone}
+                </p>
+            `;
+                    } else {
+                        // Display error messages for respective fields
+                        if (data.fullNameError) {
+                            const fullNameErrorElement = document.getElementById('fullNameError');
+                            fullNameErrorElement.textContent = data.fullNameError;
+                            fullNameErrorElement.style.display = 'block';
+                        }
+                        if (data.emailError) {
+                            const emailErrorElement = document.getElementById('emailError');
+                            emailErrorElement.textContent = data.emailError;
+                            emailErrorElement.style.display = 'block';
+                        }
+                        if (data.emailExistsError) {
+                            const emailExistsErrorElement = document.getElementById('emailExistsError');
+                            emailExistsErrorElement.textContent = data.emailExistsError;
+                            emailExistsErrorElement.style.display = 'block';
+                        }
+                        if (data.phoneError) {
+                            const phoneErrorElement = document.getElementById('phoneError');
+                            phoneErrorElement.textContent = data.phoneError;
+                            phoneErrorElement.style.display = 'block';
+                        }
+                        if (data.phoneExistsError) {
+                            const phoneExistsErrorElement = document.getElementById('phoneExistsError');
+                            phoneExistsErrorElement.textContent = data.phoneExistsError;
+                            phoneExistsErrorElement.style.display = 'block';
+                        }
+                        if (data.passwordError) {
+                            const passwordErrorElement = document.getElementById('passwordError');
+                            passwordErrorElement.textContent = data.passwordError;
+                            passwordErrorElement.style.display = 'block';
+                        }
+                        if (data.error) {
+                            alert(data.error); // General error message, if any
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
     });
 
     // Các chức năng khác không liên quan đến deliveryRoleId...
