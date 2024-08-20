@@ -58,6 +58,17 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             @Param("keyword") String keyword,
             Pageable pageable);
 
+    // Tìm kiếm order bị từ chối (PROGRESS)
+    @Query("SELECT o FROM Order o " +
+            "WHERE o.canteenId = :canteenId " +
+            "AND o.orderStatus = 'PROGRESS' " +
+            "AND LOWER(o.orderCode) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "ORDER BY o.orderDate DESC")
+    Page<Order> searchProgressOrdersByOrderCode(
+            @Param("canteenId") Integer canteenId,
+            @Param("keyword") String keyword,
+            Pageable pageable);
+
     // Tìm kiếm order cần hoàn tiền (REFUND)
     @Query("SELECT o FROM Order o " +
             "WHERE o.canteenId = :canteenId " +

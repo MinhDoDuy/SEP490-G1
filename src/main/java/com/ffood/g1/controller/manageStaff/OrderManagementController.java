@@ -1,13 +1,13 @@
 package com.ffood.g1.controller.manageStaff;
 
 import com.ffood.g1.entity.Canteen;
-import com.ffood.g1.entity.Food;
 import com.ffood.g1.entity.Order;
 import com.ffood.g1.entity.User;
 import com.ffood.g1.enum_pay.OrderStatus;
 import com.ffood.g1.enum_pay.OrderType;
-import com.ffood.g1.repository.FoodRepository;
-import com.ffood.g1.service.*;
+import com.ffood.g1.service.CanteenService;
+import com.ffood.g1.service.OrderService;
+import com.ffood.g1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,13 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,139 +37,32 @@ public class OrderManagementController {
     @Autowired
     private CanteenService canteenService;
 
-
     @GetMapping("/order-list/{canteenId}")
     public String manageOrders(@PathVariable Integer canteenId,
                                @RequestParam(value = "orderStatus", defaultValue = "PENDING") OrderStatus orderStatus,
                                @RequestParam(value = "keyword", required = false) String keyword,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
-                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
-                               @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endDate,
+                               @RequestParam(value = "startDate", required = false)
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startDate,
+                               @RequestParam(value = "endDate", required = false)
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endDate,
                                Model model, Principal principal, RedirectAttributes redirectAttributes) {
 
-        // Lấy thông tin người dùng hiện tại từ Principal
         User currentUser = userService.findByEmail(principal.getName());
-
-        // Kiểm tra xem `canteenId` có khớp với `canteenId` của người dùng hiện tại
-        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+        if (!isAuthorizedUser(currentUser, canteenId)) {
             redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của canteen khác.");
-            return "redirect:/order-list/" + currentUser.getCanteen().getCanteenId(); // Chuyển hướng về danh sách đơn hàng của canteen mà người dùng thuộc về
-        }
-
-        // Ensure orderStatus is not null
-        if (orderStatus == null) {
-            orderStatus = OrderStatus.PENDING; // Set a default value or handle appropriately
+            return "redirect:/order-list/" + currentUser.getCanteen().getCanteenId();
         }
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Order> orders;
-
-        List<User> staffList = userService.getStaffByCanteenToShip(canteenId);
-        Canteen canteen = canteenService.getCanteenById(canteenId);
-
-        LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
-        LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
-
-        // Handling COMPLETE status with date filtering
-        if (orderStatus == OrderStatus.COMPLETE && (startDate.isPresent() || endDate.isPresent())) {
-            if (start.isAfter(end)) {
-                model.addAttribute("error", "Ngày bắt đầu không thể sau ngày kết thúc");
-                orders = Page.empty();
-            } else {
-                orders = orderService.getCompletedOrdersByCanteenAndDateRange(canteenId, start, end, pageable);
-            }
-        }
-        // Handling REJECT status with keyword search
-        else if (orderStatus == OrderStatus.REJECT && keyword != null && !keyword.isEmpty()) {
-            orders = orderService.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
-        }
-        // Handling REJECT status without search
-        else if (orderStatus == OrderStatus.REJECT) {
-            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
-        }
-        // Handling REFUND status with keyword search
-        else if (orderStatus == OrderStatus.REFUND && keyword != null && !keyword.isEmpty()) {
-            orders = orderService.searchRefundedOrdersByOrderCode(canteenId, keyword, pageable);
-        }
-        // Handling REFUND status without search
-        else if (orderStatus == OrderStatus.REFUND) {
-            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REFUND), pageable);
-        }
-        // Handling other statuses (PENDING, PROGRESS)
-        else {
-            switch (orderStatus) {
-                case PENDING:
-                    orders = orderService.getOrdersByCanteenAndType(canteenId, List.of(OrderStatus.PENDING), OrderType.ONLINE_ORDER, pageable);
-                    break;
-                case PROGRESS:
-                    orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.PROGRESS), pageable);
-                    break;
-                case COMPLETE:
-                    orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.COMPLETE), pageable);
-                    break;
-                default:
-                    orders = Page.empty();
-            }
-        }
+        Page<Order> orders = fetchOrders(canteenId, orderStatus, keyword, startDate, endDate, pageable, model);
 
         model.addAttribute("orders", orders);
-        model.addAttribute("staffList", staffList);
-        model.addAttribute("canteenId", canteenId);
-        model.addAttribute("orderStatus", orderStatus);
-        model.addAttribute("startDate", startDate.orElse(null));
-        model.addAttribute("endDate", endDate.orElse(null));
-        model.addAttribute("canteenName", canteen.getCanteenName());
-        model.addAttribute("keyword", keyword);
+        populateModel(model, canteenId, orderStatus, keyword, startDate.orElse(null), endDate.orElse(null));
 
         return "staff-management/order-list";
     }
-
-
-    @GetMapping("/order-list-reject/{canteenId}")
-    public String manageRejectedOrders(@PathVariable Integer canteenId,
-                                       @RequestParam(value = "keyword", required = false) String keyword,
-                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                       @RequestParam(value = "size", defaultValue = "10") int size,
-                                       Model model) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Order> orders;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            orders = orderService.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
-        } else {
-            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
-        }
-
-        model.addAttribute("orders", orders);
-        model.addAttribute("canteenId", canteenId);
-        model.addAttribute("keyword", keyword);
-        return "staff-management/order-list";
-    }
-
-    @GetMapping("/order-list-refund/{canteenId}")
-    public String manageRefundedOrders(@PathVariable Integer canteenId,
-                                       @RequestParam(value = "keyword", required = false) String keyword,
-                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                       @RequestParam(value = "size", defaultValue = "10") int size,
-                                       Model model) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Order> orders;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            orders = orderService.searchRefundedOrdersByOrderCode(canteenId, keyword, pageable);
-        } else {
-            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REFUND), pageable);
-        }
-
-        model.addAttribute("orders", orders);
-        model.addAttribute("canteenId", canteenId);
-        model.addAttribute("keyword", keyword);
-        return "staff-management/order-list";
-    }
-
 
     @PostMapping("/update-order-status/{orderId}")
     public String assignShipperAndUpdateStatus(@PathVariable Integer orderId,
@@ -184,7 +73,7 @@ public class OrderManagementController {
         try {
             User staffShip = userService.getUserById(deliveryRoleId);
             orderService.assignShipperAndUpdateStatus(orderId, deliveryRoleId, newStatus, staffShip.getFullName());
-            redirectAttributes.addFlashAttribute("message", "Chuyển Đơn hàng cho Shipper thành công");
+            redirectAttributes.addFlashAttribute("message", "Chuyển đơn hàng cho shipper thành công");
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -203,18 +92,14 @@ public class OrderManagementController {
 
         try {
             User staffShip = userService.getUserById(deliveryRoleId);
-
-            // Sử dụng transaction để đảm bảo tính nhất quán
             orderService.bulkAssignAndUpdateOrders(selectedOrders, deliveryRoleId, staffShip.getFullName());
-
-            redirectAttributes.addFlashAttribute("message", "Chuyển Đơn hàng cho Shipper thành công cho các đơn hàng đã chọn");
+            redirectAttributes.addFlashAttribute("message", "Chuyển đơn hàng cho shipper thành công cho các đơn hàng đã chọn");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
         }
 
         return "redirect:/order-list/" + canteenId + "?orderStatus=PENDING";
     }
-
 
     @PostMapping("/reject-order")
     public String cancelOrder(@RequestParam Integer orderId,
@@ -236,8 +121,6 @@ public class OrderManagementController {
         return "redirect:/order-list/" + canteenId + "?orderStatus=REJECT";
     }
 
-
-
     @GetMapping("/order-list-ship/{canteenId}")
     public String getOrdersForShipper(@PathVariable Integer canteenId,
                                       @RequestParam(value = "deliveryRoleId", required = false) Integer deliveryRoleId,
@@ -246,49 +129,33 @@ public class OrderManagementController {
                                       @RequestParam(value = "size", defaultValue = "10") int size,
                                       Model model, Principal principal, RedirectAttributes redirectAttributes) {
 
-        // Kiểm tra nếu deliveryRoleId bị thiếu
         if (deliveryRoleId == null) {
             redirectAttributes.addFlashAttribute("error", "Delivery Role ID is required.");
             return "redirect:/404";
         }
 
-        // Lấy người dùng hiện tại từ Principal
         User currentUser = userService.findByEmail(principal.getName());
-
-        // Kiểm tra nếu người dùng hiện tại không có quyền truy cập canteen này
-        if (!currentUser.getCanteen().getCanteenId().equals(canteenId)) {
+        if (!isAuthorizedUser(currentUser, canteenId)) {
             redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của canteen khác.");
             return "redirect:/order-list-ship/" + currentUser.getCanteen().getCanteenId() + "?deliveryRoleId=" + currentUser.getUserId();
         }
 
-        // Kiểm tra nếu deliveryRoleId là hợp lệ
-        User deliveryUser = userService.loadUserById(deliveryRoleId);
-        if (deliveryUser == null || !deliveryUser.getCanteen().getCanteenId().equals(canteenId) || deliveryUser.getRole().getRoleId() != 2 || !deliveryUser.getUserId().equals(currentUser.getUserId())) {
+        if (!isAuthorizedDeliveryRole(currentUser, deliveryRoleId, canteenId)) {
             redirectAttributes.addFlashAttribute("error", "Bạn không có quyền truy cập đơn hàng của người khác trong cùng canteen.");
             return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + currentUser.getUserId();
         }
 
-        // Tạo Pageable để phân trang
         Pageable pageable = PageRequest.of(page, size);
-        Page<Order> orders;
+        Page<Order> orders = "COMPLETE".equalsIgnoreCase(status) ?
+                orderService.getCompleteOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable) :
+                orderService.getOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable);
 
-        // Xử lý lấy đơn hàng theo trạng thái
-        if ("COMPLETE".equalsIgnoreCase(status)) {
-            orders = orderService.getCompleteOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable);
-        } else {
-            orders = orderService.getOrdersByCanteenAndDeliveryRole(canteenId, deliveryRoleId, pageable);
-        }
-
-        // Thêm các thuộc tính vào model để gửi về view
         model.addAttribute("orders", orders);
         model.addAttribute("canteenId", canteenId);
         model.addAttribute("deliveryRoleId", deliveryRoleId);
         model.addAttribute("status", status);
         return "shipper/order-list";
     }
-
-
-
 
     @PostMapping("/complete-order/{orderId}")
     public String completeOrder(@PathVariable Integer orderId,
@@ -311,5 +178,77 @@ public class OrderManagementController {
         return "redirect:/order-list-ship/" + canteenId + "?deliveryRoleId=" + userId;
     }
 
+    private boolean isAuthorizedUser(User currentUser, Integer canteenId) {
+        return currentUser.getCanteen().getCanteenId().equals(canteenId);
+    }
 
+    private boolean isAuthorizedDeliveryRole(User currentUser, Integer deliveryRoleId, Integer canteenId) {
+        User deliveryUser = userService.loadUserById(deliveryRoleId);
+        return deliveryUser != null &&
+                deliveryUser.getCanteen().getCanteenId().equals(canteenId) &&
+                deliveryUser.getRole().getRoleId() == 2 &&
+                deliveryUser.getUserId().equals(currentUser.getUserId());
+    }
+
+    private Page<Order> fetchOrders(Integer canteenId, OrderStatus orderStatus, String keyword,
+                                    Optional<LocalDate> startDate, Optional<LocalDate> endDate,
+                                    Pageable pageable, Model model) {
+        Page<Order> orders;
+        if (orderStatus == OrderStatus.COMPLETE && (startDate.isPresent() || endDate.isPresent())) {
+            orders = fetchCompletedOrders(canteenId, startDate, endDate, pageable, model);
+        } else if (orderStatus == OrderStatus.REJECT && keyword != null && !keyword.isEmpty()) {
+            orders = orderService.searchRejectedOrdersByOrderCode(canteenId, keyword, pageable);
+        } else if (orderStatus == OrderStatus.REJECT) {
+            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REJECT), pageable);
+        } else if (orderStatus == OrderStatus.REFUND && keyword != null && !keyword.isEmpty()) {
+            orders = orderService.searchRefundedOrdersByOrderCode(canteenId, keyword, pageable);
+        } else if (orderStatus == OrderStatus.REFUND) {
+            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.REFUND), pageable);
+        } else if (orderStatus == OrderStatus.PROGRESS && keyword != null && !keyword.isEmpty()) {
+            orders = orderService.searchProgressOrdersByOrderCode(canteenId, keyword, pageable); // Giả sử bạn đã có phương thức tìm kiếm cho PROGRESS
+        } else if (orderStatus == OrderStatus.PROGRESS) {
+            orders = orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.PROGRESS), pageable);
+        } else {
+            orders = fetchPendingOrProgressOrders(canteenId, orderStatus, pageable);
+        }
+
+        return orders;
+    }
+
+    private Page<Order> fetchCompletedOrders(Integer canteenId, Optional<LocalDate> startDate,
+                                             Optional<LocalDate> endDate, Pageable pageable, Model model) {
+        LocalDateTime start = startDate.orElse(LocalDate.MIN).atStartOfDay();
+        LocalDateTime end = endDate.orElse(LocalDate.MAX).atTime(LocalTime.MAX);
+        if (start.isAfter(end)) {
+            model.addAttribute("error", "Ngày bắt đầu không thể sau ngày kết thúc");
+            return Page.empty();
+        }
+        return orderService.getCompletedOrdersByCanteenAndDateRange(canteenId, start, end, pageable);
+    }
+
+    private Page<Order> fetchPendingOrProgressOrders(Integer canteenId, OrderStatus orderStatus, Pageable pageable) {
+        if (orderStatus == OrderStatus.PENDING) {
+            return orderService.getOrdersByCanteenAndType(canteenId, List.of(OrderStatus.PENDING), OrderType.ONLINE_ORDER, pageable);
+        } else if (orderStatus == OrderStatus.PROGRESS) {
+            return orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.PROGRESS), pageable);
+        } else if (orderStatus == OrderStatus.COMPLETE) {
+            return orderService.getOrdersByCanteen(canteenId, List.of(OrderStatus.COMPLETE), pageable);
+        } else {
+            return Page.empty();
+        }
+    }
+
+    private void populateModel(Model model, Integer canteenId, OrderStatus orderStatus,
+                               String keyword, LocalDate startDate, LocalDate endDate) {
+        List<User> staffList = userService.getStaffByCanteenToShip(canteenId);
+        Canteen canteen = canteenService.getCanteenById(canteenId);
+
+        model.addAttribute("staffList", staffList);
+        model.addAttribute("canteenId", canteenId);
+        model.addAttribute("orderStatus", orderStatus);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        model.addAttribute("canteenName", canteen.getCanteenName());
+        model.addAttribute("keyword", keyword);
+    }
 }

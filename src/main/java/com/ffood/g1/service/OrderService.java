@@ -83,4 +83,6 @@ public interface OrderService {
     List<Object[]> getRevenueDataCanteenByDayAtCounter(Integer canteenId);
 
     void bulkAssignAndUpdateOrders(List<Integer> selectedOrders, Integer deliveryRoleId, String fullName);
+
+    Page<Order> searchProgressOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable);
 }

@@ -104,6 +104,18 @@
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
 
+            <!-- Conditional search bar for PROGRESS status -->
+            <form th:if="${orderStatus.name() == 'PROGRESS'}"
+                  th:action="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()})}"
+                  method="get" class="form-inline mb-4">
+                <div class="form-group mr-2">
+                    <label for="keyword" class="mr-2"></label>
+                    <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Nhập Mã Đơn Hàng" th:value="${keyword}">
+                </div>
+                <input type="hidden" name="orderStatus" th:value="${orderStatus.name()}"/>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
             <!-- Conditional search bar for REFUND status -->
             <form th:if="${orderStatus.name() == 'REFUND'}"
                   th:action="@{/order-list/{canteenId}(canteenId=${canteenId}, orderStatus=${orderStatus.name()})}"

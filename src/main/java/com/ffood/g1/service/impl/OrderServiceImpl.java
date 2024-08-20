@@ -402,6 +402,11 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public Page<Order> searchProgressOrdersByOrderCode(Integer canteenId, String keyword, Pageable pageable) {
+        return orderRepository.searchProgressOrdersByOrderCode(canteenId,keyword,pageable);
+    }
+
 
     @Override
     public List<Object[]> getRevenueDataCanteenByDayOnline(Integer canteenId) {
