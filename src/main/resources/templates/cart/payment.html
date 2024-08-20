@@ -291,6 +291,23 @@
     document.addEventListener("DOMContentLoaded", function () {
         const deliveryRoleId = document.getElementById('deliveryRoleId').value;
 
+        document.getElementById('paymentMethod').addEventListener('change', function () {
+            const paymentMethod = this.value;
+            const cashPayment = document.getElementById('cashPayment');
+            if (paymentMethod === 'cash') {
+                cashPayment.style.display = 'block';
+            } else {
+                cashPayment.style.display = 'none';
+            }
+        });
+
+        document.getElementById('cashReceived').addEventListener('input', function () {
+            const cashReceived = parseFloat(this.value);
+            const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').getAttribute('data-price'));
+            const changeDue = cashReceived - totalOrderPrice;
+            document.getElementById('changeDue').innerText = `Tiền Trả lại: ${formatCurrencyVND(changeDue)}`;
+        });
+
         document.getElementById('submitPayment').addEventListener('click', function () {
             const paymentMethod = document.getElementById('paymentMethod').value;
             const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;

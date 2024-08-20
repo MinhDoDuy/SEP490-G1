@@ -1,6 +1,5 @@
 package com.ffood.g1.service.impl;
 
-import com.ffood.g1.entity.Canteen;
 import com.ffood.g1.entity.ResetToken;
 import com.ffood.g1.entity.Role;
 import com.ffood.g1.entity.User;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -71,8 +69,6 @@ public class UserServiceImpl implements UserService {
     public User loadUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
-
-
 
 
     @Override
@@ -369,6 +365,38 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         resetTokenRepository.delete(resetToken);
+    }
+
+    @Override
+    public User createUser(String fullName, String email, String phone, String password) {
+        Optional<User> existingUserByEmail = Optional.ofNullable(userRepository.findByEmail(email));
+        Optional<User> existingUserByPhone = Optional.ofNullable(userRepository.findByPhone(phone));
+
+        if (existingUserByEmail.isPresent() || existingUserByPhone.isPresent()) {
+            try {
+                throw new Exception("Email hoặc số điện thoại đã tồn tại.");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // Tạo mới người dùng
+        User user = new User();
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPassword(new BCryptPasswordEncoder().encode(password)); // Mã hóa mật khẩu
+        return userRepository.save(user);
+    }
+
+    public boolean emailExists(String email) {
+        // Kiểm tra nếu email đã tồn tại trong cơ sở dữ liệu
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean phoneExists(String phone) {
+        // Kiểm tra nếu số điện thoại đã tồn tại trong cơ sở dữ liệu
+        return userRepository.existsByPhone(phone);
     }
 
 

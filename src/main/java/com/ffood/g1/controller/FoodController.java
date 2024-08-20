@@ -99,7 +99,6 @@ public class FoodController {
             if (messageAddFood != null) {
                 model.addAttribute("messageAddFood", messageAddFood);
                 session.removeAttribute("messageAddFood");
-                System.out.println("Oi caidjt con me ni"+messageAddFood);
             }
             return "canteen/food-details";
         } else {

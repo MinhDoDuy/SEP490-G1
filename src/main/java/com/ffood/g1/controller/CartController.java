@@ -19,15 +19,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -84,8 +82,8 @@ public class CartController {
         cartService.addToCart(cart, foodId, quantity, LocalDateTime.now(), price);
         session.setAttribute("messageAddFood", "Sản phẩm đã được thêm vào giỏ hàng thành công!!!");
 
-        Optional<Food> food=foodService.getFoodById(foodId);
-        int canteenId=food.get().getCanteen().getCanteenId();
+        Optional<Food> food = foodService.getFoodById(foodId);
+        int canteenId = food.get().getCanteen().getCanteenId();
         if (url == 1) {
             return "redirect:/homepage";
         } else if (url == 2) {
@@ -93,7 +91,7 @@ public class CartController {
         } else if (url == 3) {
             return "redirect:/food_details?id=" + foodId;
         } else if (url == 4) {
-            return "redirect:/canteen_info?canteenId="+canteenId;
+            return "redirect:/canteen_info?canteenId=" + canteenId;
         }
         return null;
     }
@@ -202,17 +200,16 @@ public class CartController {
 
 
     @PostMapping("/cart/add-to-cart-provisional")
-    public ResponseEntity<Void> addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity,@RequestParam("deliveryRoleId") Integer deliveryRoleId, HttpSession session) {
+    public ResponseEntity<Void> addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity, @RequestParam("deliveryRoleId") Integer deliveryRoleId, HttpSession session) {
         Optional<Food> foodProvisional = foodService.getFoodById(foodId);
         Cart cartProvisional = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
-        System.out.println(cartProvisional);
         cartService.addToCart(cartProvisional, foodId, quantity, LocalDateTime.now(), foodProvisional.get().getPrice());
         return ResponseEntity.ok().build();
     }
 
 
     @PostMapping("/cart/update-cart-item-provisional")
-    public ResponseEntity<Void> updateCartItemProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("quantity") Integer quantity,@RequestParam("deliveryRoleId") Integer deliveryRoleId) {
+    public ResponseEntity<Void> updateCartItemProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("quantity") Integer quantity, @RequestParam("deliveryRoleId") Integer deliveryRoleId) {
         Cart cartProvisional = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
         for (CartItem cartItem : cartProvisional.getCartItems()) {
             if (Objects.equals(cartItem.getFood().getFoodId(), foodId)) {
@@ -225,7 +222,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/remove-from-cart-provisional")
-    public ResponseEntity<Void> removeFromCartProvisional(@RequestParam("cartItemId") Integer foodId,@RequestParam("deliveryRoleId") Integer deliveryRoleId) {
+    public ResponseEntity<Void> removeFromCartProvisional(@RequestParam("cartItemId") Integer foodId, @RequestParam("deliveryRoleId") Integer deliveryRoleId) {
         Cart cartProvisional = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
         for (CartItem cartItem : cartProvisional.getCartItems()) {
             if (Objects.equals(cartItem.getFood().getFoodId(), foodId)) {
@@ -238,15 +235,15 @@ public class CartController {
 
 
     @GetMapping("/cart/payment")
-    public String showPaymentScreen(Model model,@RequestParam("deliveryRoleId") Integer deliveryRoleId,    @RequestParam(value = "phone", required = false) String phone) {
+    public String showPaymentScreen(Model model, @RequestParam("deliveryRoleId") Integer deliveryRoleId, @RequestParam(value = "phone", required = false) String phone) {
 
         List<CartItem> cartItems = cartItemService.getCartItemsByDeliveryRoleId(deliveryRoleId);
         model.addAttribute("cartItems", cartItems);
         int totalOrderPrice = 0;
-        int canteenId=0;
+        int canteenId = 0;
         for (CartItem cartItem : cartItems) {
             totalOrderPrice += cartItem.getQuantity() * cartItem.getFood().getPrice();
-            canteenId=cartItem.getFood().getCanteen().getCanteenId();
+            canteenId = cartItem.getFood().getCanteen().getCanteenId();
         }
         cartRepository.save(cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId));
         model.addAttribute("totalOrderPrice", totalOrderPrice);
@@ -255,16 +252,13 @@ public class CartController {
         return "cart/payment";
     }
 
-    
-    
+
     @GetMapping("/cart/search-user")
     public String searchUserByPhone(@RequestParam("phone") String phone, HttpSession session, Model model) {
         List<User> listUsers = userRepository.findAll();
-        System.out.println("phone " + phone);
         for (User userProvisional : listUsers) {
             String ph = userProvisional.getPhone();
             if (phone.equals(ph)) {
-                System.out.println("Test: " + userProvisional);
                 model.addAttribute("userProvisional", userProvisional);
                 return "cart/payment :: user-info";
             }
@@ -272,26 +266,55 @@ public class CartController {
         return "cart/payment :: user-not-found";
     }
 
-    @PostMapping("/cart/newUser")
-    public String registerUser(@RequestParam("fullName") String fullName,
-                               @RequestParam("email") String email,
-                               @RequestParam("phone") String phone,
-                               @RequestParam("password") String password,
-                               Model model) {
-        // Create a new user instance
-        User user = new User();
-        user.setFullName(fullName);
-        user.setEmail(email);
-        user.setPhone(phone);
-        user.setPassword(passwordEncoder.encode(password));
-        // Set the default role as CUSTOMER
-        Role role = new Role();
-        role.setRoleId(1); // Assuming role ID 1 is for "CUSTOMER"
-        user.setRole(role);
-        // Save the user to the database
-        userRepository.save(user);
-        model.addAttribute("userProvisional", user);
-        return "cart/payment :: user-info";
+    @PostMapping("/newUser")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> createUser(
+            @RequestParam String fullName,
+            @RequestParam String email,
+            @RequestParam String phone,
+            @RequestParam String password,
+            HttpSession session) {
+
+        Map<String, String> response = new HashMap<>();
+
+        // Kiểm tra trường bắt buộc và bỏ trống
+        if (fullName.trim().isEmpty()) {
+            response.put("fullNameError", "Họ và tên không được để trống.");
+        }
+        if (email.trim().isEmpty()) {
+            response.put("emailError", "Email không được để trống.");
+        }
+        if (phone.trim().isEmpty()) {
+            response.put("phoneError", "Số điện thoại không được để trống.");
+        }
+        if (password.trim().isEmpty()) {
+            response.put("passwordError", "Mật khẩu không được để trống.");
+        }
+
+        // Kiểm tra email và số điện thoại đã tồn tại nếu email và phone không trống
+        if (!email.trim().isEmpty() && userService.emailExists(email)) {
+            response.put("emailExistsError", "Email đã tồn tại.");
+        }
+        if (!phone.trim().isEmpty() && userService.phoneExists(phone)) {
+            response.put("phoneExistsError", "Số điện thoại đã tồn tại.");
+        }
+
+        // Nếu không có lỗi, tạo người dùng
+        if (response.isEmpty()) {
+            try {
+                User newUser = userService.createUser(fullName, email, phone, password);
+                response.put("success", "Người dùng đã được đăng ký thành công.");
+                response.put("fullName", fullName);
+                response.put("phone", phone);
+                session.setAttribute("currentCustomer", newUser); // Lưu thông tin khách hàng trong session
+                return ResponseEntity.ok(response);
+            } catch (Exception e) {
+                response.put("error", "Đã xảy ra lỗi khi tạo người dùng.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            }
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
 }
