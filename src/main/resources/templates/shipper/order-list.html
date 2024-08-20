@@ -111,9 +111,6 @@
                                                 <i class="ri-check-line"></i>
                                             </button>
                                         </form>
-                                        <button class="btn btn-danger" data-toggle="modal" th:data-target="'#rejectModal'" th:data-order-id="${order.orderId}" th:data-canteen-id="${canteenId}">
-                                            <i class="ri-close-line"></i>
-                                        </button>
                                     </th:block>
                                 </td>
                             </tr>
@@ -145,35 +142,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/manage.js}"></script>
 
-<!-- Modal for Reject Reason -->
-<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="rejectModalLabel">Lý do từ chối</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="rejectForm" method="post" th:action="@{/reject-order-ship}">
-                    <input type="hidden" id="rejectOrderId" name="orderId">
-                    <input type="hidden" id="rejectCanteenId" name="canteenId">
-                    <input type="hidden" name="userId" th:value="${deliveryRoleId}"/>
-                    <div class="form-group">
-                        <label for="rejectNote">Lý do từ chối:</label>
-                        <textarea class="form-control" id="rejectNote" name="note" required></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-danger" onclick="submitRejectForm()">Từ chối</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal for Order Details -->
 <div class="modal fade" th:each="order : ${orders.content}" th:id="'orderDetailsModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
@@ -217,27 +185,7 @@
 </div>
 
 <script>
-    $('#rejectModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var orderId = button.data('order-id'); // Extract info from data-* attributes
-        var canteenId = button.data('canteen-id');
 
-        var modal = $(this);
-        modal.find('#rejectOrderId').val(orderId);
-        modal.find('#rejectCanteenId').val(canteenId);
-    });
-
-    function submitRejectForm() {
-        document.getElementById('rejectForm').submit();
-    }
-
-    // Format all prices on page load
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.formatted-price').forEach(function (element) {
-            let price = element.innerText;
-            element.innerText = formatCurrencyVND(price);
-        });
-    });
 
     function selectAllOrders(source) {
         checkboxes = document.getElementsByName('selectedOrders');
