@@ -268,7 +268,7 @@
                                         <i class="ri-eye-line"></i>
                                     </button>
                                     <!-- Chỉ hiển thị nút hoàn tiền và hoàn tiền cho đơn hàng REJECT -->
-                                    <th:block th:if="${order.orderStatus.name() == 'REJECT'}">
+                                    <th:block th:if="${order.orderStatus.name() == 'COMPLETE' || order.orderStatus.name() == 'REJECT'}">
                                         <button type="button" class="btn btn-warning" data-toggle="modal"
                                                 th:data-target="'#refundModal' + ${order.orderId}">
                                             <i class="ri-refund-line"></i>
