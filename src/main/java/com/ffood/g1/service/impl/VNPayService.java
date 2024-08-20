@@ -9,6 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -38,13 +40,11 @@ public class VNPayService {
         vnp_Params.put("vnp_ReturnUrl", urlReturn + VNPayConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cld.getTime());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        ZonedDateTime dateTime = ZonedDateTime.now();
+        String vnp_CreateDate = dateTime.format(formatter);
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-
-        cld.add(Calendar.HOUR, 2);
-        String vnp_ExpireDate = formatter.format(cld.getTime());
+        String vnp_ExpireDate = dateTime.plusMinutes(15).format(formatter);
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldNames = new ArrayList(vnp_Params.keySet());
