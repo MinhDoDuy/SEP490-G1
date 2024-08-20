@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- MATERIAL DESIGN ICONIC FONT -->
-    <link rel="stylesheet" href="colorlib-regform-19/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet"
+          href="colorlib-regform-19/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
 
     <!-- STYLE CSS -->
     <link th:href="@{/css/style_register.css}" rel="stylesheet">
@@ -21,39 +22,80 @@
                 <div class="form-wrapper">
                     <label for="fullName">Họ Tên:<span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" autofocus="autofocus" oninput="hideError('fullNameError'); validateFullName(); " title="Nguyen Van A">
-                        <p class="help-block text-danger" id="fullNameError" th:text="${fullNameError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
+                        <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}"
+                               autofocus="autofocus" oninput="hideError('fullNameError'); validateFullName();"
+                               title="Nguyen Van A" required>
+                        <p class="help-block text-danger" id="fullNameError" th:text="${fullNameError}"
+                           style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
                 <div class="form-wrapper">
                     <label for="email">Email: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="email" name="email" th:field="*{email}" oninput="hideError('emailError'); validateEmail();" title="abc@gmail.com hoặc abcHe123456@fpt.edu.vn">
-                        <p class="help-block text-danger" id="emailError" th:text="${emailExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
+                        <input type="email" class="form-control" id="email" name="email" th:field="*{email}"
+                               oninput="hideError('emailError'); validateEmail();"
+                               title="abc@gmail.com hoặc abcHe123456@fpt.edu.vn" required>
+                        <p class="help-block text-danger" id="emailError" th:text="${emailExistsError}"
+                           style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
                 <div class="form-wrapper">
                     <label for="phone">Số Điện Thoại: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" oninput="hideError('phoneError'); validatePhone();" title="0851234567">
-                        <p class="help-block text-danger" id="phoneError" th:text="${phoneExistsError}" style="font-size: small; color: rgb(234, 77, 77);"></p>
+                        <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}"
+                               oninput="hideError('phoneError'); validatePhone();" title="0851234567" required>
+                        <p class="help-block text-danger" id="phoneError" th:text="${phoneExistsError}"
+                           style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
                 <div class="form-wrapper">
+                    <label>Giới tính:<span style="color: rgb(234, 77, 77);"> (*)</span></label>
+                    <div class="col-md-12 form-group"
+                         style="display: flex; justify-content: space-between; max-width: 200px; margin: auto;">
+                        <label style="display: flex; align-items: center;">
+                            <input type="radio" name="gender" id="genderMale" value="true" required
+                                   style="height: 40px; margin-right: 10px;">
+                            Nam
+                        </label>
+                        <label style="display: flex; align-items: center;">
+                            <input type="radio" name="gender" id="genderFemale" value="false" required
+                                   style="height: 40px; margin-right: 10px;">
+                            Nữ
+                        </label>
+                    </div>
+                    <p class="help-block text-danger" id="genderError"
+                       style="font-size: small; color: rgb(234, 77, 77);"></p>
+                </div>
+
+
+                <div class="form-wrapper">
                     <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
                     <div class="form-holder">
-
-                        <input type="password" class="form-control" id="password" name="password" th:field="*{password}" oninput="hideError('passwordError'); validatePassword();">
-                        <p class="help-block text-danger" id="passwordError" style="display: none; font-size: small"></p>
+                        <input type="password" class="form-control" id="password" name="password" th:field="*{password}"
+                               oninput="hideError('passwordError'); validatePassword();" required>
+                        <p class="help-block text-danger" id="passwordError"
+                           style="display: none; font-size: small"></p>
                     </div>
                 </div>
+                <div class="form-wrapper">
+                    <label for="confirmPassword">Nhập lại mật khẩu:<span
+                            style="color: rgb(234, 77, 77);"> (*)</span></label>
+                    <div class="form-holder">
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required
+                               oninput="hideError('confirmPasswordError'); validateConfirmPassword();">
+                        <p class="help-block text-danger" id="confirmPasswordError"
+                           style="font-size: small; color: rgb(234, 77, 77);"></p>
+                    </div>
+                </div>
+
             </div>
             <div class="form-end">
                 <div class="button-holder">
                     <button type="submit" class="btn btn-primary">Đăng Ký</button>
                 </div>
             </div>
-            <p class="help-block text-danger" id="generalError" style="display: none; font-size: medium">Vui lòng sửa các lỗi trên và thử lại.</p>
+            <p class="help-block text-danger" id="generalError" style="display: none; font-size: medium">Vui lòng sửa
+                các lỗi trên và thử lại.</p>
         </form>
     </div>
 </div>
@@ -61,13 +103,13 @@
 <script>
     function validateForm() {
         const isFullNameValid = validateFullName();
-        // const isCodeNameValid = validateCodeName();
         const isPhoneValid = validatePhone();
         const isEmailValid = validateEmail();
         const isPasswordValid = validatePassword();
+        const isConfirmPasswordValid = validateConfirmPassword();
 
         const generalError = document.getElementById('generalError');
-        if (!isFullNameValid || !isPhoneValid || !isEmailValid || !isPasswordValid) {
+        if (!isFullNameValid || !isPhoneValid || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
             generalError.style.display = 'block';
             return false;
         } else {
@@ -85,7 +127,6 @@
         const fullNameValue = fullNameInput.value.trim();
         const fullNameError = document.getElementById('fullNameError');
 
-        // Biểu thức chính quy để kiểm tra ký tự đặc biệt
         const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
 
         if (fullNameValue === '') {
@@ -159,7 +200,6 @@
     }
 
 
-
     function validatePassword() {
         const passwordInput = document.getElementById('password');
         const passwordValue = passwordInput.value.trim();
@@ -175,6 +215,25 @@
             return false;
         } else {
             passwordError.style.display = 'none';
+            return true;
+        }
+    }
+
+    function validateConfirmPassword() {
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+        if (confirmPasswordInput.value === '') {
+            confirmPasswordError.innerText = 'Vui lòng nhập lại mật khẩu.';
+            confirmPasswordError.style.display = 'block';
+            return false;
+        } else if (confirmPasswordInput.value !== passwordInput.value) {
+            confirmPasswordError.innerText = 'Mật khẩu nhập lại không khớp.';
+            confirmPasswordError.style.display = 'block';
+            return false;
+        } else {
+            confirmPasswordError.style.display = 'none';
             return true;
         }
     }

@@ -1,4 +1,5 @@
 package com.ffood.g1.controller;
+
 import com.ffood.g1.entity.User;
 import com.ffood.g1.repository.ResetTokenRepository;
 import com.ffood.g1.service.UserService;
@@ -91,7 +92,6 @@ public class AuthController {
     }
 
 
-
     //dẫn đến đường link forgot password
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm() {
@@ -156,21 +156,26 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String registerUser(@ModelAttribute User user,
+                               @RequestParam("gender") String gender,
+                               RedirectAttributes redirectAttributes,
+                               HttpServletRequest request) {
 
         boolean hasError = false;
-//            String codeNamePattern = "^[a-zA-Z0-9]{6,20}$";
 
+        // Kiểm tra email đã tồn tại
         if (userService.isEmailExist(user.getEmail())) {
             redirectAttributes.addAttribute("emailExistsError", "Email này đã được đăng ký. Vui lòng sử dụng một email khác.");
             hasError = true;
         }
 
+        // Kiểm tra số điện thoại đã tồn tại
         if (userService.isPhoneExist(user.getPhone())) {
             redirectAttributes.addAttribute("phoneExistsError", "Số điện thoại này đã được đăng ký. Vui lòng sử dụng số khác.");
             hasError = true;
         }
 
+        // Kiểm tra nếu có lỗi
         if (hasError) {
             redirectAttributes.addAttribute("fullName", user.getFullName());
             redirectAttributes.addAttribute("password", user.getPassword());
@@ -178,6 +183,8 @@ public class AuthController {
             return "redirect:/register";
         }
 
+        // Xử lý giới tính
+        user.setGender("true".equals(gender)); // Nếu giá trị là "true", set là true (Nam), ngược lại là false (Nữ)
 
         // Xử lý đăng ký người dùng (lưu thông tin người dùng vào cơ sở dữ liệu)
         String otp = generateOTP(6); // Tạo OTP
@@ -245,7 +252,6 @@ public class AuthController {
 
         mailSender.send(message); // Gửi email
     }
-
 
 
 }
