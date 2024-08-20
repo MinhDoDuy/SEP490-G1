@@ -80,38 +80,34 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).findByEmail("test@example.com");
     }
 
-
     @Test
     void testGetAllStaff_Normal() {
-        // Khởi tạo tham số cho hàm
         int page = 0;
         int size = 10;
         Integer canteenId = 1;
 
         Pageable pageable = PageRequest.of(page, size);
 
-        // Tạo các đối tượng User giả lập chỉ với các trường cần thiết
         User user1 = User.builder().userId(1).fullName("user1").build();
         User user2 = User.builder().userId(2).fullName("user2").build();
 
-        // Tạo đối tượng Page<User> chứa danh sách các user
-        Page<User> pageUsers = new PageImpl<>(Arrays.asList(user1, user2), pageable, 2);
+        // Tạo expectedPage trực tiếp
+        Page<User> expectedPage = new PageImpl<>(Arrays.asList(user1, user2), pageable, 2);
 
-        // Giả lập hành vi của userRepository
-        when(userRepository.findAllStaffByCanteenId(canteenId, pageable)).thenReturn(pageUsers);
+        // Mock repository để trả về expectedPage
+        when(userRepository.findAllStaffByCanteenId(canteenId, pageable)).thenReturn(expectedPage);
 
-        // Gọi phương thức cần test
+        // Gọi phương thức cần kiểm tra
         Page<User> result = userService.getAllStaff(page, size, canteenId);
 
-        // Kiểm tra kết quả
-        assertEquals(2, result.getTotalElements());
-        assertEquals(2, result.getContent().size());
-        assertTrue(result.getContent().contains(user1));
-        assertTrue(result.getContent().contains(user2));
+        // Kiểm tra xem kết quả có giống với expectedPage không
+        assertEquals(expectedPage, result);
 
-        // Xác minh phương thức findAllStaffByCanteenId được gọi đúng một lần với tham số cụ thể
+        // Xác minh rằng phương thức của repository đã được gọi một lần
         verify(userRepository, times(1)).findAllStaffByCanteenId(canteenId, pageable);
     }
+
+
 
 
     // Kiểm thử load User bằng ID
