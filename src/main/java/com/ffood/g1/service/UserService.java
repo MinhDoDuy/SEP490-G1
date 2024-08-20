@@ -25,14 +25,16 @@ public interface UserService extends UserDetailsService {
 
     //forgot pass
     void sendResetPasswordEmail(String email, HttpServletRequest request);
+
     boolean isResetTokenValid(String token);
+
     void updatePasswordReset(String token, String password);
 
     //change pass
     void updatePassword(User user, String newPassword);
 
     //List người dùng cho admin đã có phân trang
-    Page<User>  getAllUsers(int page, int size);
+    Page<User> getAllUsers(int page, int size);
 
     //search user
     Page<User> searchUsersFilter(String keyword, Integer roleId, Integer canteenId, int page, int size);
@@ -40,8 +42,8 @@ public interface UserService extends UserDetailsService {
 
     User getUserById(Integer userId);
 
-    void updateUserStatus(Integer userId , Boolean isActive );
-    
+    void updateUserStatus(Integer userId, Boolean isActive);
+
     void saveUser(User user);
 
 
@@ -58,11 +60,17 @@ public interface UserService extends UserDetailsService {
     List<User> getStaffByCanteenToShip(Integer canteenId);
 
 
-    void sendAssignStaffEmail(String email, HttpServletRequest request , Integer canteenId);
+    void sendAssignStaffEmail(String email, HttpServletRequest request, Integer canteenId);
 
     void confirmAssignStaff(String token, Integer canteenId);
 
     void sendAssignManagerEmail(String email, HttpServletRequest request, Integer canteenId);
 
     void confirmAssignManager(String token, Integer canteenId);
+
+    User createUser(String fullName, String email, String phone, String password);
+
+    boolean emailExists(String email);
+
+    boolean phoneExists(String phone);
 }
