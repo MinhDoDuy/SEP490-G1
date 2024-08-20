@@ -159,6 +159,7 @@
         .col-md-4.text-center {
             text-align: center; /* Center align the text */
         }
+
         .card-header h4 {
             font-size: 1.5rem;
             color: #ff6600;
@@ -192,8 +193,9 @@
     <input type="hidden" name="deliveryRoleId" id="deliveryRoleId" th:value="${deliveryRoleId}">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 style="color: #ff6600;" th:text="${canteens.canteenName}"></h2>
-        <button class="btn btn-secondary" onclick="goBack()">Quay lại</button>
+        <a class="btn btn-secondary" th:href="@{/homepage}">Quay lại</a>
     </div>
+
     <!-- Tab Navigation -->
     <ul class="nav nav-tabs" id="posTabs" role="tablist">
         <li class="nav-item">
@@ -267,9 +269,11 @@
                             <div class="col-md-4 mb-3" th:each="orderInDay, iterStat : ${orderListInDay}">
                                 <div class="card order-history-card h-100">
                                     <div class="card-body order-history-body">
-                                        <h6 class="card-title larger-text" style="display: flex">#<span th:text="${iterStat.count}"></span> -
-                                            <span class="order-time" style="margin-right: 20px" th:text="${orderInDay.orderDate}"></span>
-                                            Nhân viên :<span   th:text="${orderInDay.deliveryRoleName}"></span></h6>
+                                        <h6 class="card-title larger-text" style="display: flex">#<span
+                                                th:text="${iterStat.count}"></span> -
+                                            <span class="order-time" style="margin-right: 20px"
+                                                  th:text="${orderInDay.orderDate}"></span>
+                                            Nhân viên :<span th:text="${orderInDay.deliveryRoleName}"></span></h6>
 
                                         <h5 class="card-title"><span class="order-label">Mã:</span> <span
                                                 th:text="${orderInDay.orderCode}"></span></h5>
@@ -316,12 +320,14 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="total-price-box" style="display: flex; align-content: space-between; justify-content: space-around;">
+                                    <div class="total-price-box"
+                                         style="display: flex; align-content: space-between; justify-content: space-around;">
                                         <p class="card-text larger-text">
                                             <strong>Tổng số tiền:</strong>
                                             <span class="total-price" th:text="${orderInDay.totalOrderPrice}"></span>
                                         </p>
-                                        <button type="button" class="btn btn-danger" onclick="printOrderAsPdf(this)" th:data-orderid="${orderInDay.orderId}">
+                                        <button type="button" class="btn btn-danger" onclick="printOrderAsPdf(this)"
+                                                th:data-orderid="${orderInDay.orderId}">
                                             <i class="mdi mdi-printer"></i> In hóa đơn
                                         </button>
                                     </div>
@@ -337,120 +343,120 @@
     </div>
 </div>
 
-    <form id="cartForm" method="get" action="/cart/payment" style="display: none;">
-        <input type="hidden" name="deliveryRoleId" th:value="${deliveryRoleId}">
-        <input type="hidden" name="cartData" id="cartData">
-    </form>
+<form id="cartForm" method="get" action="/cart/payment" style="display: none;">
+    <input type="hidden" name="deliveryRoleId" th:value="${deliveryRoleId}">
+    <input type="hidden" name="cartData" id="cartData">
+</form>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script>
-        function formatCurrencyVND(amount) {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                minimumFractionDigits: 0
-            }).format(amount);
-        }
+<script>
+    function formatCurrencyVND(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0
+        }).format(amount);
+    }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            // Tìm tất cả các phần tử có class 'price-value'
-            const priceElements = document.querySelectorAll('.price-value');
+    document.addEventListener("DOMContentLoaded", function () {
+        // Tìm tất cả các phần tử có class 'price-value'
+        const priceElements = document.querySelectorAll('.price-value');
 
-            // Duyệt qua từng phần tử và định dạng lại giá trị
-            priceElements.forEach(function (priceElement) {
-                // Lấy giá trị số từ thẻ p
-                const amount = parseInt(priceElement.textContent.trim(), 10);
-                // Gọi hàm formatCurrencyVND và cập nhật giá trị
-                priceElement.textContent = formatCurrencyVND(amount);
-            });
+        // Duyệt qua từng phần tử và định dạng lại giá trị
+        priceElements.forEach(function (priceElement) {
+            // Lấy giá trị số từ thẻ p
+            const amount = parseInt(priceElement.textContent.trim(), 10);
+            // Gọi hàm formatCurrencyVND và cập nhật giá trị
+            priceElement.textContent = formatCurrencyVND(amount);
         });
+    });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const prices = document.querySelectorAll('.price-format');
-            prices.forEach(function (price) {
-                const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
-                price.textContent = amount.toLocaleString('vi-VN'); // Định dạng theo locale Vietnamese
-            });
+    document.addEventListener("DOMContentLoaded", function () {
+        const prices = document.querySelectorAll('.price-format');
+        prices.forEach(function (price) {
+            const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
+            price.textContent = amount.toLocaleString('vi-VN'); // Định dạng theo locale Vietnamese
         });
+    });
 
-        function goBack() {
-            window.history.back();
-        }
+    function goBack() {
+        window.history.back();
+    }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const prices = document.querySelectorAll('.total-price');
-            prices.forEach(function (price) {
-                const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
-                price.textContent = amount.toLocaleString('vi-VN') + ' VNĐ'; // Định dạng theo locale Vietnamese
-            });
+    document.addEventListener("DOMContentLoaded", function () {
+        const prices = document.querySelectorAll('.total-price');
+        prices.forEach(function (price) {
+            const amount = parseInt(price.textContent.replace(/\D/g, ''), 10); // Lấy số từ chuỗi
+            price.textContent = amount.toLocaleString('vi-VN') + ' VNĐ'; // Định dạng theo locale Vietnamese
         });
+    });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const orderTimes = document.querySelectorAll('.order-time');
-            orderTimes.forEach(function (orderTime) {
-                const dateTime = new Date(orderTime.textContent);
-                const time = dateTime.toTimeString().split(' ')[0]; // Get only the time part
-                orderTime.textContent = time;
-            });
+    document.addEventListener("DOMContentLoaded", function () {
+        const orderTimes = document.querySelectorAll('.order-time');
+        orderTimes.forEach(function (orderTime) {
+            const dateTime = new Date(orderTime.textContent);
+            const time = dateTime.toTimeString().split(' ')[0]; // Get only the time part
+            orderTime.textContent = time;
         });
+    });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const productList = document.getElementById('productList');
-            const cartItems = document.getElementById('cartItems');
-            const deliveryRoleId = document.getElementById('deliveryRoleId').value;
-            const addButtons = document.querySelectorAll('.btn-add');
-            const proceedToPaymentButton = document.getElementById('proceedToPayment');
-            const cartForm = document.getElementById('cartForm');
-            const cartDataInput = document.getElementById('cartData');
-            let cart = {};
+    document.addEventListener('DOMContentLoaded', function () {
+        const productList = document.getElementById('productList');
+        const cartItems = document.getElementById('cartItems');
+        const deliveryRoleId = document.getElementById('deliveryRoleId').value;
+        const addButtons = document.querySelectorAll('.btn-add');
+        const proceedToPaymentButton = document.getElementById('proceedToPayment');
+        const cartForm = document.getElementById('cartForm');
+        const cartDataInput = document.getElementById('cartData');
+        let cart = {};
 
-            addButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const productId = this.getAttribute('data-id');
-                    const productName = this.getAttribute('data-name');
-                    const productPrice = parseFloat(this.getAttribute('data-price'));
-                    const productQuantity = parseInt(this.getAttribute('data-quantity'));
+        addButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = this.getAttribute('data-id');
+                const productName = this.getAttribute('data-name');
+                const productPrice = parseFloat(this.getAttribute('data-price'));
+                const productQuantity = parseInt(this.getAttribute('data-quantity'));
 
-                    if (!cart[productId]) {
-                        cart[productId] = {
-                            id: productId,
-                            name: productName,
-                            price: productPrice,
-                            quantity: 1,
-                            maxQuantity: productQuantity
-                        };
-                        saveCartItem(productId, 1, deliveryRoleId);
+                if (!cart[productId]) {
+                    cart[productId] = {
+                        id: productId,
+                        name: productName,
+                        price: productPrice,
+                        quantity: 1,
+                        maxQuantity: productQuantity
+                    };
+                    saveCartItem(productId, 1, deliveryRoleId);
+                } else {
+                    if (cart[productId].quantity < cart[productId].maxQuantity) {
+                        cart[productId].quantity += 1;
+                        updateCartItem(productId, cart[productId].quantity, deliveryRoleId);
                     } else {
-                        if (cart[productId].quantity < cart[productId].maxQuantity) {
-                            cart[productId].quantity += 1;
-                            updateCartItem(productId, cart[productId].quantity, deliveryRoleId);
-                        } else {
-                            alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
-                        }
+                        alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
                     }
+                }
 
-                    updateCartDisplay();
-                });
+                updateCartDisplay();
             });
+        });
 
-            proceedToPaymentButton.addEventListener('click', function () {
-                cartDataInput.value = JSON.stringify(cart);
-                cartForm.submit();
-            });
+        proceedToPaymentButton.addEventListener('click', function () {
+            cartDataInput.value = JSON.stringify(cart);
+            cartForm.submit();
+        });
 
-            function updateCartDisplay() {
-                cartItems.innerHTML = '';
-                let totalItems = 0;
-                let totalPrice = 0;
-                Object.values(cart).forEach(item => {
-                    totalItems += item.quantity;
-                    totalPrice += item.price * item.quantity;
+        function updateCartDisplay() {
+            cartItems.innerHTML = '';
+            let totalItems = 0;
+            let totalPrice = 0;
+            Object.values(cart).forEach(item => {
+                totalItems += item.quantity;
+                totalPrice += item.price * item.quantity;
 
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
                     <div class="cart-item-info">
                         <p>${item.name}</p>
                         <p class="text-danger">${formatCurrencyVND(item.price)}</p>
@@ -463,155 +469,155 @@
                     <button class="btn btn-danger btn-sm btn-remove" data-id="${item.id}">x</button>
                 `;
 
-                    cartItems.appendChild(cartItem);
-                });
-
-                document.getElementById('totalItems').innerText = totalItems;
-                document.getElementById('totalPrice').innerText = formatCurrencyVND(totalPrice);
-
-                if (totalItems > 0) {
-                    proceedToPaymentButton.style.display = 'block';
-                } else {
-                    proceedToPaymentButton.style.display = 'none';
-                }
-
-                addCartEventListeners();
-            }
-
-            function addCartEventListeners() {
-                document.querySelectorAll('.btn-decrease').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const productId = this.getAttribute('data-id');
-                        if (cart[productId].quantity > 1) {
-                            cart[productId].quantity -= 1;
-                            updateCartItem(productId, cart[productId].quantity, deliveryRoleId);
-                        } else {
-                            removeCartItem(productId, deliveryRoleId);
-                            delete cart[productId];
-                        }
-                        updateCartDisplay();
-                    });
-                });
-
-                document.querySelectorAll('.btn-increase').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const productId = this.getAttribute('data-id');
-                        if (cart[productId].quantity < cart[productId].maxQuantity) {
-                            cart[productId].quantity += 1;
-                            updateCartItem(productId, cart[productId].quantity, deliveryRoleId);
-                        } else {
-                            alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
-                        }
-                        updateCartDisplay();
-                    });
-                });
-
-                document.querySelectorAll('.btn-remove').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const productId = this.getAttribute('data-id');
-                        removeCartItem(productId, deliveryRoleId);
-                        delete cart[productId];
-                        updateCartDisplay();
-                    });
-                });
-            }
-
-            function saveCartItem(productId, quantity, deliveryRoleId) {
-                fetch('/cart/add-to-cart-provisional', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        'foodId': productId,
-                        'quantity': quantity,
-                        'deliveryRoleId': deliveryRoleId
-                    })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-
-            function updateCartItem(productId, quantity, deliveryRoleId) {
-                console.log('Updating cart item:', productId, quantity);
-                fetch('/cart/update-cart-item-provisional', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        'cartItemId': productId,
-                        'quantity': quantity,
-                        'deliveryRoleId': deliveryRoleId
-                    })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-
-            function removeCartItem(productId, deliveryRoleId) {
-                console.log('Removing from cart:', productId);
-                fetch('/cart/remove-from-cart-provisional', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        'cartItemId': productId,
-                        'deliveryRoleId': deliveryRoleId
-                    })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-
-
-            document.getElementById('search').addEventListener('input', function () {
-                const searchTerm = this.value.toLowerCase();
-                const products = productList.querySelectorAll('.product-card');
-
-                products.forEach(product => {
-                    const productName = product.querySelector('h5').innerText.toLowerCase();
-                    if (productName.includes(searchTerm)) {
-                        product.parentElement.style.display = '';
-                    } else {
-                        product.parentElement.style.display = 'none';
-                    }
-                });
+                cartItems.appendChild(cartItem);
             });
-        });
 
-        function printOrderAsPdf(button) {
-            const orderId = button.getAttribute('data-orderid');
+            document.getElementById('totalItems').innerText = totalItems;
+            document.getElementById('totalPrice').innerText = formatCurrencyVND(totalPrice);
 
-            fetch(`/print-order-pdf?orderId=${orderId}`)
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = `Order_${orderId}.pdf`;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                })
-                .catch(error => console.error('Error printing order as PDF:', error));
+            if (totalItems > 0) {
+                proceedToPaymentButton.style.display = 'block';
+            } else {
+                proceedToPaymentButton.style.display = 'none';
+            }
+
+            addCartEventListeners();
         }
 
-    </script>
+        function addCartEventListeners() {
+            document.querySelectorAll('.btn-decrease').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-id');
+                    if (cart[productId].quantity > 1) {
+                        cart[productId].quantity -= 1;
+                        updateCartItem(productId, cart[productId].quantity, deliveryRoleId);
+                    } else {
+                        removeCartItem(productId, deliveryRoleId);
+                        delete cart[productId];
+                    }
+                    updateCartDisplay();
+                });
+            });
+
+            document.querySelectorAll('.btn-increase').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-id');
+                    if (cart[productId].quantity < cart[productId].maxQuantity) {
+                        cart[productId].quantity += 1;
+                        updateCartItem(productId, cart[productId].quantity, deliveryRoleId);
+                    } else {
+                        alert('Số lượng trong giỏ hàng không được vượt quá số lượng đang còn');
+                    }
+                    updateCartDisplay();
+                });
+            });
+
+            document.querySelectorAll('.btn-remove').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-id');
+                    removeCartItem(productId, deliveryRoleId);
+                    delete cart[productId];
+                    updateCartDisplay();
+                });
+            });
+        }
+
+        function saveCartItem(productId, quantity, deliveryRoleId) {
+            fetch('/cart/add-to-cart-provisional', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'foodId': productId,
+                    'quantity': quantity,
+                    'deliveryRoleId': deliveryRoleId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function updateCartItem(productId, quantity, deliveryRoleId) {
+            console.log('Updating cart item:', productId, quantity);
+            fetch('/cart/update-cart-item-provisional', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'cartItemId': productId,
+                    'quantity': quantity,
+                    'deliveryRoleId': deliveryRoleId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function removeCartItem(productId, deliveryRoleId) {
+            console.log('Removing from cart:', productId);
+            fetch('/cart/remove-from-cart-provisional', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'cartItemId': productId,
+                    'deliveryRoleId': deliveryRoleId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
+        document.getElementById('search').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const products = productList.querySelectorAll('.product-card');
+
+            products.forEach(product => {
+                const productName = product.querySelector('h5').innerText.toLowerCase();
+                if (productName.includes(searchTerm)) {
+                    product.parentElement.style.display = '';
+                } else {
+                    product.parentElement.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    function printOrderAsPdf(button) {
+        const orderId = button.getAttribute('data-orderid');
+
+        fetch(`/print-order-pdf?orderId=${orderId}`)
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `Order_${orderId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error printing order as PDF:', error));
+    }
+
+</script>
 
 
 </body>

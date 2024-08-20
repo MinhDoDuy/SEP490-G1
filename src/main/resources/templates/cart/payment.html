@@ -160,14 +160,30 @@
         .is-invalid + .invalid-feedback {
             display: block;
         }
+
+        /* Loại bỏ mũi tên tăng giảm cho các trình duyệt Webkit (Chrome, Safari, Edge) */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Loại bỏ mũi tên tăng giảm cho các trình duyệt Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body>
 
 <div class="container mt-5">
-    <h2 style="color: #ff6600;">Thanh Toán</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 style="color: #ff6600;">Thanh Toán</h2>
+        <button class="btn btn-secondary" onclick="goBack()">Quay lại</button>
+    </div>
     <input id="canteenId" type="hidden" th:value="${canteenId}">
     <input id="deliveryRoleId" type="hidden" th:value="${deliveryRoleId}">
+
     <div class="row">
         <!-- Cart Section -->
         <div class="col-md-6">
@@ -304,10 +320,14 @@
         document.getElementById('cashReceived').addEventListener('input', function () {
             const cashReceived = parseFloat(this.value);
             const totalOrderPrice = parseFloat(document.getElementById('totalOrderPrice').getAttribute('data-price'));
-            const changeDue = cashReceived - totalOrderPrice;
-            document.getElementById('changeDue').innerText = `Tiền Trả lại: ${formatCurrencyVND(changeDue)}`;
-        });
 
+            if (!isNaN(cashReceived) && cashReceived >= totalOrderPrice) {
+                const changeDue = cashReceived - totalOrderPrice;
+                document.getElementById('changeDue').innerText = `Tiền Trả lại: ${formatCurrencyVND(changeDue)}`;
+            } else {
+                document.getElementById('changeDue').innerText = `Số tiền nhận phải lớn hơn hoặc bằng tổng giá trị đơn hàng`;
+            }
+        });
         document.getElementById('submitPayment').addEventListener('click', function () {
             const paymentMethod = document.getElementById('paymentMethod').value;
             const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
@@ -512,6 +532,10 @@
         document.getElementById('searchResult').innerHTML = ''; // Xóa kết quả tìm kiếm nếu có
         searchPhoneInput.focus(); // Trả lại focus cho ô tìm kiếm sau khi xóa
     });
+
+    function goBack() {
+        window.history.back();
+    }
 </script>
 
 </body>

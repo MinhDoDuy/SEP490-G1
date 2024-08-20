@@ -19,13 +19,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -266,55 +268,26 @@ public class CartController {
         return "cart/payment :: user-not-found";
     }
 
-    @PostMapping("/newUser")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> createUser(
-            @RequestParam String fullName,
-            @RequestParam String email,
-            @RequestParam String phone,
-            @RequestParam String password,
-            HttpSession session) {
-
-        Map<String, String> response = new HashMap<>();
-
-        // Kiểm tra trường bắt buộc và bỏ trống
-        if (fullName.trim().isEmpty()) {
-            response.put("fullNameError", "Họ và tên không được để trống.");
-        }
-        if (email.trim().isEmpty()) {
-            response.put("emailError", "Email không được để trống.");
-        }
-        if (phone.trim().isEmpty()) {
-            response.put("phoneError", "Số điện thoại không được để trống.");
-        }
-        if (password.trim().isEmpty()) {
-            response.put("passwordError", "Mật khẩu không được để trống.");
-        }
-
-        // Kiểm tra email và số điện thoại đã tồn tại nếu email và phone không trống
-        if (!email.trim().isEmpty() && userService.emailExists(email)) {
-            response.put("emailExistsError", "Email đã tồn tại.");
-        }
-        if (!phone.trim().isEmpty() && userService.phoneExists(phone)) {
-            response.put("phoneExistsError", "Số điện thoại đã tồn tại.");
-        }
-
-        // Nếu không có lỗi, tạo người dùng
-        if (response.isEmpty()) {
-            try {
-                User newUser = userService.createUser(fullName, email, phone, password);
-                response.put("success", "Người dùng đã được đăng ký thành công.");
-                response.put("fullName", fullName);
-                response.put("phone", phone);
-                session.setAttribute("currentCustomer", newUser); // Lưu thông tin khách hàng trong session
-                return ResponseEntity.ok(response);
-            } catch (Exception e) {
-                response.put("error", "Đã xảy ra lỗi khi tạo người dùng.");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-            }
-        } else {
-            return ResponseEntity.badRequest().body(response);
-        }
+    @PostMapping("/cart/newUser")
+    public String registerUser(@RequestParam("fullName") String fullName,
+                               @RequestParam("email") String email,
+                               @RequestParam("phone") String phone,
+                               @RequestParam("password") String password,
+                               Model model) {
+        // Create a new user instance
+        User user = new User();
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPassword(passwordEncoder.encode(password));
+        // Set the default role as CUSTOMER
+        Role role = new Role();
+        role.setRoleId(1); // Assuming role ID 1 is for "CUSTOMER"
+        user.setRole(role);
+        // Save the user to the database
+        userRepository.save(user);
+        model.addAttribute("userProvisional", user);
+        return "cart/payment :: user-info";
     }
 
 }
