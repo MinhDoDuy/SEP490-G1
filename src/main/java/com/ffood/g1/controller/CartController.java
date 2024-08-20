@@ -205,7 +205,6 @@ public class CartController {
     public ResponseEntity<Void> addToCartProvisional(@RequestParam("foodId") Integer foodId, @RequestParam("quantity") Integer quantity,@RequestParam("deliveryRoleId") Integer deliveryRoleId, HttpSession session) {
         Optional<Food> foodProvisional = foodService.getFoodById(foodId);
         Cart cartProvisional = cartService.getCartProvisionalByDeliveryRoleId(deliveryRoleId);
-        System.out.println(cartProvisional);
         cartService.addToCart(cartProvisional, foodId, quantity, LocalDateTime.now(), foodProvisional.get().getPrice());
         return ResponseEntity.ok().build();
     }
@@ -260,11 +259,9 @@ public class CartController {
     @GetMapping("/cart/search-user")
     public String searchUserByPhone(@RequestParam("phone") String phone, HttpSession session, Model model) {
         List<User> listUsers = userRepository.findAll();
-        System.out.println("phone " + phone);
         for (User userProvisional : listUsers) {
             String ph = userProvisional.getPhone();
             if (phone.equals(ph)) {
-                System.out.println("Test: " + userProvisional);
                 model.addAttribute("userProvisional", userProvisional);
                 return "cart/payment :: user-info";
             }
