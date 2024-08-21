@@ -237,7 +237,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button id="show-more-btn" class="btn btn-primary" onclick="showMoreComments()">Xem thêm</button>
+                                <button id="show-more-btn" class="btn btn-primary" onclick="showMoreComments()" th:if="${feedbacksCanteen.size()}>5">Xem thêm</button>
                             </div>
                         </div>
                     </div>
