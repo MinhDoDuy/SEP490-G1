@@ -1,143 +1,143 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Add Quantity</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-  <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
-  <style>
-    .main-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      width: calc(100% - 256px);
-      margin-left: 256px;
-      background-color: #f7f7f7;
-    }
+    <title>Add Quantity</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link th:href="@{/css/manager-user.css}" rel="stylesheet" type="text/css">
+    <style>
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: calc(100% - 256px);
+            margin-left: 256px;
+            background-color: #f7f7f7;
+        }
 
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      width: 75%;
-      max-width: 1200px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 75%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
 
-    .form-container {
-      width: 50%;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+        .form-container {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    .image-container {
-      width: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f7f7f7;
-    }
+        .image-container {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f7f7f7;
+        }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 15px;
-    }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
 
-    .form-group-inline {
-      display: flex;
-      gap: 20px;
-    }
+        .form-group-inline {
+            display: flex;
+            gap: 20px;
+        }
 
-    .form-group-inline .form-group {
-      flex: 1;
-      margin-bottom: 0;
-    }
+        .form-group-inline .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
 
-    .form-group-inline .form-group {
-      max-width: calc(50% - 10px); /* Ensure fields are half-width with a small gap */
-    }
+        .form-group-inline .form-group {
+            max-width: calc(50% - 10px); /* Ensure fields are half-width with a small gap */
+        }
 
-    .form-group label {
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
-    }
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
 
-    .form-group input, .form-group select {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-      transition: border-color 0.3s ease-in-out;
-      height: 40px; /* Set consistent height */
-      box-sizing: border-box; /* Ensure padding is included in height */
-    }
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s ease-in-out;
+            height: 40px; /* Set consistent height */
+            box-sizing: border-box; /* Ensure padding is included in height */
+        }
 
-    .form-group input:focus, .form-group select:focus {
-      border-color: #007bff;
-      outline: none;
-    }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
 
-    .error-message {
-      color: red;
-      font-size: 12px;
-    }
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
 
-    .success-message {
-      color: green;
-      font-size: 12px;
-    }
+        .success-message {
+            color: green;
+            font-size: 12px;
+        }
 
-    button[type="submit"] {
-      background: linear-gradient(90deg, #007bff, #0056b3);
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.3s ease-in-out;
-      margin-top: 10px;
-      height: 40px; /* Match height to inputs */
-    }
+        button[type="submit"] {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease-in-out;
+            margin-top: 10px;
+            height: 40px; /* Match height to inputs */
+        }
 
-    button[type="submit"]:hover {
-      background: linear-gradient(90deg, #0056b3, #003f7f);
-    }
+        button[type="submit"]:hover {
+            background: linear-gradient(90deg, #0056b3, #003f7f);
+        }
 
-    .back-link {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 14px;
-      color: #007bff;
-      text-decoration: none;
-      transition: color 0.3s ease-in-out;
-    }
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
 
-    .back-link:hover {
-      color: #0056b3;
-      text-decoration: underline;
-    }
+        .back-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
 
-    .total-quantity {
-      font-weight: bold;
-      margin-top: 10px;
-    }
+        .total-quantity {
+            font-weight: bold;
+            margin-top: 10px;
+        }
 
-    .image-container img {
-      max-width: 100%;
-      max-height: 400px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-  </style>
+        .image-container img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body class="text-gray-800 font-inter">
 
@@ -147,63 +147,71 @@
 
 <!-- start: Main -->
 <div class="main-container">
-  <div class="container">
-    <div class="form-container">
-      <div th:if="${message}" th:classappend="${messageType == 'error'} ? 'error-message' : 'success-message'">
-        <span th:text="${message}"></span>
-      </div>
+    <div class="container">
+        <div class="form-container">
+            <div th:if="${message}" th:classappend="${messageType == 'error'} ? 'error-message' : 'success-message'">
+                <span th:text="${message}"></span>
+            </div>
 
-      <form th:action="@{/add-quantity}" method="post" th:object="${food}" enctype="multipart/form-data">
-        <input type="hidden" id="foodId" name="foodId" th:value="${food.foodId}" />
-        <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}" />
+            <form th:action="@{/add-quantity}" method="post" th:object="${food}" enctype="multipart/form-data">
+                <input type="hidden" id="foodId" name="foodId" th:value="${food.foodId}"/>
+                <input type="hidden" id="canteenId" name="canteenId" th:value="${canteenId}"/>
 
-        <div class="form-group">
-          <label for="foodName" class="form-label">Tên Đồ Ăn</label>
-          <input type="text" id="foodName" th:value="${food.foodName}" class="form-control" readonly>
+                <div class="form-group">
+                    <label for="foodName" class="form-label">Tên Đồ Ăn <span
+                            style="color: rgb(234, 77, 77);"> (*)</span></label>
+                    <input type="text" id="foodName" th:value="${food.foodName}" class="form-control" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryName" class="form-label">Danh Mục Đồ Ăn <span
+                            style="color: rgb(234, 77, 77);"> (*)</span></label>
+                    <input type="text" id="categoryName" th:value="${food.category.categoryName}" class="form-control"
+                           readonly>
+                </div>
+
+                <div class="form-group-inline">
+                    <div class="form-group">
+                        <label for="currentQuantity" class="form-label">Số Lượng Hiện Tại <span
+                                style="color: rgb(234, 77, 77);"> (*)</span></label>
+                        <input type="number" id="currentQuantity" th:value="${food.foodQuantity}" class="form-control"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newQuantity" class="form-label">Thêm Số Lượng <span
+                                style="color: rgb(234, 77, 77);"> (*)</span></label>
+                        <input type="number" id="newQuantity" name="newQuantity" class="form-control" min="0" required
+                               oninput="updateTotalQuantity()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="totalQuantity" class="form-label">Tổng Số Lượng <span
+                            style="color: rgb(234, 77, 77);"> (*)</span></label>
+                    <input type="text" id="totalQuantity" th:value="${food.foodQuantity}" class="form-control" readonly>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Cập Nhật Số Lượng</button>
+            </form>
+
+            <a th:href="@{/manage-food(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
         </div>
 
-        <div class="form-group">
-          <label for="categoryName" class="form-label">Danh Mục Đồ Ăn</label>
-          <input type="text" id="categoryName" th:value="${food.category.categoryName}" class="form-control" readonly>
+        <div class="image-container">
+            <img th:src="@{${food.imageFood}}" alt="Food Image">
         </div>
-
-        <div class="form-group-inline">
-          <div class="form-group">
-            <label for="currentQuantity" class="form-label">Số Lượng Hiện Tại</label>
-            <input type="number" id="currentQuantity" th:value="${food.foodQuantity}" class="form-control" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="newQuantity" class="form-label">Thêm Số Lượng</label>
-            <input type="number" id="newQuantity" name="newQuantity" class="form-control" min="0" required oninput="updateTotalQuantity()">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="totalQuantity" class="form-label">Tổng Số Lượng</label>
-          <input type="text" id="totalQuantity" th:value="${food.foodQuantity}" class="form-control" readonly>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Cập Nhật Số Lượng</button>
-      </form>
-
-      <a th:href="@{/manage-food(canteenId=${canteenId})}" class="back-link">Quay lại trang</a>
     </div>
-
-    <div class="image-container">
-      <img th:src="@{${food.imageFood}}" alt="Food Image">
-    </div>
-  </div>
 </div>
 <!-- end: Main -->
 
 <script>
-  function updateTotalQuantity() {
-    const currentQuantity = parseInt(document.getElementById('currentQuantity').value);
-    const newQuantity = parseInt(document.getElementById('newQuantity').value);
-    const totalQuantity = currentQuantity + newQuantity;
-    document.getElementById('totalQuantity').value = totalQuantity;
-  }
+    function updateTotalQuantity() {
+        const currentQuantity = parseInt(document.getElementById('currentQuantity').value);
+        const newQuantity = parseInt(document.getElementById('newQuantity').value);
+        const totalQuantity = currentQuantity + newQuantity;
+        document.getElementById('totalQuantity').value = totalQuantity;
+    }
 </script>
 </body>
 </html>
