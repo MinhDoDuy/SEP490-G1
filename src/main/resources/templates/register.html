@@ -8,9 +8,32 @@
     <!-- MATERIAL DESIGN ICONIC FONT -->
     <link rel="stylesheet"
           href="colorlib-regform-19/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
 
     <!-- STYLE CSS -->
     <link th:href="@{/css/style_register.css}" rel="stylesheet">
+
+    <style>
+        .form-holder {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-holder input[type="password"] {
+            padding-right: 30px; /* Chỗ trống cho biểu tượng mắt */
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px; /* Kích thước biểu tượng */
+            color: #000; /* Màu sắc của biểu tượng */
+            margin-top: 12px; /* Điều chỉnh vị trí xuống dưới */
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper">
@@ -67,27 +90,31 @@
                        style="font-size: small; color: rgb(234, 77, 77);"></p>
                 </div>
 
-
+                <!-- Mật khẩu -->
                 <div class="form-wrapper">
                     <label for="password">Mật Khẩu: <span style="color: rgb(234, 77, 77);"> (*)</span></label>
-                    <div class="form-holder">
+                    <div class="form-holder" style="position: relative;">
                         <input type="password" class="form-control" id="password" name="password" th:field="*{password}"
                                oninput="hideError('passwordError'); validatePassword();" required>
+                        <i class="zmdi zmdi-eye toggle-password" onclick="togglePasswordVisibility('password')"></i>
                         <p class="help-block text-danger" id="passwordError"
                            style="display: none; font-size: small"></p>
                     </div>
                 </div>
+
+                <!-- Nhập lại mật khẩu -->
                 <div class="form-wrapper">
                     <label for="confirmPassword">Nhập lại mật khẩu:<span
                             style="color: rgb(234, 77, 77);"> (*)</span></label>
-                    <div class="form-holder">
+                    <div class="form-holder" style="position: relative;">
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required
                                oninput="hideError('confirmPasswordError'); validateConfirmPassword();">
+                        <i class="zmdi zmdi-eye toggle-password"
+                           onclick="togglePasswordVisibility('confirmPassword')"></i>
                         <p class="help-block text-danger" id="confirmPasswordError"
                            style="font-size: small; color: rgb(234, 77, 77);"></p>
                     </div>
                 </div>
-
             </div>
             <div class="form-end">
                 <div class="button-holder">
@@ -199,7 +226,6 @@
         }
     }
 
-
     function validatePassword() {
         const passwordInput = document.getElementById('password');
         const passwordValue = passwordInput.value.trim();
@@ -235,6 +261,20 @@
         } else {
             confirmPasswordError.style.display = 'none';
             return true;
+        }
+    }
+
+    function togglePasswordVisibility(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const icon = passwordField.nextElementSibling;
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.remove('zmdi-eye');
+            icon.classList.add('zmdi-eye-off');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.remove('zmdi-eye-off');
+            icon.classList.add('zmdi-eye');
         }
     }
 </script>
