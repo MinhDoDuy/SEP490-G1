@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -303,7 +303,6 @@
 </div>
 
 <script>
-    // Đảm bảo lấy giá trị của deliveryRoleId khi DOM đã được tải hoàn toàn
     document.addEventListener("DOMContentLoaded", function () {
         const deliveryRoleId = document.getElementById('deliveryRoleId').value;
 
@@ -328,6 +327,7 @@
                 document.getElementById('changeDue').innerText = `Số tiền nhận phải lớn hơn hoặc bằng tổng giá trị đơn hàng`;
             }
         });
+
         document.getElementById('submitPayment').addEventListener('click', function () {
             const paymentMethod = document.getElementById('paymentMethod').value;
             const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
@@ -336,7 +336,6 @@
             const userId = userProvisionalElement ? userProvisionalElement.value : 1;
             const canteenId = document.getElementById('canteenId').value;
 
-            // Check if paymentMethod is 'cash' and cashReceived is less than totalOrderPrice
             if (paymentMethod === 'cash' && cashReceived < totalOrderPrice) {
                 alert('Số tiền nhận từ khách phải lớn hơn hoặc bằng tổng tiền hóa đơn.');
                 return;
@@ -352,7 +351,7 @@
                     'cashReceived': cashReceived,
                     'userId': userId,
                     'canteenId': canteenId,
-                    'deliveryRoleId': deliveryRoleId // Sử dụng deliveryRoleId đã lấy được khi DOM load xong
+                    'deliveryRoleId': deliveryRoleId
                 })
             })
                 .then(response => response.text())
@@ -363,7 +362,6 @@
                 .catch(error => console.error('Error:', error));
         });
 
-        // Modal functionality
         const modal = document.getElementById("registerModal");
         const btn = document.getElementById("openRegisterModal");
         const span = document.getElementsByClassName("close")[0];
@@ -384,12 +382,12 @@
 
         document.getElementById('registerButton').addEventListener('click', function () {
             let isValid = true;
-            // let errorMessage = "Vui lòng điền đầy đủ tất cả các trường.";
 
             // Validate full name
             var fullName = document.getElementById('fullName');
             if (fullName.value.trim() === '') {
                 fullName.classList.add('is-invalid');
+                document.getElementById('fullNameError').textContent = 'Vui lòng nhập họ và tên.';
                 isValid = false;
             } else {
                 fullName.classList.remove('is-invalid');
@@ -397,17 +395,38 @@
 
             // Validate email
             var email = document.getElementById('email');
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const validDomains = ['gmail.com', 'fpt.edu.vn', 'outlook.com', 'fpt.com'];
+
             if (email.value.trim() === '') {
                 email.classList.add('is-invalid');
+                document.getElementById('emailError').textContent = 'Vui lòng nhập email.';
+                isValid = false;
+            } else if (!emailPattern.test(email.value.trim())) {
+                email.classList.add('is-invalid');
+                document.getElementById('emailError').textContent = 'Email không đúng định dạng.';
                 isValid = false;
             } else {
-                email.classList.remove('is-invalid');
+                const emailDomain = email.value.trim().substring(email.value.lastIndexOf('@') + 1);
+                if (!validDomains.includes(emailDomain)) {
+                    email.classList.add('is-invalid');
+                    document.getElementById('emailError').textContent = 'Email phải có đuôi @gmail.com, @fpt.edu.vn, @outlook.com hoặc @fpt.com.';
+                    isValid = false;
+                } else {
+                    email.classList.remove('is-invalid');
+                }
             }
 
             // Validate phone number
             var phone = document.getElementById('phone');
+            const phonePattern = /^[0-9]{10}$/;
             if (phone.value.trim() === '') {
                 phone.classList.add('is-invalid');
+                document.getElementById('phoneError').textContent = 'Vui lòng nhập số điện thoại.';
+                isValid = false;
+            } else if (!phonePattern.test(phone.value.trim())) {
+                phone.classList.add('is-invalid');
+                document.getElementById('phoneError').textContent = 'Số điện thoại không đúng định dạng.';
                 isValid = false;
             } else {
                 phone.classList.remove('is-invalid');
@@ -417,12 +436,17 @@
             var password = document.getElementById('password');
             if (password.value.trim() === '') {
                 password.classList.add('is-invalid');
+                document.getElementById('passwordError').textContent = 'Vui lòng nhập mật khẩu.';
+                isValid = false;
+            } else if (password.value.trim().length < 6) {
+                password.classList.add('is-invalid');
+                document.getElementById('passwordError').textContent = 'Mật khẩu phải có ít nhất 6 ký tự.';
                 isValid = false;
             } else {
                 password.classList.remove('is-invalid');
             }
 
-            // If all fields are valid, submit the form
+            // Nếu tất cả các trường hợp kiểm tra đều hợp lệ, submit form
             if (isValid) {
                 const form = document.getElementById('registerForm');
                 const formData = new FormData(form);
@@ -441,7 +465,7 @@
                     })
                     .catch(error => console.error('Error:', error));
             } else {
-                alert(errorMessage);
+                alert('Vui lòng điền đầy đủ tất cả các trường.');
             }
         });
     });
@@ -458,14 +482,9 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Tìm tất cả các phần tử có class 'price-value'
         const priceElements = document.querySelectorAll('.price-value');
-
-        // Duyệt qua từng phần tử và định dạng lại giá trị
         priceElements.forEach(function (priceElement) {
-            // Lấy giá trị số từ thẻ p
             const amount = parseInt(priceElement.textContent.trim(), 10);
-            // Gọi hàm formatCurrencyVND và cập nhật giá trị
             priceElement.textContent = formatCurrencyVND(amount);
         });
     });
@@ -479,18 +498,15 @@
         });
     }
 
-    // Format prices on page load
     document.addEventListener('DOMContentLoaded', function () {
         formatPrices();
     });
 
-    // Khi nhấn nút tìm kiếm
     document.getElementById('searchUserButton').addEventListener('click', function () {
         const phoneInput = document.getElementById('searchPhone');
         const phone = phoneInput.value.trim();
         const searchResult = document.getElementById('searchResult');
 
-        // Kiểm tra nếu trường nhập liệu trống
         if (phone === '') {
             searchResult.innerHTML = '<p class="text-danger mt-3" style="font-size: 1.2rem;">Vui lòng nhập số điện thoại để tìm kiếm.</p>';
             return;
@@ -502,8 +518,6 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 const userInfo = doc.querySelector('#searchResult');
-
-                // Kiểm tra nếu tìm thấy người dùng hoặc không
                 if (userInfo && userInfo.textContent.trim()) {
                     searchResult.innerHTML = userInfo.innerHTML;
                 } else {
@@ -516,27 +530,20 @@
             });
     });
 
-    // Xóa lỗi khi người dùng bắt đầu nhập lại
     document.getElementById('searchPhone').addEventListener('input', function () {
         const searchResult = document.getElementById('searchResult');
         searchResult.innerHTML = '';
     });
 
-    // Icon xóa
     const searchPhoneInput = document.getElementById('searchPhone');
     const clearSearchIcon = document.getElementById('clearSearchIcon');
 
-    // Xóa nội dung trong ô tìm kiếm khi nhấn vào icon "Xóa"
     clearSearchIcon.addEventListener('click', function () {
         searchPhoneInput.value = '';
-        document.getElementById('searchResult').innerHTML = ''; // Xóa kết quả tìm kiếm nếu có
-        searchPhoneInput.focus(); // Trả lại focus cho ô tìm kiếm sau khi xóa
+        document.getElementById('searchResult').innerHTML = '';
+        searchPhoneInput.focus();
     });
 
-    function goBack() {
-        window.history.back();
-    }
 </script>
-
 </body>
 </html>
