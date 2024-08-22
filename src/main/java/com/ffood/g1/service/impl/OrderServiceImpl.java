@@ -104,17 +104,27 @@ public class OrderServiceImpl implements OrderService {
     private String getOrderDetails(Order order) {
         StringBuilder details = new StringBuilder();
         details.append("Chi tiết đơn hàng:\n");
-        //tại sao get 0
+
+        // Lấy tên căn tin từ món ăn đầu tiên
         details.append("Căn tin: ").append(order.getOrderDetails().get(0).getFood().getCanteen().getCanteenName()).append("\n");
+
+        // Hiển thị mã đơn hàng trước khi liệt kê chi tiết các món ăn
+        details.append("Mã đơn hàng: ").append(order.getOrderCode()).append("\n");
+
         for (OrderDetail detail : order.getOrderDetails()) {
-            details.append("Món ăn: \n").append(detail.getFood().getFoodName())
-                    .append(", Mã đơn hàng: \n").append(detail.getOrder().getOrderCode())
-                    .append(", Số lượng: \n").append(detail.getQuantity())
-                    .append(", Tổng Giá: ").append(detail.getOrder().getTotalOrderPrice())
-                    .append("\n");
+            details.append("Món ăn: ").append(detail.getFood().getFoodName()).append("\n")
+                    .append("Số lượng: ").append(detail.getQuantity()).append("\n")
+                    .append("Giá: ").append(detail.getQuantity() * detail.getFood().getPrice()).append("\n");
         }
+
+        // Thêm dòng tổng giá cuối cùng
+        details.append("Tổng giá đơn hàng: ").append(order.getTotalOrderPrice()).append("\n");
+
         return details.toString();
     }
+
+
+
 
     @Override
     public void assignShipperAndUpdateStatus(Integer orderId, Integer deliveryRoleId, OrderStatus newStatus, String staffName) {
